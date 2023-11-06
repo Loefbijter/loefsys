@@ -21,7 +21,7 @@ You should have
 
 ### Setting up your environment
 1. Make sure Docker (Desktop) is running and your command line directory is the root folder of this project.
-2. Copy the file `.env.example` and rename it to `.env`. You do not need to change any of the variables.
+2. Copy the file `infra/.env.example` and rename it to `infra/.env`. You do not need to change any of the variables.
 3. That's it! To test if your environment is working run the following in your command line:
 
         $ docker compose up -d
