@@ -2,6 +2,7 @@ version: "3.9"
 services:
   web:
     container_name: web
+    restart: always
     build:
       context: ./
       dockerfile: infra/loefsys/Dockerfile.dev
@@ -11,6 +12,7 @@ services:
     volumes:
       - .:/var/task
       - ~/.aws:/root/.aws
+      - .:/app
     depends_on:
       - db
   db:

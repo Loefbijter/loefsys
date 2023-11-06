@@ -1,4 +1,5 @@
 from django.db import models
+from loefsys.members.models import Member
 
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -6,13 +7,18 @@ from django.conf import settings
 
 class Committee(models.Model):
     name = models.CharField(
+        max_length=64,
+    )
+
+    shortname = models.CharField(
         max_length=20,
+        null=True
     )
 
     members = models.ManyToManyField(
-        to=settings.AUTH_USER_MODEL,
+        to=Member,
         through="committees.CommitteeMembership",
-        through_fields=("committee", "user"),
+        through_fields=("committee", "member"),
         symmetrical=True,
         blank=True,
     )

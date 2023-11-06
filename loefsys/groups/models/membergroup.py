@@ -14,9 +14,8 @@ class ActiveMemberGroupManager(models.Manager):
 class MemberGroup(models.Model):
     """Describes a groups of members (Users with Membership object)."""
 
-    objects = models.Manager()
-    active_objects = ActiveMemberGroupManager()
-
+    # objects = models.Manager()
+    # active_objects = ActiveMemberGroupManager()
     name = models.CharField(max_length=40, verbose_name=_("Groupname"), unique=True)
 
     description = models.TextField()
@@ -33,11 +32,11 @@ class MemberGroup(models.Model):
         settings.AUTH_USER_MODEL, through="groups.MemberGroupMembership"
     )
 
-    permissions = models.ManyToManyField(
-        Permission,
-        verbose_name=_("permissions"),
-        blank=True,
-    )
+    # permissions = models.ManyToManyField(
+    #     Permission,
+    #     verbose_name=_("permissions"),
+    #     blank=True,
+    # )
 
     active = models.BooleanField(
         default=False,
@@ -95,7 +94,3 @@ class MemberGroup(models.Model):
     #                     f"get_absolute_url() not implemented for {self.__class__.__name__}"
     #                 )
 
-    class Meta:
-        verbose_name = _("member group")
-        verbose_name_plural = _("member groups")
-        # ordering is done in the manager, to sort on a translated field

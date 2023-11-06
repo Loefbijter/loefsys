@@ -1,33 +1,34 @@
 from django.contrib import admin
-from django.contrib.auth import admin as auth_admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
+
+from .forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
-
-from loefsys.users.forms import UserAdminChangeForm, UserAdminCreationForm
-
-User = get_user_model()
+from .models import User
 
 
-@admin.register(User)
-class UserAdmin(auth_admin.UserAdmin):
-    form = UserAdminChangeForm
-    add_form = UserAdminCreationForm
+class UserAdmin(UserAdmin):
+    add_form = UserCreationForm
+    form = UserChangeForm
+    model = User
+    list_display = ("email", "is_staff", "is_active",)
+    list_filter = ("email", "is_staff", "is_active",)
     fieldsets = (
-        (None, {"fields": ("username", "password")}),
-        (_("Personal info"), {"fields": ("name", "email")}),
-        (
-            _("Permissions"),
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                ),
-            },
-        ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (None, {"fields": ("email", "password")}),
+        ("Permissions", {"fields": ("is_staff", "is_active", "groups", "user_permissions")}),
     )
-    list_display = ["username", "name", "is_superuser"]
-    search_fields = ["name"]
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": (
+                "email", "password1", "password2", "is_staff",
+                "is_active", "groups", "user_permissions"
+            )}
+        ),
+    )
+    search_fields = ("email",)
+    ordering = ("email",)
+
+
+admin.site.register(get_user_model(), UserAdmin)
+admin.site.unregister(Group)

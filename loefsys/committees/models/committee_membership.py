@@ -1,4 +1,5 @@
 from django.db import models
+from loefsys.members.models import Member
 
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -6,8 +7,8 @@ from django.conf import settings
 
 
 class CommitteeMembership(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+    member = models.ForeignKey(
+        Member,
         models.CASCADE,
     )
 
@@ -37,4 +38,4 @@ class CommitteeMembership(models.Model):
         return self.until is None or self.since > timezone.now() > self.until
 
     def __str__(self):
-        return str(self.committee) + " | " + str(self.user)
+        return str(self.committee) + " | " + str(self.member)

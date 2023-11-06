@@ -16,6 +16,8 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install -U pip-tools && \
   pip install -U zappa
 
+RUN yum -y install graphviz
+
 COPY requirements/* ./
 RUN pip install -r local.txt
 
