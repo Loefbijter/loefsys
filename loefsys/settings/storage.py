@@ -14,14 +14,25 @@ class StorageSettings(TemplateSettings, BaseSettings):
 
     AWS_STORAGE_BUCKET_NAME = env(None)
 
+    def uses_local_storage(self) -> bool:  # noqa N802 D102
+        return self.DEBUG or not self.AWS_STORAGE_BUCKET_NAME
+
     def AWS_S3_CUSTOM_DOMAIN(self) -> str:  # noqa N802 D102
         return f"{self.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 
     def STATIC_URL(self) -> str:  # noqa N802 D102
-        return f"https://{self.AWS_S3_CUSTOM_DOMAIN}/static/"
+        return (
+            "static/"
+            if self.uses_local_storage()
+            else f"https://{self.AWS_S3_CUSTOM_DOMAIN}/static/"
+        )
 
     def MEDIA_URL(self) -> str:  # noqa N802 D102
-        return f"https://{self.AWS_S3_CUSTOM_DOMAIN}/media/"
+        return (
+            "media/"
+            if self.uses_local_storage()
+            else f"https://{self.AWS_S3_CUSTOM_DOMAIN}/media/"
+        )
 
     def STATIC_DIR(self) -> Path:  # noqa N802 D102
         return self.BASE_DIR / "staticfiles"
