@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loefsys.scripts package &mdash; Loefsys  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="loefsys.scripts.code_scripts module" href="loefsys.scripts.code_scripts.html" />
+    <link rel="prev" title="loefsys.reservations.apps module" href="loefsys.reservations.apps.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            Loefsys
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-docstrings.html">How to Write Docstring Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../env-variables.html">Environment Variables</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">loefsys</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="loefsys.html">loefsys package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="loefsys.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="loefsys.contacts.html">loefsys.contacts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.events.html">loefsys.events package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.groups.html">loefsys.groups package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.reservations.html">loefsys.reservations package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">loefsys.scripts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.settings.html">loefsys.settings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.users.html">loefsys.users package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Loefsys</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">loefsys</a></li>
+          <li class="breadcrumb-item"><a href="loefsys.html">loefsys package</a></li>
+      <li class="breadcrumb-item active">loefsys.scripts package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/loefsys.scripts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-loefsys.scripts">
+<span id="loefsys-scripts-package"></span><h1>loefsys.scripts package<a class="headerlink" href="#module-loefsys.scripts" title="Link to this heading"></a></h1>
+<p>A collection of scripts to manage the dev environment.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.format">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.format" title="Link to this definition"></a></dt>
+<dd><p>Apply formatting to the project code.</p>
+<p>See <a class="reference external" href="https://docs.astral.sh/ruff/formatter/">Ruff formatter</a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.lint">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">lint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.lint" title="Link to this definition"></a></dt>
+<dd><p>Apply linting to the project code.</p>
+<p>See <a class="reference external" href="https://docs.astral.sh/ruff/linter/">Ruff linter</a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.typecheck">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">typecheck</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.typecheck" title="Link to this definition"></a></dt>
+<dd><p>Perform typechecking analysis on the project code.</p>
+<p>See <a class="reference external" href="https://mypy.readthedocs.io/en/latest/index.html" title="(in mypy v1.14.0+dev.8ef21976cfd190d0b1974f438a7d30e8eaea5272)"><span class="xref std std-doc">mypy</span></a> for more details</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.runserver">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">runserver</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.runserver" title="Link to this definition"></a></dt>
+<dd><p>Boot up Django’s development webserver.</p>
+<p>See <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/django-admin/#django-admin-runserver" title="(in Django v5.0)"><code class="docutils literal notranslate"><span class="pre">runserver</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.makemigrations">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">makemigrations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.makemigrations" title="Link to this definition"></a></dt>
+<dd><p>Make migrations based on the changes in the code.</p>
+<p>See <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/django-admin/#django-admin-makemigrations" title="(in Django v5.0)"><code class="docutils literal notranslate"><span class="pre">makemigrations</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.migrate">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">migrate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.migrate" title="Link to this definition"></a></dt>
+<dd><p>Apply migrations to the database.</p>
+<p>See <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/django-admin/#django-admin-migrate" title="(in Django v5.0)"><code class="docutils literal notranslate"><span class="pre">migrate</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.test">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.test" title="Link to this definition"></a></dt>
+<dd><p>Run tests for all installed apps.</p>
+<p>See <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/django-admin/#django-admin-test" title="(in Django v5.0)"><code class="docutils literal notranslate"><span class="pre">test</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.createsuperuser">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">createsuperuser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.createsuperuser" title="Link to this definition"></a></dt>
+<dd><p>Create an admin user for the database.</p>
+<p>See <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/django-admin/#django-admin-createsuperuser" title="(in Django v5.0)"><code class="docutils literal notranslate"><span class="pre">createsuperuser</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.collectstatic">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">collectstatic</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.collectstatic" title="Link to this definition"></a></dt>
+<dd><p>Collect all static files in the <code class="docutils literal notranslate"><span class="pre">static</span></code> folder.</p>
+<p>See <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/contrib/staticfiles/#django-admin-collectstatic" title="(in Django v5.0)"><code class="docutils literal notranslate"><span class="pre">collectstatic</span></code></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.makedocs">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">makedocs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.makedocs" title="Link to this definition"></a></dt>
+<dd><p>Generate HTML documentation for the project.</p>
+<p>See <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-build.html" title="(in Sphinx v8.2.0)"><span>sphinx-build</span></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="loefsys.scripts.genapidocs">
+<span class="sig-prename descclassname"><span class="pre">loefsys.scripts.</span></span><span class="sig-name descname"><span class="pre">genapidocs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.scripts.genapidocs" title="Link to this definition"></a></dt>
+<dd><p>Generate API documentation from the docstrings.</p>
+<p>See <a class="reference external" href="https://www.sphinx-doc.org/en/master/man/sphinx-apidoc.html" title="(in Sphinx v8.2.0)"><span>sphinx-apidoc</span></a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="loefsys.scripts.code_scripts.html">loefsys.scripts.code_scripts module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.code_scripts.html#loefsys.scripts.code_scripts.lint"><code class="docutils literal notranslate"><span class="pre">lint()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.code_scripts.html#loefsys.scripts.code_scripts.format"><code class="docutils literal notranslate"><span class="pre">format()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.code_scripts.html#loefsys.scripts.code_scripts.typecheck"><code class="docutils literal notranslate"><span class="pre">typecheck()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loefsys.scripts.django_scripts.html">loefsys.scripts.django_scripts module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.django_scripts.html#loefsys.scripts.django_scripts.runserver"><code class="docutils literal notranslate"><span class="pre">runserver()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.django_scripts.html#loefsys.scripts.django_scripts.makemigrations"><code class="docutils literal notranslate"><span class="pre">makemigrations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.django_scripts.html#loefsys.scripts.django_scripts.migrate"><code class="docutils literal notranslate"><span class="pre">migrate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.django_scripts.html#loefsys.scripts.django_scripts.test"><code class="docutils literal notranslate"><span class="pre">test()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.django_scripts.html#loefsys.scripts.django_scripts.createsuperuser"><code class="docutils literal notranslate"><span class="pre">createsuperuser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.django_scripts.html#loefsys.scripts.django_scripts.collectstatic"><code class="docutils literal notranslate"><span class="pre">collectstatic()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loefsys.scripts.sphinx_scripts.html">loefsys.scripts.sphinx_scripts module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.sphinx_scripts.html#loefsys.scripts.sphinx_scripts.makedocs"><code class="docutils literal notranslate"><span class="pre">makedocs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.scripts.sphinx_scripts.html#loefsys.scripts.sphinx_scripts.genapidocs"><code class="docutils literal notranslate"><span class="pre">genapidocs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="loefsys.reservations.apps.html" class="btn btn-neutral float-left" title="loefsys.reservations.apps module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="loefsys.scripts.code_scripts.html" class="btn btn-neutral float-right" title="loefsys.scripts.code_scripts module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Loefbijter Webcie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

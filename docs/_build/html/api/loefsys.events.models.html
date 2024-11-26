@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loefsys.events.models package &mdash; Loefsys  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="loefsys.events.models.choices module" href="loefsys.events.models.choices.html" />
+    <link rel="prev" title="loefsys.events package" href="loefsys.events.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            Loefsys
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-docstrings.html">How to Write Docstring Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../env-variables.html">Environment Variables</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">loefsys</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="loefsys.html">loefsys package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="loefsys.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="loefsys.contacts.html">loefsys.contacts package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="loefsys.events.html">loefsys.events package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.groups.html">loefsys.groups package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.reservations.html">loefsys.reservations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.scripts.html">loefsys.scripts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.settings.html">loefsys.settings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.users.html">loefsys.users package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Loefsys</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">loefsys</a></li>
+          <li class="breadcrumb-item"><a href="loefsys.html">loefsys package</a></li>
+          <li class="breadcrumb-item"><a href="loefsys.events.html">loefsys.events package</a></li>
+      <li class="breadcrumb-item active">loefsys.events.models package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/loefsys.events.models.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-loefsys.events.models">
+<span id="loefsys-events-models-package"></span><h1>loefsys.events.models package<a class="headerlink" href="#module-loefsys.events.models" title="Link to this heading"></a></h1>
+<p>Module containing the models related to events.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="loefsys.events.models.Event">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">loefsys.events.models.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#loefsys.events.models.Event" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://django-extensions.readthedocs.io/en/latest/model_extensions.html" title="(in django-extensions v3.2)"><code class="docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Extensions</span></code></a>, <a class="reference external" href="https://django-extensions.readthedocs.io/en/latest/model_extensions.html" title="(in django-extensions v3.2)"><code class="docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Extensions</span></code></a></p>
+<p>Model for an event.</p>
+<p>TODO &#64;Mark expand on this.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.created">
+<span class="sig-name descname"><span class="pre">created</span></span><a class="headerlink" href="#loefsys.events.models.Event.created" title="Link to this definition"></a></dt>
+<dd><p>The timestamp of the creation of the model, automatically generated upon
+creation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.modified">
+<span class="sig-name descname"><span class="pre">modified</span></span><a class="headerlink" href="#loefsys.events.models.Event.modified" title="Link to this definition"></a></dt>
+<dd><p>The timestamp of last modification of this model, automatically generated upon
+update.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.title">
+<span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#loefsys.events.models.Event.title" title="Link to this definition"></a></dt>
+<dd><p>The title to display for the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.description">
+<span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#loefsys.events.models.Event.description" title="Link to this definition"></a></dt>
+<dd><p>An optional description of the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.slug">
+<span class="sig-name descname"><span class="pre">slug</span></span><a class="headerlink" href="#loefsys.events.models.Event.slug" title="Link to this definition"></a></dt>
+<dd><p>A slug for the URL of the event, automatically generated from the title.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.start">
+<span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#loefsys.events.models.Event.start" title="Link to this definition"></a></dt>
+<dd><p>The start date and time of the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.end">
+<span class="sig-name descname"><span class="pre">end</span></span><a class="headerlink" href="#loefsys.events.models.Event.end" title="Link to this definition"></a></dt>
+<dd><p>The end date and time of the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.category">
+<span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#loefsys.events.models.Event.category" title="Link to this definition"></a></dt>
+<dd><p>The category of the event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories" title="loefsys.events.models.choices.EventCategories"><em>EventCategories</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.price">
+<span class="sig-name descname"><span class="pre">price</span></span><a class="headerlink" href="#loefsys.events.models.Event.price" title="Link to this definition"></a></dt>
+<dd><p>The price.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><em>Decimal</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.location">
+<span class="sig-name descname"><span class="pre">location</span></span><a class="headerlink" href="#loefsys.events.models.Event.location" title="Link to this definition"></a></dt>
+<dd><p>The location of the event.</p>
+<p>We might want to include a Google Maps widget showing the location.
+<a class="reference external" href="https://pypi.org/project/django-google-maps/">django-google-maps</a> might be
+useful for this.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.is_open_event">
+<span class="sig-name descname"><span class="pre">is_open_event</span></span><a class="headerlink" href="#loefsys.events.models.Event.is_open_event" title="Link to this definition"></a></dt>
+<dd><p>Flag to determine if non-members can register.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.published">
+<span class="sig-name descname"><span class="pre">published</span></span><a class="headerlink" href="#loefsys.events.models.Event.published" title="Link to this definition"></a></dt>
+<dd><p>Flag to determine if the event is publicly visible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.eventregistration_set">
+<span class="sig-name descname"><span class="pre">eventregistration_set</span></span><a class="headerlink" href="#loefsys.events.models.Event.eventregistration_set" title="Link to this definition"></a></dt>
+<dd><p>A manager of registrations for this event.</p>
+<p>It is the one-to-many relationship to
+<a class="reference internal" href="#loefsys.events.models.EventRegistration" title="loefsys.events.models.EventRegistration"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventRegistration</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventRegistrationManager" title="loefsys.events.models.managers.EventRegistrationManager"><em>EventRegistrationManager</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.mandatory_registration">
+<span class="sig-name descname"><span class="pre">mandatory_registration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#loefsys.events.models.Event.mandatory_registration" title="Link to this definition"></a></dt>
+<dd><p>Check whether this event has mandatory registration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean that defines whether registration is mandatory.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.registrations_open">
+<span class="sig-name descname"><span class="pre">registrations_open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#loefsys.events.models.Event.registrations_open" title="Link to this definition"></a></dt>
+<dd><p>Determine whether it is possible for users to register for this event.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean that defines whether registrations are open.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.max_capacity_reached">
+<span class="sig-name descname"><span class="pre">max_capacity_reached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#loefsys.events.models.Event.max_capacity_reached" title="Link to this definition"></a></dt>
+<dd><p>Check whether the max capacity for this event is reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when the event is full and <code class="docutils literal notranslate"><span class="pre">False</span></code> if there are places available.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.fine_on_cancellation">
+<span class="sig-name descname"><span class="pre">fine_on_cancellation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#loefsys.events.models.Event.fine_on_cancellation" title="Link to this definition"></a></dt>
+<dd><p>Check whether the cancellation of a registration will result in a fine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> when a fine will be applied and <code class="docutils literal notranslate"><span class="pre">False</span></code> when cancellation is
+free of charge.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.process_cancellation">
+<span class="sig-name descname"><span class="pre">process_cancellation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.events.models.Event.process_cancellation" title="Link to this definition"></a></dt>
+<dd><p>Process the side effects for an event of a cancellation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#loefsys.events.models.Event.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.events.models.Event.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#loefsys.events.models.Event.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">loefsys.events.models.</span></span><span class="sig-name descname"><span class="pre">EventRegistration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#loefsys.events.models.EventRegistration" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://django-extensions.readthedocs.io/en/latest/model_extensions.html" title="(in django-extensions v3.2)"><code class="docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Extensions</span></code></a></p>
+<p>Registration model for an event.</p>
+<p>TODO &#64;Mark expand on this.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.created">
+<span class="sig-name descname"><span class="pre">created</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.created" title="Link to this definition"></a></dt>
+<dd><p>The timestamp of the creation of this model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.modified">
+<span class="sig-name descname"><span class="pre">modified</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.modified" title="Link to this definition"></a></dt>
+<dd><p>The timestamp of last modification of this model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.event">
+<span class="sig-name descname"><span class="pre">event</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.event" title="Link to this definition"></a></dt>
+<dd><p>The event to which the registration applies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event" title="loefsys.events.models.event.Event"><em>Event</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.contact">
+<span class="sig-name descname"><span class="pre">contact</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.contact" title="Link to this definition"></a></dt>
+<dd><p>The contact that the registration is for.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Contact</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.status">
+<span class="sig-name descname"><span class="pre">status</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.status" title="Link to this definition"></a></dt>
+<dd><p>The status is active, in the queue, or cancelled, either with or without fine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus" title="loefsys.events.models.choices.RegistrationStatus"><em>RegistrationStatus</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.price_at_registration">
+<span class="sig-name descname"><span class="pre">price_at_registration</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.price_at_registration" title="Link to this definition"></a></dt>
+<dd><p>The agreed price of the event at the time of registration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><em>Decimal</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.fine_at_registration">
+<span class="sig-name descname"><span class="pre">fine_at_registration</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.fine_at_registration" title="Link to this definition"></a></dt>
+<dd><p>The agreed fine for cancellation at the time of registration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><em>Decimal</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.costs">
+<span class="sig-name descname"><span class="pre">costs</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.costs" title="Link to this definition"></a></dt>
+<dd><p>The cost for this event, automatically calculated from the status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><em>Decimal</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.costs_paid">
+<span class="sig-name descname"><span class="pre">costs_paid</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.costs_paid" title="Link to this definition"></a></dt>
+<dd><p>The amount paid for this registration by the contact.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><em>Decimal</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.save" title="Link to this definition"></a></dt>
+<dd><p>Save the model to the database.</p>
+<p>When creating a new registration, the attributes <a class="reference internal" href="#loefsys.events.models.EventRegistration.price_at_registration" title="loefsys.events.models.EventRegistration.price_at_registration"><code class="xref py py-attr docutils literal notranslate"><span class="pre">price_at_registration</span></code></a>
+and <a class="reference internal" href="#loefsys.events.models.EventRegistration.fine_at_registration" title="loefsys.events.models.EventRegistration.fine_at_registration"><code class="xref py py-attr docutils literal notranslate"><span class="pre">fine_at_registration</span></code></a> are copied from the :attr`.event`.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.costs_to_pay">
+<span class="sig-name descname"><span class="pre">costs_to_pay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><span class="pre">Decimal</span></a></span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.costs_to_pay" title="Link to this definition"></a></dt>
+<dd><p>Calculate the amount needed to be paid by the registration contact.</p>
+<p>TODO see if this function can be converted into a GeneratedField as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The amount of money in Euro’s.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/decimal.html#decimal.Decimal" title="(in Python v3.13)"><em>Decimal</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.cancel" title="Link to this definition"></a></dt>
+<dd><p>Cancel a registration.</p>
+<p>Upon cancellation, it is calculated whether a fine will be applied. The status
+of the registration is then either changed to
+<a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus.CANCELLED_FINE" title="loefsys.events.models.choices.RegistrationStatus.CANCELLED_FINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loefsys.events.models.choices.RegistrationStatus.CANCELLED_FINE</span></code></a> or
+<a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus.CANCELLED_NOFINE" title="loefsys.events.models.choices.RegistrationStatus.CANCELLED_NOFINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">loefsys.events.models.choices.RegistrationStatus.CANCELLED_NOFINE</span></code></a>.
+Afterwards, the event is notified to potentially activate a registration in the
+queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.events.models.EventRegistration.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#loefsys.events.models.EventRegistration.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">loefsys.events.models.</span></span><span class="sig-name descname"><span class="pre">MandatoryRegistrationDetails</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://django-extensions.readthedocs.io/en/latest/model_extensions.html" title="(in django-extensions v3.2)"><code class="docutils literal notranslate"><span class="pre">Model</span> <span class="pre">Extensions</span></code></a></p>
+<p>Model containing extra information for an event that requires registration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.event">
+<span class="sig-name descname"><span class="pre">event</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.event" title="Link to this definition"></a></dt>
+<dd><p>The event that requires these details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event" title="loefsys.events.models.event.Event"><em>Event</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.start">
+<span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.start" title="Link to this definition"></a></dt>
+<dd><p>The opening of the registration window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.end">
+<span class="sig-name descname"><span class="pre">end</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.end" title="Link to this definition"></a></dt>
+<dd><p>The closing of the registration window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.cancel_deadline">
+<span class="sig-name descname"><span class="pre">cancel_deadline</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.cancel_deadline" title="Link to this definition"></a></dt>
+<dd><p>The deadline until which registration can be cancelled free of charge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.send_cancel_email">
+<span class="sig-name descname"><span class="pre">send_cancel_email</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.send_cancel_email" title="Link to this definition"></a></dt>
+<dd><p>Flag that shows whether people receive a confirmation email upon cancellation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.capacity">
+<span class="sig-name descname"><span class="pre">capacity</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.capacity" title="Link to this definition"></a></dt>
+<dd><p>The capacity for the event, or <cite>None</cite> if there is no capacity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.registration_window_open">
+<span class="sig-name descname"><span class="pre">registration_window_open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.registration_window_open" title="Link to this definition"></a></dt>
+<dd><p>Determine whether it is possible for users to register for this event.</p>
+<p>For events with required registration, registration is only possible when the
+event is published and in the registration window defined by
+<a class="reference internal" href="#loefsys.events.models.MandatoryRegistrationDetails.start" title="loefsys.events.models.MandatoryRegistrationDetails.start"><code class="xref py py-attr docutils literal notranslate"><span class="pre">start</span></code></a> and <a class="reference internal" href="#loefsys.events.models.MandatoryRegistrationDetails.end" title="loefsys.events.models.MandatoryRegistrationDetails.end"><code class="xref py py-attr docutils literal notranslate"><span class="pre">end</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean that defines whether registrations are in the registration window.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.capacity_reached">
+<span class="sig-name descname"><span class="pre">capacity_reached</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.capacity_reached" title="Link to this definition"></a></dt>
+<dd><p>Determine whether the maximum capacity for the event has been reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean that defines whether the capacity has been reached.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.events.models.MandatoryRegistrationDetails.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#loefsys.events.models.MandatoryRegistrationDetails.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="loefsys.events.models.choices.html">loefsys.events.models.choices module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories"><code class="docutils literal notranslate"><span class="pre">EventCategories</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories.OTHER"><code class="docutils literal notranslate"><span class="pre">EventCategories.OTHER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories.ALUMNI"><code class="docutils literal notranslate"><span class="pre">EventCategories.ALUMNI</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories.ASSOCIATION"><code class="docutils literal notranslate"><span class="pre">EventCategories.ASSOCIATION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories.COMPETITION"><code class="docutils literal notranslate"><span class="pre">EventCategories.COMPETITION</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories.LEISURE"><code class="docutils literal notranslate"><span class="pre">EventCategories.LEISURE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.EventCategories.SAILING"><code class="docutils literal notranslate"><span class="pre">EventCategories.SAILING</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus"><code class="docutils literal notranslate"><span class="pre">RegistrationStatus</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus.ACTIVE"><code class="docutils literal notranslate"><span class="pre">RegistrationStatus.ACTIVE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus.QUEUED"><code class="docutils literal notranslate"><span class="pre">RegistrationStatus.QUEUED</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus.CANCELLED_NOFINE"><code class="docutils literal notranslate"><span class="pre">RegistrationStatus.CANCELLED_NOFINE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.choices.html#loefsys.events.models.choices.RegistrationStatus.CANCELLED_FINE"><code class="docutils literal notranslate"><span class="pre">RegistrationStatus.CANCELLED_FINE</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loefsys.events.models.event.html">loefsys.events.models.event module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event"><code class="docutils literal notranslate"><span class="pre">Event</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.created"><code class="docutils literal notranslate"><span class="pre">Event.created</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.modified"><code class="docutils literal notranslate"><span class="pre">Event.modified</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.title"><code class="docutils literal notranslate"><span class="pre">Event.title</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.description"><code class="docutils literal notranslate"><span class="pre">Event.description</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.slug"><code class="docutils literal notranslate"><span class="pre">Event.slug</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.start"><code class="docutils literal notranslate"><span class="pre">Event.start</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.end"><code class="docutils literal notranslate"><span class="pre">Event.end</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.category"><code class="docutils literal notranslate"><span class="pre">Event.category</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.price"><code class="docutils literal notranslate"><span class="pre">Event.price</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.location"><code class="docutils literal notranslate"><span class="pre">Event.location</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.is_open_event"><code class="docutils literal notranslate"><span class="pre">Event.is_open_event</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.published"><code class="docutils literal notranslate"><span class="pre">Event.published</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.eventregistration_set"><code class="docutils literal notranslate"><span class="pre">Event.eventregistration_set</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.mandatory_registration"><code class="docutils literal notranslate"><span class="pre">Event.mandatory_registration()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.registrations_open"><code class="docutils literal notranslate"><span class="pre">Event.registrations_open()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.max_capacity_reached"><code class="docutils literal notranslate"><span class="pre">Event.max_capacity_reached()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.fine_on_cancellation"><code class="docutils literal notranslate"><span class="pre">Event.fine_on_cancellation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.process_cancellation"><code class="docutils literal notranslate"><span class="pre">Event.process_cancellation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">Event.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.Event.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">Event.MultipleObjectsReturned</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.event"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.event</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.start"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.start</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.end"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.end</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.cancel_deadline"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.cancel_deadline</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.send_cancel_email"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.send_cancel_email</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.capacity"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.capacity</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.registration_window_open"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.registration_window_open()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.capacity_reached"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.capacity_reached()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.MandatoryRegistrationDetails.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">MandatoryRegistrationDetails.MultipleObjectsReturned</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer"><code class="docutils literal notranslate"><span class="pre">EventOrganizer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer.created"><code class="docutils literal notranslate"><span class="pre">EventOrganizer.created</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer.modified"><code class="docutils literal notranslate"><span class="pre">EventOrganizer.modified</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer.event"><code class="docutils literal notranslate"><span class="pre">EventOrganizer.event</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer.groups"><code class="docutils literal notranslate"><span class="pre">EventOrganizer.groups</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer.contacts"><code class="docutils literal notranslate"><span class="pre">EventOrganizer.contacts</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">EventOrganizer.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.event.html#loefsys.events.models.event.EventOrganizer.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">EventOrganizer.MultipleObjectsReturned</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loefsys.events.models.managers.html">loefsys.events.models.managers module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventManager"><code class="docutils literal notranslate"><span class="pre">EventManager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventManager.active"><code class="docutils literal notranslate"><span class="pre">EventManager.active()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventRegistrationManager"><code class="docutils literal notranslate"><span class="pre">EventRegistrationManager</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventRegistrationManager.order_by_creation"><code class="docutils literal notranslate"><span class="pre">EventRegistrationManager.order_by_creation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventRegistrationManager.active"><code class="docutils literal notranslate"><span class="pre">EventRegistrationManager.active()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventRegistrationManager.queued"><code class="docutils literal notranslate"><span class="pre">EventRegistrationManager.queued()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.managers.html#loefsys.events.models.managers.EventRegistrationManager.cancelled"><code class="docutils literal notranslate"><span class="pre">EventRegistrationManager.cancelled()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="loefsys.events.models.registration.html">loefsys.events.models.registration module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration"><code class="docutils literal notranslate"><span class="pre">EventRegistration</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.created"><code class="docutils literal notranslate"><span class="pre">EventRegistration.created</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.modified"><code class="docutils literal notranslate"><span class="pre">EventRegistration.modified</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.event"><code class="docutils literal notranslate"><span class="pre">EventRegistration.event</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.contact"><code class="docutils literal notranslate"><span class="pre">EventRegistration.contact</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.status"><code class="docutils literal notranslate"><span class="pre">EventRegistration.status</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.price_at_registration"><code class="docutils literal notranslate"><span class="pre">EventRegistration.price_at_registration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.fine_at_registration"><code class="docutils literal notranslate"><span class="pre">EventRegistration.fine_at_registration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.costs"><code class="docutils literal notranslate"><span class="pre">EventRegistration.costs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.costs_paid"><code class="docutils literal notranslate"><span class="pre">EventRegistration.costs_paid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.save"><code class="docutils literal notranslate"><span class="pre">EventRegistration.save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.costs_to_pay"><code class="docutils literal notranslate"><span class="pre">EventRegistration.costs_to_pay()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.cancel"><code class="docutils literal notranslate"><span class="pre">EventRegistration.cancel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.DoesNotExist"><code class="docutils literal notranslate"><span class="pre">EventRegistration.DoesNotExist</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.events.models.registration.html#loefsys.events.models.registration.EventRegistration.MultipleObjectsReturned"><code class="docutils literal notranslate"><span class="pre">EventRegistration.MultipleObjectsReturned</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="loefsys.events.html" class="btn btn-neutral float-left" title="loefsys.events package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="loefsys.events.models.choices.html" class="btn btn-neutral float-right" title="loefsys.events.models.choices module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Loefbijter Webcie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>

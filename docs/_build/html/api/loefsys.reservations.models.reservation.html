@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loefsys.reservations.models.reservation module &mdash; Loefsys  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="loefsys.reservations.models.room module" href="loefsys.reservations.models.room.html" />
+    <link rel="prev" title="loefsys.reservations.models.reservable module" href="loefsys.reservations.models.reservable.html" />
+</head>
+
+<body class="wy-body-for-nav">
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+
+
+          <a href="../index.html" class="icon icon-home">
+            Loefsys
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how-to-docstrings.html">How to Write Docstring Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../env-variables.html">Environment Variables</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">loefsys</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="loefsys.html">loefsys package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="loefsys.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="loefsys.contacts.html">loefsys.contacts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.events.html">loefsys.events package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.groups.html">loefsys.groups package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="loefsys.reservations.html">loefsys.reservations package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.scripts.html">loefsys.scripts package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.settings.html">loefsys.settings package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="loefsys.users.html">loefsys.users package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="loefsys.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Loefsys</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">loefsys</a></li>
+          <li class="breadcrumb-item"><a href="loefsys.html">loefsys package</a></li>
+          <li class="breadcrumb-item"><a href="loefsys.reservations.html">loefsys.reservations package</a></li>
+          <li class="breadcrumb-item"><a href="loefsys.reservations.models.html">loefsys.reservations.models package</a></li>
+      <li class="breadcrumb-item active">loefsys.reservations.models.reservation module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/loefsys.reservations.models.reservation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+
+  <section id="module-loefsys.reservations.models.reservation">
+<span id="loefsys-reservations-models-reservation-module"></span><h1>loefsys.reservations.models.reservation module<a class="headerlink" href="#module-loefsys.reservations.models.reservation" title="Link to this heading"></a></h1>
+<p>Module defining the model for a reservation.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">loefsys.reservations.models.reservation.</span></span><span class="sig-name descname"><span class="pre">Reservation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/models/instances/#django.db.models.Model" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></p>
+<p>Model describing a reservation of a reservable item.</p>
+<p>A reservation is a ‘time-claim’ anyone can put on a reservable item. It has a start
+time and end time which is after the start time. The start time may be in the past,
+but only an admin can create reservation that ends in the past. The start time and
+end time may be on different dates, as long as the start time is earlier than the
+end time. A reservation has a reference to a person (or possibly to a group). A
+reservation has a function which can calculate any costs related to that
+reservation. A reservation has a log, which the user must fill in after the
+reservation has ended. A reservation can be linked to a group, training or event.</p>
+<p>A boat reservation can be linked to a training (or event). If it is not then it must
+be reserved by a person with the required skipper’s certificate. If the boat has an
+engine, then the user can set an amount of engine-hours used.</p>
+<p>TODO write validation logic for overlap.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation.content_type">
+<span class="sig-name descname"><span class="pre">content_type</span></span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation.content_type" title="Link to this definition"></a></dt>
+<dd><p>Part of the ForeignKey.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/contrib/contenttypes/#django.contrib.contenttypes.models.ContentType" title="(in Django v5.0)"><em>ContentType</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation.item_id">
+<span class="sig-name descname"><span class="pre">item_id</span></span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation.item_id" title="Link to this definition"></a></dt>
+<dd><p>Part of the ForeignKey.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation.item">
+<span class="sig-name descname"><span class="pre">item</span></span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation.item" title="Link to this definition"></a></dt>
+<dd><p>The item that is reserved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="loefsys.reservations.models.reservable.html#loefsys.reservations.models.reservable.ReservableItem" title="loefsys.reservations.models.reservable.ReservableItem"><em>ReservableItem</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation.start">
+<span class="sig-name descname"><span class="pre">start</span></span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation.start" title="Link to this definition"></a></dt>
+<dd><p>The start timestamp of the reservation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation.end">
+<span class="sig-name descname"><span class="pre">end</span></span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation.end" title="Link to this definition"></a></dt>
+<dd><p>The end timestamp of the reservation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectDoesNotExist</span></code></a></p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="loefsys.reservations.models.reservation.Reservation.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#loefsys.reservations.models.reservation.Reservation.MultipleObjectsReturned" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.djangoproject.com/en/5.0/ref/exceptions/#django.core.exceptions.MultipleObjectsReturned" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleObjectsReturned</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="loefsys.reservations.models.reservable.html" class="btn btn-neutral float-left" title="loefsys.reservations.models.reservable module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="loefsys.reservations.models.room.html" class="btn btn-neutral float-right" title="loefsys.reservations.models.room module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Loefbijter Webcie.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+</body>
+</html>
