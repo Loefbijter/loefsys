@@ -13,7 +13,9 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
-    environment: github-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     env:
       DJANGO_SECRET_KEY: django-insecure-loefbijter
       DJANGO_DATABASE_URL: sqlite:///db.sqlite
@@ -47,6 +49,7 @@ jobs:
           if-no-files-found: error
 
       - name: Deploy
+        id: deployment
         uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
         with:
