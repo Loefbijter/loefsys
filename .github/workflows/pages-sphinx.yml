@@ -39,6 +39,22 @@ jobs:
       - name: Build HTML
         run: poetry run makedocs
 
+      - name: Correct file permissions
+        shell: sh
+        if: runner.os == 'Linux'
+        run: |
+          chmod -c -R +rX "docs/_build/html" |
+          while read line; do
+            echo "::warning title=Invalid file permissions automatically fixed::$line"
+          done
+          tar \
+            --dereference --hard-dereference \
+            --directory "$INPUT_PATH" \
+            -cvf "$RUNNER_TEMP/artifact.tar" \
+            --exclude=.git \
+            --exclude=.github \
+            .
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -52,7 +68,6 @@ jobs:
     needs: build
 
     permissions:
-      contents: read
       pages: write
       id-token: write
 
