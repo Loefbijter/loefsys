@@ -22,22 +22,19 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v4
 
-      - name: Install poetry
-        run: pipx install poetry
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
 
       - name: Install python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'poetry'
+        run: uv python install
 
       - name: Install dependencies
-        run: poetry install
+        run: uv sync --all-extras --dev
 
       - name: Prepare the database
         run: |
-          poetry run makemigrations
-          poetry run migrate
+          uv run manage.py makemigrations
+          uv run manage.py migrate
 
       - name: Run the tests
-        run: poetry run python loefsys/manage.py test --noinput
+        run: uv run manage.py test

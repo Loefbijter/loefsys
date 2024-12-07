@@ -6,6 +6,8 @@ is loaded to populate the environment variables.
 
 from dotenv import load_dotenv
 
+from .storage import StorageSettings
+
 # fmt: off
 # isort: off
 from .test import TestSettings
@@ -33,7 +35,7 @@ load_dotenv()
 # configuration correctly.
 class Settings(
     DatabaseSettings,
-    # StorageSettings,
+    StorageSettings,
     # LocaleSettings,
     AdminSettings,
     # SecuritySettings,
