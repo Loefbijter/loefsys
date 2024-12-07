@@ -11,11 +11,15 @@ on:
       - dev
 
 jobs:
-  build:
+  docs:
     runs-on: ubuntu-latest
     environment: default
+    env:
+      DJANGO_SECRET_KEY: django-insecure-loefbijter
+      DJANGO_DATABASE_URL: sqlite:///db.sqlite
     permissions:
       contents: write
+
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v4
@@ -40,9 +44,10 @@ jobs:
         with:
           name: html-docs
           path: docs/_build/html
+          if-no-files-found: error
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
