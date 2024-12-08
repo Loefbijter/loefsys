@@ -4,11 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
-  pull_request:
-    branches:
-      - main
-      - dev
 
 jobs:
   build:
@@ -39,21 +34,11 @@ jobs:
       - name: Build HTML
         run: poetry run makedocs
 
-      # - name: Correct file permissions
-      #   shell: sh
-      #   if: runner.os == 'Linux'
-      #   run: |
-      #     chmod -c -R +rX "docs/_build/html" |
-      #     while read line; do
-      #       echo "::warning title=Invalid file permissions automatically fixed::$line"
-      #     done
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           name: html-docs
           path: docs/_build/html
-          # if-no-files-found: error
 
   deploy:
     needs: build
@@ -65,8 +50,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    env:
-      ACTIONS_STEP_DEBUG: true
 
     steps:
       - name: Deploy to Github Pages
