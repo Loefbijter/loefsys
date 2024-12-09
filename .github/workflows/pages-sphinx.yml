@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     environment: default
     env:
       DJANGO_SECRET_KEY: django-insecure-loefbijter
@@ -43,7 +43,7 @@ jobs:
   deploy:
     needs: build
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pages: write
       id-token: write
