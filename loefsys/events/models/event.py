@@ -59,15 +59,15 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         :class:`~loefsys.events.models.EventRegistration`.
     """
 
-    start = models.DateTimeField(_("start time"))
-    end = models.DateTimeField(_("end time"))
+    start = models.DateTimeField(_("Start time"))
+    end = models.DateTimeField(_("End time"))
 
     category = models.PositiveSmallIntegerField(
-        choices=EventCategories, verbose_name=_("category")
+        choices=EventCategories, verbose_name=_("Category")
     )
 
     price = models.DecimalField(
-        _("price"),
+        _("Price"),
         max_digits=5,
         decimal_places=2,
         default=Decimal("0.00"),
@@ -75,7 +75,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         validators=[validators.MinValueValidator(0)],
     )
     fine = models.DecimalField(
-        _("fine"),
+        _("Fine"),
         max_digits=5,
         decimal_places=2,
         default=Decimal("0.00"),
@@ -84,12 +84,12 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         validators=[validators.MinValueValidator(0)],
     )
 
-    location = models.CharField(_("location"), max_length=255)
+    location = models.CharField(_("Location"), max_length=255)
 
     is_open_event = models.BooleanField(
         help_text=_("Event is open for non-members"), default=False
     )
-    published = models.BooleanField(_("published"), default=False)
+    published = models.BooleanField(_("Published"), default=False)
 
     registration_details: Optional["MandatoryRegistrationDetails"]
     eventregistration_set: EventRegistrationManager
@@ -202,18 +202,18 @@ class MandatoryRegistrationDetails(TimeStampedModel):
         Event,
         on_delete=models.CASCADE,
         related_name="registration_details",
-        verbose_name=_("event"),
+        verbose_name=_("Event"),
     )
 
     start = models.DateTimeField(
-        _("registration start"),
+        _("Registration start"),
         help_text=_(
             "Prefer times when people don't have lectures, "
             "e.g. 12:30 instead of 13:37."
         ),
     )
     end = models.DateTimeField(
-        _("registration end"),
+        _("Registration end"),
         help_text=_(
             "If you set a registration period registration will be "
             "required. If you don't set one, registration won't be "
@@ -221,9 +221,9 @@ class MandatoryRegistrationDetails(TimeStampedModel):
         ),
     )
 
-    cancel_deadline = models.DateTimeField(_("cancel deadline"), null=True, blank=True)
+    cancel_deadline = models.DateTimeField(_("Cancel deadline"), null=True, blank=True)
     send_cancel_email = models.BooleanField(
-        _("send cancellation notifications"),
+        _("Send cancellation notifications"),
         default=True,
         help_text=_(
             "Send an email to the organising party when a member "
@@ -232,7 +232,7 @@ class MandatoryRegistrationDetails(TimeStampedModel):
     )
 
     capacity = models.PositiveSmallIntegerField(
-        _("maximum number of participants"), blank=True, null=True
+        _("Maximum number of participants"), blank=True, null=True
     )
 
     def registration_window_open(self) -> bool:
@@ -283,7 +283,7 @@ class EventOrganizer(TimeStampedModel):
     """
 
     event = models.OneToOneField(
-        Event, on_delete=models.CASCADE, verbose_name=_("event")
+        Event, on_delete=models.CASCADE, verbose_name=_("Event")
     )
 
     groups = models.ManyToManyField(

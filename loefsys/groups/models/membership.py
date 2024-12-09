@@ -64,23 +64,23 @@ class GroupMembership(TimeStampedModel):
     """
 
     user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, verbose_name=_("user")
+        get_user_model(), on_delete=models.CASCADE, verbose_name=_("User")
     )
     group = models.ForeignKey(
-        LoefbijterGroup, on_delete=models.CASCADE, verbose_name=_("group")
+        LoefbijterGroup, on_delete=models.CASCADE, verbose_name=_("Group")
     )
 
-    chair = models.BooleanField(verbose_name=_("chair"), default=False)
+    chair = models.BooleanField(verbose_name=_("Chair"), default=False)
     role = models.CharField(
-        _("role"), help_text=_("The role of this member"), max_length=255, blank=True
+        _("Role"), help_text=_("The role of this member"), max_length=255, blank=True
     )
     member_since = models.DateField(
-        verbose_name=_("member since"),
+        verbose_name=_("Member since"),
         help_text=_("The date this member joined in this role"),
         default=datetime.date.today,
     )
     member_until = models.DateField(
-        verbose_name=_("member until"),
+        verbose_name=_("Member until"),
         help_text=_("A member until this time."),
         blank=True,
         null=True,

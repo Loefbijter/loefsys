@@ -33,7 +33,7 @@ class Address(TimeStampedModel):
         max_length=100,
         validators=[
             validators.RegexValidator(
-                regex=r"^.+ \d+.*", message=_("please use the format <street> <number>")
+                regex=r"^.+ \d+.*", message=_("Please use the format <street> <number>")
             )
         ],
         verbose_name=_("Street and house number"),
