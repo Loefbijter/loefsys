@@ -90,7 +90,7 @@ class User(AbstractBaseUser, PermissionsMixin, NameMixin, TimeStampedModel):
 
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(
-        _("staff status"),
+        _("Staff status"),
         default=False,
         help_text=_("Designates whether the user can log into this admin site."),
     )
@@ -98,7 +98,7 @@ class User(AbstractBaseUser, PermissionsMixin, NameMixin, TimeStampedModel):
     # Copied from PermissionsMixin to override Group type to LoefbijterGroup.
     groups = models.ManyToManyField(
         LoefbijterGroup,
-        verbose_name=_("groups"),
+        verbose_name=_("Groups"),
         blank=True,
         help_text=_(
             "The groups this user belongs to. A user will get all permissions "
