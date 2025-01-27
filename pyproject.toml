@@ -2,7 +2,7 @@
 name = "loefsys"
 version = "0.1.0"
 description = "The in-house developed website of N.S.Z.V. Loefbijter."
-authors = ["Loefbijter Webcie <webcie@loefbijter.nl>"]
+authors = [{name = "Loefbijter Webcie", email = "webcie@loefbijter.nl"}]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -84,7 +84,7 @@ split-on-trailing-comma = false
 convention = "numpy"
 
 [tool.mypy]
-python_version = 3.12
+python_version = "3.12"
 modules = "loefsys"
 exclude = [
     ".*/migrations/.*",
