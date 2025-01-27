@@ -50,12 +50,10 @@ class MemberDetails(TimeStampedModel):
         to=User, on_delete=models.CASCADE, related_name="member", primary_key=True
     )
 
-    gender = models.PositiveSmallIntegerField(
-        choices=Genders.choices, verbose_name=_("Gender")
-    )
+    gender = models.PositiveSmallIntegerField(choices=Genders, verbose_name=_("Gender"))
     birthday = models.DateField(verbose_name=_("Birthday"))
     show_birthday = models.BooleanField(verbose_name=_("Display birthday"))
 
-    address = OneToOneField(to=Address, on_delete=models.SET_NULL)
+    address = OneToOneField(to=Address, on_delete=models.SET_NULL, null=True)
     study_registration: Optional["StudyRegistration"]
     membership_set: QuerySet["Membership"]

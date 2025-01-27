@@ -1,3 +1,5 @@
-.venv
+.env
 .git
 .gitignore
+.sqlite
+.venv
