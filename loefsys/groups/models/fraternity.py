@@ -9,7 +9,7 @@ from .group import LoefbijterGroup
 class Fraternity(LoefbijterGroup):
     """Model defining fraternities within the associations.
 
-    TODO @Mark expand on this.
+    TODO Expand on this.
 
     Attributes
     ----------

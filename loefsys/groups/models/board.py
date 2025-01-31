@@ -9,7 +9,7 @@ from .group import LoefbijterGroup
 class Board(LoefbijterGroup):
     """A group model for the board of Loefbijter.
 
-    TODO @Mark expand on this.
+    TODO @Expand on this.
 
     Attributes
     ----------

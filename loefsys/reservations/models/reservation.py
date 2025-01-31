@@ -22,7 +22,7 @@ class Reservation(models.Model):
     be reserved by a person with the required skipper's certificate. If the boat has an
     engine, then the user can set an amount of engine-hours used.
 
-    TODO write validation logic for overlap.
+    TODO Write validation logic for overlap.
 
     Attributes
     ----------

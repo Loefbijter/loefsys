@@ -14,7 +14,7 @@ class GroupManager[TGroup: "LoefbijterGroup"](models.Manager[TGroup]):
     The manager is used by models inheriting the
     :class:`~loefsys.groups.models.group.LoefbijterGroup` model.
 
-    TODO add tests for `active` method.
+    TODO Add tests for `active` method.
     """
 
     use_in_migrations = True

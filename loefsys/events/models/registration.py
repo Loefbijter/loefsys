@@ -17,7 +17,7 @@ from .managers import EventRegistrationManager
 class EventRegistration(TimeStampedModel):
     """Registration model for an event.
 
-    TODO @Mark expand on this.
+    TODO Expand on this.
 
     Attributes
     ----------
@@ -100,7 +100,7 @@ class EventRegistration(TimeStampedModel):
     def costs_to_pay(self) -> Decimal:
         """Calculate the amount needed to be paid by the registration contact.
 
-        TODO see if this function can be converted into a GeneratedField as well.
+        TODO See if this function can be converted into a GeneratedField as well.
 
         Returns
         -------

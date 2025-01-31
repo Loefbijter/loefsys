@@ -9,7 +9,7 @@ from .group import LoefbijterGroup
 class YearClub(LoefbijterGroup):
     """A year club consists of a group people belonging to the same year.
 
-    TODO @Mark expand on this
+    TODO Expand on this
 
     Attributes
     ----------

@@ -9,7 +9,7 @@ from .group import LoefbijterGroup
 class Committee(LoefbijterGroup):
     """Model representing a committee.
 
-    TODO @Mark expand on this
+    TODO Expand on this
 
     Attributes
     ----------
