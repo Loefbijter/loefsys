@@ -18,7 +18,10 @@ from loefsys.groups.models import LoefbijterGroup
 class Event(TitleSlugDescriptionModel, TimeStampedModel):
     """Model for an event.
 
-    TODO Expand on this.
+    An event is an activity that people can sign up for. This can be a
+    sail training, a cantus, or any other activity that is organized for
+    the association. Events have many properties, such as a start and end date,
+    a category, a price, a location, and more.
 
     Attributes
     ----------

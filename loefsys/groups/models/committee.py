@@ -9,7 +9,10 @@ from .group import LoefbijterGroup
 class Committee(LoefbijterGroup):
     """Model representing a committee.
 
-    TODO Expand on this
+    A committee is a group of people that work together to run or manage a certain
+    part of the association. An example of this is the "WebCie" which is responsible
+    for the website of the association. A committee can be mandatory, meaning that
+    new members can be assigned to this committee to satisfy their committee duty.
 
     Attributes
     ----------

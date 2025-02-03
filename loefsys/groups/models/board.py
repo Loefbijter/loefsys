@@ -9,7 +9,8 @@ from .group import LoefbijterGroup
 class Board(LoefbijterGroup):
     """A group model for the board of Loefbijter.
 
-    TODO @Expand on this.
+    The board is a group of people that run the association. The board members
+    change yearly so every board has a year attached to it.
 
     Attributes
     ----------
