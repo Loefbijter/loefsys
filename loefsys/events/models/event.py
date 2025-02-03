@@ -45,6 +45,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         The category of the event.
     price : ~decimal.Decimal
         The price.
+    fine : ~decimal.Decimal
+        The fine if a participant does not show up.
     location : str
         The location of the event.
 
@@ -211,8 +213,7 @@ class MandatoryRegistrationDetails(TimeStampedModel):
     start = models.DateTimeField(
         _("Registration start"),
         help_text=_(
-            "Prefer times when people don't have lectures, "
-            "e.g. 12:30 instead of 13:37."
+            "Prefer times when people don't have lectures, e.g. 12:30 instead of 13:37."
         ),
     )
     end = models.DateTimeField(

@@ -16,7 +16,7 @@ class Committee(LoefbijterGroup):
 
     Attributes
     ----------
-    mandatory : bool
+        mandatory : bool
         A flag that shows whether the committee is a mandatory committee. If a committee
         is one of the mandatory committees, new members can be assigned to this
         committee to satisfy their committee duty.

@@ -15,7 +15,7 @@ from .group import LoefbijterGroup
 class GroupMembershipManager(models.Manager["GroupMembership"]):
     """Manager for the :class:`~loefsys.groups.models.group.LoefbijterGroup` model.
 
-    TODO add tests for `active` method.
+    TODO Add tests for `active` method.
     """
 
     def active(self) -> QuerySet["GroupMembership"]:
@@ -37,7 +37,7 @@ class GroupMembership(TimeStampedModel):
     :class:`~loefsys.groups.models.group.LoefbijterGroup` and
     :class:`~loefsys.contacts.models.contact.Contact`.
 
-    TODO currently this is not used. @Jort Find a way to integrate this effectively.
+    TODO Currently this is not used. Find a way to integrate this effectively.
 
     Attributes
     ----------
@@ -45,11 +45,10 @@ class GroupMembership(TimeStampedModel):
         The date and time that this model was created.
     modified : ~datetime.datetime
         The date and time that this model was last modified.
+    user : ~loefsys.users.models.user.User
+        The user that the membership applies to.
     group : ~loefsys.groups.models.group.LoefbijterGroup
         The group that the membership applies to.
-    contact : ~loefsys.contacts.models.Contact or None
-        The person that the membership applies to. It is set to ``None`` when the user
-        is removed for privacy.
     chair : bool
         Defines whether this member has admin privileges for this group.
     role : str
@@ -60,7 +59,7 @@ class GroupMembership(TimeStampedModel):
         The date that the member left/leaves the group.
     note : str
         A potential note on this membership.
-        TODO is this needed?
+        TODO Is this needed?
     """
 
     user = models.ForeignKey(

@@ -42,7 +42,7 @@ class StudyRegistration(TimeStampedModel):
         verbose_name=_("Student number"),
         validators=[
             validators.RegexValidator(
-                regex=r"(s\d{7}|[ezu]\d{6,7})",  # TODO: allow for HAN, maybe others
+                regex=r"(s\d{7}|[ezu]\d{6,7})",  # TODO Allow for HAN, maybe others
                 message=_("Enter a valid student- or e/z/u-number."),  # or no check
             )
         ],
