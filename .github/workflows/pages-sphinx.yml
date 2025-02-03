@@ -12,6 +12,7 @@ jobs:
     env:
       DJANGO_SECRET_KEY: django-insecure-loefbijter
       DJANGO_DATABASE_URL: sqlite:///db.sqlite
+      SPHINX_APIDOCS_OPTIONS: members,show-inheritance
     permissions:
       contents: write
 
@@ -28,8 +29,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-extras --group docs
 
+      - name: Update the API docs
+        run: uv run sphinx-apidoc -M -f -e --remove-old -o ./docs/api ./loefsys ./loefsys/*/migrations ./loefsys/manage.py ./loefsys/*/tests*
+
       - name: Build HTML
-        run: uv run sphinx-build -M html ./docs ./docs/_build
+        run: uv run sphinx-build -M html ./docs ./docs/_build -E
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
