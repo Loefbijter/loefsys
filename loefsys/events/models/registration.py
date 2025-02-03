@@ -17,7 +17,10 @@ from .managers import EventRegistrationManager
 class EventRegistration(TimeStampedModel):
     """Registration model for an event.
 
-    TODO @Mark expand on this.
+    Registrating for an event lets you claim a spot in the event. If an event is full,
+    the registration is put in a queue. The registration can be also be cancelled, with
+    a possible fine if it is cancelled late. Registrations can also come with a price.
+
 
     Attributes
     ----------

@@ -18,7 +18,10 @@ from loefsys.groups.models import LoefbijterGroup
 class Event(TitleSlugDescriptionModel, TimeStampedModel):
     """Model for an event.
 
-    TODO @Mark expand on this.
+    An event is an activity that people can sign up for. This can be a
+    sail training, a cantus, or any other activity that is organised for
+    the association. Events have many properties, such as a start and end date,
+    a category, a price, a location, and more.
 
     Attributes
     ----------
@@ -45,7 +48,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     location : str
         The location of the event.
 
-        We might want to include a Google Maps widget showing the location.
+        TODO We might want to include a Google Maps widget showing the location.
         `django-google-maps <https://pypi.org/project/django-google-maps/>`_ might be
         useful for this.
     is_open_event : bool
