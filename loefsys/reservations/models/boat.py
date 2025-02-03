@@ -10,8 +10,8 @@ from .reservable import ReservableItem, ReservableType
 class Boat(ReservableItem):
     """Describes a boat that can be reserved.
 
-    A boat is part of our or any external fleet of boats. It can be any type of boat. A
-    boat requires a certain skipper's certificate. It has a limited capacity and can
+    A boat is part of our or any external fleet of boats. It can be any type of boat.
+    A boat requires a certain skipper's certificate. It has a limited capacity and can
     possibly have an engine.
 
     Attributes

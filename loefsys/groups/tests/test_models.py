@@ -6,6 +6,7 @@ from loefsys.groups.models import (
     Committee,
     Fraternity,
     LoefbijterGroup,
+    Taskforce,
     YearClub,
 )
 
@@ -48,6 +49,16 @@ class FraternityTestCase(TestCase):
         fraternity = G(Fraternity)
         self.assertIsNotNone(fraternity)
         self.assertIsNotNone(fraternity.pk)
+
+
+class TaskforceTestCase(TestCase):
+    """Tests for Taskforce model creation and validation."""
+
+    def test_create(self):
+        """Test that Taskforce instance can be created."""
+        taskforce = G(Taskforce)
+        self.assertIsNotNone(taskforce)
+        self.assertIsNotNone(taskforce.pk)
 
 
 class YearClubTestCase(TestCase):
