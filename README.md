@@ -11,4 +11,3 @@ License: MIT
 ## Getting started
 
 Read [the documentation on getting started](docs/getting-started.rst) for instructions on how to set up the development environment.
-gti s
