@@ -69,3 +69,34 @@ class YearClubTestCase(TestCase):
         year_club = G(YearClub)
         self.assertIsNotNone(year_club)
         self.assertIsNotNone(year_club.pk)
+
+
+class ActivePropertyTestCase(TestCase):
+    """Tests for the active property of the group model."""
+
+    def test_active_property(self):
+        """Test the active property."""
+        group = G(LoefbijterGroup, date_discontinuation=None)
+        self.assertTrue(group.active)
+
+        group = G(
+            LoefbijterGroup,
+            date_foundation="2020-01-01",
+            date_discontinuation="2021-01-01"
+        )
+        self.assertFalse(group.active)
+
+        group = G(
+            LoefbijterGroup,
+            date_foundation="2020-01-01",
+            date_discontinuation="3000-01-01"
+        )
+        self.assertTrue(group.active)
+
+        group = G(
+            LoefbijterGroup,
+            date_foundation="2020-01-01",
+            date_discontinuation=None
+        )
+        self.assertTrue(group.active)
+

@@ -94,6 +94,11 @@ class User(AbstractBaseUser, PermissionsMixin, NameMixin, TimeStampedModel):
         default=False,
         help_text=_("Designates whether the user can log into this admin site."),
     )
+    is_active = models.BooleanField(
+        _("Active"),
+        default=True,
+        help_text=_("Designates whether this user should be treated as active."),
+    )
 
     # Copied from PermissionsMixin to override Group type to LoefbijterGroup.
     groups = models.ManyToManyField(
@@ -114,7 +119,7 @@ class User(AbstractBaseUser, PermissionsMixin, NameMixin, TimeStampedModel):
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
 
-    manager = UserManager()
+    objects = UserManager()
 
     def __str__(self):
         return f"User {self.email}"

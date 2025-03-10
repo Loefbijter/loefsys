@@ -3,8 +3,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .choices import FleetChoices, ReservableCategories
-from .reservable import ReservableItem, ReservableType
+from .choices import FleetChoices
+from .reservable import ReservableItem
 
 
 class Boat(ReservableItem):
@@ -16,8 +16,6 @@ class Boat(ReservableItem):
 
     Attributes
     ----------
-    reservable_type : ~loefsys.reservations.models.reservable.ReservableType
-        The type for which the pricing is set.
     capacity : int
         The capacity of the boat.
     has_engine : bool
@@ -26,12 +24,6 @@ class Boat(ReservableItem):
         The provider of the boat.
     """
 
-    reservable_type = models.ForeignKey(
-        ReservableType,
-        on_delete=models.CASCADE,
-        verbose_name=_("Reservable type"),
-        limit_choices_to={"category": ReservableCategories.BOAT},
-    )
     capacity = models.PositiveSmallIntegerField(verbose_name=_("Capacity"))
     has_engine = models.BooleanField(
         default=False, verbose_name=_("Boat has an engine")

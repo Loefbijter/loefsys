@@ -26,6 +26,8 @@ class BaseSettings(ClassySettings):
 
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+    STATIC_URL = "static/"
+
     @denv
     def SECRET_KEY(self) -> str:  # noqa N802 D102
         raise ValueError("Environment variable DJANGO_SECRET_KEY must be set.")
@@ -45,6 +47,7 @@ class BaseSettings(ClassySettings):
             "loefsys.groups",
             "loefsys.reservations",
             "loefsys.users",
+            "loefsys.indexpage",
         )
 
     def INSTALLED_APPS(self) -> Sequence[str]:  # noqa N802 D102
