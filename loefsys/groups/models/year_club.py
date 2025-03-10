@@ -9,9 +9,7 @@ from .group import LoefbijterGroup
 class YearClub(LoefbijterGroup):
     """A year club consists of a group people belonging to the same year.
 
-    A year club is a group of members that joined the association in the same year.
-    Year clubs usually host certain events for the association, and are tied to the
-    year they joined the association.
+    TODO @Mark expand on this
 
     Attributes
     ----------

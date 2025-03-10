@@ -17,9 +17,7 @@ from .managers import EventRegistrationManager
 class EventRegistration(TimeStampedModel):
     """Registration model for an event.
 
-    Registering for an event lets you claim a spot in the event. If an event is full,
-    the registration is put in a queue. The registration can be also be cancelled, with
-    a possible fine if it is cancelled late. Registrations can also come with a price.
+    TODO @Mark expand on this.
 
     Attributes
     ----------
@@ -47,14 +45,14 @@ class EventRegistration(TimeStampedModel):
     contact = models.ForeignKey(get_user_model(), models.SET_NULL, null=True)
 
     status = models.PositiveSmallIntegerField(
-        choices=RegistrationStatus, blank=True, verbose_name=_("Status")
+        choices=RegistrationStatus, blank=True, verbose_name=_("status")
     )
 
     price_at_registration = models.DecimalField(
-        _("Price"), max_digits=5, decimal_places=2, blank=True
+        _("price"), max_digits=5, decimal_places=2, blank=True
     )
     fine_at_registration = models.DecimalField(
-        _("Fine"), max_digits=5, decimal_places=2, blank=True
+        _("fine"), max_digits=5, decimal_places=2, blank=True
     )
     costs = models.GeneratedField(
         expression=Case(
@@ -68,7 +66,7 @@ class EventRegistration(TimeStampedModel):
         db_persist=True,
     )
     costs_paid = models.DecimalField(
-        max_digits=5, decimal_places=2, verbose_name=_("Costs paid")
+        max_digits=5, decimal_places=2, verbose_name=_("costs paid")
     )
 
     objects = EventRegistrationManager()
@@ -102,7 +100,7 @@ class EventRegistration(TimeStampedModel):
     def costs_to_pay(self) -> Decimal:
         """Calculate the amount needed to be paid by the registration contact.
 
-        TODO See if this function can be converted into a GeneratedField as well.
+        TODO see if this function can be converted into a GeneratedField as well.
 
         Returns
         -------

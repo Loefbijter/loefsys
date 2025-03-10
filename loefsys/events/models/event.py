@@ -18,10 +18,7 @@ from loefsys.groups.models import LoefbijterGroup
 class Event(TitleSlugDescriptionModel, TimeStampedModel):
     """Model for an event.
 
-    An event is an activity that people can sign up for. This can be a
-    sail training, a cantus, or any other activity that is organized for
-    the association. Events have many properties, such as a start and end date,
-    a category, a price, a location, and more.
+    TODO @Mark expand on this.
 
     Attributes
     ----------
@@ -45,8 +42,6 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         The category of the event.
     price : ~decimal.Decimal
         The price.
-    fine : ~decimal.Decimal
-        The fine if a participant does not show up.
     location : str
         The location of the event.
 
@@ -64,15 +59,15 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         :class:`~loefsys.events.models.EventRegistration`.
     """
 
-    start = models.DateTimeField(_("Start time"))
-    end = models.DateTimeField(_("End time"))
+    start = models.DateTimeField(_("start time"))
+    end = models.DateTimeField(_("end time"))
 
     category = models.PositiveSmallIntegerField(
-        choices=EventCategories, verbose_name=_("Category")
+        choices=EventCategories, verbose_name=_("category")
     )
 
     price = models.DecimalField(
-        _("Price"),
+        _("price"),
         max_digits=5,
         decimal_places=2,
         default=Decimal("0.00"),
@@ -80,7 +75,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         validators=[validators.MinValueValidator(0)],
     )
     fine = models.DecimalField(
-        _("Fine"),
+        _("fine"),
         max_digits=5,
         decimal_places=2,
         default=Decimal("0.00"),
@@ -89,12 +84,12 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         validators=[validators.MinValueValidator(0)],
     )
 
-    location = models.CharField(_("Location"), max_length=255)
+    location = models.CharField(_("location"), max_length=255)
 
     is_open_event = models.BooleanField(
         help_text=_("Event is open for non-members"), default=False
     )
-    published = models.BooleanField(_("Published"), default=False)
+    published = models.BooleanField(_("published"), default=False)
 
     registration_details: Optional["MandatoryRegistrationDetails"]
     eventregistration_set: EventRegistrationManager
@@ -207,17 +202,18 @@ class MandatoryRegistrationDetails(TimeStampedModel):
         Event,
         on_delete=models.CASCADE,
         related_name="registration_details",
-        verbose_name=_("Event"),
+        verbose_name=_("event"),
     )
 
     start = models.DateTimeField(
-        _("Registration start"),
+        _("registration start"),
         help_text=_(
-            "Prefer times when people don't have lectures, e.g. 12:30 instead of 13:37."
+            "Prefer times when people don't have lectures, "
+            "e.g. 12:30 instead of 13:37."
         ),
     )
     end = models.DateTimeField(
-        _("Registration end"),
+        _("registration end"),
         help_text=_(
             "If you set a registration period registration will be "
             "required. If you don't set one, registration won't be "
@@ -225,9 +221,9 @@ class MandatoryRegistrationDetails(TimeStampedModel):
         ),
     )
 
-    cancel_deadline = models.DateTimeField(_("Cancel deadline"), null=True, blank=True)
+    cancel_deadline = models.DateTimeField(_("cancel deadline"), null=True, blank=True)
     send_cancel_email = models.BooleanField(
-        _("Send cancellation notifications"),
+        _("send cancellation notifications"),
         default=True,
         help_text=_(
             "Send an email to the organising party when a member "
@@ -236,7 +232,7 @@ class MandatoryRegistrationDetails(TimeStampedModel):
     )
 
     capacity = models.PositiveSmallIntegerField(
-        _("Maximum number of participants"), blank=True, null=True
+        _("maximum number of participants"), blank=True, null=True
     )
 
     def registration_window_open(self) -> bool:
@@ -287,7 +283,7 @@ class EventOrganizer(TimeStampedModel):
     """
 
     event = models.OneToOneField(
-        Event, on_delete=models.CASCADE, verbose_name=_("Event")
+        Event, on_delete=models.CASCADE, verbose_name=_("event")
     )
 
     groups = models.ManyToManyField(

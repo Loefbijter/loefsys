@@ -9,8 +9,7 @@ from .group import LoefbijterGroup
 class Fraternity(LoefbijterGroup):
     """Model defining fraternities within the associations.
 
-    Fraternities are groups of members that want to do more outside of the regular
-    association activities. Fraternities can be male only, female only or mixed.
+    TODO @Mark expand on this.
 
     Attributes
     ----------
