@@ -26,7 +26,7 @@ def signup(request):
 
         if form.is_valid():
             form.save()
-            return redirect("/admin/")
+            return redirect("/")
 
     else:
         form = SignupForm()

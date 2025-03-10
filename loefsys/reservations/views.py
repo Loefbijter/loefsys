@@ -1,7 +1,5 @@
 """Module defining the class-based views for the reservations."""
 
-from typing import ClassVar
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
@@ -13,14 +11,14 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
     """Reservation create view."""
 
     model = Reservation
-    fields: ClassVar[list[str]] = ["reserved_item", "start", "end"]
+    fields = ("reserved_item", "start", "end")
 
 
 class ReservationUpdateView(LoginRequiredMixin, UpdateView):
     """Reservation update view."""
 
     model = Reservation
-    fields: ClassVar[list[str]] = ["reserved_item", "start", "end"]
+    fields = ("reserved_item", "start", "end")
 
 
 class ReservationDeleteView(LoginRequiredMixin, DeleteView):

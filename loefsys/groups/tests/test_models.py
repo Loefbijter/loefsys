@@ -1,4 +1,3 @@
-
 from django.test import TestCase
 from django_dynamic_fixture import G
 
@@ -90,7 +89,7 @@ class ActivePropertyTestCase(TestCase):
         group = G(
             LoefbijterGroup,
             date_foundation="2020-01-01",
-            date_discontinuation="2030-01-01"
+            date_discontinuation="3000-01-01"
         )
         self.assertTrue(group.active)
 

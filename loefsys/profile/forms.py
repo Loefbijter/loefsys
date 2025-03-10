@@ -2,7 +2,7 @@
 
 from django.contrib.auth.forms import UserCreationForm
 
-from ..users.models.user import User
+from loefsys.users.models.user import User
 
 
 class SignupForm(UserCreationForm):

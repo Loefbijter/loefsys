@@ -10,8 +10,8 @@ from .models import Board, Committee, Fraternity, Taskforce, YearClub
 class GroupActivityFilter(admin.SimpleListFilter):
     """Describes a filter that filters a queryset by a group's activity."""
 
-    title = _("Activity")
-    parameter_name = "activity"
+    title = _("Activity Status")
+    parameter_name = "activitystatus"
 
     def lookups(self, _request, _model_admin):
         """Return a list of filter options."""
