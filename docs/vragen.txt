@@ -1,0 +1,25 @@
+Voornaam*
+Midden
+Achternaam*
+Pronouns*
+Straat + Huisnummer*
+Stad*
+Postcode*
+Land*
+Telefoonnummer*
+Tellie nood*
+Geboortedatum*
+Email*
+
+S-nummer*
+Sportkaart?*
+Kaartnummer
+Radboud/HAN/Overig*
+
+Zeilervaring*
+T-shirt maat*
+
+Akkoord lidmaatschapsovereenkomst*
+IBAN*
+
+captcha
