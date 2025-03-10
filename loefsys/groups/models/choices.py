@@ -7,15 +7,15 @@ from django.utils.translation import gettext_lazy as _
 class FraternityGenders(models.IntegerChoices):
     """The possible type of the fraternity.
 
-    Fraternities are typically divided into three categories: male-only, female-only,
-    and mixed.
+    Fraternities are typically divided into three categories: mainly male,
+    mainly female and mixed.
     """
 
     MIXED = 0, _("Mixed")
     """Used for mixed-gender fraternities."""
 
     FEMALE = 1, _("Female")
-    """Used for female-only fraternities."""
+    """Used for mainly female fraternities."""
 
     MALE = 2, _("Male")
-    """Used for male-only fraternities."""
+    """Used for mainly male fraternities."""

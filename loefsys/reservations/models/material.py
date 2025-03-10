@@ -3,8 +3,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .choices import ReservableCategories
-from .reservable import ReservableItem, ReservableType
+from .reservable import ReservableItem
 
 
 class Material(ReservableItem):
@@ -15,16 +14,8 @@ class Material(ReservableItem):
 
     Attributes
     ----------
-    reservable_type : ~loefsys.reservations.models.reservable.ReservableType
-        The type for which the pricing is set.
     size : str
         The size of the item (if applicable?).
     """
 
-    reservable_type = models.ForeignKey(
-        ReservableType,
-        on_delete=models.CASCADE,
-        verbose_name=_("Reservable type"),
-        limit_choices_to={"category": ReservableCategories.MATERIAL},
-    )
     size = models.CharField(max_length=10, verbose_name=_("Size"))

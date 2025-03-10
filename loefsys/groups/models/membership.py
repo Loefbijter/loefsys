@@ -15,7 +15,7 @@ from .group import LoefbijterGroup
 class GroupMembershipManager(models.Manager["GroupMembership"]):
     """Manager for the :class:`~loefsys.groups.models.group.LoefbijterGroup` model.
 
-    TODO add tests for `active` method.
+    TODO Add tests for `active` method.
     """
 
     def active(self) -> QuerySet["GroupMembership"]:
@@ -37,7 +37,7 @@ class GroupMembership(TimeStampedModel):
     :class:`~loefsys.groups.models.group.LoefbijterGroup` and
     :class:`~loefsys.contacts.models.contact.Contact`.
 
-    TODO currently this is not used. @Jort Find a way to integrate this effectively.
+    TODO Currently this is not used. Find a way to integrate this effectively.
 
     Attributes
     ----------
@@ -45,11 +45,10 @@ class GroupMembership(TimeStampedModel):
         The date and time that this model was created.
     modified : ~datetime.datetime
         The date and time that this model was last modified.
+    user : ~loefsys.users.models.user.User
+        The user that the membership applies to.
     group : ~loefsys.groups.models.group.LoefbijterGroup
         The group that the membership applies to.
-    contact : ~loefsys.contacts.models.Contact or None
-        The person that the membership applies to. It is set to ``None`` when the user
-        is removed for privacy.
     chair : bool
         Defines whether this member has admin privileges for this group.
     role : str
@@ -60,27 +59,27 @@ class GroupMembership(TimeStampedModel):
         The date that the member left/leaves the group.
     note : str
         A potential note on this membership.
-        TODO is this needed?
+        TODO Is this needed?
     """
 
     user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, verbose_name=_("user")
+        get_user_model(), on_delete=models.CASCADE, verbose_name=_("User")
     )
     group = models.ForeignKey(
-        LoefbijterGroup, on_delete=models.CASCADE, verbose_name=_("group")
+        LoefbijterGroup, on_delete=models.CASCADE, verbose_name=_("Group")
     )
 
-    chair = models.BooleanField(verbose_name=_("chair"), default=False)
+    chair = models.BooleanField(verbose_name=_("Chair"), default=False)
     role = models.CharField(
-        _("role"), help_text=_("The role of this member"), max_length=255, blank=True
+        _("Role"), help_text=_("The role of this member"), max_length=255, blank=True
     )
     member_since = models.DateField(
-        verbose_name=_("member since"),
+        verbose_name=_("Member since"),
         help_text=_("The date this member joined in this role"),
         default=datetime.date.today,
     )
     member_until = models.DateField(
-        verbose_name=_("member until"),
+        verbose_name=_("Member until"),
         help_text=_("A member until this time."),
         blank=True,
         null=True,

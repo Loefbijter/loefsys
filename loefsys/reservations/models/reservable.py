@@ -81,7 +81,7 @@ class ReservableItem(TimeStampedModel):
     non-reservable, for example due to maintenance. Additionally, it has a location and
     has a list of known complications.
 
-    TODO add complications.
+    TODO Add complications.
 
     Attributes
     ----------
@@ -117,5 +117,5 @@ class ReservableItem(TimeStampedModel):
         ),
     )
 
-    class Meta:
-        abstract = True
+    def __str__(self):
+        return self.name

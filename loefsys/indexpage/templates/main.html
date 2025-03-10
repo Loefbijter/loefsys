@@ -1,0 +1,55 @@
+{% extends "master.html" %}
+
+{% block title %}
+    Home - Loefbijter
+{% endblock %}
+
+{% block content %}
+    <div class="flex flex-col h-screen">
+        <section id="announcements" class="bg-[#234193] p-8 flex flex-col">
+            <h1 class="text-6xl font-bold text-white pb-8 mt-4">WELKOM</h1>
+            {% for announcement in announcements %}
+                <button onClick="(function() { alert('test') })()" class="p-4 border-2 border-red-500 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-300 text-left">
+                    <h1 class="font-bold text-5xl">
+                        {{ announcement.header }}
+                    </h1>
+                    <p class="text-4xl">
+                        {{ announcement.text }}
+                    </p>
+                </button>
+            {% endfor %}
+            <button onClick="(function() { alert('test') })()" class="p-2 border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400">
+                <h1 class="font-bold text-3xl">
+                    meer meldingen
+                </h1>
+            </button>
+        </section>
+        <section id="events" class="bg-[#1BB1E6] flex-auto p-8">
+            <h1 class="text-5xl font-bold">MIJN LOEFBIJTER</h2>
+            <div class="p-4 m-4 border-2 border-black rounded-3xl mx-auto w-4/5 bg-white text-left flex flex-row">
+                <img class="w-25 mr-4" src="https://eveks.nl/4432-home_default/test.jpg">
+                <div>
+                    <h1 class="font-bold text-4xl">
+                        Bierproeverij
+                    </h1>
+                    <p class="text-3xl">10/03 19:30 - 21:00</p>
+                    <p class="text-3xl">Café jos</p>
+                </div>
+            </div>
+        </section>
+        <div class="w-full bottom-[0] bg-[#234193] grid grid-cols-4 items-center">
+            <button href="" class="p-4 text-2xl text-white hover:bg-[#012071]">
+                <img class="mx-auto max-w-[3rem] h-auto" src="https://eveks.nl/4432-home_default/test.jpg">
+                Profiel</button>
+            <button href="" class="p-4 text-2xl text-white hover:bg-[#012071]">
+                <img class="mx-auto max-w-[3rem] h-auto" src="https://eveks.nl/4432-home_default/test.jpg">
+                Activiteiten</button>
+            <button href="" class="p-4 text-2xl text-white hover:bg-[#012071]">
+                <img class="mx-auto max-w-[3rem] h-auto" src="https://eveks.nl/4432-home_default/test.jpg">
+                Reserveringen</button>
+            <button href="" class="p-4 text-2xl text-white hover:bg-[#012071]">
+                <img class="mx-auto max-w-[3rem] h-auto" src="https://eveks.nl/4432-home_default/test.jpg">
+                Meer</button>
+        </div>
+    </div>
+{% endblock %}
