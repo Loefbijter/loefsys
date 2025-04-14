@@ -57,3 +57,6 @@ class MemberDetails(TimeStampedModel):
     address = OneToOneField(to=Address, on_delete=models.SET_NULL, null=True)
     study_registration: Optional["StudyRegistration"]
     membership_set: QuerySet["Membership"]
+
+    class Meta:
+        verbose_name_plural = _("Member details")
