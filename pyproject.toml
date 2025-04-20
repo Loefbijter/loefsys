@@ -84,7 +84,7 @@ split-on-trailing-comma = false
 convention = "numpy"
 
 [tool.mypy]
-python_version = "3.12"
+python_version = ">=3.12"
 modules = "loefsys"
 exclude = [
     ".*/migrations/.*",
