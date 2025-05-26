@@ -11,8 +11,8 @@ class EventTestCase(TestCase):
     def test_create(self):
         """Test that Event instance can be created."""
         event = G(Event,
-                  start="2022-01-01 00:00:00",
-                  end="2023-01-01 00:00:00")
+                  start="2022-01-01 00:00:00+00:00",
+                  end="2023-01-01 00:00:00+00:00")
         self.assertIsNotNone(event)
         self.assertIsNotNone(event.pk)
 
@@ -24,8 +24,8 @@ class EventOrganizerTestCase(TestCase):
         """Test that EventOrganizer instance can be created."""
         organizer = G(EventOrganizer,
                       event=G(Event,
-                              start="2022-01-01 00:00:00",
-                              end="2023-01-01 00:00:00"))
+                              start="2022-01-01 00:00:00+00:00",
+                              end="2023-01-01 00:00:00+00:00"))
         self.assertIsNotNone(organizer)
         self.assertIsNotNone(organizer.pk)
 
@@ -37,7 +37,7 @@ class EventRegistrationTestCase(TestCase):
         """Test that EventRegistration instance can be created."""
         registration = G(EventRegistration,
                          event=G(Event,
-                                 start="2022-01-01 00:00:00",
-                                 end="2023-01-01 00:00:00"))
+                                 start="2022-01-01 00:00:00+00:00",
+                                 end="2023-01-01 00:00:00+00:00"))
         self.assertIsNotNone(registration)
         self.assertIsNotNone(registration.pk)

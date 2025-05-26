@@ -296,8 +296,8 @@ class ReservationUserSkippershipTestCase(TestCase):
             Reservation,
             reserved_item=self.boat,
             reservee_user=self.user1,
-            start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             authorized_userskippership=None,
         )
         with self.assertRaises(ValidationError):
@@ -312,8 +312,8 @@ class ReservationUserSkippershipTestCase(TestCase):
             Reservation,
             reserved_item=self.boat,
             reservee_user=self.user1,
-            start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             authorized_userskippership=userskippership,
         )
         with self.assertRaises(ValidationError):

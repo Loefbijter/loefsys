@@ -88,8 +88,8 @@ class ReservationTestCase(TestCase):
         reservation = Reservation(
             reserved_item=self.reservable_item,
             reservee_user=self.reservee_user,
-            start=datetime.datetime(2025, 1, 1, hour=12, minute=0),
-            end=datetime.datetime(2025, 1, 1, hour=13, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
         )
         reservation.save()
         self.assertIsNotNone(reservation)
@@ -101,8 +101,8 @@ class ReservationTestCase(TestCase):
             reservation = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=12, minute=0),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+                start=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             )
             reservation.save()
 
@@ -112,8 +112,8 @@ class ReservationTestCase(TestCase):
             reservation = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=13, minute=0),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+                start=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
+                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             )
             reservation.save()
 
@@ -122,16 +122,16 @@ class ReservationTestCase(TestCase):
         reservation1 = Reservation(
             reserved_item=self.reservable_item,
             reservee_user=self.reservee_user,
-            start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
         )
         reservation1.save()
 
         reservation2 = Reservation(
             reserved_item=self.reservable_item,
             reservee_user=self.reservee_user,
-            start=datetime.datetime(2025, 1, 1, hour=13, minute=0),
-            end=datetime.datetime(2025, 1, 1, hour=14, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=14, minute=0, tzinfo=datetime.UTC),
         )
         reservation2.save()
 
@@ -144,8 +144,8 @@ class ReservationTestCase(TestCase):
             reservation1 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             )
             reservation1.save()
             reservation1.clean()
@@ -153,8 +153,8 @@ class ReservationTestCase(TestCase):
             reservation2 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=30),
-                end=datetime.datetime(2025, 1, 1, hour=13, minute=0),
+                start=datetime.datetime(2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC),
+                end=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
             )
             reservation2.save()
             reservation2.clean()
@@ -165,16 +165,16 @@ class ReservationTestCase(TestCase):
             reservation1 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             )
             reservation1.save()
 
             reservation2 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             )
             reservation2.clean()
             reservation2.save()
@@ -193,16 +193,16 @@ class ReservationTestCase(TestCase):
         reservation1 = Reservation(
             reserved_item=self.reservable_item,
             reservee_user=self.reservee_user,
-            start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
         )
         reservation1.save()
 
         reservation2 = Reservation(
             reserved_item=reservable_item2,
             reservee_user=self.reservee_user,
-            start=datetime.datetime(2025, 1, 1, hour=11, minute=30),
-            end=datetime.datetime(2025, 1, 1, hour=13, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
         )
         reservation2.clean()
         reservation2.save()
@@ -215,8 +215,8 @@ class ReservationTestCase(TestCase):
         reservation = Reservation(
             reserved_item=self.reservable_item,
             reservee_user=self.reservee_user,
-            start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
         )
         reservation.save()
 
@@ -228,7 +228,7 @@ class ReservationTestCase(TestCase):
             reservation = Reservation(
                 reserved_item=self.unreservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
+                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
             )
             reservation.save()
