@@ -4,4 +4,4 @@ from django.urls import path
 
 from .views import IndexpageView
 
-urlpatterns = [path("", IndexpageView.as_view(), name="main")]
+urlpatterns = [path("", IndexpageView.as_view(), name="index")]

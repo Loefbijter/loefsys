@@ -29,5 +29,5 @@ class IndexpageView(View):
         else:
             events = events.filter(published=True)[:2]
         return render(
-            request, "main.html", {"announcements": announcements, "events": events}
+            request, "index.html", {"announcements": announcements, "events": events}
         )

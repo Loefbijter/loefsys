@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.12"
 
 [[package]]
@@ -204,6 +205,20 @@ wheels = [
 ]
 
 [[package]]
+name = "django-components"
+version = "0.139.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "djc-core-html-parser" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e8/99/915972d3994fc6e0a08edc3f4c285974815a54f41f1c55714eff889afbd1/django_components-0.139.1.tar.gz", hash = "sha256:03a180510964ca029ce7c9d7544cde1cad4a23791b84481b2f24104c41dc5813", size = 168800 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/69/52/a9a929c5b1fcd46b74f8a85e4b29d07cc1efb8a7a736cead00a50f551519/django_components-0.139.1-py3-none-any.whl", hash = "sha256:9f86824094c5bed189018ec61fe3d81ad04d161320ef1bf51e24e49b004dccbe", size = 189048 },
+]
+
+[[package]]
 name = "django-debug-toolbar"
 version = "5.0.1"
 source = { registry = "https://pypi.org/simple" }
@@ -303,6 +318,42 @@ wheels = [
 ]
 
 [[package]]
+name = "djc-core-html-parser"
+version = "1.0.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/2a/fd/841abba157450b526f49026703f20f21992075d9f882e878a96177014ade/djc_core_html_parser-1.0.2.tar.gz", hash = "sha256:8e98741832b1c0c36348022107d9536c466a952c8f07343f3632165db6f393c2", size = 17257 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c9/99/b4782dbcefede2368924939efe7ed807607528142975cc7931ab2bd880c1/djc_core_html_parser-1.0.2-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:7a6588f6f3ac7f825ebd70ed0fd348ffcbb71b67a6b97a9f0918abc951c026b1", size = 249739 },
+    { url = "https://files.pythonhosted.org/packages/0d/38/f3e518c3d4c751c99241113c15d85422c3c1237d063eca9bebb466c4d187/djc_core_html_parser-1.0.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:72af514de25754c6c0707217251bed43cbbd2727c5e1c30951778e8834917c96", size = 239841 },
+    { url = "https://files.pythonhosted.org/packages/b6/fc/08ce09f4e25e47b2bc919a6b510588a83eadcd99ba184c39ce0c2572fa42/djc_core_html_parser-1.0.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f89a736c221ded75d94ca12258fb5447429bc0376abcf33e940b81a7a5392776", size = 1009455 },
+    { url = "https://files.pythonhosted.org/packages/2f/f7/d90e6cc9ff249ad1c1cac7b7ef8da1bbf787dde91dc752e95f7021c9cb4a/djc_core_html_parser-1.0.2-cp312-cp312-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:cf9003ec550616b2d8721f00c4c27c1c5d30500ba9f308f5e91a37525443b09b", size = 1021507 },
+    { url = "https://files.pythonhosted.org/packages/aa/bd/8dd766a981d692dbbb68360973e00d4a0233369398d692da95cdcd17df6e/djc_core_html_parser-1.0.2-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:0ad02194a500a72a4715403796e51e7b31bbe36ed2e15260467e51a4378013ed", size = 1024385 },
+    { url = "https://files.pythonhosted.org/packages/23/c5/0e42b1aa8c605c4ab5d1a36da92b1b494fb6ab4a49c8433d2881b461345c/djc_core_html_parser-1.0.2-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:e803b4e2c6d54a806c37b8eb93c0e4ef2ffca183b8ec5c20ccb4bfd162ff5161", size = 1253049 },
+    { url = "https://files.pythonhosted.org/packages/86/77/4680db49fd441012cabe5def3135dadffe512cb731d0e90587b71f564461/djc_core_html_parser-1.0.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e111631f773ce128854cc01ad197b555f2ffef1eb46ab46c1377df65e8fc59b2", size = 1026146 },
+    { url = "https://files.pythonhosted.org/packages/be/5e/4f68ad7c35100203b2a39bcdc52a78047c5ebe4572e5cef869a2df1faf91/djc_core_html_parser-1.0.2-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:0778e4c43636882a070ab2955e9374cd152beebac75b91f9c2e5afbc474532c3", size = 1025129 },
+    { url = "https://files.pythonhosted.org/packages/15/7c/81f91e9e0e76759f2be8ba8907b089b18790a4fd588427553ce35af0782b/djc_core_html_parser-1.0.2-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:84b47cdcb695b0dbcef36f3dc67ff5b8c4bd8a9c4f9d70caf175fce8a4101787", size = 1183657 },
+    { url = "https://files.pythonhosted.org/packages/3e/1a/8e26353daef325d5f9e8a14874467d4229f7144f021fc8d81c17cc4469e3/djc_core_html_parser-1.0.2-cp312-cp312-musllinux_1_2_armv7l.whl", hash = "sha256:cf31a0aa1449d7b5031e9f325225fba135899478b65cb49342c8260457aec4c4", size = 1280164 },
+    { url = "https://files.pythonhosted.org/packages/57/2d/c3d45e379ad2a8dcb26a11f9ee98a9a3146ee06b2504fdb80f8f248fdbdc/djc_core_html_parser-1.0.2-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:13faa923b650189a62311bd083181656fc90c3326af47a95ba532b0831db7971", size = 1197641 },
+    { url = "https://files.pythonhosted.org/packages/38/69/4c87d0b244b6017a47ff3e18791fc5811505d0cb9f930d93788144b88756/djc_core_html_parser-1.0.2-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:3d2fd9839321f645b6a7a27c1ac1ffab9a39d8262f6a2fa8570a12a27fe110f2", size = 1194521 },
+    { url = "https://files.pythonhosted.org/packages/38/94/86b5f1f1eec3614675e88710acdb0f9408b464ca073408bde50e8efa026f/djc_core_html_parser-1.0.2-cp312-cp312-win32.whl", hash = "sha256:8c3add44f133c92db99e911a043c303991b3ee2e6fe562e66fef4109d7b8c49b", size = 135952 },
+    { url = "https://files.pythonhosted.org/packages/33/37/5a2063aa64ab6e31e75edf8454d2673324f24466f2022f34bd0e32721fc3/djc_core_html_parser-1.0.2-cp312-cp312-win_amd64.whl", hash = "sha256:0c1d80854de1e419fef6474eee7018a5969ca6ed57cbcf1e8c909d387cf69654", size = 141509 },
+    { url = "https://files.pythonhosted.org/packages/31/09/ba1f4b718acb9e309ac1affc24f4a8c05c7e7d3d6cb4ae468b7e4eaec7ce/djc_core_html_parser-1.0.2-cp313-cp313-macosx_10_12_x86_64.whl", hash = "sha256:7afb8054d4d6e14fe3965c3f45d2553bebd83fb8b38d1c7006aebd7af22b3653", size = 249739 },
+    { url = "https://files.pythonhosted.org/packages/6c/e1/0bcc622ff7302a8ca7bcf4b2470a8a0d077511c0156a420ce7af08923cc0/djc_core_html_parser-1.0.2-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:803c73f99ff644ab9961755b80143c4edeaa6ee88fc0faa0d887dadf3a26ad35", size = 239842 },
+    { url = "https://files.pythonhosted.org/packages/cf/18/626061b9e6517e075d0139edf12fd6de024c08d4beb830452ab26d683555/djc_core_html_parser-1.0.2-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7b33636e8ed5615b4b7500428b69a30a3857ca050be7d350fbc57c8a025021b7", size = 1009456 },
+    { url = "https://files.pythonhosted.org/packages/80/72/8c1788f9299fbba77d1dfad28201abc5af51fb1fe87248e0dd4c66c78317/djc_core_html_parser-1.0.2-cp313-cp313-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:9a970c25f38f0cf59a2a6595b8a6834a514d5edee26e80170c65ca4a8ae41f0b", size = 1021508 },
+    { url = "https://files.pythonhosted.org/packages/c3/2e/52deb6216ff1f5d398f01ef674fe6a61353ae86453f54ac7b291ed67054e/djc_core_html_parser-1.0.2-cp313-cp313-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:93e99c4b3007d4bfa5dc239a7693e9c6edce5605436fd7dab612758a187c0020", size = 1024387 },
+    { url = "https://files.pythonhosted.org/packages/7c/51/af3b44e27923d771c732bc28385417c962286d7f6ed855e31a3efcced408/djc_core_html_parser-1.0.2-cp313-cp313-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:c5d8383126709abfad1ace658a8aefa72f9e56d77b1818929adad9066ac91594", size = 1253051 },
+    { url = "https://files.pythonhosted.org/packages/de/52/631e7f4f45a73646133d0faa7a27c3233c59cd7429450c4cc5385ee7445d/djc_core_html_parser-1.0.2-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:039c01b06f8ba01845ffdc09b21a5ee998141ff9b673c8b6fa6570e7531a8f10", size = 1026145 },
+    { url = "https://files.pythonhosted.org/packages/63/1e/a69631bc755683f636bc56de842241d5af064df2b8741983922a4381fecc/djc_core_html_parser-1.0.2-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:cb9f839b226183214becad4355e3d5281ae78b4c5517fa77a552cd29cdbddc63", size = 1025128 },
+    { url = "https://files.pythonhosted.org/packages/b1/3f/0048ddd81670ec5fd95a01f77cec20867e7572f009d4163b44cefd5f1017/djc_core_html_parser-1.0.2-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:b296121c15e373c2569229907fb4f56ab01b184797215b2ad1bede2051900b08", size = 1183658 },
+    { url = "https://files.pythonhosted.org/packages/bb/ab/090840898696ef388531d200bb6d08b72607f5d232c4d18c65d17651cb54/djc_core_html_parser-1.0.2-cp313-cp313-musllinux_1_2_armv7l.whl", hash = "sha256:23d834e4a91c3c96ba503bbf49bfd49b29f1f8f7437353cdeb5ec5988cc0562f", size = 1280163 },
+    { url = "https://files.pythonhosted.org/packages/6f/c2/cfaf41a278b8485179d8ceed5cd8d2527294ec33cec7fd5c31257643410c/djc_core_html_parser-1.0.2-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:6d0aa795126db1c495120076cb972fc8d6fbc63295d0011512e235cfaf5e4a78", size = 1197642 },
+    { url = "https://files.pythonhosted.org/packages/4b/b7/eb53898f72dd05be0e78d5d50cd60426b56c8d1dc3eb574051cedd1603e9/djc_core_html_parser-1.0.2-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:caa2651dbf3600d01685adb4f71520edfc0aba7ce7833608f332a2901d366d51", size = 1194522 },
+    { url = "https://files.pythonhosted.org/packages/4d/92/d64b7bce2281ec90b1f7b5ca34599c2ab8795a441379f67f91e53fa02079/djc_core_html_parser-1.0.2-cp313-cp313-win32.whl", hash = "sha256:4d448ae5f64019af11cb92bd8e551fee75965e9d01822e8d392077e92036edea", size = 135950 },
+    { url = "https://files.pythonhosted.org/packages/c8/37/c73e2453b1eae724c9c81a2c8d5dfbdbb516c0820eb51509438285f233e1/djc_core_html_parser-1.0.2-cp313-cp313-win_amd64.whl", hash = "sha256:c1091c414b662b3f8dd448153c2a69b735c53fca9e64c1b7cc9750a103297ae2", size = 141513 },
+]
+
+[[package]]
 name = "docutils"
 version = "0.21.2"
 source = { registry = "https://pypi.org/simple" }
@@ -380,6 +431,7 @@ dependencies = [
     { name = "dj-database-url" },
     { name = "django" },
     { name = "django-classy-settings" },
+    { name = "django-components" },
     { name = "django-extensions" },
     { name = "django-localflavor" },
     { name = "django-phonenumber-field" },
@@ -411,6 +463,7 @@ requires-dist = [
     { name = "dj-database-url", specifier = ">=2.3.0" },
     { name = "django", specifier = ">=5.1.5" },
     { name = "django-classy-settings", specifier = ">=3.0.7" },
+    { name = "django-components", specifier = ">=0.139.1" },
     { name = "django-extensions", specifier = ">=3.2.3" },
     { name = "django-localflavor", specifier = ">=4.0" },
     { name = "django-phonenumber-field", specifier = ">=8.0.0" },

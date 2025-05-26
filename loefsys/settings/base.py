@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import cast
 
 from cbs import BaseSettings as ClassySettings, env
+from django_components import ComponentsSettings
 
 denv = env["DJANGO_"]
 
@@ -28,6 +29,14 @@ class BaseSettings(ClassySettings):
 
     STATIC_URL = "static/"
 
+    STATICFILES_FINDERS = [
+        # Default finders
+        "django.contrib.staticfiles.finders.FileSystemFinder",
+        "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+        # Django components
+        "django_components.finders.ComponentsFileSystemFinder",
+    ]
+
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
 
@@ -42,7 +51,9 @@ class BaseSettings(ClassySettings):
         return ("django.contrib.contenttypes",)
 
     def THIRD_PARTY_APPS(self) -> Sequence[str]:  # noqa N802 D102
-        return ("debug_toolbar",) if self.DEBUG else ()
+        apps = ("django_components",)
+        debug_apps = ("debug_toolbar",)
+        return apps + debug_apps if self.DEBUG else apps
 
     def LOCAL_APPS(self) -> Sequence[str]:  # noqa N802 D102
         return (
@@ -63,6 +74,6 @@ class BaseSettings(ClassySettings):
         )
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
-        return (
-            ("debug_toolbar.middleware.DebugToolbarMiddleware",) if self.DEBUG else ()
-        )
+        middleware = ("django_components.middleware.ComponentDependencyMiddleware",)
+        debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+        return middleware + debug_middleware if self.DEBUG else middleware

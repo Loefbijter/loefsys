@@ -7,12 +7,15 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("", include("loefsys.indexpage.urls")),
     path("admin/", admin.site.urls),
+
+    path("", include("loefsys.indexpage.urls")),
     path("profile/", include("loefsys.profile.urls")),
     path("account/", include("loefsys.accountinfopage.urls")),
     path("reservations/", include("loefsys.reservations.urls")),
     path("events/", include("loefsys.events.urls")),
+
+    path("", include("django_components.urls")),
     *debug_toolbar_urls(),
 ]
 

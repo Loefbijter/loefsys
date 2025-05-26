@@ -1,15 +1,33 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="bg-[#1BB1E6]">
+<html lang="en">
 <head>
-    <title>{% block title %}{% endblock %} - Loefbijter</title>
-    <link rel="stylesheet" href="{% static 'output.css' %}">
+    <title>{% block title %}{% endblock %} | Loefbijter</title>
+    <!-- <link rel="stylesheet" href="{% static 'output.css' %}"> -->
     <link rel="icon" type="image/x-icon" href="/media/Logo.png">
 </head>
-<body>
+<body style="margin: 0; padding: 0;">
 
+<!-- header -->
+{% component "wavy-seperator-top" %}
+    {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
+        {% include "desktop-menu.html" %}
+    {% endif %}
+{% endcomponent %}
+
+<!-- main content -->
 {% block content %}
 {% endblock %}
+
+<!-- footer -->
+{% component "wavy-seperator-bottom" %}
+    {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
+        {% include "footer.html" %}
+    {% else %} {# request is from a smartphone #}
+        {% include "smartphone-menu.html" %}
+    {% endif %}
+{% endcomponent %}
+
 
 </body>
 </html>
