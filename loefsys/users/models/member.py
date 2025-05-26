@@ -58,5 +58,9 @@ class MemberDetails(TimeStampedModel):
     study_registration: Optional["StudyRegistration"]
     membership_set: QuerySet["Membership"]
 
+    def __str__(self) -> str:
+        """Return a string representation of the member details."""
+        return f"{self.user.first_name} {self.user.last_name} ({self.user.email})"
+
     class Meta:
         verbose_name_plural = _("Member details")

@@ -9,42 +9,20 @@ from django.utils.translation import gettext as _
 from .models import Address, MemberDetails, Membership, StudyRegistration, User
 
 
+class MembershipInline(admin.TabularInline):
+    """Inline admin for the Membership model."""
+
+    model = Membership
+    extra = 0
+    fields = ("membership_type", "start", "end")
+
+
 class StudyRegistrationInline(admin.StackedInline):
     """Inline admin for the StudyRegistration model."""
 
     model = StudyRegistration
     extra = 0
     fields = ("institution", "programme", "student_number", "rsc_number")
-
-
-# class AddressInlineForm(forms.ModelForm):
-#     """Custom form for the Address inline."""
-
-#     class Meta:
-#         model = Address
-#         fields = ("street", "street2", "postal_code", "city", "country")
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         if self.instance.pk and hasattr(self.instance, "memberdetails"):
-#             try:
-#                 self.instance = self.instance.memberdetails.address
-#             except ObjectDoesNotExist:
-#                 pass
-
-
-# class AddressInline(admin.StackedInline):
-#     """Custom inline admin for the Address model."""
-
-#     model = Address
-#     form = AddressInlineForm
-#     extra = 0
-#     fields = ("street", "street2", "postal_code", "city", "country")
-
-#     def get_queryset(self, request):
-#         """Filter the queryset to only show addresses linked to MemberDetails."""
-#         qs = super().get_queryset(request)
-#         return qs.filter(memberdetails__isnull=False)
 
 
 @admin.register(Address)
@@ -55,29 +33,74 @@ class AddressAdmin(admin.ModelAdmin):
     search_fields = ("street", "city", "postal_code", "country")
 
 
-class MembershipInline(admin.TabularInline):
-    """Inline admin for the Membership model."""
-
-    model = Membership
-    extra = 0
-    fields = ("membership_type", "start", "end")
-
-
 @admin.register(MemberDetails)
 class MemberDetailsAdmin(admin.ModelAdmin):
     """Admin class for the MemberDetails model."""
 
-    inlines: ClassVar = [MembershipInline, StudyRegistrationInline]  # AddressInline]
-    fields = ("gender", "birthday")
+    inlines: ClassVar = [MembershipInline, StudyRegistrationInline]
+    fields = ("user", "gender", "birthday", "show_birthday", "address")
+    list_dislay = ("user", "gender", "birthday", "show_birthday", "address")
+    search_fields = ("user__email", "user__first_name", "user__last_name")
 
 
 class MemberDetailsInline(admin.StackedInline):
     """Inline admin for the MemberDetails model."""
 
     model = MemberDetails
-    extra = 1
-    fields = ("gender", "birthday")
-    inlines: ClassVar = [MembershipInline, StudyRegistrationInline]  # AddressInline]
+    extra = 0
+    fields = ("gender", "birthday", "show_birthday", "address")
+    can_delete = False
+
+
+class GuestUser(User):
+    """Proxy model for GuestUser, inheriting from User."""
+
+    class Meta:
+        proxy = True
+        verbose_name = _("Guest User")
+        verbose_name_plural = _("Guest Users")
+
+
+@admin.register(GuestUser)
+class GuestUserAdmin(BaseUserAdmin):
+    """Admin class for the GuestUser proxy model."""
+
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        (
+            _("Personal info"),
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "is_active",
+                    "phone_number",
+                    "note",
+                )
+            },
+        ),
+        (_("Permissions"), {"fields": ("is_staff", "is_superuser")}),
+        (_("Groups"), {"fields": ("groups",)}),
+    )
+
+    add_fieldsets = (
+        (None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),
+        (
+            _("Personal info"),
+            {"fields": ("first_name", "last_name", "phone_number", "note")},
+        ),
+        (_("Permissions"), {"fields": ("is_staff", "is_superuser")}),
+        (_("Groups"), {"fields": ("groups",)}),
+    )
+
+    list_display = ("email", "first_name", "last_name", "is_staff")
+    search_fields = ("email", "first_name", "last_name")
+    ordering = ("email",)
+
+    def get_queryset(self, request):
+        """Return the queryset of users without MemberDetails."""
+        qs = super().get_queryset(request)
+        return qs.filter(member__isnull=True)
 
 
 @admin.register(User)
