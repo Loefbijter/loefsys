@@ -1,15 +1,23 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="bg-[#1BB1E6]">
+<html lang="en">
 <head>
-    <title>{% block title %}{% endblock %} - Loefbijter</title>
+    <title>{% block title %}{% endblock %} | Loefbijter</title>
     <link rel="stylesheet" href="{% static 'output.css' %}">
     <link rel="icon" type="image/x-icon" href="/media/Logo.png">
 </head>
 <body>
 
+<!-- if request is from a desktop load desktop-menu.html -->
+
+
+<!-- main content -->
 {% block content %}
 {% endblock %}
+
+
+<!-- if request is from a smartphone load mobile-menu.html -->
+
 
 </body>
 </html>
