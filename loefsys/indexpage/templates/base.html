@@ -3,31 +3,35 @@
 <html lang="en">
 <head>
     <title>{% block title %}{% endblock %} | Loefbijter</title>
-    <!-- <link rel="stylesheet" href="{% static 'output.css' %}"> -->
     <link rel="icon" type="image/x-icon" href="/media/Logo.png">
+    <link rel="stylesheet" href="{% static 'colors.css' %}">
 </head>
-<body style="margin: 0; padding: 0;">
-
+<body style="margin: 0; overflow-x: hidden; background-color: var(--background-blue);">
 <!-- header -->
-{% component "wavy-seperator-top" %}
-    {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
-        {% include "desktop-menu.html" %}
-    {% endif %}
-{% endcomponent %}
+<div style="background-color: var(--main-bg-color);">
+    <div style="position: sticky; top: 0; z-index: 100;">
+        {% component "wavy-seperator-top" %}  
+            {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
+                {% include "desktop-menu.html" %}
+            {% endif %}
+        {% endcomponent %}
+    </div>
 
-<!-- main content -->
-{% block content %}
-{% endblock %}
+    <!-- main content -->
+    {% block content %}
+    {% endblock %}
 
-<!-- footer -->
-{% component "wavy-seperator-bottom" %}
-    {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
-        {% include "footer.html" %}
-    {% else %} {# request is from a smartphone #}
-        {% include "smartphone-menu.html" %}
-    {% endif %}
-{% endcomponent %}
+    <!-- footer -->
+    <div style="position: sticky; bottom: 0; z-index: 100;">
+        {% component "wavy-seperator-bottom" %}
+            {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
+                {% include "footer.html" %}
+            {% else %} {# request is from a smartphone #}
+                {% include "smartphone-menu.html" %}
+            {% endif %}
+        {% endcomponent %}
+    </div>
 
-
+</div>
 </body>
 </html>

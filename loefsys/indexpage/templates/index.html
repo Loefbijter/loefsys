@@ -6,16 +6,23 @@ Home
 
 {% block content %}
 <div>
-    <div id="banner">
-        <!-- {% block banner %}
-        {% endblock %} -->
+    <div id="banner" style="
+        z-index: 9;
+        position: relative;
+        top: -5vh;
+        height: 30vh;
+    ">
+        {% include "banner.html" %}
     </div>
 
-    {% component "wavy-seperator-full" / %}
+    <div style="position: relative; top: -10vh;">
+        {% component "wavy-seperator-full" / %}
+    </div>
 
-    <div id="main-content">
+    <div id="main-content" style="overflow-y: scroll; height: 2500px;">
         <!-- {% block main-content %}
         {% endblock %}         -->
+        notification content
     </div>
 </div>
 {% endblock %}

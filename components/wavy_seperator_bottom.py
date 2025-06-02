@@ -8,8 +8,8 @@ class WavySeperatorTop(Component):
     # language=HTML
     template: types.django_html = """
         <div class="wavy-seperator-bottom">
-            <img src="/media/wave2.svg" class="flipped">
-            <div>
+            <div class="wave-bot flipped"></div>
+            <div class="content">
                 {% slot "content" default / %}
             </div>
         </div>
@@ -17,8 +17,26 @@ class WavySeperatorTop(Component):
 
     # language=CSS
     css: types.css = """
+
+        .wave-bot {
+            position: relative;
+            bottom: 0;
+            z-index: 10;
+            top: 1px;
+            background-image: url('/media/wave2.svg');
+            background-position: top center;
+            background-size: cover; 
+            background-repeat: no-repeat;
+            height: 5vh;
+            width: 100%;
+        }
+
         .flipped {
             transform: rotate(180deg);
+        }
+
+        .content {
+            background-color: var(--background-blue);
         }
     """
 
