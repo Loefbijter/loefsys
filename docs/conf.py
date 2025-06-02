@@ -25,6 +25,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
     "sphinx.ext.napoleon",
+    "celery.contrib.sphinx",
     "sphinxcontrib.mermaid",
     "djangodocs",
     "ref_aliases",
