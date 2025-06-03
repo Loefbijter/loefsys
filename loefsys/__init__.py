@@ -1,6 +1,6 @@
 """The root module of the project."""
 
-from .celery import app as celery_app
+from .celery import celery_app
 
 __version__ = "0.1.0"
 __version_info__ = tuple(
