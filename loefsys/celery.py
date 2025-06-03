@@ -7,6 +7,6 @@ from celery import Celery
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "loefsys.settings")
 
 
-app = Celery("loefsys")
-app.config_from_object("django.conf:settings", namespace="CELERY")
-app.autodiscover_tasks()
+celery_app = Celery("loefsys")
+celery_app.config_from_object("django.conf:settings", namespace="CELERY")
+celery_app.autodiscover_tasks()
