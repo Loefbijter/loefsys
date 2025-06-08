@@ -6,7 +6,7 @@ Bewerk reservering
 
 {% block content %}
 <div class="bg-[#1BB1E6] relative flex flex-col h-screen ">
-    <section class="bg-[#234193] p-8 w-full">
+    <section class="bg-[#2972b3] p-8 w-full">
         <h1 class="text-5xl font-bold text-white">RESERVEREN</h1>
         <div class="flex justify-center items-center">
             <ul class="flex flex-wrap text-4xl font-medium text-center text-gray-500 dark:text-gray-400">
@@ -33,17 +33,23 @@ Bewerk reservering
             </ul>
         </div>
 
-        <form method="get">
-            {% csrf_token %}
-            <select name="reservable_type" onchange="this.form.submit()">
-                 <option value="" ></option>
-                {% for reservable_type in reservable_types %}
-                <option value="{{reservable_type.name}}"
-                {% if reservable_type.name == selected_reservable_type %} selected {% endif %}>{{reservable_type.name}}</option>
-                {% endfor %}
-            </select>
-        </form>
+        <!-- Filter for boat reservable types -->
+        <div class="text-left ml-55 my-4 grid-cols-1">
+            <form method="get">
+                {% csrf_token %}
+                <div class="text-2xl text-white w-3/5 flex justify-center">Filter:
+                <select class="text-xl text-black" name="reservable_type" onchange="this.form.submit()">
+                    <option value=""></option>
+                    {% for reservable_type in reservable_types %}
+                    <option value="{{reservable_type.name}}"
+                    {% if reservable_type.name == selected_reservable_type %} selected {% endif %}>{{reservable_type.name}}</option>
+                    {% endfor %}
+                </select>
+                </div>
+            </form>
+        </div>
 
+        <!-- Start time field, end time field, skippership field and error display -->
         <form id="reservationform" method="post">
             {% csrf_token %}
             <div class="text-red-600">
@@ -67,13 +73,15 @@ Bewerk reservering
                         </div>
                     {% endif %}
                     {% endfor %}
-                    <div class="text-2xl font-bold">Schipper: </div><div class="text-xl">{{ form.authorized_userskippership }}</div>
+                    <div class="text-2xl font-bold flex w-full justify-center">Schipper:{{ form.authorized_userskippership }}</div>
                 </div>
             </div>
 
+            <!-- List of items -->
             <div class="grid-cols-1 w-3/5 justify-self-center mt-4">
                 {% for item in form.reserved_item.field.queryset %}
-                    <div class="text-3xl font-medium text-gray-900 flex grid grid-cols-3" role="group">
+                    <!-- Item selection -->
+                    <div class="text-3xl font-medium text-gray-900 flex items-stretch grid grid-cols-3" role="group">
                         <input type="radio"
                             value="{{ item.pk }}"
                             name="{{ form.reserved_item.name }}"
@@ -85,16 +93,63 @@ Bewerk reservering
                         {{ item.name }}
                     </label>
 
-                    <div
-                         class="border-black {% if item.is_reservable %} bg-green-600 {% else %} bg-red-600 {% endif %} p-4 mb-4 border-4 shadow-lg">
-                        <span>
-                            {% if item.is_reservable %} Beschikbaar {% else %} Niet Beschikbaar {% endif %}
-                        </span>
+                    <!-- Availability display -->
+                    {% if item.is_reservable %}
+                    <div id="availability_{{ forloop.counter }}"
+                         class="available border-black py-4 mb-4 border-4 shadow-lg ">
+                            Beschikbaar
                     </div>
+                    {% else %}
+                    <div
+                         class="not-available border-black py-4 mb-4 border-4 shadow-lg ">
+                            Niet Beschikbaar
+                    </div>
+                    {% endif %}
 
-                    <details class="open" name="open">
+                    <!-- Listener to change availability based on start and end time -->
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const startInput = document.querySelector("input[name='start']");
+                            const endInput = document.querySelector("input[name='end']");
+                            const statusDiv = document.getElementById("availability_{{ forloop.counter }}");
+
+                            async function validateAvailability() {
+                                const start = startInput?.value;
+                                const end = endInput?.value;
+                                const item = "{{ item.pk }}";
+                                const object_pk = "{{ object.pk }}"
+
+                                if (!start || !end || !item) return;
+
+                                try {
+                                    const response = await fetch(`../check-availability?start=${start}&end=${end}&reserved_item=${item}&object_pk=${object_pk}`);
+                                    const data = await response.json();
+
+                                    if (data.available) {
+                                        statusDiv.textContent = "Beschikbaar";
+                                        statusDiv.classList.remove("not-available");
+                                        statusDiv.classList.add("available");
+                                    }
+                                    else {
+                                        statusDiv.textContent = "Niet Beschikbaar";
+                                        statusDiv.classList.remove("available");
+                                        statusDiv.classList.add("not-available");
+                                    }
+                                }
+                                catch (err) {
+                                    console.error("Error checking availability:", err);
+                                }
+                            }
+
+                            startInput?.addEventListener("change", validateAvailability);
+                            endInput?.addEventListener("change", validateAvailability);
+                        });
+                    </script>
+
+                    <!-- Information display per item -->
+                    <details class="open flex" name="open">
                         <summary
-                                 class="p-4 mb-4 border-4 border-black rounded-e-3xl shadow-lg bg-white hover:bg-gray-200">
+                                 class="w-full place-content-center p-4 mb-4 border-4 border-black rounded-e-3xl shadow-lg bg-white hover:bg-gray-200">
                             Info
                         </summary>
                         <div
@@ -153,6 +208,7 @@ Bewerk reservering
         </form>
     </section>
 
+    <!-- Submit Reservation or cancel -->
     <section id="submit reservation" class="bg-[#1BB1E6] flex flex-col p-8 pb-30">
         <h1 class="text-5xl font-bold">RESERVERING INDIENEN</h1>
         <form method="post" class="w-4/5 mx-auto">
@@ -168,8 +224,5 @@ Bewerk reservering
         </a>
     </section>
 
-
-    <div class="fixed bottom-0 w-full">
-        {% include "menu.html" %}
-    </div>
+    {% include "menu.html" %}
     {% endblock %}

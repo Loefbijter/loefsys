@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block title %}
     {{ event.title }}
@@ -7,13 +6,16 @@
 
 {% block content %}
 <div class="flex flex-col h-screen">
-    <section id="event-details" class="bg-[#234193] p-8 flex flex-col">
+    <section id="event-details" class="bg-[#2972b3] p-8 flex flex-col">
         <h1 class="text-6xl font-bold text-white pb-8 mt-4"> {{event.title}}</h1>
 
     </section>
 
     <section id="event-detail" class="bg-[#1BB1E6] flex-auto p-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-2xl">
+            <div class="border p-4 rounded-xl bg-gray-100 col-span-2 flex gap-2">
+                <img class="w-25 mr-4" src="{% if event.picture %} /media/{{ event.picture }} {% else %} /media/events/default.png {% endif %}">
+            </div>
             <div class="border p-4 rounded-xl bg-gray-100 col-span-2 flex gap-2">
                 <span class="font-bold whitespace-nowrap text-lg">Beschrijving: </span>
                 <span class="text-lg">{{ event.description }}</span>
@@ -40,7 +42,12 @@
                 <span class="font-bold">Prijs:</span> {{ event.price }}
             </div>
             <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Inschrijvingen:</span> {{ num_registrations }} / {{ event.capacity }}
+                <span class="font-bold">Inschrijvingen:</span>
+                {% if event.capacity %}
+                    {{ num_registrations }} / {{ event.capacity }}
+                {% else %}
+                    {{ num_registrations }}
+                {% endif %}
             </div>
         </div>
         {% if registration_active %}
@@ -56,14 +63,14 @@
                 <input type="hidden" name="action" value="cancel">
                 <div class="py-4">
                     <input required=1 type="hidden" name="fine-consent" value="1" id="fine-consent-checkbox" class="mx-2 scale-175">
-                    <label for="fine-consent" class="hidden font-normal" id="fine-consent-label">Ik weet dat ik me te laat uitschrijf en accepteer de consquenties (boete)</label>
+                    <label for="fine-consent" class="hidden font-normal" id="fine-consent-label">Ik weet dat ik me te laat uitschrijf en accepteer de consquenties (€{{ fine_amount_display }} boete)</label>
                 </div>
                 <input type="submit" value="Uitschrijven" id="cancellation-button" class="font-bold text-3xl bg-gray-100 py-2 px-4 rounded">
             </form>
             <script>
                 const date = new Date();
                 const cancellationDeadline = new Date("{{ event.cancelation_deadline|date:'Y-m-d H:i:s'}}");
-                if ({{queue_position}} == 0 && date >= cancellationDeadline) {
+                if ({queue_position} == 0 && date >= cancellationDeadline) {
                     // Only show fine consent option if your registration is ACTIVE and the cancellation deadline is due
                     document.getElementById("fine-consent-label").classList.remove("hidden")
                     document.getElementById("fine-consent-checkbox").type="checkbox"
@@ -93,7 +100,6 @@
 
             registrationButton.addEventListener("click", () => {
             if (now >= registrationStart && now <= registrationDeadline) {
-                alert("Inschrijven is mogelijk!");
                 const form = document.createElement("form");
                 form.method = "post";
                 form.action = "";
@@ -119,14 +125,13 @@
 
                 document.body.appendChild(form);
                 form.submit();
-            } else {
-                alert("Inschrijven voor dit evenement is niet meer mogelijk.");
-            }
+                }
             });
             </script>
         </div>
         {% endif %}
     </section>
+    {% include "menu.html" %}
 
 </div>
 {% endblock %}

@@ -46,14 +46,13 @@ class Reservation(models.Model):
     """
 
     reserved_item = models.ForeignKey(ReservableItem, on_delete=models.CASCADE)
-    # reservee_member = models.ForeignKey(MemberDetails, on_delete=models.CASCADE)
-    # reservee_group = models.ForeignKey(LoefbijterGroup, on_delete=models.CASCADE)
     reservee_user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="reservee_user_reservation_set"
     )
     # TODO reservee_user is a temporary field which should be replaced
-    # by the fields reservee_member and reservee_group once the WebCie
-    # has added Member(ship) to the admin page.
+    # by the fields reservee_member and reservee_group once Member(ship)
+    # has been added to the admin page (see GitHub history from before
+    # 2 June 2025).
     authorized_userskippership = models.ForeignKey(
         UserSkippership,
         on_delete=models.CASCADE,
@@ -69,25 +68,11 @@ class Reservation(models.Model):
 
     class Meta:
         constraints = (
-            # TODO Check for permissions of the reservator, depends on the implementation of permissions.  # noqa: E501
-            # CheckConstraint(
-            #     check=(),
-            #     name="permission",
-            #     violation_error_message="You are not permitted to make this reservation.",  # noqa: E501
-            # ),
             CheckConstraint(
                 condition=Q(end__gt=F("start")),
                 name="end_gt_start",
                 violation_error_message="End time cannot be before the start time.",
             ),
-            # CheckConstraint(
-            #     condition=(
-            #         Q(reservee_member__isnull=True) & Q(reservee_group__isnull=False)
-            #     )
-            #     | (Q(reservee_member__isnull=False) & Q(reservee_group__isnull=True)),
-            #     name="member_or_group",
-            #     violation_error_message="Only a group or a member can make reservation, not both.",  # noqa: E501
-            # ),  # TODO create tests for this
         )
 
     def __str__(self) -> str:

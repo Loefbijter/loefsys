@@ -103,7 +103,7 @@ class RegistrationFormField(models.Model):
         field_value.field = self
         field_value.value = value
         field_value.full_clean()
-        field_value.save()  # TODO See how to show this to admin
+        field_value.save()
 
 
 class AbstractRegistrationInformation(models.Model):

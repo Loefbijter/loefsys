@@ -45,8 +45,6 @@ class EventFieldsForm(forms.Form):
 
     def field_values(self):
         """Get field values."""
-        print("data", self.data)
-        print("cleaned_data", self.cleaned_data)
         for pk, field in self.form_fields:
             registration_form_field = RegistrationFormField.objects.get(id=pk)
             yield pk, self.cleaned_data.get(str(pk), registration_form_field.default)

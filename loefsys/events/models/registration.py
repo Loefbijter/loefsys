@@ -127,8 +127,6 @@ class EventRegistration(TimeStampedModel):
         Afterwards, the event is notified to potentially activate a registration in the
         queue.
         """
-        print("CANCELLATION STARTED")
-
         if self.status in {
             RegistrationStatus.CANCELLED_FINE,
             RegistrationStatus.CANCELLED_NOFINE,

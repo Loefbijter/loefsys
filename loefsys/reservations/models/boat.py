@@ -24,6 +24,8 @@ class Boat(ReservableItem):
         Flag that determines whether the boat has an engine.
     fleet : ~loefsys.reservations.models.choices.FleetChoices
         The provider of the boat.
+    requires_skippership : ~loefsys.users.models.skippership.Skippership
+        The skippership needed to reserve the boat. Can be none.
     """
 
     capacity = models.PositiveSmallIntegerField(verbose_name=_("Capacity"))
