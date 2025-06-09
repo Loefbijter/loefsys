@@ -77,6 +77,7 @@ class EventAdmin(admin.ModelAdmin):
     fields = (
         "title",
         "description",
+        "picture",
         "start",
         "end",
         "registration_start",

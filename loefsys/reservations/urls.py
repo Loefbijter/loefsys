@@ -21,5 +21,15 @@ urlpatterns = [
     ),
     path("delete/<int:pk>", ReservationDeleteView.as_view(), name="reservation-delete"),
     path("detail/<int:pk>", ReservationDetailView.as_view(), name="reservation-detail"),
+    path(
+        "check-availability",
+        ReservationCreateView.check_availability,
+        name="check-availability",
+    ),
+    path(
+        "update/check-availability",
+        ReservationUpdateView.check_availability,
+        name="check-availability",
+    ),
     path("add/log/<int:pk>", LogCreateView.as_view(), name="log-add"),
 ]

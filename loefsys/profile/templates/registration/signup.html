@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}
+Aanmeld pagina
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col h-screen">
+
+<section id="aanmeld-form" class="bg-[#234193] p-8 flex flex-auto flex-col items-center">
+<p class="text-6xl font-bold text-white pb-8 mt-4">AANMELDEN</p>
+<form method="post" class="bg-white p-8 rounded-3xl shadow-lg w-4/5">
+  {% csrf_token %}
+  <!-- Email Field -->
+  <div class="mb-6">
+    <label for="{{ form.email.id_for_label }}" class="block text-lg font-semibold mb-2">Email</label>
+    <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+          value="{{ form.email.value|default_if_none:'' }}"
+          class="w-full text-4xl py-4 px-5 border rounded-xl" />
+    {% if form.email.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <!-- First Name Field -->
+  <div class="mb-6">
+    <label for="{{ form.first_name.id_for_label }}" class="block text-lg font-semibold mb-2">Voornaam</label>
+    {% comment %} {{ form.first_name }} {% endcomment %}
+    <input type="first_name" name="{{ form.first_name.name }}" id="{{ form.first_name.id_for_label }}"
+            class="w-full text-4xl py-4 px-4 border rounded-lg" />
+    {% if form.first_name.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.first_name.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Last Name Field -->
+  <div class="mb-6">
+    <label for="{{ form.last_name.id_for_label }}" class="block text-lg font-semibold mb-2">Achternaam</label>
+    {% comment %} {{ form.last_name }} {% endcomment %}
+    <input type="last_name" name="{{ form.last_name.name }}" id="{{ form.last_name.id_for_label }}"
+            class="w-full text-4xl py-4 px-4 border rounded-lg" />
+    {% if form.last_name.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.last_name.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Phone Number Field -->
+  <div class="mb-6">
+    <label for="{{ form.phone_number.id_for_label }}" class="block text-lg font-semibold mb-2">Telefoonnummer</label>
+    {% comment %} {{ form.phone_number }} {% endcomment %}
+    <input type="phone_number" name="{{ form.phone_number.name }}" id="{{ form.phone_number.id_for_label }}"
+            class="w-full text-4xl py-4 px-4 border rounded-lg" />
+    {% if form.phone_number.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.phone_number.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Password Requirements Notice -->
+  <div class="mb-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded">
+    <p class="font-semibold">Wachtwoord vereisten:</p>
+    <ul class="list-disc pl-6">
+      <li>Minimaal 8 tekens</li>
+      <li>Minstens één hoofdletter</li>
+      <li>Minstens één kleine letter</li>
+      <li>Minstens één cijfer</li>
+      <li>Minstens één speciaal teken (bijv. !, @, #, etc.)</li>
+    </ul>
+  </div>
+
+  <!-- Password1 Field -->
+  <div class="mb-6">
+    <label for="{{ form.password1.id_for_label }}" class="block text-lg font-semibold mb-2">Wachtwoord</label>
+    <input type="password" name="{{ form.password1.name }}" id="{{ form.password1.id_for_label }}"
+            class="w-full text-4xl py-4 px-4 border rounded-lg" />
+    {% if form.password1.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Password2 Field -->
+  <div class="mb-6">
+    <label for="{{ form.password2.id_for_label }}" class="block text-lg font-semibold mb-2">Bevestig wachtwoord</label>
+    <input type="password" name="{{ form.password2.name }}" id="{{ form.password2.id_for_label }}"
+          class="w-full text-4xl py-4 px-4 border rounded-lg" />
+    {% if form.password2.errors %}
+      <p class="text-red-500 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Non-field Errors -->
+  {% if form.non_field_errors %}
+    <p class="text-red-500 text-sm mt-1">{{ form.non_field_errors.0 }}</p>
+  {% endif %}
+
+  <!-- Confirm Button-->
+  <button type="submit" class="p-3 sm:p-4 border-2 rounded-full shadow-lg w-full bg-gray-200 hover:bg-gray-400 text-center mt-4 p-10 flex items-center justify-center">
+    <h1 class="font-bold text-4xl sm:text-5xl">
+        Meld je aan
+    </h1>
+  </button>
+</form>
+</section>
+
+<section id="back-to-login" class="bg-[#1BB1E6] flex-auto p-8">
+<p class="text-5xl font-bold text-white pb-8 mt-4">TERUG NAAR INLOGGEN</p>
+<a href="{% url 'login' %}" class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
+  <h1 class="font-bold text-4xl">
+      Inloggen
+  </h1>
+</a>
+</section>
+</div>
+{% endblock %}

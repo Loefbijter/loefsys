@@ -1,3 +1,4 @@
+# TODO remove line too long ignores.
 import datetime
 
 from django.db import IntegrityError
@@ -101,8 +102,12 @@ class ReservationTestCase(TestCase):
             reservation = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+                start=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
             )
             reservation.save()
 
@@ -112,8 +117,12 @@ class ReservationTestCase(TestCase):
             reservation = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+                start=datetime.datetime(
+                    2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
             )
             reservation.save()
 
@@ -144,8 +153,12 @@ class ReservationTestCase(TestCase):
             reservation1 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
             )
             reservation1.save()
             reservation1.clean()
@@ -153,8 +166,12 @@ class ReservationTestCase(TestCase):
             reservation2 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC),
-                end=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC
+                ),
             )
             reservation2.save()
             reservation2.clean()
@@ -165,16 +182,24 @@ class ReservationTestCase(TestCase):
             reservation1 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
             )
             reservation1.save()
 
             reservation2 = Reservation(
                 reserved_item=self.reservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
             )
             reservation2.clean()
             reservation2.save()
@@ -201,7 +226,9 @@ class ReservationTestCase(TestCase):
         reservation2 = Reservation(
             reserved_item=reservable_item2,
             reservee_user=self.reservee_user,
-            start=datetime.datetime(2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC),
+            start=datetime.datetime(
+                2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC
+            ),
             end=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
         )
         reservation2.clean()
@@ -210,8 +237,8 @@ class ReservationTestCase(TestCase):
         self.assertIsNotNone(reservation1)
         self.assertIsNotNone(reservation2)
 
-    def is_reservable(self):
-        """Tests that an item that has the is_reservable field as true can be reserved."""  # noqa: D401, E501
+    def test_is_reservable(self):
+        """Tests that an item that has the is_reservable field as true can be reserved."""  # noqa: E501
         reservation = Reservation(
             reserved_item=self.reservable_item,
             reservee_user=self.reservee_user,
@@ -222,13 +249,18 @@ class ReservationTestCase(TestCase):
 
         self.assertIsNotNone(reservation)
 
-    def is_not_reservable(self):
-        """Tests that an item that has the is_reservable field as true can be reserved."""  # noqa: D401, E501
+    def test_is_not_reservable(self):
+        """Tests that an item that has the is_reservable field as true can be reserved."""  # noqa: E501
         with self.assertRaises(ValidationError):
             reservation = Reservation(
                 reserved_item=self.unreservable_item,
                 reservee_user=self.reservee_user,
-                start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
-                end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
             )
             reservation.save()
+            reservation.clean()

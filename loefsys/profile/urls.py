@@ -1,8 +1,12 @@
 """Module containing the url definition of the sign up page."""
 
+from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from .views import (
+    AccountinfoView,
+    AccountinfoeditView,
+    DeleteAccountView,
     ProfileLoginView,
     ProfilePasswordResetCompleteView,
     ProfilePasswordResetConfirmView,
@@ -12,6 +16,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("", AccountinfoView.as_view(), name="accountinfo"),
     path("signup/", ProfileSignupView.as_view(), name="signup"),
     path("login/", ProfileLoginView.as_view(), name="login"),
     path("password-reset/", ProfilePasswordResetView.as_view(), name="password_reset"),
@@ -30,4 +35,7 @@ urlpatterns = [
         ProfilePasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
+    path("edit", AccountinfoeditView.as_view(), name="accountinfoedit"),
+    path("logout/", auth_views.LogoutView.as_view(next_page="login"), name="logout"),
+    path("delete-account/", DeleteAccountView.as_view(), name="delete_account"),
 ]

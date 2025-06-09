@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="flex flex-col h-screen">
-    <section id="reservation detail" class="bg-[#234193] p-8" flex flex-col>
+    <section id="reservation detail" class="bg-[#2972b3] p-8" flex flex-col>
         <h1 class="text-6xl font-bold text-white pb-8 mt-4">RESERVERINGSDETAILS</h1>
 
         <div class="p-4 border-2 border-red-500 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white text-left">
@@ -49,15 +49,5 @@
         </a>
 
     </section>
-    {% include "menu.html" %}
+{% include "menu.html" %}
 {% endblock %}
-
-
-
-
-
-
-{% comment %}
- What do we want to display:
-Name object, Description object, Reservable type, Location, (Reservable), Capacity, (Boat has engine), Boat provider, Start time - End time - Duration of reservation,Who reserved it, delete / edit reservation, (photo of boat)
-{% endcomment %}

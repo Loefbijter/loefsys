@@ -84,7 +84,7 @@ wheels = [
 
 [[package]]
 name = "celery"
-version = "5.5.2"
+version = "5.5.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "billiard" },
@@ -96,14 +96,14 @@ dependencies = [
     { name = "python-dateutil" },
     { name = "vine" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/bf/03/5d9c6c449248958f1a5870e633a29d7419ff3724c452a98ffd22688a1a6a/celery-5.5.2.tar.gz", hash = "sha256:4d6930f354f9d29295425d7a37261245c74a32807c45d764bedc286afd0e724e", size = 1666892 }
+sdist = { url = "https://files.pythonhosted.org/packages/bb/7d/6c289f407d219ba36d8b384b42489ebdd0c84ce9c413875a8aae0c85f35b/celery-5.5.3.tar.gz", hash = "sha256:6c972ae7968c2b5281227f01c3a3f984037d21c5129d07bf3550cc2afc6b10a5", size = 1667144 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/04/94/8e825ac1cf59d45d20c4345d4461e6b5263ae475f708d047c3dad0ac6401/celery-5.5.2-py3-none-any.whl", hash = "sha256:54425a067afdc88b57cd8d94ed4af2ffaf13ab8c7680041ac2c4ac44357bdf4c", size = 438626 },
+    { url = "https://files.pythonhosted.org/packages/c9/af/0dcccc7fdcdf170f9a1585e5e96b6fb0ba1749ef6be8c89a6202284759bd/celery-5.5.3-py3-none-any.whl", hash = "sha256:0b5761a07057acee94694464ca482416b959568904c9dfa41ce8413a7d65d525", size = 438775 },
 ]
 
 [package.optional-dependencies]
 redis = [
-    { name = "redis" },
+    { name = "kombu", extra = ["redis"] },
 ]
 
 [[package]]
@@ -332,6 +332,20 @@ wheels = [
 ]
 
 [[package]]
+name = "django-ical"
+version = "1.9.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "django-recurrence" },
+    { name = "icalendar" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e1/dc/70971de377f77c4f9f789a38b049b5fa239f1cfc6b671b0503971960f245/django-ical-1.9.2.tar.gz", hash = "sha256:44c9b6fa90d09f25e9ebaa91ed9eb007f079afbc23d6aac909cfc18188a8e90c", size = 30831 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/05/3f/647857462fa4169cb855aaf14969a6843f3910a3781d7c17f18c460b0e08/django_ical-1.9.2-py3-none-any.whl", hash = "sha256:74a16bca05735f91a00120cad7250f3c3aa292a9f698a6cfdc544a922c11de70", size = 15494 },
+]
+
+[[package]]
 name = "django-localflavor"
 version = "4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -365,6 +379,19 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3d/8e/ad888a32f8ed14cf660ea1160f077a729735e93d493767691b0e4e8edb77/django_phonenumbers-1.0.1-py3-none-any.whl", hash = "sha256:cd617e4ee924f6492e0106d738fea619c95f3659e41dbeb97df83c1f3b51f453", size = 2551270 },
+]
+
+[[package]]
+name = "django-recurrence"
+version = "1.11.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "python-dateutil" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d1/c7/e8d8539d8ccb3ee6498206b6ecef6cd551c3a281e28ae16812b9bc868da3/django-recurrence-1.11.1.tar.gz", hash = "sha256:9c89444e651a78c587f352c5f63eda48ab2f53996347b9fcdff2d248f4fcff70", size = 133440 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3d/0a/5dc0f1f408a5b5f00c64ec57f3868248ed65ee660980118867b1279eca96/django_recurrence-1.11.1-py3-none-any.whl", hash = "sha256:0c65f30872599b5813a9bab6952dada23c55894f28674490a753ada559f14bc5", size = 127256 },
 ]
 
 [[package]]
@@ -427,6 +454,19 @@ wheels = [
 ]
 
 [[package]]
+name = "icalendar"
+version = "6.3.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "python-dateutil" },
+    { name = "tzdata" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/08/13/e5899c916dcf1343ea65823eb7278d3e1a1d679f383f6409380594b5f322/icalendar-6.3.1.tar.gz", hash = "sha256:a697ce7b678072941e519f2745704fc29d78ef92a2dc53d9108ba6a04aeba466", size = 177169 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/25/b5fc00e85d2dfaf5c806ac8b5f1de072fa11630c5b15b4ae5bbc228abd51/icalendar-6.3.1-py3-none-any.whl", hash = "sha256:7ea1d1b212df685353f74cdc6ec9646bf42fa557d1746ea645ce8779fdfbecdd", size = 242349 },
+]
+
+[[package]]
 name = "identify"
 version = "2.6.6"
 source = { registry = "https://pypi.org/simple" }
@@ -467,16 +507,22 @@ wheels = [
 
 [[package]]
 name = "kombu"
-version = "5.5.3"
+version = "5.5.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "amqp" },
+    { name = "packaging" },
     { name = "tzdata" },
     { name = "vine" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/60/0a/128b65651ed8120460fc5af754241ad595eac74993115ec0de4f2d7bc459/kombu-5.5.3.tar.gz", hash = "sha256:021a0e11fcfcd9b0260ef1fb64088c0e92beb976eb59c1dfca7ddd4ad4562ea2", size = 461784 }
+sdist = { url = "https://files.pythonhosted.org/packages/0f/d3/5ff936d8319ac86b9c409f1501b07c426e6ad41966fedace9ef1b966e23f/kombu-5.5.4.tar.gz", hash = "sha256:886600168275ebeada93b888e831352fe578168342f0d1d5833d88ba0d847363", size = 461992 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5d/35/1407fb0b2f5b07b50cbaf97fce09ad87d3bfefbf64f7171a8651cd8d2f68/kombu-5.5.3-py3-none-any.whl", hash = "sha256:5b0dbceb4edee50aa464f59469d34b97864be09111338cfb224a10b6a163909b", size = 209921 },
+    { url = "https://files.pythonhosted.org/packages/ef/70/a07dcf4f62598c8ad579df241af55ced65bed76e42e45d3c368a6d82dbc1/kombu-5.5.4-py3-none-any.whl", hash = "sha256:a12ed0557c238897d8e518f1d1fdf84bd1516c5e305af2dacd85c2015115feb8", size = 210034 },
+]
+
+[package.optional-dependencies]
+redis = [
+    { name = "redis" },
 ]
 
 [[package]]
@@ -490,6 +536,7 @@ dependencies = [
     { name = "django" },
     { name = "django-classy-settings" },
     { name = "django-extensions" },
+    { name = "django-ical" },
     { name = "django-localflavor" },
     { name = "django-phonenumber-field" },
     { name = "django-phonenumbers" },
@@ -523,6 +570,7 @@ requires-dist = [
     { name = "django", specifier = ">=5.1.5" },
     { name = "django-classy-settings", specifier = ">=3.0.7" },
     { name = "django-extensions", specifier = ">=3.2.3" },
+    { name = "django-ical", specifier = ">=1.9.2" },
     { name = "django-localflavor", specifier = ">=4.0" },
     { name = "django-phonenumber-field", specifier = ">=8.0.0" },
     { name = "django-phonenumbers", specifier = ">=1.0.1" },
@@ -789,11 +837,11 @@ wheels = [
 
 [[package]]
 name = "pyjwt"
-version = "2.9.0"
+version = "2.10.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/fb/68/ce067f09fca4abeca8771fe667d89cc347d1e99da3e093112ac329c6020e/pyjwt-2.9.0.tar.gz", hash = "sha256:7e1e5b56cc735432a7369cbfa0efe50fa113ebecdc04ae6922deba8b84582d0c", size = 78825 }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/46/bd74733ff231675599650d3e47f361794b22ef3e3770998dda30d3b63726/pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953", size = 87785 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/79/84/0fdf9b18ba31d69877bd39c9cd6052b47f3761e9910c15de788e519f079f/PyJWT-2.9.0-py3-none-any.whl", hash = "sha256:3b02fb0f44517787776cf48f2ae25d8e14f300e6d7545a4315cee571a415e850", size = 22344 },
+    { url = "https://files.pythonhosted.org/packages/61/ad/689f02752eeec26aed679477e80e632ef1b682313be70793d798c1d5fc8f/PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb", size = 22997 },
 ]
 
 [[package]]
@@ -854,14 +902,11 @@ wheels = [
 
 [[package]]
 name = "redis"
-version = "5.3.0"
+version = "5.2.1"
 source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pyjwt" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/71/dd/2b37032f4119dff2a2f9bbcaade03221b100ba26051bb96e275de3e5db7a/redis-5.3.0.tar.gz", hash = "sha256:8d69d2dde11a12dc85d0dbf5c45577a5af048e2456f7077d87ad35c1c81c310e", size = 4626288 }
+sdist = { url = "https://files.pythonhosted.org/packages/47/da/d283a37303a995cd36f8b92db85135153dc4f7a8e4441aa827721b442cfb/redis-5.2.1.tar.gz", hash = "sha256:16f2e22dff21d5125e8481515e386711a34cbec50f0e44413dd7d9c060a54e0f", size = 4608355 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/45/b0/aa601efe12180ba492b02e270554877e68467e66bda5d73e51eaa8ecc78a/redis-5.3.0-py3-none-any.whl", hash = "sha256:f1deeca1ea2ef25c1e4e46b07f4ea1275140526b1feea4c6459c0ec27a10ef83", size = 272836 },
+    { url = "https://files.pythonhosted.org/packages/3c/5f/fa26b9b2672cbe30e07d9a5bdf39cf16e3b80b42916757c5f92bca88e4ba/redis-5.2.1-py3-none-any.whl", hash = "sha256:ee7e1056b9aea0f04c6c2ed59452947f34c4940ee025f5dd83e6a6418b6989e4", size = 261502 },
 ]
 
 [[package]]

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit account information
+{% endblock %}
+
+{% block content %}
+{% comment %} <h1>Account information</h1>
+
+<form class="" action="{% url 'accountinfoedit' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="flex flex-row" id="account-information">
+        <div class="flex flex-col grow" id="personal-information">
+            <h2>User details</h2>
+            {{ user_form.as_p }}
+        </div>
+        {% if member_form %}
+        <div class="flex flex-col grow" id="member-information">
+            <h2>Member details</h2>
+            {{ member_form.as_p }}
+        </div>
+        {% endif %}
+    </div>
+    <button class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">Save account information</button>
+</form>
+
+<a href="{% url 'delete_account' %}" class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
+    <h1 class="font-bold text-3xl">
+        Verwijder mijn account
+    </h1>
+</a> {% endcomment %}
+
+
+<div class="flex flex-col h-screen">
+
+    <!-- Dark Blue top Section -->
+    <section class="bg-[#234193] flex flex-col p-8 flex-grow items-center text-white">
+        <p class="text-6xl font-bold mb-6">PAS JE PROFIEL AAN</p>
+        <form action="{% url 'accountinfoedit' %}" method="post" enctype="multipart/form-data" class="w-full">
+            {% csrf_token %}
+            <div class=" space-y-6 flex flex-col md:flex-row gap-12" id="account-information">
+
+                <!-- Personal Information -->
+                <div class="flex-col" id="personal-information">
+                    <p class="text-5xl font-semibold mb-6">User details</p>
+                    <div class="space-y-6">
+                        {% for field in user_form %}
+                            <div class="flex flex-col w-4/5 mx-auto text-black text-5xl center">
+                                <label for="{{ field.id_for_label }}" class="mb-1 font-bold text-white">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Member Information -->
+                {% if member_form %}
+                <div class="flex-1" id="member-information">
+                    <p class="text-2xl font-semibold mb-6">Member details</h2>
+                    <div class="space-y-6">
+                        {% for field in member_form %}
+                            <div class="flex flex-col">
+                                <label for="{{ field.id_for_label }}" class="mb-1 font-medium text-white">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <p class="text-red-300 text-sm mt-1">{{ field.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <br>
+                <br>
+                <button class="mt-10 p-3 border-2 rounded-5xl shadow-lg mx-auto w-4/5 bg-gray-200 hover:bg-gray-400 text-black text-5xl font-semibold">
+                    Nieuwe informatie opslaan
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Light Blue Bottom Section -->
+    <section class="bg-[#1BB1E6] p-8 flex flex-auto items-center flex-col">
+      <p class="text-6xl font-bold text-white pb-8 mt-4 text-center">Annuleren</p>
+      <a href="{% url 'accountinfo' %}" class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-4/5 bg-gray-200 hover:bg-gray-400 text-center">
+        <h1 class="font-bold text-3xl">Annuleren</h1>
+      </a>
+    </section>
+    <div class="pb-27">
+        {% include "menu.html" %}
+    </div>
+  </div>
+{% endblock %}

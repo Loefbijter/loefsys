@@ -9,6 +9,14 @@ body {
     color: black;
 }
 
+.available {
+    background-color: rgba(0, 128, 0, 0.8);
+}
+
+.not-available {
+    background-color: rgba(255, 0, 0, 0.8);
+}
+
 /* Base styles for all form elements */
 input, select, textarea, button {
   @apply px-2 border rounded;

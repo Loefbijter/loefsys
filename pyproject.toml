@@ -13,6 +13,7 @@ dependencies = [
     "django>=5.1.5",
     "django-classy-settings>=3.0.7",
     "django-extensions>=3.2.3",
+    "django-ical>=1.9.2",
     "django-localflavor>=4.0",
     "django-phonenumber-field>=8.0.0",
     "django-phonenumbers>=1.0.1",

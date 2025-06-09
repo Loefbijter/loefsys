@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
+{% block title %}
+    Kalender
+{% endblock %}
+
 {% block content %}
 <div class="flex flex-col h-screen">
   <!-- Top Bar -->
-  <section id="calendar-topbar" class="bg-[#234193] p-8 flex flex-col">
-    <h1 class="text-6xl font-bold text-white pb-8 mt-4"> Calendar </h1>
+  <section id="calendar-topbar" class="bg-[#2972b3] p-8 flex flex-col">
+    <h1 class="text-6xl font-bold text-white pb-8 mt-4">Kalender</h1>
   </section>
 
   <!-- Calendar Section -->
@@ -15,22 +19,34 @@
     <div id='calendar' class="h-[100%] w-[100%] mx-auto p-8 rounded-3xl bg-gray-200"></div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
+      document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           height: '100%',
           eventDisplay: 'block',
           eventColor: '#1BB1E6',
+          customButtons: {
+            synchronize: {
+              text: 'Synchronize calendar',
+                click: function() {
+                window.location.href = "/events/feed";
+                }
+            }
+          },
           headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev,next today synchronize',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,listWeek'
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
           },
           views: {
             timeGridWeek: {
               type: 'timeGrid',
               duration: { weeks: 1 }
+            },
+            timeGridDay: {
+              type: 'timeGridDay',
+              duration: { days: 1 }
             },
             listWeek: {
               type: 'list',
@@ -38,7 +54,7 @@
             }
           },
           events: {
-            url: "/events/event_filler", 
+            url: "/events/event_filler",
             method: 'GET'
           },
           eventTimeFormat: {
@@ -52,6 +68,9 @@
       });
     </script>
   </section>
-  {% include "menu.html" %}
+  <div class="pb-27">
+    {% include "menu.html" %}
+  </div>
 </div>
+
 {% endblock %}

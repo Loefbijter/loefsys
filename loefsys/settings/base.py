@@ -26,6 +26,8 @@ class BaseSettings(ClassySettings):
 
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+    LOGIN_URL = "login"
+
     STATIC_URL = "static/"
 
     MEDIA_URL = "/media/"
@@ -52,7 +54,6 @@ class BaseSettings(ClassySettings):
             "loefsys.users",
             "loefsys.indexpage",
             "loefsys.profile",
-            "loefsys.accountinfopage",
         )
 
     def INSTALLED_APPS(self) -> Sequence[str]:  # noqa N802 D102

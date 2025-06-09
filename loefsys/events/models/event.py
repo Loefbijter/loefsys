@@ -4,6 +4,7 @@ from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core import validators
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models import CheckConstraint, F, Q
 from django.urls import reverse
@@ -14,6 +15,21 @@ from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionMo
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
 from loefsys.events.models.managers import EventManager, EventRegistrationManager
 from loefsys.groups.models import LoefbijterGroup
+
+
+class OverwriteStorage(FileSystemStorage):
+    """Custom storage class that overwrites files with the same name.
+
+    Needed because when a user uploads a new profile picture, the old
+    one would otherwise still be present together with the new one that
+    gets renamed.
+    """
+
+    def get_available_name(self, name, max_length=None):  # noqa: ARG002
+        """Given the desired name, derive and return a name that is available."""
+        if self.exists(name):
+            self.delete(name)
+        return name
 
 
 class Event(TitleSlugDescriptionModel, TimeStampedModel):
@@ -36,6 +52,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         The title to display for the event.
     description : str, None
         An optional description of the event.
+    picture : ~django.db.models.fields.files.ImageFieldFile
+        The picture for an event.
     slug : str
         A slug for the URL of the event, automatically generated from the title.
     start : ~datetime.datetime
@@ -74,6 +92,17 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         It is the one-to-many relationship to
         :class:`~loefsys.events.models.EventRegistration`.
     """
+
+    def event_picture_upload_path(self, _):
+        """Return the upload path for the event picture."""
+        return f"events/{self.slug}/picture.jpg"
+
+    picture = models.ImageField(
+        upload_to=event_picture_upload_path,
+        null=True,
+        blank=True,
+        storage=OverwriteStorage(),
+    )
 
     start = models.DateTimeField(_("Start time"))
     end = models.DateTimeField(_("End time"))
@@ -178,9 +207,14 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     def __str__(self):
         return f"{self.title}"
 
+    @property
+    def url(self) -> str:
+        """Url for the event."""
+        return self.get_absolute_url()
+
     def get_absolute_url(self):
         """Return the detail page url for this registration."""
-        return reverse("events:event", kwargs={"pk": self.pk})
+        return reverse("events:event", kwargs={"slug": self.slug})
 
     def mandatory_registration(self) -> bool:
         """Check whether this event has mandatory registration.
@@ -190,7 +224,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         bool
             A boolean that defines whether registration is mandatory.
         """
-        return self.capacity > 0
+        return self.capacity is not None and self.capacity > 0
 
     def registrations_open(self) -> bool:
         """Determine whether it is possible for users to register for this event.

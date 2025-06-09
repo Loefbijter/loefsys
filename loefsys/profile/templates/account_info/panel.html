@@ -1,0 +1,8 @@
+<div>
+  <h3>{{ key }}</h3>
+  {% if value == "" %}
+    <p class="italic">{{ key }} is not set.</p>
+  {% else %}
+    <p>{{ value }}</p>
+  {% endif %}
+</div>
