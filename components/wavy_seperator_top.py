@@ -21,7 +21,7 @@ class WavySeperatorTop(Component):
             top: 0;
             z-index: 10;
             top: -1px;
-            background-image: url('/media/wave2.svg');
+            background-image: url('/media/wave3.svg');
             background-position: top center;
             background-size: cover; 
             background-repeat: no-repeat;

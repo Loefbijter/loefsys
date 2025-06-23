@@ -28,6 +28,7 @@ class BaseSettings(ClassySettings):
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
     STATIC_URL = "static/"
+    TAILWIND_APP_NAME = 'loefsys.theme'
 
     STATICFILES_FINDERS = [
         # Default finders
@@ -51,7 +52,11 @@ class BaseSettings(ClassySettings):
         return ("django.contrib.contenttypes",)
 
     def THIRD_PARTY_APPS(self) -> Sequence[str]:  # noqa N802 D102
-        apps = ("django_components",)
+        apps = (
+            "django_components",
+            "tailwind",
+            "django_browser_reload",
+        )
         debug_apps = ("debug_toolbar",)
         return apps + debug_apps if self.DEBUG else apps
 
@@ -64,6 +69,7 @@ class BaseSettings(ClassySettings):
             "loefsys.indexpage",
             "loefsys.profile",
             "loefsys.accountinfopage",
+            "loefsys.theme",
         )
 
     def INSTALLED_APPS(self) -> Sequence[str]:  # noqa N802 D102
@@ -74,6 +80,9 @@ class BaseSettings(ClassySettings):
         )
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
-        middleware = ("django_components.middleware.ComponentDependencyMiddleware",)
+        middleware = (
+            "django_components.middleware.ComponentDependencyMiddleware",
+            "django_browser_reload.middleware.BrowserReloadMiddleware",
+        )
         debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
         return middleware + debug_middleware if self.DEBUG else middleware

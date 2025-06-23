@@ -16,6 +16,7 @@ urlpatterns = [
     path("events/", include("loefsys.events.urls")),
 
     path("", include("django_components.urls")),
+    path("__reload__/", include("django_browser_reload.urls")),
     *debug_toolbar_urls(),
 ]
 

@@ -19,9 +19,9 @@
     <g style="stroke:none;transform:none;opacity:1;;animation:none">
         <path opacity="1" fill="#1bb1e6" 
             d="M 0 0 L 0 42.88 Q 83.33 67.96 166.67 47.64 T 333.33 39.75 T 500 42.19 T 666.67 47.11 T 833.33 32.28 T 1000 32.79 T 1166.67 46.62 T 1333.33 47.13 T 1500 38.32 T 1666.67 36.09 T 1833.33 39.36 T 2000 42.43 T 2166.67 40.62 T 2333.33 45.35 T 2500 35.08 T 2666.67 49.97 T 2833.33 46.74 T 3000 41.34 L 3000 0 Z" 
-            style="stroke:none;transform:none;animation:none"
+            style="stroke:none;transform: translateY(-10px);animation:none"
         ></path>
-        <!-- <path opacity="calc(2/3)" fill="#12AFE6" 
+        <path opacity="calc(2/3)" fill="#12AFE6" 
             d="M 0 0 L 0 43.99 Q 83.33 64.91 166.67 43.24 T 333.33 44.5 T 500 32.02 T 666.67 44.85 T 833.33 36.91 T 1000 32.94 T 1166.67 48.36 T 1333.33 47.95 T 1500 45.84 T 1666.67 46.2 T 1833.33 46.54 T 2000 44.12 T 2166.67 48.29 T 2333.33 49.71 T 2500 38.82 T 2666.67 33.07 T 2833.33 32 T 3000 35.39 L 3000 0 Z" 
             style="stroke:none;transform:none;animation:none"
         ></path>
@@ -29,10 +29,10 @@
             d="M 0 0 L 0 34.17 Q 83.33 72.27 166.67 42.59 T 333.33 41.99 T 500 36.84 T 666.67 41.98 T 833.33 41.7 T 1000 34.53 T 1166.67 48.22 T 1333.33 45.6 T 1500 45.58 T 1666.67 38.42 T 1833.33 44.49 T 2000 42.58 T 2166.67 36.92 T 2333.33 37.77 T 2500 38.98 T 2666.67 34.1 T 2833.33 38.89 T 3000 41.08 L 3000 0 Z" 
             style="stroke:none;transform:none;animation:none"
         ></path>
-        <path opacity="1" fill="#1bb1e6"
+        <!-- <path opacity="1" fill="#1bb1e6"
             d="M -1 -1 L 3001 -1 L 3001 5 L -1 5 Z"
             style="stroke:none;transform:none;animation:none"
-        ></path> -->
+        ></path> --> -->
         <!-- <g style="fill:rgb(0,0,0);stroke:none;transform:none;opacity:1;;animation:none"></g> -->
     </g>
 </svg>
