@@ -1,5 +1,6 @@
 db.sqlite*
 .vscode/
+migrations/{0,1,2,3}*.py
 
 ### Python template
 # Byte-compiled / optimized / DLL files
