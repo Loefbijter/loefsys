@@ -182,8 +182,8 @@ class EventRegistrationTestCase(TestCase):
         )
         self.upcoming_event_with_early_cancellation_deadline = G(
             Event,
-            title="Upcoming event for 2 people",
-            description="Event for which 2 people can sign up.",
+            title="Upcoming event with early cancellation deadline",
+            description="Event that has an early cancellation deadline.",
             start=now + timedelta(days=7),
             end=now + timedelta(days=8),
             registration_start=now - timedelta(days=2),
@@ -281,7 +281,6 @@ class EventRegistrationTestCase(TestCase):
             event=self.upcoming_event_with_form_fields,
             type=RegistrationFormField.DATETIME_FIELD,
         ).pk
-        print(text_field_pk, boolean_field_pk, integer_field_pk, datetime_field_pk)
         response = self.client.post(
             reverse(
                 "events:registration",

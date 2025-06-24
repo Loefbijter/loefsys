@@ -26,7 +26,8 @@ class EventManager[TEvent: "Event"](models.Manager[TEvent]):
         return self.filter(event_end__lte=Now())
 
 
-class EventRegistrationManager(models.Manager["EventRegistration"]):
+# TODO fix typing
+class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ignore
     """Custom manager for :class:`~loefsys.events.models.EventRegistration` models."""
 
     def order_by_creation(self) -> Self:

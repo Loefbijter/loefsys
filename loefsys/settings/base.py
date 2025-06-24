@@ -33,6 +33,8 @@ class BaseSettings(ClassySettings):
 
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+    LOGIN_URL = "login"
+
     STATIC_URL = "static/"
     TAILWIND_APP_NAME = 'loefsys.theme'
 
@@ -86,9 +88,6 @@ class BaseSettings(ClassySettings):
         )
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
-        middleware = (
-            "django_components.middleware.ComponentDependencyMiddleware",
-            "django_browser_reload.middleware.BrowserReloadMiddleware",
-        )
+        middleware = ("django_browser_reload.middleware.BrowserReloadMiddleware",)
         debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
         return middleware + debug_middleware if self.DEBUG else middleware

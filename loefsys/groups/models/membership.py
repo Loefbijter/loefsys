@@ -13,10 +13,7 @@ from .group import LoefbijterGroup
 
 
 class GroupMembershipManager(models.Manager["GroupMembership"]):
-    """Manager for the :class:`~loefsys.groups.models.group.LoefbijterGroup` model.
-
-    TODO Add tests for `active` method.
-    """
+    """Manager for the :class:`~loefsys.groups.models.group.LoefbijterGroup` model."""
 
     def active(self) -> QuerySet["GroupMembership"]:
         """Filter and return only active group memberships.

@@ -1,6 +1,6 @@
 db.sqlite*
 .vscode/
-migrations/{0,1,2,3}*.py
+migrations/0*.py
 
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -26,7 +26,7 @@ lib/
 lib64/
 parts/
 sdist/
-var/
+var/rotate-180
 wheels/
 *.egg-info/
 .installed.cfg

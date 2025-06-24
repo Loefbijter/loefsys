@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+Account delete
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col h-screen">
+
+  <!-- Dark Blue Top Section -->
+  <section class="bg-[#234193] flex flex-col p-8 flex-grow items-center text-white">
+    <p class="text-6xl font-bold mb-6">VERWIJDER ACCOUNT</p>
+
+    <div class="flex flex-col md:flex-row w-full gap-12 text-white text-5xl">
+
+      <!-- Personal Information -->
+      <div class="flex flex-col flex-1 items-center" id="personal-information">
+        <div class="bg-white text-black rounded-3xl w-4/5">
+          <p class="text-3xl font-semibold mb-4 text-center p-8">Weet je zeker dat je je account wil verwijderen?</p>
+          <form method="post" action="{% url 'delete_account' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary p-4 border-2 rounded-3xl shadow-lg w-4/5 bg-gray-200 hover:bg-gray-400 text-center">
+                Verwijder mijn account
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Light Blue Bottom Section -->
+  <section class="bg-[#1BB1E6] p-8 flex flex-auto items-center flex-col">
+    <p class="text-6xl font-bold text-white pb-8 mt-4 text-center">ANNULEREN</p>
+    <a href="{% url 'accountinfo' %}" class="btn btn-primary p-4 border-2 rounded-3xl shadow-lg w-4/5 bg-gray-200 hover:bg-gray-400 text-center">
+        <p class="font-bold text-3xl">Annuleren</p>
+    </a>
+
+  </section>
+
+  {% include "menu.html" %}
+</div>
+{% endblock %}

@@ -7,15 +7,15 @@ Aanmeld pagina
 {% block content %}
 <div class="flex flex-col h-screen">
 
-  <section id="aanmeld-form" class="bg-[#234193] p-8 flex flex-auto flex-col items-center">
+  <section id="aanmeld-form" class="bg-[#2972b3] p-8 flex flex-auto flex-col items-center">
       <p class="text-6xl font-bold text-white pb-8 mt-4">AANMELDEN</p>
       <form method="post" class="bg-white p-8 rounded-3xl shadow-lg w-4/5">
         {% csrf_token %}
         <!-- Email Field -->
         <div class="mb-6">
           <label for="{{ form.email.id_for_label }}" class="block text-lg font-semibold mb-2">Email</label>
-          <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}" 
-                 value="{{ form.email.value|default_if_none:'' }}" 
+          <input type="email" name="{{ form.email.name }}" id="{{ form.email.id_for_label }}"
+                 value="{{ form.email.value|default_if_none:'' }}"
                  class="w-full text-5xl py-4 px-5 border rounded-xl" />
           {% if form.email.errors %}
             <p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>
@@ -62,9 +62,6 @@ Aanmeld pagina
             Inloggen
         </h1>
       </a>
-  </section>  
-  {% include "menu.html" %}
+  </section>
 </div>
 {% endblock %}
-
-
