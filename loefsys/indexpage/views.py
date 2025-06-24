@@ -10,7 +10,7 @@ from loefsys.events.models import Event
 from loefsys.indexpage.models import Announcement
 
 
-class IndexpageView(LoginRequiredMixin, View):
+class IndexpageView(View):
     """View for loading the index page."""
 
     def get(self, request):

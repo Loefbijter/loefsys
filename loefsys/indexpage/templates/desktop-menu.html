@@ -13,23 +13,23 @@
 
         <!-- Logo and title on <md screens -->
         <a href="{% url 'index' %}" class="visible md:invisible md:w-0 h-10 flex pr-2 items-center bg-primary hover:text-primary rounded-full">
-            <img src="/media/Logo.png" alt="Loefbijter Logo" class="h-6 w-auto m-3">
+            <img src="/media/Logo.png" alt="Loefbijter Logo" class="h-7 w-auto m-3">
             <span class="text-lg font-bold text-secondary">N.S.Z.V. De Loefbijter</span>
         </a>
 
         <!-- Navigation links -->
         <div class="hidden md:flex space-x-4 justify-between items-center text-md font-bold px-4">
             <a href="{% url 'index' %}" class="h-10 flex items-center bg-primary hover:text-primary rounded-full">
-                <img src="/media/Logo.png" alt="Loefbijter Logo" class="h-6 w-auto m-3">
+                <img src="/media/Logo.png" alt="Loefbijter Logo" class="h-7 w-auto m-3">
             </a>
-            <a href="" class="text-primary hover:text-secondary hover:bg-primary p-2 rounded-lg">Home</a>
-            <a href="" class="text-primary hover:text-secondary hover:bg-primary p-2 rounded-lg">Over Ons</a>
-            <a href="" class="text-primary hover:text-secondary hover:bg-primary p-2 rounded-lg">Evenementen</a>
-            <a href="" class="text-primary hover:text-secondary hover:bg-primary p-2 rounded-lg">Galerij</a>
+            <a href="" class="text-primary hover:underline p-2 rounded-full">Activiteiten</a>
+            <a href="" class="text-secondary bg-primary p-2 rounded-full">Reserveringen</a>
+            <a href="" class="text-primary hover:underline p-2 rounded-full">Reserveren</a>
+            <a href="" class="text-primary hover:underline p-2 rounded-full">Galerij</a>
         </div>
 
         <!-- User profile icon -->
-        <a href="" class="absolute right-0 text-primary hover:text-secondary hover:bg-primary px-3 py-2 rounded-md text-sm font-medium">
+        <a href="" class="absolute right-0 px-3 py-2 text-sm font-medium">
             <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User Profile" class="h-10 w-10 rounded-full border-2 border-primary">
         </a>
     </div>
