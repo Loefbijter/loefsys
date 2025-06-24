@@ -8,10 +8,10 @@
     {% tailwind_css %}
      <!-- <link rel="stylesheet" href="{% static 'colors.css' %}"> -->
 </head>
-<body style="margin: 0; overflow-x: hidden; background-color: var(--background-blue);">
+<body class="m-0 overflow-x-hidden bg-secondary">
 <!-- header -->
-<div style="background-color: var(--main-bg-color);">
-    <div style="position: sticky; top: 0; z-index: 100;">
+<div class="bg-primary">
+    <div class="sticky top-0 z-1000">
         {% component "wavy-seperator-top" %}  
             {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
                 {% include "desktop-menu.html" %}
@@ -24,7 +24,7 @@
     {% endblock %}
 
     <!-- footer -->
-    <div style="position: sticky; bottom: 0; z-index: 100;">
+    <div class="sticky top-0 z-1000">
         {% component "wavy-seperator-bottom" %}
             {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
                 {% include "footer.html" %}

@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  /* Primary color */
+  --color-primary: oklch(0.9 0.02 230);
+
+  /* Secondary color */
+  --color-secondary: oklch(0.7 0.13 230);
+
+  --color-button: oklch(0.5 0.13 230);
+
+  --color-active: oklch(0.3 0.13 230);
+
+  /* Accent color */
+  --color-accent: #f5a623;
+
+  /* Text color */
+  --color-text: #212529;
+
+}

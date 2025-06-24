@@ -6,20 +6,15 @@ Home
 
 {% block content %}
 <div>
-    <div id="banner" style="
-        z-index: 9;
-        position: relative;
-        top: -5vh;
-        height: 30vh;
-    ">
+    <div class="w-screen h-[30vh] relative bg-accent -top-[3vh]">
         {% include "banner.html" %}
     </div>
 
-    <div style="position: relative; top: -10vh;">
+    <div class="w-screen relative -top-[6vh] z-100">
         {% component "wavy-seperator-full" / %}
     </div>
 
-    <div id="main-content" style="overflow-y: scroll; height: 2500px;">
+    <div class="w-screen relative -top-[9vh] z-10 h-[80vh]">
         <!-- {% block main-content %}
         {% endblock %}         -->
         notification content

@@ -19,6 +19,12 @@ class BaseSettings(ClassySettings):
 
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+    COMPONENTS = ComponentsSettings(
+        dirs=[
+            Path(BASE_DIR) / "loefsys/components",
+        ],
+    )
+
     DEBUG = denv.bool(False)
     ALLOWED_HOSTS = denv.list("")
 
