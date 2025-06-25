@@ -15,6 +15,8 @@ from .views import (
     ProfileSignupView,
 )
 
+app_name = "profile"
+
 urlpatterns = [
     path("", AccountinfoView.as_view(), name="accountinfo"),
     path("/signup", ProfileSignupView.as_view(), name="signup"),

@@ -5,72 +5,66 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
-  <!-- Top Bar -->
-  <section id="calendar-topbar" class="bg-[#2972b3] p-8 flex flex-col">
-    <h1 class="text-6xl font-bold text-white pb-8 mt-4">Kalender</h1>
-  </section>
 
-  <!-- Calendar Section -->
-  <section id="calendar-wrapper" class="bg-[#1BB1E6] flex-auto p-8 overflow-hidden relative">
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+<!-- Calendar Section -->
+<section id="calendar-wrapper" class="flex-auto p-2">
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
 
-    <!-- FullCalendar Container -->
-    <div id='calendar' class="h-[100%] w-[100%] mx-auto p-8 rounded-3xl bg-gray-200"></div>
+  <!-- FullCalendar Container -->
+  <div id='calendar' class="mx-auto"></div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          height: '100%',
-          eventDisplay: 'block',
-          eventColor: '#1BB1E6',
-          customButtons: {
-            synchronize: {
-              text: 'Synchronize calendar',
-                click: function() {
-                window.location.href = "/events/feed";
-                }
-            }
+  <style>
+    .fc-button {
+      background-color: var(--color-background) !important;
+      color: var(--color-primary) !important;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'list',
+        height: '85vh',
+        eventDisplay: 'block',
+        eventColor: 'var(--color-secondary)',
+        customButtons: {
+          synchronize: {
+            text: 'Synchronize calendar',
+              click: function() {
+              window.location.href = "/events/feed";
+              }
+          }
+        },
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,listWeek synchronize'
+        },
+        views: {
+          timeGridWeek: {
+            type: 'timeGrid',
+            duration: { weeks: 1 }
           },
-          headerToolbar: {
-            left: 'prev,next today synchronize',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-          },
-          views: {
-            timeGridWeek: {
-              type: 'timeGrid',
-              duration: { weeks: 1 }
-            },
-            timeGridDay: {
-              type: 'timeGridDay',
-              duration: { days: 1 }
-            },
-            listWeek: {
-              type: 'list',
-              duration: { weeks: 1 }
-            }
-          },
-          events: {
-            url: "/events/event_filler",
-            method: 'GET'
-          },
-          eventTimeFormat: {
-            hour: '2-digit',
-            minute: '2-digit',
-            meridiem: false,
-            hour12: false
-          },
-        });
-        calendar.render();
+          listWeek: {
+            type: 'list',
+            duration: { weeks: 1 }
+          }
+        },
+        events: {
+          url: "/events/event_filler",
+          method: 'GET'
+        },
+        eventTimeFormat: {
+          hour: '2-digit',
+          minute: '2-digit',
+          meridiem: false,
+          hour12: false
+        },
       });
-    </script>
-  </section>
-  <div class="pb-27">
-    {% include "menu.html" %}
-  </div>
-</div>
+      calendar.render();
+    });
+  </script>
+</section>
 
 {% endblock %}
