@@ -23,6 +23,7 @@ Login
             {% endif %}
           </div>
           <input type="text" name="username" id="id_username" autocomplete="email" required
+            tabindex="1"
             value="{{ form.username.value|default_if_none:'' }}" 
             class="
             mt-2
@@ -36,13 +37,14 @@ Login
           <div class="flex items-center justify-between text-sm/6">
             <label for="id_password" class="block font-medium text-primary">Wachtwoord</label>
             <div class="text-sm">
-              <a href="{% url 'password_reset' %}" class="font-semibold text-background hover:underline">Wachtwoord vergeten?</a>
+              <a href="{% url 'password_reset' %}" tabindex="4" class="font-semibold text-background hover:underline">Wachtwoord vergeten?</a>
             </div>
           </div>
           {% if form.password.errors %}
               <p class="text-danger font-medium text-sm/6">{{ form.password.errors.0 }}</p>
           {% endif %}
           <input type="password" name="password" id="id_password" autocomplete="current-password" required 
+            tabindex="2"
             class="
             mt-2
             block w-full rounded-md bg-primary px-3 py-1.5 
@@ -52,7 +54,7 @@ Login
         </div>
 
         <div>
-          <button type="submit" 
+          <button type="submit" tabindex="3"
             class="
             flex w-full justify-center rounded-md
             bg-background px-3 py-1.5 text-sm/6 font-semibold text-primary
@@ -68,7 +70,7 @@ Login
 
       <p class="mt-10 text-center text-sm/6 text-active">
         Geen account?
-        <a href="{% url 'signup' %}" class="font-semibold text-background hover:underline">Account aanmaken</a>
+        <a href="{% url 'signup' %}" tabindex="5" class="font-semibold text-background hover:underline">Account aanmaken</a>
       </p>
     </div>
   </div>

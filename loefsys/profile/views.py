@@ -26,7 +26,7 @@ User = get_user_model()
 class ProfileLoginView(LoginView):
     """View for logging in users."""
 
-    next_page = "/profile/"
+    next_page = "/profile"
 
 
 class ProfileSignupView(FormView):
