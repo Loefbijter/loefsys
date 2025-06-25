@@ -37,7 +37,7 @@ Login
           <div class="flex items-center justify-between text-sm/6">
             <label for="id_password" class="block font-medium text-primary">Wachtwoord</label>
             <div class="text-sm">
-              <a href="{% url 'password_reset' %}" tabindex="4" class="font-semibold text-background hover:underline">Wachtwoord vergeten?</a>
+              <a href="{% url 'profile:password_reset' %}" tabindex="4" class="font-semibold text-background hover:underline">Wachtwoord vergeten?</a>
             </div>
           </div>
           {% if form.password.errors %}
@@ -70,7 +70,7 @@ Login
 
       <p class="mt-10 text-center text-sm/6 text-active">
         Geen account?
-        <a href="{% url 'signup' %}" tabindex="5" class="font-semibold text-background hover:underline">Account aanmaken</a>
+        <a href="{% url 'profile:signup' %}" tabindex="5" class="font-semibold text-background hover:underline">Account aanmaken</a>
       </p>
     </div>
   </div>
