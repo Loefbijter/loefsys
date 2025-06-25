@@ -2,28 +2,23 @@
     <div class="flex items-center justify-between">
 
         <!-- Open side menu -->
-        <svg class="visible md:invisible md:w-0 mx-2 text-text block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+        <svg class="visible md:invisible mx-2 text-text block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
 
-        <!-- Close side menu -->
-        <!-- <svg class="visible md:invisible size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-        </svg> -->
-
         <!-- Logo and title on <md screens -->
-        <a href="{% url 'index' %}" class="visible md:invisible md:w-0 h-10 flex pr-2 items-center bg-primary hover:text-primary rounded-full">
-            <img src="/media/Logo.png" alt="Loefbijter Logo" class="h-7 w-auto m-3">
-            <span class="text-lg font-bold text-secondary">N.S.Z.V. De Loefbijter</span>
+        <a href="{% url 'index' %}" class="h-10 p-3 flex items-center bg-primary hover:text-primary rounded-full">
+            <img src="/media/Logo.png" alt="Loefbijter Logo" class="h-7 w-auto mx-2">
+            <span class="md:w-0 md:invisible text-lg font-bold text-background">N.S.Z.V. De Loefbijter</span>
         </a>
 
         <!-- Navigation links -->
         <div class="hidden md:flex space-x-4 justify-between items-center text-md font-bold px-4">
-            <a href="{% url 'index' %}" class="h-10 flex items-center bg-primary hover:text-primary rounded-full">
+            <!-- <a href="{% url 'index' %}" class="h-10 flex items-center bg-primary hover:text-primary rounded-full">
                 <img src="/media/Logo.png" alt="Loefbijter Logo" class="h-7 w-auto m-3">
-            </a>
+            </a> -->
             <a href="" class="text-primary hover:underline p-2 rounded-full">Activiteiten</a>
-            <a href="" class="text-secondary bg-primary p-2 rounded-full">Reserveringen</a>
+            <a href="" class="text-background bg-primary p-2 rounded-full">Reserveringen</a>
             <a href="" class="text-primary hover:underline p-2 rounded-full">Reserveren</a>
             <a href="" class="text-primary hover:underline p-2 rounded-full">Galerij</a>
         </div>

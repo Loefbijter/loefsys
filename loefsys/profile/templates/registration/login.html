@@ -5,61 +5,71 @@ Login
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
 
-  <!-- Login Form Section -->
-  <section class="bg-[#2972b3] p-8 flex flex-col flex-grow items-center">
-    <p class="text-6 xl font-bold text-white pb-8 mt-4">LOGIN</p>
+<div class="flex flex-col justify-center py-6">
 
-    <form method="post" class="bg-white p-8 rounded-3xl shadow-lg w-4/5 center">
-      {% csrf_token %}
+  <img class="mx-auto my-8 h-20 w-auto" src="/media/Logo.png" alt="N.S.Z.V. De Loefbijter" />
 
-      <!-- Email Field -->
-      <div class="mb-6">
-        <label for="id_username" class="block text-lg font-semibold mb-2 text-black">Email</label>
-        <input type="text" name="username" id="id_username"
-               value="{{ form.username.value|default_if_none:'' }}"
-               class="w-full text-5xl py-4 px-5 border rounded-xl" required />
-        {% if form.username.errors %}
-          <p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>
+  <div class="mx-auto rounded-xl bg-secondary px-6 pb-12 md:px-8 md:w-150">
+    <h2 class="my-8 text-center text-2xl/9 font-bold tracking-tight text-primary">Log in om verder te gaan</h2>
+    <div class="mx-auto w-full max-w-sm md:max-w-lg">
+      <form class="space-y-6" method="post">
+        {% csrf_token %}
+        <div>
+          <div class="flex space-x-4 text-sm/6">
+            <label for="id_username" class="block font-medium text-primary">Email</label>
+            {% if form.username.errors %}
+              <p class="text-danger font-medium">{{ form.username.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <input type="text" name="username" id="id_username" autocomplete="email" required
+            value="{{ form.username.value|default_if_none:'' }}" 
+            class="
+            mt-2
+            block w-full rounded-md bg-primary px-3 py-1.5 
+            text-base text-background outline-1 -outline-offset-1 
+            outline-background placeholder:secondary
+            focus:outline-2 focus:-outline-offset-2 sm:text-sm/6" />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between text-sm/6">
+            <label for="id_password" class="block font-medium text-primary">Wachtwoord</label>
+            <div class="text-sm">
+              <a href="{% url 'password_reset' %}" class="font-semibold text-background hover:underline">Wachtwoord vergeten?</a>
+            </div>
+          </div>
+          {% if form.password.errors %}
+              <p class="text-danger font-medium text-sm/6">{{ form.password.errors.0 }}</p>
+          {% endif %}
+          <input type="password" name="password" id="id_password" autocomplete="current-password" required 
+            class="
+            mt-2
+            block w-full rounded-md bg-primary px-3 py-1.5 
+            text-base text-background outline-1 -outline-offset-1 
+            outline-background placeholder:secondary
+            focus:outline-2 focus:-outline-offset-2 sm:text-sm/6" />
+        </div>
+
+        <div>
+          <button type="submit" 
+            class="
+            flex w-full justify-center rounded-md
+            bg-background px-3 py-1.5 text-sm/6 font-semibold 
+            text-primary shadow-xs hover:bg-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-active">Sign in</button>
+        </div>
+        {% if form.non_field_errors %}
+          <p class="text-danger font-medium mt-1">{{ form.non_field_errors.0 }}</p>
         {% endif %}
-      </div>
+      </form>
 
-      <!-- Password Field -->
-      <div class="mb-6">
-        <label for="id_password" class="block text-lg font-semibold mb-2 text-black">Wachtwoord</label>
-        <input type="password" name="password" id="id_password"
-               class="w-full text-5xl py-4 px-5 border rounded-xl" required />
-        {% if form.password.errors %}
-          <p class="text-red-500 text-sm mt-1">{{ form.password.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <!-- Non-field Errors -->
-      {% if form.non_field_errors %}
-        <p class="text-red-500 text-sm mt-1">{{ form.non_field_errors.0 }}</p>
-      {% endif %}
-
-      <!-- Login Button -->
-      <button type="submit" class="p-4 border-2 rounded-3xl shadow-lg w-full bg-gray-200 hover:bg-gray-400 text-center mt-4 flex items-center justify-center">
-        <h1 class="font-bold text-5xl">Login</h1>
-      </button>
-    </form>
-  </section>
-
-  <!-- Navigation Buttons Section -->
-  <section class="bg-[#1BB1E6] p-8 flex-auto">
-    <p class="text-5xl font-bold text-white pb-8 mt-4">GEEN TOEGANG?</p>
-    <a href="{% url 'password_reset' %}" class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
-      <h1 class="font-bold text-3xl">
-          Wachtwoord Vergeten?
-      </h1>
-    </a>
-    <a href="{% url 'signup' %}" class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
-      <h1 class="font-bold text-3xl">
-          Aanmelden
-      </h1>
-    </a>
-  </section>
+      <p class="mt-10 text-center text-sm/6 text-active">
+        Geen account?
+        <a href="{% url 'signup' %}" class="font-semibold text-background hover:underline">Account aanmaken</a>
+      </p>
+    </div>
+  </div>
 </div>
+
+
 {% endblock %}
