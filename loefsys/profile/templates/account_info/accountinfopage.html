@@ -5,7 +5,56 @@ Account information
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
+
+<section id="profile" class="max-w-200 mx-auto mt-8 border-2 p-4">
+  <h1>Jouw publiek profiel</h1>
+  <div class="flex flex-wrap justify-center items-center border-2">
+    <div class="basis-64 m-4 aspect-square border-2">
+      <img class="rounded-full shadow-xl" src="{% if user_info.picture %}{{ user_info.picture.url }}{% else %}https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80{% endif %}" alt = "Profile Picture">
+    </div>
+    <div class="basis-64 m-4 border-2 text-xl">
+      <h4>{{ user_info.name }}</h4>
+      <h2>{{ user_info.email }}</h2>
+      <h2>{{ user_info.phone_number }}</h2>
+
+      {% if user_info.groups.count != 0 %}
+      <div>
+          <h3>Mijn groepen</h3>
+          {% for group in user_info.groups %}
+              <h4>{{ group.name }}</h4>
+              <p>{{ group.description }}<p>
+          {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% if member_info|length != 0 %}
+      <div class="flex flex-col flex-1 items-center" id="membership-information">
+        <p class="text-4xl font-semibold mb-6">Lidmaatschapsgegevens</p>
+        <div class="w-4/5 space-y-4">
+          {% if member_info.show_birthday %}
+            {% include 'account_info/panel.html' with key='Date of birth' value=member_info.birthday %}
+          {% endif %}
+          {% include 'account_info/panel.html' with key='Member since' value=member_info.member_since %}
+        </div>
+
+        <div class="mt-6 w-4/5">
+          <p class="text-3xl font-semibold mb-2">Deelnames</p>
+          {% for activity in member_info.activities %}
+            <div class="mb-2">
+              <p class="text-xl font-bold">{{ activity.title }}</p>
+              <p>{{ activity.description }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+
+<div class="hidden flex flex-col h-screen">
 
   <!-- Dark Blue Top Section -->
   <section class="bg-[#234193] flex flex-col p-8 flex-grow items-center text-white">
@@ -34,42 +83,13 @@ Account information
             </div>
           </div>
 
-          {% if user_info.groups.count != 0 %}
-          <div>
-              <h3>Mijn groepen</h3>
-              {% for group in user_info.groups %}
-                  <h4>{{ group.name }}</h4>
-                  <p>{{ group.description }}<p>
-              {% endfor %}
-          </div>
-          {% endif %}
+
         </div>
       </div>
 
 
       <!-- Leden Informatie -->
-      {% if member_info|length != 0 %}
-      <div class="flex flex-col flex-1 items-center" id="membership-information">
-        <p class="text-4xl font-semibold mb-6">Lidmaatschapsgegevens</p>
-        <div class="w-4/5 space-y-4">
-          {% if member_info.show_birthday %}
-            {% include 'account_info/panel.html' with key='Date of birth' value=member_info.birthday %}
-          {% endif %}
-          {% include 'account_info/panel.html' with key='Member since' value=member_info.member_since %}
-        </div>
 
-        <div class="mt-6 w-4/5">
-          <p class="text-3xl font-semibold mb-2">Deelnames</p>
-          {% for activity in member_info.activities %}
-            <div class="mb-2">
-              <p class="text-xl font-bold">{{ activity.title }}</p>
-              <p>{{ activity.description }}</p>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-      {% endif %}
-    </div>
 
     <!-- Buttons -->
     <div class="w-4/5 flex flex-col gap-4 mt-10 items-center">
@@ -88,15 +108,5 @@ Account information
     </div>
   </section>
 
-  <!-- Light Blue Bottom Section -->
-  <section class="bg-[#1BB1E6] p-8 flex flex-auto items-center flex-col">
-    <p class="text-6xl font-bold text-white pb-8 mt-4 text-center">ACCOUNT VERWIJDEREN</p>
-    <a href="{% url 'delete_account' %}" class="btn btn-primary p-4 border-2 rounded-3xl shadow-lg w-4/5 bg-gray-200 hover:bg-gray-400 text-center">
-      <p class="font-bold text-5xl">Verwijderen</p>
-    </a>
-  </section>
-  <div class="pb-27">
-    {% include "menu.html" %}
-  </div>
 </div>
 {% endblock %}
