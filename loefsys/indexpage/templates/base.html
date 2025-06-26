@@ -2,16 +2,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <meta content="translucent-black" name="apple-mobile-web-app-status-bar-style"> -->
+
     <title>{% block title %}{% endblock %} | Loefbijter</title>
     <link rel="icon" type="image/x-icon" href="/media/loefbijter-logo.svg">
     {% tailwind_preload_css %}
     {% tailwind_css %}
-     <!-- <link rel="stylesheet" href="{% static 'colors.css' %}"> -->
 </head>
 <body class="m-0 overflow-x-hidden bg-secondary w-full min-h-screen">
-<!-- header -->
-<div class="flex flex-col min-h-screen min-w-screen bg-primary">
-    <div class="sticky top-0">
+<div class="flex flex-col min-h-screen w-screen bg-primary">
+    <!-- header -->
+    <div class="sticky top-0 z-1000">
         {% component "wavy-seperator-top" %}  
             {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
                 {% include "desktop-menu.html" %}
@@ -26,7 +28,7 @@
     </div>
 
     <!-- footer -->
-    <div class="self-end">
+    <div>
         {% component "wavy-seperator-bottom" %}
             {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
                 {% include "footer.html" %}
