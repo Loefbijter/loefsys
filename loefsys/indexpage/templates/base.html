@@ -8,10 +8,10 @@
     {% tailwind_css %}
      <!-- <link rel="stylesheet" href="{% static 'colors.css' %}"> -->
 </head>
-<body class="m-0 overflow-x-hidden bg-secondary">
+<body class="m-0 overflow-x-hidden bg-secondary w-full min-h-screen">
 <!-- header -->
-<div class="bg-primary">
-    <div class="sticky top-0 z-1000">
+<div class="flex flex-col min-h-screen min-w-screen bg-primary">
+    <div class="sticky top-0">
         {% component "wavy-seperator-top" %}  
             {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
                 {% include "desktop-menu.html" %}
@@ -19,22 +19,21 @@
         {% endcomponent %}
     </div>
 
-    <!-- (var(--spacing)*15)-3vh) is the height of the top bar -->
-    <div class="relative w-screen min-h-[calc(100vh-(var(--spacing)*15)-3vh)]">
-        <!-- main content -->
+    <!-- main content -->
+    <div class="grow">
         {% block content %}
         {% endblock %}
+    </div>
 
-        <!-- footer -->
-        <div class="absolute bottom-0 z-1000">
-            {% component "wavy-seperator-bottom" %}
-                {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
-                    {% include "footer.html" %}
-                {% else %} {# request is from a smartphone #}
-                    {% include "smartphone-menu.html" %}
-                {% endif %}
-            {% endcomponent %}
-        </div>
+    <!-- footer -->
+    <div class="self-end">
+        {% component "wavy-seperator-bottom" %}
+            {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
+                {% include "footer.html" %}
+            {% else %} {# request is from a smartphone #}
+                {% include "smartphone-menu.html" %}
+            {% endif %}
+        {% endcomponent %}
     </div>
 </div>
 </body>

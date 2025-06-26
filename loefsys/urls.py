@@ -10,14 +10,16 @@ urlpatterns = [
     path("admin", admin.site.urls),
 
     path("", include("loefsys.indexpage.urls")),
-    path("profile", include("loefsys.profile.urls"), name="profile"),
-    path("account", include("loefsys.accountinfopage.urls")),
-    path("reservations", include("loefsys.reservations.urls"), name="reservations"),
-    path("events", include("loefsys.events.urls"), name="events"),
+    
+    
+    path("profile/", include("loefsys.profile.urls"), name="profile"),
+    path("account/", include("loefsys.accountinfopage.urls")),
+    path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
+    path("events/", include("loefsys.events.urls"), name="events"),
 
     path("", include("django_components.urls")),
     path("__reload__", include("django_browser_reload.urls")),
-    *debug_toolbar_urls(),
+    # *debug_toolbar_urls(),
 ]
 
 if settings.DEBUG:

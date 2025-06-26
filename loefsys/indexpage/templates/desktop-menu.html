@@ -7,11 +7,11 @@
         </svg>
 
         <!-- Logo and title on <md screens -->
-        <a href="{% url 'index' %}" 
+        <a href="{% url 'index' %}"
           class="
-              h-10 p-3 flex items-center 
-              bg-primary hover:text-primary 
-              rounded-full border-t-1 border-primary-highlight 
+              h-10 p-3 flex items-center
+              bg-primary hover:text-primary
+              rounded-full border-t-1 border-primary-highlight
               shadow-sm hover:shadow-md
           ">
             <img src="/media/loefbijter-logo.svg" alt="Loefbijter Logo" class="h-7 w-auto mx-2">
@@ -21,16 +21,16 @@
         <!-- Navigation links -->
         <div class="hidden md:flex space-x-4 justify-between items-center text-md font-bold px-4">
             <a href="{% url 'events:events' %}" class="text-primary hover:underline p-2 rounded-full">Activiteiten</a>
-            <a href="{% url 'reservations:reservations' %}" class="text-background bg-primary p-2 rounded-full shadow-sm border-t-1 border-primary-hightlight">Reserveringen</a>
+            <a href="{% url 'reservations:reservations' %}" class="text-secondary bg-primary p-2 rounded-full shadow-sm border-t-1 border-primary-hightlight">Reserveringen</a>
             <a href="" class="text-primary hover:underline p-2 rounded-full">Reserveren</a>
             <a href="" class="text-primary hover:underline p-2 rounded-full">Galerij</a>
         </div>
 
         <!-- User profile icon -->
         <a href="{% url 'profile:accountinfo' %}" class="absolute right-0 px-3 py-2 text-sm font-medium">
-            <img 
+            <img
               src="{% if user_info.picture %}{{ user_info.picture.url }}{% else %}https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80{% endif %}"
-              alt="User Profile" 
+              alt="User Profile"
               class="h-10 w-10 rounded-full border-2 border-primary shadow-sm hover:shadow-md border-t-primary-hightlight">
         </a>
     </div>

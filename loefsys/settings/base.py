@@ -89,5 +89,5 @@ class BaseSettings(ClassySettings):
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
         middleware = ("django_browser_reload.middleware.BrowserReloadMiddleware",)
-        debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
-        return middleware + debug_middleware if self.DEBUG else middleware
+        #debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+        return middleware #+ debug_middleware if self.DEBUG else middleware
