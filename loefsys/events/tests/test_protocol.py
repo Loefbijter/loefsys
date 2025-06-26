@@ -16,7 +16,7 @@ from loefsys.events.models.registration_form_field import (
     IntegerRegistrationInformation,
     TextRegistrationInformation,
 )
-from loefsys.users.models import User
+from loefsys.members.models import User
 
 
 class EventRegistrationTestCase(TestCase):

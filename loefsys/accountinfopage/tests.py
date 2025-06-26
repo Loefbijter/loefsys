@@ -13,7 +13,7 @@ from django.urls import reverse
 from django_dynamic_fixture import G
 
 from loefsys.groups.models import LoefbijterGroup
-from loefsys.users.models import MemberDetails, Membership, User
+from loefsys.members.models import MemberDetails, Membership, User
 
 
 class EditAccountInformationTestCase(TestCase):

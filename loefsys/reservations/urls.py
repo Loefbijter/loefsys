@@ -11,6 +11,8 @@ from .views import (
     ReservationUpdateView,
 )
 
+app_name = "reservations"
+
 urlpatterns = [
     path("", ReservationListView.as_view(), name="reservations"),
     path("add/<int:location>", ReservationCreateView.as_view(), name="reservation-add"),

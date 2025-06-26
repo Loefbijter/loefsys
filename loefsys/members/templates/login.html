@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+
+<div class="flex flex-col justify-center items-center py-6 px-2">
+
+  <img class="my-8 h-20 w-auto" src="{% static 'loefbijter-logo.svg' %}" alt="N.S.Z.V. De Loefbijter" />
+
+  <div class="rounded-xl shadow-2xl bg-secondary px-6 pb-12 md:px-8 md:w-150 border-t-3 border-background">
+    <h2 class="my-8 text-center text-2xl/9 font-bold tracking-tight text-primary">Log in om verder te gaan</h2>
+    <div class="mx-auto w-full max-w-sm md:max-w-lg">
+      <form class="space-y-6" method="post">
+        {% csrf_token %}
+        <div>
+          <div class="flex space-x-4 text-sm/6">
+            <label for="id_username" class="block font-medium text-primary">Email</label>
+            {% if form.username.errors %}
+              <p class="text-danger font-medium">{{ form.username.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <input type="text" name="username" id="id_username" autocomplete="email" required
+            tabindex="1"
+            value="{{ form.username.value|default_if_none:'' }}" 
+            class="
+            mt-2
+            block w-full rounded-md bg-primary px-3 py-1.5 
+            text-base text-background outline-1 -outline-offset-1 
+            outline-background placeholder:secondary
+            focus:outline-2 focus:-outline-offset-2 sm:text-sm/6" />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between text-sm/6">
+            <label for="id_password" class="block font-medium text-primary">Wachtwoord</label>
+            <div class="text-sm">
+              <a href="{% url 'members:reset-password' %}" tabindex="4" class="font-semibold text-background hover:underline">Wachtwoord vergeten?</a>
+            </div>
+          </div>
+          {% if form.password.errors %}
+              <p class="text-danger font-medium text-sm/6">{{ form.password.errors.0 }}</p>
+          {% endif %}
+          <input type="password" name="password" id="id_password" autocomplete="current-password" required 
+            tabindex="2"
+            class="
+            mt-2
+            block w-full rounded-md bg-primary px-3 py-1.5 
+            text-base text-background outline-1 -outline-offset-1 
+            outline-background placeholder:secondary
+            focus:outline-2 focus:-outline-offset-2 sm:text-sm/6" />
+        </div>
+
+        <div>
+          <button type="submit" tabindex="3"
+            class="
+            flex w-full justify-center rounded-md
+            bg-background px-3 py-1.5 text-sm/6 font-semibold text-primary
+            border-t-2 border-background-highlight shadow-md 
+            hover:shadow-lg hover:bg-active hover:border-active-highlight
+            focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-active
+            ">Inloggen</button>
+        </div>
+        {% if form.non_field_errors %}
+          <p class="text-danger font-medium mt-1">{{ form.non_field_errors.0 }}</p>
+        {% endif %}
+      </form>
+
+      <p class="mt-10 text-center text-sm/6 text-active">
+        Geen account?
+        <a href="" tabindex="5" class="font-semibold text-background hover:underline">Account aanmaken</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

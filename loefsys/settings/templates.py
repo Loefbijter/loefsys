@@ -10,8 +10,12 @@ class TemplateSettings:
         return (
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
-                "APP_DIRS": True,
-                "OPTIONS": {"context_processors": self.templates_context_processors()},
+                "DIRS": [self.BASE_DIR / "templates"],
+                "OPTIONS": {
+                    "context_processors": self.templates_context_processors(),
+                    "loaders": self.templates_loaders(),
+                    "builtins": self.templates_builtins(),
+                },
             },
         )
 
@@ -20,3 +24,23 @@ class TemplateSettings:
             "django.template.context_processors.debug",
             "django.template.context_processors.request",
         )
+
+    def templates_loaders(self):  # noqa D102
+        return [
+            (
+                "django.template.loaders.cached.Loader",
+                [
+                    # Default Django loader
+                    "django.template.loaders.filesystem.Loader",
+                    # Including this is the same as APP_DIRS=True
+                    "django.template.loaders.app_directories.Loader",
+                    # Components loader
+                    "django_components.template_loader.Loader",
+                ]
+            )
+        ]
+
+    def templates_builtins(self):  # noqa D102
+        return [
+            "django_components.templatetags.component_tags",
+        ]

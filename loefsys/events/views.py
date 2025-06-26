@@ -191,7 +191,6 @@ class RegistrationFormView(FormView, LoginRequiredMixin):
         return redirect(self.success_url)
 
 
-# TODO fix that use of login required is not used double here
 class CalendarView(DetailView, LoginRequiredMixin):
     """View for displaying the event calendar."""
 

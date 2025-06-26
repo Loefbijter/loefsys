@@ -1,0 +1,42 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- <meta content="translucent-black" name="apple-mobile-web-app-status-bar-style"> -->
+
+    <title>{% block title %}{% endblock %} | Loefbijter</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'loefbijter-logo.svg' %}">
+    {% tailwind_preload_css %}
+    {% tailwind_css %}
+</head>
+<body class="m-0 overflow-x-hidden bg-secondary w-full min-h-screen">
+<div class="flex flex-col min-h-screen w-screen bg-primary">
+    <!-- header -->
+    <div class="sticky top-0 z-1000">
+        {% component "wavy-seperator-top" %}  
+            {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
+                {% include "desktop-menu.html" %}
+            {% endif %}
+        {% endcomponent %}
+    </div>
+
+    <!-- main content -->
+    <div class="grow">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- footer -->
+    <div>
+        {% component "wavy-seperator-bottom" %}
+            {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
+                {% include "footer.html" %}
+            {% else %} {# request is from a smartphone #}
+                {% include "smartphone-menu.html" %}
+            {% endif %}
+        {% endcomponent %}
+    </div>
+</div>
+</body>
+</html>

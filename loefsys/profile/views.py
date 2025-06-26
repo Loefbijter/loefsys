@@ -14,8 +14,8 @@ from django.urls import reverse_lazy
 from django.views.generic import DeleteView, View
 from django.views.generic.edit import FormView
 
-from loefsys.users.models import MemberDetails
-from loefsys.users.models.membership import Membership
+from loefsys.members.models import MemberDetails
+from loefsys.members.models.membership import Membership
 
 from . import forms
 from .forms import SignupForm
@@ -26,7 +26,7 @@ User = get_user_model()
 class ProfileLoginView(LoginView):
     """View for logging in users."""
 
-    next_page = "/profile/"
+    next_page = "/profile"
 
 
 class ProfileSignupView(FormView):

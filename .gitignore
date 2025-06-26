@@ -1,4 +1,7 @@
 db.sqlite*
+.vscode/
+loefsys/*/migrations/0*.py
+media/
 
 ### Python template
 # Byte-compiled / optimized / DLL files

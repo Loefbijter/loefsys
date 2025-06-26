@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import cast
 
 from cbs import BaseSettings as ClassySettings, env
+from django_components import ComponentsSettings
 
 denv = env["DJANGO_"]
 
@@ -18,6 +19,12 @@ class BaseSettings(ClassySettings):
 
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+    COMPONENTS = ComponentsSettings(
+        dirs=[
+            Path(BASE_DIR) / "components",
+        ],
+    )
+
     DEBUG = denv.bool(False)
     ALLOWED_HOSTS = denv.list("")
 
@@ -28,10 +35,7 @@ class BaseSettings(ClassySettings):
 
     LOGIN_URL = "login"
 
-    STATIC_URL = "static/"
-
-    MEDIA_URL = "/media/"
-    MEDIA_ROOT = BASE_DIR / "media"
+    TAILWIND_APP_NAME = "loefsys.theme"
 
     @denv
     def SECRET_KEY(self) -> str:  # noqa N802 D102
@@ -44,17 +48,23 @@ class BaseSettings(ClassySettings):
         return ("django.contrib.contenttypes",)
 
     def THIRD_PARTY_APPS(self) -> Sequence[str]:  # noqa N802 D102
-        return ("debug_toolbar",) if self.DEBUG else ()
+        apps = (
+            "django_components",
+            "tailwind",
+            "django_browser_reload",
+        )
+        debug_apps = ("debug_toolbar",)
+        return apps + debug_apps if self.DEBUG else apps
 
     def LOCAL_APPS(self) -> Sequence[str]:  # noqa N802 D102
         return (
             "loefsys.events",
             "loefsys.groups",
             "loefsys.reservations",
-            "loefsys.users",
-            "loefsys.indexpage",
+            "loefsys.members",
+            "loefsys.home",
             "loefsys.profile",
-            "loefsys.accountinfopage",
+            "loefsys.theme",
         )
 
     def INSTALLED_APPS(self) -> Sequence[str]:  # noqa N802 D102
@@ -65,6 +75,6 @@ class BaseSettings(ClassySettings):
         )
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
-        return (
-            ("debug_toolbar.middleware.DebugToolbarMiddleware",) if self.DEBUG else ()
-        )
+        middleware = ("django_browser_reload.middleware.BrowserReloadMiddleware",)
+        debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+        return middleware + debug_middleware if self.DEBUG else middleware

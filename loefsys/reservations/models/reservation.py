@@ -6,11 +6,11 @@ from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from loefsys.members.models.user import User
+from loefsys.members.models.user_skippership import UserSkippership
 from loefsys.reservations.models.boat import Boat
 from loefsys.reservations.models.choices import ReservableCategories
 from loefsys.reservations.models.reservable import ReservableItem
-from loefsys.users.models.user import User
-from loefsys.users.models.user_skippership import UserSkippership
 
 
 class Reservation(models.Model):

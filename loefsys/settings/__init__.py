@@ -20,7 +20,6 @@ from .admin import AdminSettings
 from .database import DatabaseSettings
 from .locale import LocaleSettings
 # from .logging import LoggingSettings
-# from .storage import StorageSettings
 # isort: on
 # fmt: on
 

@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.crypto import get_random_string
 
-from loefsys.users.models import User
+from loefsys.members.models import User
 
 
 class FeedToken(models.Model):

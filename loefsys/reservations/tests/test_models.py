@@ -6,10 +6,10 @@ from django.forms import ValidationError
 from django.test import TestCase
 from django_dynamic_fixture import G
 
+from loefsys.members.models.user import User
 from loefsys.reservations.models import Boat, Material, ReservableType, Reservation
 from loefsys.reservations.models.choices import Locations, ReservableCategories
 from loefsys.reservations.models.reservable import ReservableItem
-from loefsys.users.models.user import User
 
 
 class BoatTestCase(TestCase):

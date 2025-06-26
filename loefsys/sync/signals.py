@@ -3,7 +3,7 @@
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
 
-from loefsys.users.models import (
+from loefsys.members.models import (
     Address,
     MemberDetails,
     Membership,

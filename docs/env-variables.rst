@@ -36,6 +36,11 @@ Django
     * Default: ``"Europe/Amsterdam"``
     * Used to set the variable `TIME_ZONE <https://docs.djangoproject.com/en/5.0/ref/settings/#time-zone>`_.
 
+* ``DJANGO_ALLOWED_HOSTS``
+
+    * Default: ``[""]``
+    * Used to set the variable `ALLOWED_HOSTS <https://docs.djangoproject.com/en/5.2/ref/settings/#allowed-hosts>`_.
+
 AWS
 ^^^
 

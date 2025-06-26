@@ -4,8 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.views.generic import View
 
-from loefsys.users.models import MemberDetails
-from loefsys.users.models.membership import Membership
+from loefsys.members.models import MemberDetails
+from loefsys.members.models.membership import Membership
 
 from . import forms
 
