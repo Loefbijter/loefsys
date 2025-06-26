@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from loefsys.users.models.skippership import Skippership
+from loefsys.members.models.skippership import Skippership
 
 from .choices import FleetChoices
 from .reservable import ReservableItem

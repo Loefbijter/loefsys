@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import PhoneNumberField
 
-from loefsys.users.models import MemberDetails, User
+from loefsys.members.models import MemberDetails, User
 
 
 class SignupForm(UserCreationForm):

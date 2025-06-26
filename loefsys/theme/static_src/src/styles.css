@@ -9,4 +9,5 @@
   * the scope of this path.
   */
 @source "../../../**/*.{html,py,js}";
+@source "../../../../{templates,components}/*.{html,py,js}";
 @source "../../../**/**/*.{html,py,js}";

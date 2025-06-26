@@ -21,7 +21,7 @@ class BaseSettings(ClassySettings):
 
     COMPONENTS = ComponentsSettings(
         dirs=[
-            Path(BASE_DIR) / "loefsys/components",
+            Path(BASE_DIR) / "components",
         ],
     )
 
@@ -35,19 +35,7 @@ class BaseSettings(ClassySettings):
 
     LOGIN_URL = "login"
 
-    STATIC_URL = "static/"
-    TAILWIND_APP_NAME = 'loefsys.theme'
-
-    STATICFILES_FINDERS = [
-        # Default finders
-        "django.contrib.staticfiles.finders.FileSystemFinder",
-        "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-        # Django components
-        "django_components.finders.ComponentsFileSystemFinder",
-    ]
-
-    MEDIA_URL = "/media/"
-    MEDIA_ROOT = BASE_DIR / "media"
+    TAILWIND_APP_NAME = "loefsys.theme"
 
     @denv
     def SECRET_KEY(self) -> str:  # noqa N802 D102
@@ -73,10 +61,9 @@ class BaseSettings(ClassySettings):
             "loefsys.events",
             "loefsys.groups",
             "loefsys.reservations",
-            "loefsys.users",
-            "loefsys.indexpage",
+            "loefsys.members",
+            "loefsys.home",
             "loefsys.profile",
-            "loefsys.accountinfopage",
             "loefsys.theme",
         )
 
@@ -89,5 +76,5 @@ class BaseSettings(ClassySettings):
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
         middleware = ("django_browser_reload.middleware.BrowserReloadMiddleware",)
-        #debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
-        return middleware #+ debug_middleware if self.DEBUG else middleware
+        debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+        return middleware + debug_middleware if self.DEBUG else middleware

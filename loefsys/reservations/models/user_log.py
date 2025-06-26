@@ -2,7 +2,7 @@
 
 from django.db import models
 
-from loefsys.users.models.user import User
+from loefsys.members.models.user import User
 
 
 class UserLog(models.Model):

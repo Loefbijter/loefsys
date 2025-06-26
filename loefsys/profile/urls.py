@@ -6,7 +6,6 @@ from django.urls import path
 from .views import (
     AccountinfoView,
     AccountinfoeditView,
-    DeleteAccountView,
     ProfileLoginView,
     ProfilePasswordResetCompleteView,
     ProfilePasswordResetConfirmView,

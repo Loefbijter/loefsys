@@ -2,7 +2,7 @@
 
 from django import forms
 
-from loefsys.users.models import MemberDetails, User
+from loefsys.members.models import MemberDetails, User
 
 
 class EditUserInfo(forms.ModelForm):

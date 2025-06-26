@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+Account information
+{% endblock %}
+
+{% block content %}
+<section id="profile" class="max-w-180 mx-auto mt-4 p-6">
+
+  {% if is_user_profile %}
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4 bg-secondary rounded-xl p-3 shadow-2xl border-t-4 border-background">
+      <h4 class="text-xl font-bold text-primary p-2">Jouw publiek profiel</h4>
+      <button class="bg-background hover:bg-active text-primary font-bold py-2 px-4 rounded-md">
+        <a href="">Profiel Bewerken</a>
+      </button>
+    </div>
+  {% endif %}
+
+  <div class="flex flex-col sm:flex-row justify-between items-center sm:space-x-4 space-y-4 sm:space-y-0">
+    <div class="max-h-64 max-w-64">
+      <img class="rounded-full shadow-2xl border-6 border-background" src="{% if member.picture %}{{ member.picture.url }}{% else %}{% static 'default-profile-picture.svg' %}{% endif %}" alt = "Profile Picture">
+    </div>
+    <div class="flex flex-col grow self-stretch bg-secondary border-t-4 border-background text-md rounded-xl shadow-2xl p-3 text-primary font-semibold">
+      <h4>{{ member.display_name }}</h4>
+      <h2>{{ member.email }}</h2>
+      <h2>{{ member.phone_number }}</h2>
+
+      {% if member.groups.count > 0 %}
+      <div>
+          <h3>Mijn groepen</h3>
+          {% for group in member.groups %}
+              <h4>{{ group.name }}</h4>
+              <p>{{ group.description }}<p>
+          {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% if False and member_info|length > 0 %}
+      <div class="flex flex-col flex-1 items-center" id="membership-information">
+        <p class="text-4xl font-semibold mb-6">Lidmaatschapsgegevens</p>
+        <div class="w-4/5 space-y-4">
+          {% if member_info.show_birthday %}
+            {% include 'account_info/panel.html' with key='Date of birth' value=member_info.birthday %}
+          {% endif %}
+          {% include 'account_info/panel.html' with key='Member since' value=member_info.member_since %}
+        </div>
+
+        <div class="mt-6 w-4/5">
+          <p class="text-3xl font-semibold mb-2">Deelnames</p>
+          {% for activity in member_info.activities %}
+            <div class="mb-2">
+              <p class="text-xl font-bold">{{ activity.title }}</p>
+              <p>{{ activity.description }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -12,15 +12,15 @@ from .django_scripts import (
 from .sphinx_scripts import genapidocs, makedocs
 
 __all__ = [
+    "collectstatic",
+    "createsuperuser",
     "format",
+    "genapidocs",
     "lint",
-    "typecheck",
-    "runserver",
+    "makedocs",
     "makemigrations",
     "migrate",
+    "runserver",
     "test",
-    "createsuperuser",
-    "collectstatic",
-    "makedocs",
-    "genapidocs",
+    "typecheck",
 ]

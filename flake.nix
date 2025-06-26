@@ -376,6 +376,7 @@
               venv
               pkgs.uv
               pkgs.nodejs
+              pkgs.ruff
             ];
             env = {
               UV_NO_SYNC = "1";

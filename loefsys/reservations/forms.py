@@ -2,8 +2,8 @@
 
 from django import forms
 
+from loefsys.members.models.user_skippership import UserSkippership
 from loefsys.reservations.models.log import Question
-from loefsys.users.models.user_skippership import UserSkippership
 
 from .models import ReservableItem, Reservation
 

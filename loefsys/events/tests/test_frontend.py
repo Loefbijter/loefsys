@@ -14,7 +14,7 @@ from django_dynamic_fixture import G
 
 from loefsys.events.models import Event
 from loefsys.events.models.choices import EventCategories
-from loefsys.users.models import User
+from loefsys.members.models import User
 
 
 @override_settings(MEDIA_ROOT=lambda self: self.test_media_dir)
