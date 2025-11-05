@@ -35,14 +35,15 @@ class BaseSettings(ClassySettings):
 
     LOGIN_URL = "login"
 
+    @env
+    def NPM_BIN_PATH(self) -> str:  # noqa N802 D102
+        pass
+
     TAILWIND_APP_NAME = "loefsys.theme"
 
     @denv
     def SECRET_KEY(self) -> str:  # noqa N802 D102
         raise ValueError("Environment variable DJANGO_SECRET_KEY must be set.")
-    
-    def NPM_BIN_PATH(self) -> str:  # noqa N802 D102
-        return denv("npm", key="NPM_BIN_PATH")
 
     def INTERNAL_IPS(self) -> Sequence[str]:  # noqa N802 D102
         return ("localhost", "127.0.0.1") if self.DEBUG else ()
