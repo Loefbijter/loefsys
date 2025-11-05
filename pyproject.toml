@@ -25,6 +25,7 @@ dependencies = [
     "psycopg[binary]>=3.2.4",
     "pyjwt>=2.9.0",
     "python-dotenv>=1.0.1",
+    "honcho>=2.0.0",
 ]
 
 [dependency-groups]
