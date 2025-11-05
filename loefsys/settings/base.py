@@ -35,6 +35,9 @@ class BaseSettings(ClassySettings):
 
     LOGIN_URL = "login"
 
+    if env["NPM_BIN_PATH"]:
+        NPM_BIN_PATH = env["NPM_BIN_PATH"]
+
     TAILWIND_APP_NAME = "loefsys.theme"
 
     @denv
