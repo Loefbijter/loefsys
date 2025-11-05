@@ -43,6 +43,9 @@ class BaseSettings(ClassySettings):
     @denv
     def SECRET_KEY(self) -> str:  # noqa N802 D102
         raise ValueError("Environment variable DJANGO_SECRET_KEY must be set.")
+    
+    def NPM_BIN_PATH(self) -> str:  # noqa N802 D102
+        return denv.str("npm")
 
     def INTERNAL_IPS(self) -> Sequence[str]:  # noqa N802 D102
         return ("localhost", "127.0.0.1") if self.DEBUG else ()
