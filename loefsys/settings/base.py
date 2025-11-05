@@ -37,7 +37,7 @@ class BaseSettings(ClassySettings):
 
     @env
     def NPM_BIN_PATH(self) -> str:  # noqa N802 D102
-        pass
+        return "npm"
 
     TAILWIND_APP_NAME = "loefsys.theme"
 
