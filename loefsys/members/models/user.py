@@ -236,7 +236,6 @@ class User(
 
     objects = UserManager()
 
-
     @property
     def full_name(self) -> str:
         """Return the full name of the person."""

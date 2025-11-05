@@ -5,9 +5,8 @@ from datetime import date
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from loefsys.members.models.skippership import Skippership
-
-from . import User
+from .skippership import Skippership
+from .user import User
 
 
 class UserSkippership(models.Model):
