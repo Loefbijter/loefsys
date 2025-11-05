@@ -59,5 +59,8 @@ For development, it is recommended to start with the following variables set in 
     DJANGO_SECRET_KEY=CustomString
     DJANGO_DEBUG=1
     DJANGO_DATABASE_URL=sqlite:///db.sqlite
+    
+Additionally, to set the NPM binary path (mainly for windows users!), the following variable can be set::
+    NPM_BIN_PATH=npm.cmd # For Windows users, otherwise leave unset as it defaults to "npm"
 
 Then, depending on which part of the project is being developed, it is possible to customize this to suit your own needs.

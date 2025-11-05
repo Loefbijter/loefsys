@@ -18,7 +18,7 @@ In order to contribute to the project, you should have the following prerequisit
 
 #. Then, open the directory with the cloned repository and execute::
 
-    $ uv install
+    $ uv sync
 
 #. Install all pre-commit hooks with the following command::
 
@@ -40,11 +40,7 @@ In order to contribute to the project, you should have the following prerequisit
 
 #. Finally, you can start the development server in a new terminal with::
 
-    $ uv run manage.py runserver
-
-    Additionally, the following command must be run in parallel for the styling::
-    
-    $ uv run manage.py tailwind start
+    $ uv run manage.py tailwind dev
 
 #. Now, head over to `localhost:8000 <localhost:8000>`_ in your browser and you should see the homepage of loefsys, or go to http://localhost:8000/profile/signup/.
 
@@ -59,12 +55,3 @@ Creating a Superuser
     # If you get a prompt that your password is too weak, you can ignore this (only in development of course, we don't do weak passwords in production ;).
 
 #. You just created your first superuser! Head over to http://localhost:8000/profile/login/ and log in with the credentials which you have entered in the previous step.
-
-
-Available Commands
-------------------
-
-* :func:`uv run manage.py runserver <loefsys.scripts.runserver>`
-* :func:`uv run manage.py makemigrations <loefsys.scripts.makemigrations>`
-* :func:`uv run manage.py migrate <loefsys.scripts.migrate>`
-* :func:`uv run manage.py createsuperuser <loefsys.scripts.createsuperuser>`
