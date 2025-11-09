@@ -17,6 +17,7 @@ jobs:
     env:
       DJANGO_SECRET_KEY: django-insecure-loefbijter
       DJANGO_DATABASE_URL: sqlite:///db.sqlite
+      DJANGO_DEBUG: true
 
     steps:
       - name: Checkout the repo

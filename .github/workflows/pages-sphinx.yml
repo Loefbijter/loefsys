@@ -13,6 +13,7 @@ jobs:
       DJANGO_SECRET_KEY: django-insecure-loefbijter
       DJANGO_DATABASE_URL: sqlite:///db.sqlite
       SPHINX_APIDOCS_OPTIONS: members,show-inheritance
+      DJANGO_DEBUG: true
     permissions:
       contents: write
 
