@@ -13,7 +13,6 @@ from django_extensions.db.models import TimeStampedModel
 from django_extensions.db.fields import RandomCharField
 from phonenumber_field.modelfields import PhoneNumberField
 
-from loefsys.groups.models import LoefbijterGroup
 from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
@@ -131,7 +130,7 @@ class User(
     initials : str
         The initials of the user.
     is_superuser : bool
-        Designated that this user
+        Designated that this user is a superuser.
     nickname : str
         The nickname of the user, or blank if not applicable.
     display_name_preference :  has all permissions without explicit assignation.
@@ -140,7 +139,6 @@ class User(
         The user's preference of how they want their name to be displayed.
 
 
-    er belongs to.
     user_permissions : ~django.db.models.query.QuerySet of \
         ~django.contrib.auth.models.Permission
         The specific permissions for this user.
@@ -160,7 +158,7 @@ class User(
 
     def user_upload_directory(self):
         """Return the user upload directory."""
-        return f"user_{self.id}"
+        return f"user_{self.pk}"
 
     def user_picture_upload_path(self, _):
         """Return the upload path for the user profile picture."""
@@ -214,17 +212,18 @@ class User(
     membership_set: QuerySet["Membership"]
 
     # Copied from PermissionsMixin to override Group type to LoefbijterGroup.
-    groups = models.ManyToManyField(
-        LoefbijterGroup,
-        verbose_name=_("Groups"),
-        blank=True,
-        help_text=_(
-            "The groups this user belongs to. A user will get all permissions "
-            "granted to each of their groups."
-        ),
-        related_name="user_set",
-        related_query_name="user",
-    )
+    # This many to many field should have been created on the Groups model.
+    # groups = models.ManyToManyField(
+    #     LoefbijterGroup,
+    #     verbose_name=_("Groups"),
+    #     blank=True,
+    #     help_text=_(
+    #         "The groups this user belongs to. A user will get all permissions "
+    #         "granted to each of their groups."
+    #     ),
+    #     related_name="user_set",
+    #     related_query_name="user",
+    # )
 
     phone_number = PhoneNumberField(blank=True)
 

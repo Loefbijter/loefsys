@@ -13,8 +13,7 @@ urlpatterns = [
     path("", include("loefsys.members.urls"), name="members"),
 
     # path("profile/", include("loefsys.profile.urls"), name="profile"),
-    # path("account/", include("loefsys.accountinfopage.urls")),
-    path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
+    # path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
     path("events/", include("loefsys.events.urls"), name="events"),
 
     path("", include("django_components.urls")),

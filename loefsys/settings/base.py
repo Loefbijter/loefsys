@@ -52,12 +52,12 @@ class BaseSettings(ClassySettings):
 
     def LOCAL_APPS(self) -> Sequence[str]:  # noqa N802 D102
         return (
+            "loefsys.core",
             "loefsys.events",
             "loefsys.groups",
-            "loefsys.reservations",
+            # "loefsys.reservations",
             "loefsys.members",
             "loefsys.home",
-            "loefsys.profile",
             "loefsys.theme",
         )
 

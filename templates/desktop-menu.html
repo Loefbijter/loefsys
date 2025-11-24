@@ -1,4 +1,4 @@
-{% load static %}
+{% load static settings_filters %}
 <nav class="bg-secondary h-15 w-screen flex justify-between">
     <div class="flex items-center justify-between">
 
@@ -21,9 +21,15 @@
 
         <!-- Navigation links -->
         <div class="hidden md:flex space-x-4 justify-between items-center text-md font-bold px-4">
+          <!-- if events is installed -->
+            {% requireapp "loefsys.events" %}
             <a href="{% url 'events:events' %}" class="text-primary hover:underline p-2 rounded-full">Activiteiten</a>
+            {% endrequireapp %}
+            {% requireapp "loefsys.reservations" %}
             <a href="{% url 'reservations:reservations' %}" class="text-secondary bg-primary p-2 rounded-full shadow-sm border-t-1 border-primary-hightlight">Reserveringen</a>
             <a href="" class="text-primary hover:underline p-2 rounded-full">Reserveren</a>
+            {% endrequireapp %}
+            
             <a href="" class="text-primary hover:underline p-2 rounded-full">Galerij</a>
         </div>
 
