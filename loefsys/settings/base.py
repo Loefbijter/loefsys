@@ -19,11 +19,7 @@ class BaseSettings(ClassySettings):
 
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-    COMPONENTS = ComponentsSettings(
-        dirs=[
-            Path(BASE_DIR) / "components",
-        ],
-    )
+    COMPONENTS = ComponentsSettings(dirs=[Path(BASE_DIR) / "components"])
 
     DEBUG = denv.bool(False)
     ALLOWED_HOSTS = denv.list("")
@@ -32,8 +28,6 @@ class BaseSettings(ClassySettings):
     WSGI_APPLICATION = "loefsys.wsgi.application"
 
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-    LOGIN_URL = "login"
 
     TAILWIND_APP_NAME = "loefsys.theme"
 
@@ -52,11 +46,7 @@ class BaseSettings(ClassySettings):
         return ("django.contrib.contenttypes",)
 
     def THIRD_PARTY_APPS(self) -> Sequence[str]:  # noqa N802 D102
-        apps = (
-            "django_components",
-            "tailwind",
-            "django_browser_reload",
-        )
+        apps = ("django_components", "tailwind", "django_browser_reload")
         debug_apps = ("debug_toolbar",)
         return apps + debug_apps if self.DEBUG else apps
 
