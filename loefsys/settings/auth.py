@@ -11,6 +11,8 @@ DJANGO_PASSWORD_VALIDATION_MODULE = "django.contrib.auth.password_validation"
 class AuthSettings(TemplateSettings, BaseSettings):
     """Class containing the settings for user authentication."""
 
+    LOGIN_URL = "members:login"
+
     AUTH_USER_MODEL = "members.User"
 
     # from: https://docs.djangoproject.com/en/5.0/topics/auth/passwords/#using-argon2-with-django
