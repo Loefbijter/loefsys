@@ -1,17 +1,17 @@
-import datetime
 from datetime import date
 
-from django.forms import ValidationError
 from django.test import TestCase
 from django_dynamic_fixture import G
 
 from loefsys.members.models.address import Address
+
 # from loefsys.members.models.member import MemberDetails
 from loefsys.members.models.membership import Membership, validate_has_overlap
 from loefsys.members.models.skippership import Skippership
 from loefsys.members.models.study_registration import StudyRegistration
 from loefsys.members.models.user import User
 from loefsys.members.models.user_skippership import UserSkippership
+
 # from loefsys.reservations.models.boat import Boat
 # from loefsys.reservations.models.choices import ReservableCategories
 # from loefsys.reservations.models.reservable import ReservableType

@@ -9,8 +9,8 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models import OneToOneField, QuerySet
 from django.utils.translation import gettext_lazy as _
-from django_extensions.db.models import TimeStampedModel
 from django_extensions.db.fields import RandomCharField
+from django_extensions.db.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
 from loefsys.members.models.choices import DisplayNamePreferences
@@ -73,11 +73,7 @@ class OverwriteStorage(FileSystemStorage):
         return name
 
 
-class User(
-    AbstractBaseUser,
-    TimeStampedModel,
-    PermissionsMixin,
-):
+class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     """The user model for authentication on the Loefbijter website.
 
     A user account can be made for two use cases. First, when a member registers at
@@ -201,10 +197,14 @@ class User(
         storage=OverwriteStorage(),
     )
 
-    gender = models.PositiveSmallIntegerField(choices=Genders, verbose_name=_("Gender"), default=Genders.UNSPECIFIED)
+    gender = models.PositiveSmallIntegerField(
+        choices=Genders, verbose_name=_("Gender"), default=Genders.UNSPECIFIED
+    )
 
     birthday = models.DateField(verbose_name=_("Birthday"), null=True, blank=True)
-    show_birthday = models.BooleanField(verbose_name=_("Display birthday"), default=False)
+    show_birthday = models.BooleanField(
+        verbose_name=_("Display birthday"), default=False
+    )
 
     address = OneToOneField(to=Address, on_delete=models.SET_NULL, null=True)
 

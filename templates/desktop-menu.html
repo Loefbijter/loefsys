@@ -22,14 +22,16 @@
         <!-- Navigation links -->
         <div class="hidden md:flex space-x-4 justify-between items-center text-md font-bold px-4">
           <!-- if events is installed -->
-            {% requireapp "loefsys.events" %}
+            {% is_app_installed "events:events" as events_installed %}
+            {% if events_installed %}
             <a href="{% url 'events:events' %}" class="text-primary hover:underline p-2 rounded-full">Activiteiten</a>
-            {% endrequireapp %}
-            {% requireapp "loefsys.reservations" %}
+            {% endif %}
+            {% is_app_installed "reservations:reservations" as events_installed %}
+            {% if "loefsys.reservations" %}
             <a href="{% url 'reservations:reservations' %}" class="text-secondary bg-primary p-2 rounded-full shadow-sm border-t-1 border-primary-hightlight">Reserveringen</a>
             <a href="" class="text-primary hover:underline p-2 rounded-full">Reserveren</a>
             {% endrequireapp %}
-            
+
             <a href="" class="text-primary hover:underline p-2 rounded-full">Galerij</a>
         </div>
 

@@ -8,6 +8,7 @@ from django_dynamic_fixture import G
 from loefsys.events.models import Event
 from loefsys.members.models import User
 
+
 @skipUnless(apps.is_installed("loefsys.events"), "Events app not installed")
 class EventTestCase(TestCase):
     """Tests for event information display for users."""

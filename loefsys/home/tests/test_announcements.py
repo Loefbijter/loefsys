@@ -2,11 +2,13 @@
 """Module defining the tests for indexpage."""
 
 from datetime import datetime
+
 from django.test import TestCase
 from django_dynamic_fixture import G
 
 from loefsys.home.models import Announcement
 from loefsys.members.models import User
+
 
 class AnnouncementTestCase(TestCase):
     """Tests for announcement display on the index page."""
@@ -26,7 +28,6 @@ class AnnouncementTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response=response, text="Test Announcement")
         self.assertContains(response=response, text="This is a test announcement.")
-
 
     def test_announcement_not_displayed_when_not_published(self):
         """Test that the announcement is not displayed when not published."""
