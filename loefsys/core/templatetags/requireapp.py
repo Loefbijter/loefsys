@@ -28,7 +28,17 @@ class RequireAppNode(template.Node):
 
 @register.tag("requireapp")
 def do_requireapp(parser, token):
-    """TODO: Write documentation later, going to sleep now."""
+    """Template tag that skips blocks if a certain app is disabled.
+
+    Checks whether an app is enabled, and if it is, outputs the contents of the block:
+
+        {% requireapp 'loefsys.events' %}
+            <a href="{% url 'events:events' %}">Activiteiten</a>
+        {% endrequireapp %}
+
+    In the example above, if the ``loefsys.events`` app is enabled in the settings,
+    a link to the app is shown. If it is disabled, the entire block is ignored.
+    """
     # token.split_contents returns ["requireapp", app_name]. As we do
     # {% requireapp "loefsys.core" %}, the second item contains the double quotes, which
     # must be stripped.
