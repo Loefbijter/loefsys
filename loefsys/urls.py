@@ -8,15 +8,11 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin", admin.site.urls),
-
     path("", include("loefsys.home.urls"), name="home"),
     path("", include("loefsys.members.urls"), name="members"),
-
     # path("profile/", include("loefsys.profile.urls"), name="profile"),
-    # path("account/", include("loefsys.accountinfopage.urls")),
-    path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
+    # path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
     path("events/", include("loefsys.events.urls"), name="events"),
-
     path("", include("django_components.urls")),
     path("__reload__", include("django_browser_reload.urls")),
     *debug_toolbar_urls(),
