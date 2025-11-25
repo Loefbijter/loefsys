@@ -13,13 +13,13 @@ Django
 
     * Default: ``False``
     * Set ``DJANGO_DEBUG=1`` to set this variable to ``True``.
-    * Used to set the variable `DEBUG <https://docs.djangoproject.com/en/5.0/ref/settings/#debug>`_. Sets `INTERNAL_IPS <https://docs.djangoproject.com/en/5.0/ref/settings/#internal-ips>`_ to ``["127.0.0.1", "localhost"]`` when debugging is enabled and to ``[]`` when disabled. Also enables or disables `Django debug toolbar <https://django-debug-toolbar.readthedocs.io/en/latest/>`_.
+    * Used to set the variable `DEBUG <https://docs.djangoproject.com/en/5.2/ref/settings/#debug>`_. Sets `INTERNAL_IPS <https://docs.djangoproject.com/en/5.0/ref/settings/#internal-ips>`_ to ``["127.0.0.1", "localhost"]`` when debugging is enabled and to ``[]`` when disabled. Also enables or disables `Django debug toolbar <https://django-debug-toolbar.readthedocs.io/en/latest/>`_.
 
 * ``DJANGO_SECRET_KEY``
 
     .. IMPORTANT:: Must be defined as environment variable. No default is provided.
 
-    * Used to set the variable `SECRET_KEY <https://docs.djangoproject.com/en/5.0/ref/settings/#secret-key>`_. For development, set this string to any desired. For production, the secret key must not have the prefix ``"django-insecure-"``, the minimum length must be at least 50 characters, with a minimum of 5 unique characters.
+    * Used to set the variable `SECRET_KEY <https://docs.djangoproject.com/en/5.2/ref/settings/#secret-key>`_. For development, set this string to any desired. For production, the secret key must not have the prefix ``"django-insecure-"``, the minimum length must be at least 50 characters, with a minimum of 5 unique characters.
 
 * ``DJANGO_DATABASE_URL``
 
@@ -29,12 +29,12 @@ Django
 * ``DJANGO_DATABASE_CONN_MAX_AGE``
 
     * Default: ``60``
-    * Used to set the variable `CONN_MAX_AGE <https://docs.djangoproject.com/en/5.0/ref/settings/#conn-max-age>`_.
+    * Used to set the variable `CONN_MAX_AGE <https://docs.djangoproject.com/en/5.2/ref/settings/#conn-max-age>`_.
 
 * ``DJANGO_TIME_ZONE``
 
     * Default: ``"Europe/Amsterdam"``
-    * Used to set the variable `TIME_ZONE <https://docs.djangoproject.com/en/5.0/ref/settings/#time-zone>`_.
+    * Used to set the variable `TIME_ZONE <https://docs.djangoproject.com/en/5.2/ref/settings/#time-zone>`_.
 
 * ``DJANGO_ALLOWED_HOSTS``
 
@@ -47,7 +47,7 @@ AWS
 * ``AWS_STORAGE_BUCKET_NAME``
 
     * Default: ``None``
-    * If not defined, the standard `StaticFilesStorage <https://docs.djangoproject.com/en/5.0/ref/contrib/staticfiles/#django.contrib.staticfiles.storage.StaticFilesStorage>`_ and `FileSystemStorage <https://docs.djangoproject.com/en/5.0/ref/files/storage/#django.core.files.storage.FileSystemStorage>`_ are used for static files and media, respectively.
+    * If not defined, the standard `StaticFilesStorage <https://docs.djangoproject.com/en/5.2/ref/contrib/staticfiles/#django.contrib.staticfiles.storage.StaticFilesStorage>`_ and `FileSystemStorage <https://docs.djangoproject.com/en/5.0/ref/files/storage/#django.core.files.storage.FileSystemStorage>`_ are used for static files and media, respectively.
 
 .. _recommended-env:
 
@@ -59,8 +59,9 @@ For development, it is recommended to start with the following variables set in 
     DJANGO_SECRET_KEY=CustomString
     DJANGO_DEBUG=1
     DJANGO_DATABASE_URL=sqlite:///db.sqlite
-    
-Additionally, to set the NPM binary path (mainly for windows users!), the following variable can be set::
-    NPM_BIN_PATH=npm.cmd # For Windows users, otherwise leave unset as it defaults to "npm"
 
-Then, depending on which part of the project is being developed, it is possible to customize this to suit your own needs.
+Windows users can run into a CommandError running ``uv run manage.py tailwind start``. To solve this, set the the environment variable ``NPM_BIN_PATH`` as follows::
+
+    NPM_BIN_PATH=npm.cmd # Windows users only, leave unset for Unix.
+
+Then, depending on which part of the project is being developed, it is possible to customize the environment variables to suit your own needs.

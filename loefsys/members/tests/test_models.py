@@ -298,7 +298,7 @@ class SkippershipModelsTestCase(TestCase):
 #             Reservation,
 #             reserved_item=self.boat,
 #             reservee_user=self.user1,
-#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),  # noqa: E501  # TODO when making use of this code, remove the noqa as it should adhere to the linter.
 #             end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
 #             authorized_userskippership=None,
 #         )
@@ -314,7 +314,7 @@ class SkippershipModelsTestCase(TestCase):
 #             Reservation,
 #             reserved_item=self.boat,
 #             reservee_user=self.user1,
-#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),  # noqa: E501  # TODO: when fixing this code also remove E501, it should adhere to the linter.
 #             end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
 #             authorized_userskippership=userskippership,
 #         )

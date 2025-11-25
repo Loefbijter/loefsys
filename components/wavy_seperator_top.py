@@ -1,3 +1,5 @@
+"""Separator component module."""
+
 from django_components import Component, register, types
 
 
@@ -18,7 +20,7 @@ class WavySeperatorTop(Component):
             </svg>
 
         </div>
-    """
+    """  # noqa: E501
     # language=CSS
     css: types.css = """
         .wave-shape-fill {
