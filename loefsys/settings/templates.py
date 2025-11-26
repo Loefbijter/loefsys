@@ -11,10 +11,10 @@ class TemplateSettings:
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
                 "DIRS": [self.BASE_DIR / "templates"],
+                "APP_DIRS": True,
                 "OPTIONS": {
                     "context_processors": self.templates_context_processors(),
                     "loaders": self.templates_loaders(),
-                    "builtins": self.templates_builtins(),
                 },
             },
         )
@@ -34,11 +34,6 @@ class TemplateSettings:
                     "django.template.loaders.filesystem.Loader",
                     # Including this is the same as APP_DIRS=True
                     "django.template.loaders.app_directories.Loader",
-                    # Components loader
-                    "django_components.template_loader.Loader",
                 ],
             )
         ]
-
-    def templates_builtins(self):  # noqa D102
-        return ["django_components.templatetags.component_tags"]

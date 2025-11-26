@@ -14,11 +14,11 @@
 <div class="flex flex-col min-h-screen w-screen bg-primary">
     <!-- header -->
     <div class="sticky top-0 z-1000">
-        {% component "wavy-seperator-top" %}  
-            {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
-                {% include "desktop-menu.html" %}
+        {% cotton waves at="bottom" %}
+            {% if request.user_agent.device_type != "Mobile" %}
+                {% include "menu_desktop.html" %}
             {% endif %}
-        {% endcomponent %}
+        {% endcotton %}
     </div>
 
     <!-- main content -->
@@ -28,14 +28,12 @@
     </div>
 
     <!-- footer -->
-    <div>
-        {% component "wavy-seperator-bottom" %}
-            {% if True %} {# Replace True with a condition to check if the request is from a desktop #}
-                {% include "footer.html" %}
-            {% else %} {# request is from a smartphone #}
-                {% include "smartphone-menu.html" %}
+    <div class="sticky bottom-0 z-1000">
+        {% cotton waves at="top" %}
+            {% if request.user_agent.device_type == "Mobile" %}
+                {% include "menu_smartphone.html" %}
             {% endif %}
-        {% endcomponent %}
+        {% endcotton %}
     </div>
 </div>
 </body>

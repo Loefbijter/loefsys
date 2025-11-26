@@ -10,20 +10,24 @@ Account information
 <section id="profile" class="flex flex-col space-y-4 max-w-200 mx-auto mt-4 p-6">
 
   {% if is_user_profile %}
-  <div class="flex flex-col sm:flex-row justify-between items-center mb-4 bg-secondary rounded-xl p-3 shadow-2xl border-t-4 border-background">
-    <h4 class="text-xl font-bold text-primary p-2">Jouw publiek profiel</h4>
-    <button class="bg-background hover:bg-active text-primary font-bold py-2 px-4 rounded-md">
-      <a href="">Profiel Bewerken</a>
-    </button>
-  </div>
+      {% cotton card class="flex-row! justify-between" %}
+          <h4 class="text-xl font-bold text-primary p-2">Jouw publiek profiel</h4>
+          <button class="bg-background hover:bg-active text-primary font-bold py-2 px-4 rounded-md">
+            <a href="">Profiel Bewerken</a>
+          </button>
+      {% endcotton %}
   {% endif %}
 
   <div class="flex flex-col sm:flex-row justify-between items-center sm:space-x-4 space-y-4 sm:space-y-0">
     <div class="max-h-64 max-w-64">
-      <img class="rounded-full shadow-2xl border-6 border-background" src="{% if member.picture %}{{ member.picture.url }}{% else %}{% static 'default-profile-picture.svg' %}{% endif %}" alt = "Profile Picture">
+        {% if member.picture %}
+            <img class="rounded-full shadow-2xl border-6 border-background" src="{{ member.picture.url }}" alt="Profile Picture" />
+        {% else %}
+            <img class="rounded-full shadow-2xl border-6 border-background size-64" src="{% static 'default-profile-picture.svg' %}" alt="Profile Picture" />
+        {% endif %}
     </div>
-    <div class="flex flex-col justify-between grow self-stretch bg-secondary border-t-4 border-background text-md rounded-xl shadow-2xl p-3 text-primary font-semibold">
-      <div>
+    {% cotton card class="grow self-stretch" %}
+        <div>
         <h4>{{ member.display_name }}</h4>
         <h2>{{ member.email }}</h2>
         <h2>{{ member.phone_number }}</h2>
@@ -31,14 +35,13 @@ Account information
         <h2>Lid sinds: 1 september 2020</h2>
         <h2 class="">Lidmaatschap: Actief Lid</h2>
       </div>
-      <!-- only if member has done at least one board year -->
-      <!-- divider -->
-      <div class="border-t-2 border-background my-2 mx-5"></div>
-      <ul class=""> 
+      {#  only if member has done at least one board year #}
+      {% cotton separator / %}
+      <ul class="">
         <li>56e "Lancerend": Assessor Bastion</li>
         <li>56e "Lancerend": Abactis (Interim)</li>
       </ul>
-    </div>
+    {% endcotton %}
   </div>
 
   <!--  -->
@@ -79,6 +82,6 @@ Account information
     </div>
   </div>
   {% endif %}
-  
+
 </section>
 {% endblock %}
