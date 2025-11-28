@@ -1,0 +1,4 @@
+{% load static %}
+<a href="{% url 'members:user-profile' %}" class="{{ class }}">
+    <img class="size-10 rounded-full border-2 border-primary shadow-sm hover:shadow-md border-t-primary-highlight" src="{% if user.picture %}{{ user.picture.url }}{% else %}{% static 'default-profile-picture.svg' %}{% endif %}" alt="User Profile">
+</a>
