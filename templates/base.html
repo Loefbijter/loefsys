@@ -9,26 +9,31 @@
     {% tailwind_preload_css %}
     {% tailwind_css %}
 </head>
-<body class="flex flex-col bg-secondary w-screen min-h-screen">
-        {# Header #}
+<body class="bg-secondary text-secondary-foreground">
+<div class="flex flex-col w-full min-h-screen bg-primary text-primary-foreground">
+    {# Header #}
+    {% if is_mobile %}
+        <c-waves base="top"/>
+    {% else %}
+        <div class="sticky grid top-0">
+            <c-menu.desktop/>
+            <c-waves base="top"/>
+        </div>
+    {% endif %}
+    {# Main content #}
+    <div class="grid gap-6 p-6">
+        {% block content %}
+        {% endblock %}
+    </div>
+    {# Footer #}
 
-        <div class="sticky top-0 z-1000">
-            {% if request.user_agent.device_type != "Mobile" %}
-                    <c-menu.desktop class="bg-secondary" />
-                {% endif %}
-            <c-waves base="top" />
-        </div>
-        {# Main content #}
-        <div class="grow bg-primary">
-            {% block content %}
-            {% endblock %}
-        </div>
-        {# Footer #}
-        <div class="bg-primary">
-            <c-waves base="bottom" />
-            {% if request.user_agent.device_type == "Mobile" %}
-                {% include "menu_mobile.html" %}
-            {% endif %}
-        </div>
+    {% if is_mobile %}
+        {# TODO #}
+    {% else %}
+        <footer class="mt-auto justify-self-end">
+            <c-waves base="bottom"/>
+        </footer>
+    {% endif %}
+</div>
 </body>
 </html>

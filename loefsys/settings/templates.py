@@ -6,6 +6,8 @@ from collections.abc import Sequence
 class TemplateSettings:
     """Class containing the configuration for templates."""
 
+    FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
     def TEMPLATES(self) -> Sequence[dict]:  # noqa N802 D102
         return (
             {
@@ -23,6 +25,7 @@ class TemplateSettings:
         return (
             "django.template.context_processors.debug",
             "django.template.context_processors.request",
+            "loefsys.core.context_processors.is_mobile",
         )
 
     def templates_loaders(self):  # noqa D102

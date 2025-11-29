@@ -1,25 +1,25 @@
 {% load static %}
-{% load requireapp %}
-<nav class="{{ class }} flex items-center justify-between gap-4 p-4">
-    <c-logo />
+{% load loefsys %}
+<nav class="flex items-center justify-between gap-4 p-4 bg-secondary text-secondary-foreground">
+    <c-logo/>
     {# Navigation links #}
     <div class="hidden md:flex gap-4 items-center">
         {#  If events is installed #}
         {% requireapp "loefsys.events" %}
-            <c-menu-item href="{% url 'events:events' %}">
+            <c-menu.item href="{% url 'events:events' %}">
                 Activiteiten
-            </c-menu-item>
+            </c-menu.item>
         {% endrequireapp %}
         {% requireapp "loefsys.reservations" %}
             {# If reservations is installed #}
-            <c-menu-item href="{% url 'reservations:reservations' %}">
+            <c-menu.item href="{% url 'reservations:reservations' %}">
                 Reserveringen
-            </c-menu-item>
-            <c-menu-item href="">
+            </c-menu.item>
+            <c-menu.item href="">
                 Reserveer
-            </c-menu-item>
+            </c-menu.item>
         {% endrequireapp %}
-        <c-menu-item>Gallerij</c-menu-item>
+        <c-menu.item>Gallerij</c-menu.item>
     </div>
-    <c-profile-icon class="ml-auto" />
+    <c-profile-icon class="ml-auto"/>
 </nav>
