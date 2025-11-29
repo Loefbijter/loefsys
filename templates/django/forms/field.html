@@ -1,0 +1,29 @@
+{% comment %}
+{% if field.use_fieldset %}
+    <fieldset{% if field.aria_describedby %} aria-describedby="{{ field.aria_describedby }}"{% endif %}>
+    {% if field.label %}
+        {{ field.legend_tag }}
+    {% endif %}
+{% else %}
+    {% if field.label %}
+        {{ field.label_tag }}
+    {% endif %}
+{% endif %}
+{{ field }}
+{% if field.help_text %}
+    <div class="helptext"{% if field.auto_id %} id="{{ field.auto_id }}_helptext"{% endif %}>
+        {{ field.help_text|safe }}
+    </div>
+{% endif %}
+{{ field.errors }}
+{% if field.use_fieldset %}
+    </fieldset>
+{% endif %}
+{% endcomment %}
+<div class="grid space-y-2">
+    {% if field.label %}{{ field.label_tag }}{% endif %}
+    {{ field }}
+    {% if field.help_text %}
+        <p id="{{ field.auto_id }}_helptext" class="opacity-60 text-sm">{{ field.help_text|safe }}</p>{% endif %}
+    {{ field.errors }}
+</div>

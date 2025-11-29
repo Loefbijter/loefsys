@@ -32,7 +32,7 @@ class AuthSettings(TemplateSettings, BaseSettings):
         {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
         {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
         {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
-        {"NAME": "loefsys.profile.password_validators.CustomComplexityValidator"},
+        {"NAME": "loefsys.members.password_validators.CustomComplexityValidator"},
     )
 
     def DJANGO_APPS(self) -> Sequence[str]:  # noqa N802

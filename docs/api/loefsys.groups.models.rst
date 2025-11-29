@@ -4,6 +4,7 @@ loefsys.groups.models package
 .. automodule:: loefsys.groups.models
    :members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------
@@ -17,4 +18,5 @@ Submodules
    loefsys.groups.models.fraternity
    loefsys.groups.models.group
    loefsys.groups.models.membership
+   loefsys.groups.models.taskforce
    loefsys.groups.models.year_club

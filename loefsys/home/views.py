@@ -19,12 +19,8 @@ class HomeView(View):
             announcement_start__lte=datetime.now(),
             announcement_end__gte=datetime.now(),
         ).order_by("-announcement_start")
-        announcements = announcements[:2]
         events = Event.objects.filter(start__gte=datetime.now()).order_by("start")
-        if self.request.user.is_active:
-            events = events[:2]
-        else:
-            events = events.filter(published=True)[:2]
-        return render(
-            request, "home.html", {"announcements": announcements, "events": events}
-        )
+        if not self.request.user.is_active:
+            events = events.filter(published=True)
+        context = {"announcements": announcements, "events": events}
+        return render(request, "home/index.html", context)

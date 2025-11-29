@@ -22,5 +22,5 @@ class EmailSettings:
     DEFAULT_FROM_EMAIL = "Loefbijter <noreply@loefbijter.nl>"
     EMAIL_SUBJECT_PREFIX = "[Loefbijter]"
 
-    def SERVER_EMAIL(self) -> str:  # noqa: D102
+    def SERVER_EMAIL(self) -> str:  # noqa: D102, N802
         return self.DEFAULT_FROM_EMAIL

@@ -17,9 +17,8 @@ Any questions related to the documentation should be directed towards the `Loefb
     getting-started
     how-to-docstrings
     env-variables
+    commands
     api/modules
-
-
 
 Indices and Tables
 ==================

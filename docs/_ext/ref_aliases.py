@@ -7,7 +7,7 @@ The source of this extension was adapted from
 `StackOverflow <https://stackoverflow.com/questions/62293058/>`_.
 """
 
-from docutils.nodes import TextElement, document
+from docutils.nodes import TextElement, document, reference
 from sphinx.addnodes import pending_xref
 from sphinx.application import Sphinx
 from sphinx.environment import BuildEnvironment
@@ -37,7 +37,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
 
 def missing_reference_alias(
     app: Sphinx, env: BuildEnvironment, node: pending_xref, contnode: TextElement
-) -> None:
+) -> reference | None:
     """Missing reference listener.
 
     Listen to missing references and apply an alias if found to subsequently provide to
@@ -56,6 +56,7 @@ def missing_reference_alias(
     """
     if _apply_alias(app, node):
         return missing_reference(app, env, node, contnode)
+    return None
 
 
 def doctree_read_alias(app: Sphinx, doctree: document) -> None:
