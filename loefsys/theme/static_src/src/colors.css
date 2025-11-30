@@ -1,21 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap')layer(base);
+
 @import "tailwindcss";
 
 @theme {
   --color-primary: oklch(0.9 0.05 230);
-  --color-primary-highlight: oklch(0.95 0.05 230);
+  --color-primary-foreground: oklch(0.3 0.15 230);
+  --color-primary-accent: oklch(0.95 0.05 230);
 
   --color-secondary: oklch(0.7 0.15 230);
-  --color-secondary-highlight: oklch(0.75 0.15 230);
+  --color-secondary-foreground: oklch(0.9 0.05 230);
+  --color-secondary-accent: oklch(0.75 0.15 230);
 
-  --color-background: oklch(0.5 0.15 230);
-  --color-background-highlight: oklch(0.55 0.15 230);
+  --color-tertiary: oklch(0.5 0.15 230);
+  --color-tertiary-foreground: oklch(0.9 0.05 230);
+  --color-tertiary-accent: oklch(0.55 0.15 230);
 
-  --color-active: oklch(0.3 0.15 230);
-  --color-active-highlight: oklch(0.35 0.15 230);
+  --color-quaternary: oklch(0.3 0.15 230);
+  --color-quaternary-foreground: oklch(0.9 0.05 230);
+  --color-quaternary-accent: oklch(0.35 0.15 230);
 
-  --color-warning: #f5a623;
+  --color-alert: oklch(0.8 0.15 70);
+  --color-alert-foreground: oklch(0.15 0 0);
+  --color-alert-accent: oklch(0.85 0.15 70);
 
-  --color-danger: #dc3545;
-  --color-error: var(--color-danger);
+  --color-destructive: oklch(0.6 0.2 30);
+  --color-foreground: oklch(0.9 0.05 230);
+  --color-destructive-accent: oklch(0.65 0.2 30);
 
+  --radius: 0.5rem;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 }
+
+  * {
+    font-family: 'Inter', sans-serif;
+  }
+
