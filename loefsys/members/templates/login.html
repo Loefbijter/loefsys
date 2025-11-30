@@ -11,7 +11,7 @@
         <img class="h-20 w-auto" src="{% static 'loefbijter-logo.svg' %}" alt="N.S.Z.V. De Loefbijter"/>
         <c-card>
             <c-header.h2 class="mx-auto">Log in om verder te gaan</c-header.h2>
-            <form class="grid gap-4">
+            <form method="post" class="grid gap-4">
                 {% csrf_token %}
                 {{ form }}
                 <c-link href="{% url 'members:reset-password' %}">Wachtwoord vergeten?</c-link>
