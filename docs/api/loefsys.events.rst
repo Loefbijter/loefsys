@@ -4,6 +4,7 @@ loefsys.events package
 .. automodule:: loefsys.events
    :members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------
@@ -19,4 +20,10 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   loefsys.events.admin
    loefsys.events.apps
+   loefsys.events.exceptions
+   loefsys.events.feeds
+   loefsys.events.forms
+   loefsys.events.urls
+   loefsys.events.views

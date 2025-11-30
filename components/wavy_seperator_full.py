@@ -1,3 +1,5 @@
+"""Separator component module."""
+
 from django_components import Component, register, types
 
 

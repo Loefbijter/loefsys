@@ -36,11 +36,9 @@ class TemplateSettings:
                     "django.template.loaders.app_directories.Loader",
                     # Components loader
                     "django_components.template_loader.Loader",
-                ]
+                ],
             )
         ]
 
     def templates_builtins(self):  # noqa D102
-        return [
-            "django_components.templatetags.component_tags",
-        ]
+        return ["django_components.templatetags.component_tags"]

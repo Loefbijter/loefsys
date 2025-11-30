@@ -5,4 +5,4 @@ from .membership import Membership
 from .study_registration import StudyRegistration
 from .user import User
 
-__all__ = ["Address", "MemberDetails", "Membership", "StudyRegistration", "User"]
+__all__ = ["Address", "Membership", "StudyRegistration", "User"]

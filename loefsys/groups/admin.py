@@ -21,10 +21,9 @@ class GroupActivityFilter(admin.SimpleListFilter):
         """Return the filtered queryset."""
         match self.value():
             case "active":
-                return (
-                queryset.filter(date_discontinuation = None)
-                | queryset.filter(date_discontinuation__gte=Now())
-            )
+                return queryset.filter(date_discontinuation=None) | queryset.filter(
+                    date_discontinuation__gte=Now()
+                )
             case "inactive":
                 return queryset.filter(date_discontinuation__lt=Now())
 
