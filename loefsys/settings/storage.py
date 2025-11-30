@@ -14,16 +14,14 @@ class StorageSettings(TemplateSettings, BaseSettings):
 
     AWS_STORAGE_BUCKET_NAME = env(None)
 
-    STATICFILES_FINDERS = [
+    STATICFILES_FINDERS = (
         # Default finders
         "django.contrib.staticfiles.finders.FileSystemFinder",
         "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-        # Django components
-        "django_components.finders.ComponentsFileSystemFinder",
-    ]
+    )
 
-    def STATICFILES_DIRS(self) -> str:
-        return self.BASE_DIR / "static/",
+    def STATICFILES_DIRS(self) -> Sequence[Path]:  # noqa: N802, D102
+        return (self.BASE_DIR / "static",)
 
     def uses_local_storage(self) -> bool:  # noqa N802 D102
         return self.DEBUG or not self.AWS_STORAGE_BUCKET_NAME

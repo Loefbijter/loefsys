@@ -18,7 +18,7 @@ In order to contribute to the project, you should have the following prerequisit
 
 #. Then, open the directory with the cloned repository and execute::
 
-    $ uv sync
+    $ uv sync --locked
 
 #. Install all pre-commit hooks with the following command::
 
@@ -40,7 +40,7 @@ In order to contribute to the project, you should have the following prerequisit
 
 #. Finally, you can start the development server in a new terminal with::
 
-    $ uv run manage.py tailwind dev
+    $ uv run manage.py tailwind start
 
 #. Now, head over to `localhost:8000 <localhost:8000>`_ in your browser and you should see the homepage of loefsys, or go to http://localhost:8000/profile/signup/.
 

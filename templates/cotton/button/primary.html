@@ -1,0 +1,7 @@
+<c-vars tag="button"/>
+<c-component is="button._{{ tag }}" :attrs="attrs" :class="
+    {# base #} inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0
+    {# size #} h-8 px-4 py-2
+    {# style #} bg-tertiary text-tertiary-foreground border-t-2 border-tertiary-accent hover:bg-quaternary hover:text-quaternary-foreground hover:border-quaternary-accent
+"
+>{{ slot }}</c-component>

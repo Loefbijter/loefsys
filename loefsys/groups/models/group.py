@@ -86,8 +86,8 @@ class LoefbijterGroup(TimeStampedModel):
     def active(self):
         """Return whether the group is currently active."""
         return (
-            self.date_discontinuation is None or
-            self.date_discontinuation >= now().__str__()
+            self.date_discontinuation is None
+            or self.date_discontinuation >= now().__str__()
         )
 
     display_members = models.BooleanField(_("Display group members"))
