@@ -43,7 +43,7 @@ class BaseSettings(ClassySettings):
         return ("django.contrib.contenttypes",)
 
     def THIRD_PARTY_APPS(self) -> Sequence[str]:  # noqa N802 D102
-        apps = ("django_cotton", "tailwind", "django_browser_reload")
+        apps = ("django_cotton", "django_browser_reload")
         debug_apps = ("debug_toolbar",)
         return apps + debug_apps if self.DEBUG else apps
 

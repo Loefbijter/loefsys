@@ -282,7 +282,4 @@ tags
 # Redis dump file
 dump.rdb
 
-### Project template
-loefsys/media/
-
 .pytest_cache/

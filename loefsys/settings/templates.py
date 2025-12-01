@@ -8,6 +8,11 @@ class TemplateSettings:
 
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
+    TAILWIND_VERSION = "v4.1.17"
+
+    def TAILWIND_INPUT(self):  # noqa: D102, N802
+        return self.BASE_DIR / "styles" / "globals.css"
+
     def TEMPLATES(self) -> Sequence[dict]:  # noqa N802 D102
         return (
             {
