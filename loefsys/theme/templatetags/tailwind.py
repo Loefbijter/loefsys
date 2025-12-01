@@ -4,18 +4,18 @@ import time
 
 from django import template
 from django.conf import settings
-from django.templatetags.static import StaticNode
+from django.http import QueryDict
 
 register = template.Library()
 
 
-@register.simple_tag(name="tailwind")
+@register.inclusion_tag("theme/tailwind_url.html", name="tailwind_static_url")
 def do_tailwind():
     """Retrieve the static url for the stylesheet.
 
     In debug mode, a url parameter is added to force refresh upon changes.
     """
-    url = StaticNode.handle_simple("styles.css")
+    qd = QueryDict(mutable=True)
     if settings.DEBUG:
-        url += f"?v={int(time.time())}"
-    return url
+        qd["v"] = str(int(time.time()))
+    return {"url": "styles.css", "qd": qd}
