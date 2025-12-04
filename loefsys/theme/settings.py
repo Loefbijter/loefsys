@@ -5,7 +5,11 @@ from pathlib import Path
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
-DEFAULTS = {"TAILWIND_VERSION": "latest", "TAILWIND_OUTPUT_CSS": None}
+DEFAULTS = {
+    "TAILWIND_VERSION": "latest",
+    "TAILWIND_BIN_PATH": None,
+    "TAILWIND_OUTPUT_CSS": None,
+}
 
 
 def _import_from_settings(setting):
@@ -18,6 +22,7 @@ def _import_from_settings(setting):
 
 
 TAILWIND_VERSION = _import_from_settings("TAILWIND_VERSION")
+TAILWIND_BIN_PATH = _import_from_settings("TAILWIND_BIN_PATH")
 TAILWIND_INPUT_CSS = Path(_import_from_settings("TAILWIND_INPUT_CSS"))
 TAILWIND_OUTPUT_CSS = Path(
     _import_from_settings("TAILWIND_OUTPUT_CSS")

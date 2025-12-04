@@ -2,6 +2,8 @@
 
 from collections.abc import Sequence
 
+from cbs import env
+
 
 class TemplateSettings:
     """Class containing the configuration for templates."""
@@ -9,6 +11,7 @@ class TemplateSettings:
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
     TAILWIND_VERSION = "v4.1.17"
+    TAILWIND_BIN_PATH = env(None, key="TAILWIND_BIN_PATH")
 
     def TAILWIND_INPUT_CSS(self):  # noqa: D102, N802
         return self.BASE_DIR / "styles" / "globals.css"

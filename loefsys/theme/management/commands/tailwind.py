@@ -28,11 +28,13 @@ class Command(BaseCommand):
             # We want watching to be the default.
             args += ["--watch"]
 
+        bin_path = settings.TAILWIND_BIN_PATH
         try:
             pytailwindcss.run(
                 args,
+                bin_path=bin_path,
                 live_output=True,
-                auto_install=True,
+                auto_install=False if bin_path else True,
                 version=settings.TAILWIND_VERSION,
             )
         except KeyboardInterrupt:
