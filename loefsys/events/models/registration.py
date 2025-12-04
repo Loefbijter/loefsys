@@ -77,6 +77,25 @@ class EventRegistration(TimeStampedModel):
         fields = self.event.registrationformfield_set.all()
         return [(field, field.get_value_for(self)) for field in fields]
 
+    @property
+    def get_queue_position(self) -> int | None:
+        """Get the position in the queue for this registration.
+
+        Returns
+        -------
+        int
+            The position in the queue, starting at 1.
+            If not in the queue, returns None.
+        """
+        if self.status != RegistrationStatus.QUEUED:
+            return None
+
+        return EventRegistration.objects.filter(
+            created__lt=self.created,
+            event=self.event,
+            status=RegistrationStatus.QUEUED,
+        ).count() + 1
+
     objects = EventRegistrationManager()
 
     class Meta:

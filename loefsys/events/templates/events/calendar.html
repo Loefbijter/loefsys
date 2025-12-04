@@ -1,25 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     Kalender
 {% endblock %}
 
-{% block content %}
-
-<!-- Calendar Section -->
-<section id="calendar-wrapper" class="flex-auto p-2">
+{% block head %}
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
-
-  <!-- FullCalendar Container -->
-  <div id='calendar' class="mx-auto"></div>
-
-  <style>
-    .fc-button {
-      background-color: var(--color-background) !important;
-      color: var(--color-primary) !important;
-    }
-  </style>
-
+  <link rel="stylsheet" href="{% static 'events/calendar.css' %}">
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
@@ -65,6 +53,15 @@
       calendar.render();
     });
   </script>
+{% endblock head %}
+
+{% block content %}
+<!-- Calendar Section -->
+<section id="calendar-wrapper" class="flex-auto p-2">
+  
+
+  <!-- FullCalendar Container -->
+  <div id='calendar' class="mx-auto"></div>
 </section>
 
 {% endblock %}

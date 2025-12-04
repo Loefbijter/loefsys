@@ -5,51 +5,67 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
-    <section id="event-details" class="bg-[#2972b3] p-8 flex flex-col">
-        <h1 class="text-6xl font-bold text-white pb-8 mt-4"> {{event.title}}</h1>
 
-    </section>
+<div>
+    <c-card>
+        <c-header.h1>{{ event.title }}</c-header.h1>
 
-    <section id="event-detail" class="bg-[#1BB1E6] flex-auto p-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-2xl">
-            <div class="border p-4 rounded-xl bg-gray-100 col-span-2 flex gap-2">
-                <img class="w-25 mr-4" src="{% if event.picture %} /media/{{ event.picture }} {% else %} /media/events/default.png {% endif %}">
+        <!-- TODO: try to add some logic based on dimensions to have less empty space on this page -->
+        {% if event.picture %}
+            <img class="rounded-lg shadow-2xl max-h-100 bg-background border-4 border-secondary my-4 mx-auto" 
+                 src="{{ event.picture.url }}"
+                 alt="Event Picture"/>
+        {% endif %}
+
+        <c-separator/>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-4">
+
+            <!-- Basic information -->
+            <div class="grid grid-cols-2">
+                <div class="font-bold">Van:</div>
+                <div>{{ event.start|date:"d M y, H:i" }}</div>
+                    
+                <div class="font-bold">Tot:</div>
+                <div>{{ event.end|date:"d M y, H:i" }}</div>
+
+                <div class="font-bold">Locatie:</div>
+                <div>{{ event.location }}</div>
+
+                <div class="font-bold">Prijs:</div>
+                <div>{{ price }}</div>
+
             </div>
-            <div class="border p-4 rounded-xl bg-gray-100 col-span-2 flex gap-2">
-                <span class="font-bold whitespace-nowrap text-lg">Beschrijving: </span>
-                <span class="text-lg">{{ event.description }}</span>
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Starttijd:</span> {{ event.start|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Eindtijd:</span> {{ event.end|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Registratie Start:</span> {{ event.registration_start|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Registratie Deadline:</span> {{ event.registration_deadline|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Annulering Deadline:</span> {{ event.cancelation_deadline|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Locatie:</span> {{ event.location }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Prijs:</span> {{ event.price }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Inschrijvingen:</span>
-                {% if event.capacity %}
-                    {{ num_registrations }} / {{ event.capacity }}
-                {% else %}
-                    {{ num_registrations }}
-                {% endif %}
+
+            <!-- Related to registering -->
+            <div class="grid grid-cols-2">
+                <div class="font-bold">Aanmelden vanaf:</div>
+                <div>{{ event.registration_start|date:"d M y, H:i" }}</div>
+                    
+                <div class="font-bold">Aanmelden tot:</div>
+                <div>{{ event.registration_deadline|date:"d M y, H:i" }}</div>
+
+                <div class="font-bold">Afmelden tot:</div>
+                <div>{{ event.cancelation_deadline|date:"d M y, H:i" }}</div>
+
+                <div class="font-bold">Inschrijvingen:</div>
+                <div>
+                    {% if event.capacity %}
+                        {{ num_registrations }} / {{ event.capacity }}
+                    {% else %}
+                        {{ num_registrations }}
+                    {% endif %}
+                </div>
             </div>
         </div>
+
+        <c-separator/>
+
+        <!-- TODO: neatly move registration button logic here. -->
+
+    </c-card>
+
+</div>
         {% if registration_active %}
         <div class="border p-4 rounded-xl bg-gray-100 justify-center mt-4">
             <span class="font-bold text-2xl">
@@ -130,8 +146,5 @@
             </script>
         </div>
         {% endif %}
-    </section>
-    {% include "menu.html" %}
 
-</div>
 {% endblock %}

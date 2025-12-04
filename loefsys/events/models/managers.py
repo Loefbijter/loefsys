@@ -6,6 +6,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Now
 
+from loefsys.members.models import User
+
 from .choices import RegistrationStatus
 
 if TYPE_CHECKING:
@@ -72,3 +74,14 @@ class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ig
             Q(status=RegistrationStatus.CANCELLED_FINE)
             | Q(status=RegistrationStatus.CANCELLED_NOFINE)
         )
+
+    def for_user(self, user: User) -> Self:
+        """Filter registrations for a specific user.
+
+        Returns
+        -------
+        ~django.db.models.query.QuerySet of ~loefsys.events.models.EventRegistration
+            A query containing registrations for the specified user.
+        """
+        return self.filter(contact=user)
+
