@@ -10,28 +10,38 @@
 @source "../**/*.{html,js,py}";
 
 @theme {
-  --color-primary: oklch(0.95 0.05 230);
-  --color-primary-foreground: oklch(0.3 0.15 230);
-  --color-primary-accent: oklch(1 0.05 230);
+  --color-loef-0: oklch(0.95 0.05 230);
+  --color-loef-1: oklch(0.7 0.15 230);
+  --color-loef-2: oklch(0.5 0.15 230);
+  --color-loef-3: oklch(0.3 0.15 230);
 
-  --color-secondary: oklch(0.7 0.15 230);
-  --color-secondary-foreground: oklch(0.95 0.05 230);
-  --color-secondary-accent: oklch(0.75 0.15 230);
+  --color-loef-0-offset: oklch(0.95 0.05 230);
+  --color-loef-1-offset: oklch(0.75 0.15 230);
+  --color-loef-2-offset: oklch(0.55 0.15 230);
+  --color-loef-3-offset: oklch(0.35 0.15 230);
 
-  --color-tertiary: oklch(0.5 0.15 230);
-  --color-tertiary-foreground: oklch(0.95 0.05 230);
-  --color-tertiary-accent: oklch(0.55 0.15 230);
+  --color-background: var(--color-loef-0);
+  --color-foreground: var(--color-loef-3);
+  --color-accent: var(--color-loef-0-offset);
 
-  --color-quaternary: oklch(0.3 0.15 230);
-  --color-quaternary-foreground: oklch(0.95 0.05 230);
-  --color-quaternary-accent: oklch(0.35 0.15 230);
+  --color-primary: var(--color-loef-1);
+  --color-primary-foreground: var(--color-loef-0-offset);
+  --color-primary-accent: var(--color-loef-2-offset);
+
+  --color-secondary: var(--color-loef-2);
+  --color-secondary-foreground: var(--color-loef-0-offset);
+  --color-secondary-accent: var(--color-loef-2-offset);
+
+  --color-tertiary: var(--color-loef-3);
+  --color-tertiary-foreground: var(--color-loef-0-offset);
+  --color-tertiary-accent: var(--color-loef-3-offset);
 
   --color-alert: oklch(0.8 0.15 70);
   --color-alert-foreground: oklch(0.15 0 0);
   --color-alert-accent: oklch(0.85 0.15 70);
 
   --color-destructive: oklch(0.6 0.2 30);
-  --color-foreground: oklch(0.95 0.05 230);
+  --color-destructive-foreground: oklch(1 0 0);
   --color-destructive-accent: oklch(0.65 0.2 30);
 
   --radius: 0.5rem;

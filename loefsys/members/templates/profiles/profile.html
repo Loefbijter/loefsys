@@ -12,9 +12,9 @@
             <c-card>
                 <div class="flex items-center justify-between">
                     <c-header.h4>Jouw publiek profiel</c-header.h4>
-                    <c-button.primary tag="a" :href="{% url 'members:user-profile-edit' %}">
+                    <c-button.secondary tag="a" :href="{% url 'members:user-profile-edit' %}">
                         Profiel Bewerken
-                    </c-button.primary>
+                    </c-button.secondary>
                 </div>
             </c-card>
         {% endif %}
@@ -22,10 +22,10 @@
         <div class="flex flex-col sm:flex-row justify-between items-center sm:space-x-4 space-y-4 sm:space-y-0">
             <div class="max-h-64 max-w-64">
                 {% if member.picture %}
-                    <img class="rounded-full shadow-2xl border-6 border-tertiary" src="{{ member.picture.url }}"
+                    <img class="rounded-full shadow-2xl border-6 border-secondary" src="{{ member.picture.url }}"
                          alt="Profile Picture"/>
                 {% else %}
-                    <img class="rounded-full shadow-2xl border-6 border-tertiary size-64"
+                    <img class="rounded-full shadow-2xl border-6 border-secondary size-64"
                          src="{% static 'default-profile-picture.svg' %}" alt="Profile Picture"/>
                 {% endif %}
             </div>
