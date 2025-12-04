@@ -4,8 +4,9 @@ import sys
 from typing import Any
 
 import pytailwindcss
-from django.conf import settings
 from django.core.management import BaseCommand
+
+from loefsys.theme import settings
 
 
 class Command(BaseCommand):
@@ -20,9 +21,7 @@ class Command(BaseCommand):
 
     def handle(self, *_: tuple[Any, ...], **options: dict[str, object]) -> str | None:
         """Perform the actual logic of the command."""
-        ipath = settings.BASE_DIR / "styles" / "globals.css"
-        opath = settings.STATICFILES_DIRS[0] / "styles.css"
-        args = ["-i", ipath, "-o", opath]
+        args = ["-i", settings.TAILWIND_INPUT_CSS, "-o", settings.TAILWIND_OUTPUT_CSS]
         if options["minify"]:
             args += ["--minify"]
         if options["watch"] or not options["minify"]:

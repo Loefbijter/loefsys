@@ -6,8 +6,8 @@
     <!-- <meta content="translucent-black" name="apple-mobile-web-app-status-bar-style"> -->
     <title>{% block title %}{% endblock %} | Loefbijter</title>
     <link rel="icon" type="image/x-icon" href="{% static 'loefbijter-logo.svg' %}">
-    <link rel="preload" href="{% tailwind_static_url %}" as="style">
-    <link rel="stylesheet" href="{% tailwind_static_url %}">
+    <link rel="preload" href="{% tailwind_static 'globals.css' %}" as="style">
+    <link rel="stylesheet" href="{% tailwind_static 'globals.css' %}">
 </head>
 <body class="bg-secondary text-secondary-foreground">
 <div class="flex flex-col w-full min-h-screen bg-primary text-primary-foreground">
