@@ -381,7 +381,7 @@
             env = {
               UV_NO_SYNC = "1";
               UV_PYTHON = "${venv}/bin/python";
-              TAILWIND_OVERRIDE = "${pkgs.tailwindcss_4}/bin/tailwindcss";
+              TAILWIND_BIN_PATH = "${pkgs.tailwindcss_4}/bin/tailwindcss";
               UV_PYTHON_DOWNLOADS = "never";
             };
             shellHook = ''
