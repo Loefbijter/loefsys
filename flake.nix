@@ -375,12 +375,13 @@
             packages = [
               venv
               pkgs.uv
-              pkgs.nodejs
               pkgs.ruff
+              pkgs.tailwindcss_4
             ];
             env = {
               UV_NO_SYNC = "1";
               UV_PYTHON = "${venv}/bin/python";
+              TAILWIND_OVERRIDE = "${pkgs.tailwindcss_4}/bin/tailwindcss";
               UV_PYTHON_DOWNLOADS = "never";
             };
             shellHook = ''
