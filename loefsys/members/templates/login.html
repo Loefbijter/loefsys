@@ -15,7 +15,7 @@
                 {% csrf_token %}
                 {{ form }}
                 <c-link href="{% url 'members:reset-password' %}">Wachtwoord vergeten?</c-link>
-                <c-button.primary type="submit">Log in</c-button.primary>
+                <c-button.secondary type="submit">Log in</c-button.secondary>
                 <p class="text-center">Geen account?
                     <c-link href="">Account aanmaken</c-link>
                 </p>

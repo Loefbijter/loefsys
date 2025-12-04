@@ -1,4 +1,4 @@
-{% load static tailwind_tags %}
+{% load static tailwind %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +6,11 @@
     <!-- <meta content="translucent-black" name="apple-mobile-web-app-status-bar-style"> -->
     <title>{% block title %}{% endblock %} | Loefbijter</title>
     <link rel="icon" type="image/x-icon" href="{% static 'loefbijter-logo.svg' %}">
-    {% tailwind_preload_css %}
-    {% tailwind_css %}
+    <link rel="preload" href="{% tailwind_static 'globals.css' %}" as="style">
+    <link rel="stylesheet" href="{% tailwind_static 'globals.css' %}">
 </head>
-<body class="bg-secondary text-secondary-foreground">
-<div class="flex flex-col w-full min-h-screen bg-primary text-primary-foreground">
+<body class="bg-primary text-primary-foreground">
+<div class="flex flex-col w-full min-h-screen bg-background text-foreground">
     {# Header #}
     {% if is_mobile %}
         <c-waves base="top"/>

@@ -21,7 +21,7 @@ class StorageSettings(TemplateSettings, BaseSettings):
     )
 
     def STATICFILES_DIRS(self) -> Sequence[Path]:  # noqa: N802, D102
-        return (self.BASE_DIR / "static",)
+        return (self.BASE_DIR / "static", self.BASE_DIR / "styles" / "dist")
 
     def uses_local_storage(self) -> bool:  # noqa N802 D102
         return self.DEBUG or not self.AWS_STORAGE_BUCKET_NAME
