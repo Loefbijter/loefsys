@@ -10,6 +10,5 @@ class SyncConfig(AppConfig):
 
     def ready(self):
         """Run when Django starts."""
-        from . import signals
-
-        return signals
+        # Not sure if this should be removed or not
+        return None

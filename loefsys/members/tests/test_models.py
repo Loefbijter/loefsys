@@ -1,21 +1,24 @@
-from datetime import date
+from datetime import date, datetime
+from unittest import skipUnless
 
+from django.apps import apps
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django_dynamic_fixture import G
 
 from loefsys.members.models.address import Address
-
-# from loefsys.members.models.member import MemberDetails
 from loefsys.members.models.membership import Membership, validate_has_overlap
 from loefsys.members.models.skippership import Skippership
 from loefsys.members.models.study_registration import StudyRegistration
 from loefsys.members.models.user import User
 from loefsys.members.models.user_skippership import UserSkippership
 
-# from loefsys.reservations.models.boat import Boat
-# from loefsys.reservations.models.choices import ReservableCategories
-# from loefsys.reservations.models.reservable import ReservableType
-# from loefsys.reservations.models.reservation import Reservation
+if apps.is_installed("loefsys.reservations"):
+    # Only include reservation models if the app is enabled
+    from loefsys.reservations.models.boat import Boat
+    from loefsys.reservations.models.choices import ReservableCategories
+    from loefsys.reservations.models.reservable import ReservableType
+    from loefsys.reservations.models.reservation import Reservation
 
 
 class AddressTestCase(TestCase):
@@ -260,76 +263,79 @@ class SkippershipModelsTestCase(TestCase):
         self.assertNotIn(user3, self.skippership2.skippers.all())
 
 
-# class ReservationUserSkippershipTestCase(TestCase):
-#     """Tests for authorized_skipper field in Reservation model."""
+@skipUnless(
+    apps.is_installed("loefsys.reservations"), "Tests depend on reservation models"
+)
+class ReservationUserSkippershipTestCase(TestCase):
+    """Tests for authorized_skipper field in Reservation model."""
 
-#     def setUp(self):
-#         self.user1 = G(User)
-#         self.user2 = G(User)
-#         self.skippership = G(Skippership, name="Kielboot 2")
-#         self.userskippership = G(
-#             UserSkippership, user=self.user2, skippership=self.skippership
-#         )
-#         self.reservable_type = G(
-#             ReservableType, name="Kielboten", category=ReservableCategories.BOAT
-#         )
-#         self.boat = G(
-#             Boat,
-#             name="Kielboot",
-#             reservable_type=self.reservable_type,
-#             requires_skippership=self.skippership,
-#         )
+    def setUp(self):
+        self.user1 = G(User)
+        self.user2 = G(User)
+        self.skippership = G(Skippership, name="Kielboot 2")
+        self.userskippership = G(
+            UserSkippership, user=self.user2, skippership=self.skippership
+        )
+        self.reservable_type = G(
+            ReservableType, name="Kielboten", category=ReservableCategories.BOAT
+        )
+        self.boat = G(
+            Boat,
+            name="Kielboot",
+            reservable_type=self.reservable_type,
+            requires_skippership=self.skippership,
+        )
 
-#     def test_reservation_authorized_userskippership(self):
-#         """Test that a reservation can be created with an authorized skipper."""
-#         reservation = G(
-#             Reservation,
-#             reserved_item=self.boat,
-#             reservee_user=self.user1,
-#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-#             end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
-#             authorized_userskippership=self.userskippership,
-#         )
-#         self.assertIsNotNone(reservation)
+    def test_reservation_authorized_userskippership(self):
+        """Test that a reservation can be created with an authorized skipper."""
+        reservation = G(
+            Reservation,
+            reserved_item=self.boat,
+            reservee_user=self.user1,
+            start=datetime(2025, 1, 1, hour=11, minute=0),
+            end=datetime(2025, 1, 1, hour=12, minute=0),
+            authorized_userskippership=self.userskippership,
+        )
+        self.assertIsNotNone(reservation)
 
-#     def test_reservation_no_authorized_userskippership(self):
-#         """Test that a reservation cannot be made without an authorized skipper."""
-#         reservation = G(
-#             Reservation,
-#             reserved_item=self.boat,
-#             reservee_user=self.user1,
-#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
-#             end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
-#             authorized_userskippership=None,
-#         )
-#         with self.assertRaises(ValidationError):
-#             reservation.clean()
+    def test_reservation_no_authorized_userskippership(self):
+        """Test that a reservation cannot be made without an authorized skipper."""
+        reservation = G(
+            Reservation,
+            reserved_item=self.boat,
+            reservee_user=self.user1,
+            start=datetime(2025, 1, 1, hour=11, minute=0),
+            end=datetime(2025, 1, 1, hour=12, minute=0),
+            authorized_userskippership=None,
+        )
+        with self.assertRaises(ValidationError):
+            reservation.clean()
 
-#     def test_reservation_unauthorized_userskippership(self):
-#         """Test that a reservation cannot be made with an unauthorized skipper."""
-#         user3 = G(User)
-#         skippership = G(Skippership, name="Kielboot 1")
-#         userskippership = G(UserSkippership, user=user3, skippership=skippership)
-#         reservation = G(
-#             Reservation,
-#             reserved_item=self.boat,
-#             reservee_user=self.user1,
-#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
-#             end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
-#             authorized_userskippership=userskippership,
-#         )
-#         with self.assertRaises(ValidationError):
-#             reservation.clean()
+    def test_reservation_unauthorized_userskippership(self):
+        """Test that a reservation cannot be made with an unauthorized skipper."""
+        user3 = G(User)
+        skippership = G(Skippership, name="Kielboot 1")
+        userskippership = G(UserSkippership, user=user3, skippership=skippership)
+        reservation = G(
+            Reservation,
+            reserved_item=self.boat,
+            reservee_user=self.user1,
+            start=datetime(2025, 1, 1, hour=11, minute=0),
+            end=datetime(2025, 1, 1, hour=12, minute=0),
+            authorized_userskippership=userskippership,
+        )
+        with self.assertRaises(ValidationError):
+            reservation.clean()
 
-#     def test_reservation_no_skippership(self):
-#         """Test that a reservation can be made with an authorized skipper without the reserved item requiring a skippership."""  # noqa: E501
-#         boat2 = G(Boat)
-#         reservation = G(
-#             Reservation,
-#             reserved_item=boat2,
-#             reservee_user=self.user1,
-#             start=datetime.datetime(2025, 1, 1, hour=11, minute=0),
-#             end=datetime.datetime(2025, 1, 1, hour=12, minute=0),
-#             authorized_userskippership=self.userskippership,
-#         )
-#         self.assertIsNotNone(reservation)
+    def test_reservation_no_skippership(self):
+        """Test that a reservation can be made with an authorized skipper without the reserved item requiring a skippership."""  # noqa: E501
+        boat2 = G(Boat)
+        reservation = G(
+            Reservation,
+            reserved_item=boat2,
+            reservee_user=self.user1,
+            start=datetime(2025, 1, 1, hour=11, minute=0),
+            end=datetime(2025, 1, 1, hour=12, minute=0),
+            authorized_userskippership=self.userskippership,
+        )
+        self.assertIsNotNone(reservation)
