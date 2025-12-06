@@ -7,8 +7,3 @@ class SyncConfig(AppConfig):
     """Configuration for the sync app."""
 
     name = "loefsys.sync"
-
-    def ready(self):
-        """Run when Django starts."""
-        # Not sure if this should be removed or not
-        return None
