@@ -82,21 +82,18 @@ class ActivePropertyTestCase(TestCase):
         group = G(
             LoefbijterGroup,
             date_foundation="2020-01-01",
-            date_discontinuation="2021-01-01"
+            date_discontinuation="2021-01-01",
         )
         self.assertFalse(group.active)
 
         group = G(
             LoefbijterGroup,
             date_foundation="2020-01-01",
-            date_discontinuation="3000-01-01"
+            date_discontinuation="3000-01-01",
         )
         self.assertTrue(group.active)
 
         group = G(
-            LoefbijterGroup,
-            date_foundation="2020-01-01",
-            date_discontinuation=None
+            LoefbijterGroup, date_foundation="2020-01-01", date_discontinuation=None
         )
         self.assertTrue(group.active)
-

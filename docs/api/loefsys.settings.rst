@@ -4,6 +4,7 @@ loefsys.settings package
 .. automodule:: loefsys.settings
    :members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------
