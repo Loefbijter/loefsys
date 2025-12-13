@@ -1,152 +1,110 @@
 {% extends "base.html" %}
+{% load formatters compress %}
 
 {% block title %}
-    {{ event.title }}
+{{ event.title }}
 {% endblock %}
 
 {% block content %}
 
-<div>
-    <c-card>
-        <c-header.h1>{{ event.title }}</c-header.h1>
+<div class="flex-col space-y-4 w-[95%] sm:w-[80%] mx-auto">
+  <c-card class="">
+    <c-header.h1>{{ event.title }}</c-header.h1>
+    <c-separator />
+  </c-card>
 
-        <!-- TODO: try to add some logic based on dimensions to have less empty space on this page -->
-        {% if event.picture %}
-            <img class="rounded-lg shadow-2xl max-h-100 bg-background border-4 border-secondary my-4 mx-auto" 
-                 src="{{ event.picture.url }}"
-                 alt="Event Picture"/>
-        {% endif %}
+  <div class="flex flex-col space-y-4 xl:space-x-4 xl:space-y-0 xl:flex-row">
 
-        <c-separator/>
+    {% if event.picture %}
+    <c-card class="flex flex-col justify-around space-y-4 items-center">
+      <div
+        class="max-h-full max-w-64 overflow-hidden justify-center aspect-square rounded-lg shadow-2xl bg-background border-4 border-secondary">
+        <img class="object-contain" src="{{ event.picture.url }}" alt="Event Picture" />
+      </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mx-4">
+      <!-- TODO:  -->
+      <c-button id="registration-button" class="max-w-64"
+        disabled="{{ registration_disabled|yesno:'true,false' }}">
+        {{ registration_button_text }}
+      </c-button>
 
-            <!-- Basic information -->
-            <div class="grid grid-cols-2">
-                <div class="font-bold">Van:</div>
-                <div>{{ event.start|date:"d M y, H:i" }}</div>
-                    
-                <div class="font-bold">Tot:</div>
-                <div>{{ event.end|date:"d M y, H:i" }}</div>
+      {% if not event.registration_window_open %}
+      {% translate "Register" as register%}
 
-                <div class="font-bold">Locatie:</div>
-                <div>{{ event.location }}</div>
+      {% compress js inline %}
+      <script>
+        const timeUntilStartInMiliseconds = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}") - new Date();
 
-                <div class="font-bold">Prijs:</div>
-                <div>{{ price }}</div>
+        if (timeUntilStartInMiliseconds > 0) {
+          const registrationButton = document.getElementById("registration-button");
 
-            </div>
-
-            <!-- Related to registering -->
-            <div class="grid grid-cols-2">
-                <div class="font-bold">Aanmelden vanaf:</div>
-                <div>{{ event.registration_start|date:"d M y, H:i" }}</div>
-                    
-                <div class="font-bold">Aanmelden tot:</div>
-                <div>{{ event.registration_deadline|date:"d M y, H:i" }}</div>
-
-                <div class="font-bold">Afmelden tot:</div>
-                <div>{{ event.cancelation_deadline|date:"d M y, H:i" }}</div>
-
-                <div class="font-bold">Inschrijvingen:</div>
-                <div>
-                    {% if event.capacity %}
-                        {{ num_registrations }} / {{ event.capacity }}
-                    {% else %}
-                        {{ num_registrations }}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <c-separator/>
-
-        <!-- TODO: neatly move registration button logic here. -->
-
+          setTimeout(() => {
+            registrationButton.textContent = "{{ register }}";
+            registrationButton.disabled = false;
+          }, timeUntilStartInMiliseconds + 100); // +0.1 second to be sure we're past the start time
+        }
+      </script>
+      {% endcompress %}
+      {% endif %}
     </c-card>
+    {% endif %}
 
-    <!-- TODO: Create some sort of gallery to list registrations -->
+    <div class="flex flex-col space-y-4 grow">
 
-</div>
-        {% if registration_active %}
-        <div class="border p-4 rounded-xl bg-gray-100 justify-center mt-4">
-            <span class="font-bold text-2xl">
-                {% if queue_position > 0 %}
-                    {{ queue_position }}e in de wachtrij.</span>
-                {% else %}
-                    Je bent ingeschreven.
-                {% endif %}
-            <form method="post" action="{{ request.path }}" id="cancellation-form" class="flex flex-col">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="cancel">
-                <div class="py-4">
-                    <input required=1 type="hidden" name="fine-consent" value="1" id="fine-consent-checkbox" class="mx-2 scale-175">
-                    <label for="fine-consent" class="hidden font-normal" id="fine-consent-label">Ik weet dat ik me te laat uitschrijf en accepteer de consquenties (€{{ fine_amount_display }} boete)</label>
-                </div>
-                <input type="submit" value="Uitschrijven" id="cancellation-button" class="font-bold text-3xl bg-gray-100 py-2 px-4 rounded">
-            </form>
-            <script>
-                const date = new Date();
-                const cancellationDeadline = new Date("{{ event.cancelation_deadline|date:'Y-m-d H:i:s'}}");
-                if ({queue_position} == 0 && date >= cancellationDeadline) {
-                    // Only show fine consent option if your registration is ACTIVE and the cancellation deadline is due
-                    document.getElementById("fine-consent-label").classList.remove("hidden")
-                    document.getElementById("fine-consent-checkbox").type="checkbox"
-                }
-            </script>
-            {% if event.has_form_fields %}
-            <a href="{% url 'events:registration' slug=event.slug %}">
-                <button>Wijzig formulier</button>
-            </a>
+      <c-card class="flex flex-col justify-around px-5 md:px-24">
+        <c-separator />
+
+        <!-- Basic information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-10 justify-items-normal">
+          <!-- <div class="grid grid-cols-2 px-10"> -->
+          <div class="font-bold">Van:</div>
+          <div>{{ event.start|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Tot:</div>
+          <div>{{ event.end|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Locatie:</div>
+          <div>{{ event.location }}</div>
+
+          <div class="font-bold">Prijs:</div>
+          <div>{{ self.object.price|euro }}</div>
+
+        </div>
+        <c-separator />
+
+      </c-card>
+
+      <c-card class="flex flex-col justify-around px-5 md:px-24">
+        <c-separator />
+
+        <!-- Related to registering -->
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-10 justify-items-normal">
+          <div class="font-bold">Aanmelden vanaf:</div>
+          <div>{{ event.registration_start|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Aanmelden tot:</div>
+          <div>{{ event.registration_deadline|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Afmelden tot:</div>
+          <div>{{ event.cancelation_deadline|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Inschrijvingen:</div>
+          <div>
+            {% if event.capacity %}
+            {{ num_registrations }} / {{ event.capacity }}
+            {% else %}
+            {{ num_registrations }}
             {% endif %}
+          </div>
         </div>
-        {% else %}
-        <div class="border p-4 rounded-xl bg-gray-100 justify-center mt-4">
-            <button id="registration-button" class="font-bold text-3xl bg-gray-100 py-2 px-4 rounded">
-            </button>
-            <script>
-            const now = new Date();
-            const registrationStart = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}");
-            const registrationDeadline = new Date("{{ event.registration_deadline|date:'Y-m-d H:i:s' }}");
-            const registrationButton = document.getElementById("registration-button");
 
-            if (now >= registrationStart && now <= registrationDeadline) {
-            registrationButton.textContent = "Inschrijven is mogelijk";
-            } else {
-            registrationButton.textContent = "Inschrijven voor dit evenement is niet meer mogelijk";
-            }
+        <c-separator />
+      </c-card>
 
-            registrationButton.addEventListener("click", () => {
-            if (now >= registrationStart && now <= registrationDeadline) {
-                const form = document.createElement("form");
-                form.method = "post";
-                form.action = "";
+    </div>
+  </div>
+</div>
 
-                const csrfTokenInput = document.createElement("input");
-                csrfTokenInput.type = "hidden";
-                csrfTokenInput.name = "csrfmiddlewaretoken";
-                csrfTokenInput.value = "{{ csrf_token }}";
-
-                const actionInput = document.createElement("input");
-                actionInput.type = "hidden";
-                actionInput.name = "action"
-                actionInput.value = "register"
-
-                const submitInput = document.createElement("input");
-                submitInput.type = "submit";
-                submitInput.value = "Register";
-                submitInput.className = "btn btn-primary";
-
-                form.appendChild(csrfTokenInput);
-                form.appendChild(actionInput);
-                form.appendChild(submitInput);
-
-                document.body.appendChild(form);
-                form.submit();
-                }
-            });
-            </script>
-        </div>
-        {% endif %}
+<!-- TODO: Create some sort of gallery to list registrations -->
 
 {% endblock %}

@@ -1,3 +1,5 @@
-<div class="{{ class }} grid bg-primary text-primary-foreground border-t-4 border-secondary rounded-xl shadow-lg p-3 content-start">
+{% load styling %}
+<c-vars class="" />
+<div class="{% cn 'grid bg-primary text-primary-foreground border-t-4 border-secondary rounded-xl shadow-lg p-3 content-start' class %}" {{ attrs }}>
     {{ slot }}
 </div>

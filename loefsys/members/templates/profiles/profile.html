@@ -12,9 +12,9 @@
             <c-card>
                 <div class="flex items-center justify-between">
                     <c-header.h4>Jouw publiek profiel</c-header.h4>
-                    <c-button.secondary tag="a" :href="{% url 'members:user-profile-edit' %}">
+                    <c-button tag="a" :href="{% url 'members:user-profile-edit' %}">
                         Profiel Bewerken
-                    </c-button.secondary>
+                    </c-button>
                 </div>
             </c-card>
         {% endif %}

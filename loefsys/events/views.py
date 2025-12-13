@@ -20,7 +20,7 @@ from .models import Event, EventRegistration, RegistrationFormField
 from .models.choices import RegistrationStatus
 
 
-class EventDetailView(DetailView, LoginRequiredMixin):
+class EventDetailView(LoginRequiredMixin, DetailView):
     """View for viewing an event."""
 
     model = Event
@@ -60,9 +60,10 @@ class EventDetailView(DetailView, LoginRequiredMixin):
                 if user_registration else None,
             "num_registrations":
                 self.object.eventregistration_set.active().count(),
-            "price": f"€{self.object.price:.2f}".replace(".", ",") if self.object.price else "Gratis!",
-            "fine_amount_display":
-                f"{self.object.fine:.2f}".replace(".", ","),
+            "registration_button_text":
+                self.get_registration_button_text(user_registration),
+            "registration_disabled":
+                not self.object.registrations_open() and not self.object.cancelation_window_open(),
         }
 
     def post(self, request, *_args, **_kwargs):
@@ -74,15 +75,15 @@ class EventDetailView(DetailView, LoginRequiredMixin):
             if self.object.registrations_open():
                 try:
                     register = EventRegistration(
-                        event=event,
+                        event=self.object,
                         contact=request.user,
-                        price_at_registration=event.price,
-                        fine_at_registration=event.fine,
+                        price_at_registration=self.object.price,
+                        fine_at_registration=self.object.fine,
                         costs_paid=0.00,
                     )
                     register.save()
-                    if event.has_form_fields:
-                        return redirect("events:registration", slug=event.slug)
+                    if self.object.has_form_fields:
+                        return redirect("events:registration", slug=self.object.slug)
                 except IntegrityError:
                     # TODO handle the error
                     print("Registration already exists")
@@ -95,7 +96,7 @@ class EventDetailView(DetailView, LoginRequiredMixin):
             ):
                 self.get_registration_for_current_user().cancel()
 
-        return redirect(event)
+        return redirect(self.object)
     
     def create_registration(self):
         pass
@@ -113,8 +114,39 @@ class EventDetailView(DetailView, LoginRequiredMixin):
                     Q(status=RegistrationStatus.QUEUED) )
                 .last()
         )
-
-class RegistrationFormView(FormView, LoginRequiredMixin):
+    
+    def get_registration_button_text(self, registration):
+        if registration:
+            deadline = self.object.cancelation_deadline or self.object.registration_deadline
+            if not (self.object.registrations_open() and timezone.now() < deadline):
+                return _("Can't deregister")
+            
+            if registration.get_queue_position(self.request.user) is not None:
+                return _("Leave queue")
+            
+            if timezone.now() < deadline:
+                return _("Deregister")
+            
+            if self.object.fine > 0:
+                # TODO: implement replacement registration
+                return _("Deregister (with fine)")
+            
+            return _("Registered")
+        else:
+            if not self.object.registrations_open():
+                return (
+                    _("Can't register yet") 
+                    if timezone.now() < self.object.registration_start 
+                    else _("Registration closed")
+                )
+            
+            if self.object.is_full():
+                return _("Join queue")
+            
+            # TODO: implement agreement to fine
+            return _("Register")
+            
+class RegistrationFormView(LoginRequiredMixin, FormView):
     """View for the registration form."""
 
     template_name = "events/registration_form.html"
@@ -190,7 +222,7 @@ class RegistrationFormView(FormView, LoginRequiredMixin):
         return redirect(self.success_url)
 
 
-class CalendarView(TemplateView, LoginRequiredMixin):
+class CalendarView(LoginRequiredMixin, TemplateView):
     """View for displaying the event calendar."""
 
     template_name = "events/calendar.html"
