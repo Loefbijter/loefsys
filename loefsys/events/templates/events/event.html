@@ -22,14 +22,13 @@
         <img class="object-contain" src="{{ event.picture.url }}" alt="Event Picture" />
       </div>
 
-      <!-- TODO:  -->
       <c-button id="registration-button" class="max-w-64"
         disabled="{{ registration_disabled|yesno:'true,false' }}">
         {{ registration_button_text }}
       </c-button>
 
       {% if not event.registration_window_open %}
-      {% translate "Register" as register%}
+      {% translate "Register" as register %}
 
       {% compress js inline %}
       <script>
