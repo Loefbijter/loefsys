@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from unittest import skip, skipUnless
 
 from django.apps import apps
@@ -21,15 +21,15 @@ class EventTestCase(TestCase):
         G(
             Event,
             title="Bierproeverij",
-            start=datetime(3000, 3, 10, 19, 0, 0),
-            end=datetime(3000, 3, 10, 21, 0, 0),
+            start=datetime(3000, 3, 10, 19, 0, 0, tzinfo=UTC),
+            end=datetime(3000, 3, 10, 21, 0, 0, tzinfo=UTC),
             location="Café jos",
         )
         G(
             Event,
             title="Later event",
-            start=datetime(5000, 1, 1, 10, 0, 0),
-            end=datetime(5000, 10, 10, 10, 0, 0),
+            start=datetime(5000, 1, 1, 10, 0, 0, tzinfo=UTC),
+            end=datetime(5000, 10, 10, 10, 0, 0, tzinfo=UTC),
             published=True,
         )
 
@@ -59,8 +59,8 @@ class EventTestCase(TestCase):
         G(
             Event,
             title="Earlier event",
-            start=datetime(4000, 2, 2, 20, 0, 0),
-            end=datetime(4000, 12, 2, 20, 0, 0),
+            start=datetime(4000, 2, 2, 20, 0, 0, tzinfo=UTC),
+            end=datetime(4000, 12, 2, 20, 0, 0, tzinfo=UTC),
         )
         self.client.force_login(self.user)
         response = self.client.get("/")
@@ -82,8 +82,8 @@ class EventTestCase(TestCase):
         G(
             Event,
             title="Old event",
-            start=datetime(2024, 1, 1, 20, 0, 0),
-            end=datetime(3000, 3, 10, 21, 0, 0),
+            start=datetime(2024, 1, 1, 20, 0, 0, tzinfo=UTC),
+            end=datetime(3000, 3, 10, 21, 0, 0, tzinfo=UTC),
         )
         self.client.force_login(self.user)
         response = self.client.get("/")

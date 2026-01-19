@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from unittest import skipUnless
 
 from django.apps import apps
@@ -292,8 +292,8 @@ class ReservationUserSkippershipTestCase(TestCase):
             Reservation,
             reserved_item=self.boat,
             reservee_user=self.user1,
-            start=datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime(2025, 1, 1, hour=11, minute=0, tzinfo=UTC),
+            end=datetime(2025, 1, 1, hour=12, minute=0, tzinfo=UTC),
             authorized_userskippership=self.userskippership,
         )
         self.assertIsNotNone(reservation)
@@ -304,8 +304,8 @@ class ReservationUserSkippershipTestCase(TestCase):
             Reservation,
             reserved_item=self.boat,
             reservee_user=self.user1,
-            start=datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime(2025, 1, 1, hour=11, minute=0, tzinfo=UTC),
+            end=datetime(2025, 1, 1, hour=12, minute=0, tzinfo=UTC),
             authorized_userskippership=None,
         )
         with self.assertRaises(ValidationError):
@@ -320,8 +320,8 @@ class ReservationUserSkippershipTestCase(TestCase):
             Reservation,
             reserved_item=self.boat,
             reservee_user=self.user1,
-            start=datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime(2025, 1, 1, hour=11, minute=0, tzinfo=UTC),
+            end=datetime(2025, 1, 1, hour=12, minute=0, tzinfo=UTC),
             authorized_userskippership=userskippership,
         )
         with self.assertRaises(ValidationError):
@@ -334,8 +334,8 @@ class ReservationUserSkippershipTestCase(TestCase):
             Reservation,
             reserved_item=boat2,
             reservee_user=self.user1,
-            start=datetime(2025, 1, 1, hour=11, minute=0),
-            end=datetime(2025, 1, 1, hour=12, minute=0),
+            start=datetime(2025, 1, 1, hour=11, minute=0, tzinfo=UTC),
+            end=datetime(2025, 1, 1, hour=12, minute=0, tzinfo=UTC),
             authorized_userskippership=self.userskippership,
         )
         self.assertIsNotNone(reservation)

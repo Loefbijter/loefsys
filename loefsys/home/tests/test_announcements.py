@@ -1,7 +1,7 @@
 # TODO Move all tests into a module instead of a single file.
 """Module defining the tests for indexpage."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 from unittest import skip
 
 from django.test import TestCase
@@ -11,10 +11,10 @@ from loefsys.home.models import Announcement
 from loefsys.members.models import User
 
 
+@skip("Announcements are not yet rendered on the index page")
 class AnnouncementTestCase(TestCase):
     """Tests for announcement display on the index page."""
 
-    @skip("Announcements are not yet rendered on the index page")
     def test_announcement_display(self):
         """Test that the announcement is displayed on the index page."""
         self.client.force_login(user=G(User))
@@ -22,8 +22,8 @@ class AnnouncementTestCase(TestCase):
             Announcement,
             title="Test Announcement",
             content="This is a test announcement.",
-            announcement_start=datetime(2020, 1, 1, 0, 0, 0),
-            announcement_end=datetime(3000, 12, 31, 23, 59, 59),
+            announcement_start=datetime(2020, 1, 1, 0, 0, 0, tzinfo=UTC),
+            announcement_end=datetime(3000, 12, 31, 23, 59, 59, tzinfo=UTC),
             published=True,
         )
         response = self.client.get("/")
@@ -38,8 +38,8 @@ class AnnouncementTestCase(TestCase):
             Announcement,
             title="Unpublished Announcement",
             content="This announcement should not be visible.",
-            announcement_start=datetime(2020, 1, 1, 0, 0, 0),
-            announcement_end=datetime(3000, 12, 31, 23, 59, 59),
+            announcement_start=datetime(2020, 1, 1, 0, 0, 0, tzinfo=UTC),
+            announcement_end=datetime(3000, 12, 31, 23, 59, 59, tzinfo=UTC),
             published=False,
         )
         response = self.client.get("/")
