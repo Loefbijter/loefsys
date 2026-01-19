@@ -19,6 +19,7 @@ def main(request):
     ]
     return render(request, "main.html", {"announcements": announcements})
 
+
 def signup(request):
     """Sign up page view."""
     if request.method == "POST":

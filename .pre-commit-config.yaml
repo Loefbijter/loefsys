@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v6.0.0
     hooks:
       - id: check-ast
       - id: check-merge-conflict
@@ -15,12 +15,12 @@ repos:
         exclude: .*/__mocks__.py
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.1
+    rev: v0.14.6
     hooks:
       - id: ruff-format
       - id: ruff
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.5.22
+    rev: 0.9.11
     hooks:
       - id: uv-lock

@@ -4,6 +4,7 @@ loefsys package
 .. automodule:: loefsys
    :members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------
@@ -11,13 +12,15 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   loefsys.contacts
+   loefsys.core
    loefsys.events
    loefsys.groups
+   loefsys.home
+   loefsys.members
    loefsys.reservations
-   loefsys.scripts
    loefsys.settings
-   loefsys.users
+   loefsys.sync
+   loefsys.theme
 
 Submodules
 ----------
@@ -25,5 +28,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   loefsys.celery
    loefsys.urls
+   loefsys.views
    loefsys.wsgi
