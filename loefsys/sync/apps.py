@@ -7,9 +7,3 @@ class SyncConfig(AppConfig):
     """Configuration for the sync app."""
 
     name = "loefsys.sync"
-
-    def ready(self):
-        """Run when Django starts."""
-        from . import signals  # noqa: PLC0415
-
-        return signals
