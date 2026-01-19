@@ -2,19 +2,29 @@
 
 from collections.abc import Sequence
 
+from cbs import env
+
 
 class TemplateSettings:
     """Class containing the configuration for templates."""
+
+    FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
+    TAILWIND_VERSION = "v4.1.17"
+    TAILWIND_BIN_PATH = env(None, key="TAILWIND_BIN_PATH")
+
+    def TAILWIND_INPUT_CSS(self):  # noqa: D102, N802
+        return self.BASE_DIR / "styles" / "globals.css"
 
     def TEMPLATES(self) -> Sequence[dict]:  # noqa N802 D102
         return (
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
                 "DIRS": [self.BASE_DIR / "templates"],
+                "APP_DIRS": True,
                 "OPTIONS": {
                     "context_processors": self.templates_context_processors(),
                     "loaders": self.templates_loaders(),
-                    "builtins": self.templates_builtins(),
                 },
             },
         )
@@ -23,6 +33,7 @@ class TemplateSettings:
         return (
             "django.template.context_processors.debug",
             "django.template.context_processors.request",
+            "loefsys.core.context_processors.is_mobile",
         )
 
     def templates_loaders(self):  # noqa D102
@@ -34,13 +45,6 @@ class TemplateSettings:
                     "django.template.loaders.filesystem.Loader",
                     # Including this is the same as APP_DIRS=True
                     "django.template.loaders.app_directories.Loader",
-                    # Components loader
-                    "django_components.template_loader.Loader",
-                ]
+                ],
             )
-        ]
-
-    def templates_builtins(self):  # noqa D102
-        return [
-            "django_components.templatetags.component_tags",
         ]

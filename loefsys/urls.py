@@ -13,7 +13,6 @@ urlpatterns = [
     # path("profile/", include("loefsys.profile.urls"), name="profile"),
     # path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
     path("events/", include("loefsys.events.urls"), name="events"),
-    path("", include("django_components.urls")),
     path("__reload__", include("django_browser_reload.urls")),
     *debug_toolbar_urls(),
 ]

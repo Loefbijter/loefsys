@@ -14,7 +14,7 @@ import django
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "Loefsys"
-copyright = "2024, Loefbijter Webcie"  # noqa: A001
+copyright = "2025, Loefbijter Webcie"  # noqa: A001
 author = "Loefbijter Webcie"
 
 # -- General configuration ---------------------------------------------------
@@ -48,10 +48,7 @@ html_static_path = ["_static"]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "django": (
-        "https://docs.djangoproject.com/en/5.0/",
-        "https://docs.djangoproject.com/en/5.0/_objects/",
-    ),
+    "django": ("https://docs.djangoproject.com/en/5.0/", None),
     "django_ext": ("https://django-extensions.readthedocs.io/en/latest/", None),
     "django_cbs": ("https://django-classy-settings.readthedocs.io/latest/", None),
     "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
@@ -64,7 +61,6 @@ intersphinx_disabled_reftypes = []
 
 autodoc_typehints = "both"
 autodoc_member_order = "bysource"
-autodoc_type_aliases = {"EventRegistration": "~loefsys.events.models.EventRegistration"}
 
 # -- Options for Napoleon ----------------------------------------------------
 
