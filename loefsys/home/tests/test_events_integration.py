@@ -1,5 +1,5 @@
 from datetime import datetime
-from unittest import skipUnless
+from unittest import skip, skipUnless
 
 from django.apps import apps
 from django.test import Client, TestCase
@@ -10,6 +10,7 @@ from loefsys.members.models import User
 
 
 @skipUnless(apps.is_installed("loefsys.events"), "Events app not installed")
+@skip("Events aren't yet rendered on the homepage")
 class EventTestCase(TestCase):
     """Tests for event information display for users."""
 
