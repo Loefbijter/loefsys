@@ -33,7 +33,7 @@ class Reservation(models.Model):
     ----------
     reserved_item : ~loefsys.reservations.models.reservable.ReservableItem
         The ForeignKey.
-    reservee_member : ~loefsys.users.models.member.MemberDetails
+    reservee_user : ~loefsys.users.models.member.User
         The person reserving the item, is null if a group is reserving the item.
     reservee_group : ~loefsys.groups.models.group.LoefBijterGroup
         The group reserving the item, is null if a person is reserving the item.
