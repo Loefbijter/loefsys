@@ -82,6 +82,8 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 "**/{tests}/*" = ["D100", "D101", "D102", "D104"]
+"**/__init__.py" = ["PLC0415"]
+"**/__disabled__.**.py" = ["N999"]
 
 [tool.ruff.lint.isort]
 case-sensitive = true

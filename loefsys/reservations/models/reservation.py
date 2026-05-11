@@ -7,7 +7,8 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from loefsys.members.models.user import User
-from loefsys.members.models.user_skippership import UserSkippership
+
+# from loefsys.members.models.user_skippership import UserSkippership
 from loefsys.reservations.models.boat import Boat
 from loefsys.reservations.models.choices import ReservableCategories
 from loefsys.reservations.models.reservable import ReservableItem
@@ -37,8 +38,8 @@ class Reservation(models.Model):
         The person reserving the item, is null if a group is reserving the item.
     reservee_group : ~loefsys.groups.models.group.LoefBijterGroup
         The group reserving the item, is null if a person is reserving the item.
-    authorized_userskippership : ~loefsys.users..models.user_skippership.UserSkippership
-        The person who is the authorized skipper for a boat.
+    #authorized_userskippership : ~loefsys.users.models.user_skippership.UserSkippership
+    #     The person who is the authorized skipper for a boat.
     start : ~datetime.datetime
         The start timestamp of the reservation.
     end : ~datetime.datetime
@@ -53,14 +54,14 @@ class Reservation(models.Model):
     # by the fields reservee_member and reservee_group once Member(ship)
     # has been added to the admin page (see GitHub history from before
     # 2 June 2025).
-    authorized_userskippership = models.ForeignKey(
-        UserSkippership,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="authorized_skipper_reservation_set",
-        verbose_name=_("Authorized skipper"),
-    )
+    # authorized_userskippership = models.ForeignKey(
+    #     UserSkippership,
+    #     on_delete=models.CASCADE,
+    #     null=True,
+    #     blank=True,
+    #     related_name="authorized_skipper_reservation_set",
+    #     verbose_name=_("Authorized skipper"),
+    # )
 
     start = models.DateTimeField(verbose_name=_("Start time"))
     end = models.DateTimeField(verbose_name=_("End time"))
@@ -114,16 +115,17 @@ class Reservation(models.Model):
                     pk=self.reserved_item.pk
                 ).requires_skippership
                 if requires_skippership:
-                    if not self.authorized_userskippership:
-                        raise ValidationError(
-                            "The boat selected requires an authorized skipper to be set."  # noqa: E501
-                        )
+                    # if not self.authorized_userskippership:
+                    #     raise ValidationError(
+                    #         "The boat selected requires an authorized skipper to be set."  # noqa: E501
+                    #     )
 
-                    if (
-                        requires_skippership
-                        != self.authorized_userskippership.skippership
-                    ):
-                        raise ValidationError(
-                            "The skipper set is not authorized for this boat."
-                        )
+                    # if (
+                    #     requires_skippership
+                    #     != self.authorized_userskippership.skippership
+                    # ):
+                    #     raise ValidationError(
+                    #         "The skipper set is not authorized for this boat."
+                    #     )
+                    raise NameError("Skipperships are currently disabled.")
             return

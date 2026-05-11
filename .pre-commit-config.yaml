@@ -12,13 +12,14 @@ repos:
       - id: debug-statements
       - id: name-tests-test
         args: [--django]
-        exclude: .*/__mocks__.py
+        exclude: (.*/__mocks__.py|.*/__disabled__\..*.py)
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.6
     hooks:
+      - id: ruff-check
+        args: [ --fix ]
       - id: ruff-format
-      - id: ruff
 
   - repo: https://github.com/astral-sh/uv-pre-commit
     rev: 0.9.11
