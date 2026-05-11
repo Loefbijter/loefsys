@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load formatters compress %}
+{% load formatters i18n %}
 
 {% block title %}
 {{ event.title }}
@@ -30,7 +30,6 @@
       {% if not event.registration_window_open %}
       {% translate "Register" as register %}
 
-      {% compress js inline %}
       <script>
         const timeUntilStartInMiliseconds = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}") - new Date();
 
@@ -43,7 +42,7 @@
           }, timeUntilStartInMiliseconds + 100); // +0.1 second to be sure we're past the start time
         }
       </script>
-      {% endcompress %}
+
       {% endif %}
     </c-card>
     {% endif %}

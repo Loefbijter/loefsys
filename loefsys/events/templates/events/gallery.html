@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+Gallerij
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-primary mb-4 tracking-tight">Gallerij</h1>
+        <p class="text-lg text-muted-foreground max-w-2xl mx-auto">Bekijk hier de foto's van onze afgelopen evenementen.</p>
+    </div>
+
+    {% if events %}
+        <div class="space-y-16">
+            {% for event in events %}
+                <section class="bg-card rounded-xl shadow-sm border overflow-hidden">
+                    <div class="p-6 md:p-8 bg-muted/30 border-b">
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-2xl font-bold text-card-foreground">
+                                <a href="{{ event.get_absolute_url }}" class="hover:text-primary transition-colors">
+                                    {{ event.title }}
+                                </a>
+                            </h2>
+                            <span class="text-sm font-medium text-muted-foreground">{{ event.start|date:"j F Y" }}</span>
+                        </div>
+                        {% if event.description %}
+                            <p class="text-muted-foreground">{{ event.description|truncatewords:20 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        {% for photo in event.photos.all %}
+                            <div class="group relative aspect-square rounded-lg overflow-hidden bg-muted cursor-pointer shadow-sm hover:shadow-md transition-shadow">
+                                <img src="{{ photo.picture.url }}" alt="Foto van {{ event.title }}" class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <span class="text-white font-medium">Bekijken</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-24 bg-muted/20 rounded-2xl border border-dashed">
+            <svg class="mx-auto h-16 w-16 text-muted-foreground/50 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <h3 class="text-xl font-semibold text-foreground">Geen foto's gevonden</h3>
+            <p class="text-muted-foreground mt-2 max-w-sm mx-auto">Er zijn op dit moment nog geen foto's van evenementen geüpload. Kom later nog eens terug!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

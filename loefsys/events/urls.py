@@ -9,11 +9,13 @@ from .views import (
     EventFillerView,
     EventDetailView,
     RegistrationFormView,
+    GalleryView,
 )
 
 app_name = "events"
 
 urlpatterns = [
+    path("gallery/", GalleryView.as_view(), name="gallery"),
     path("<slug:slug>/", EventDetailView.as_view(), name="event"),
     path(
         "<slug:slug>/registration/", RegistrationFormView.as_view(), name="registration"

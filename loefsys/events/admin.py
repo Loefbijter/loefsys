@@ -70,6 +70,14 @@ class IntegerRegistrationInformationInline(AbstractRegistrationInformationInline
     model = IntegerRegistrationInformation
 
 
+from .models import Event, EventOrganizer, EventRegistration, EventPhoto
+
+class EventPhotoInline(admin.TabularInline):
+    """Inline admin interface for event photos."""
+
+    model = EventPhoto
+    extra = 1
+
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     """Admin interface for the fields of the event class."""
@@ -89,7 +97,7 @@ class EventAdmin(admin.ModelAdmin):
         "category",
         "published",
     )
-    inlines: ClassVar[list[type]] = [RegistrationFormInline, EventOrganizerInline]
+    inlines: ClassVar[list[type]] = [RegistrationFormInline, EventOrganizerInline, EventPhotoInline]
 
 
 @admin.register(EventRegistration)

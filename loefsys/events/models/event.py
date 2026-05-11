@@ -368,3 +368,17 @@ class EventOrganizer(TimeStampedModel):
     user = models.ManyToManyField(
         to=get_user_model(), related_name="organizer", blank=True
     )
+
+
+class EventPhoto(TimeStampedModel):
+    """Model representing a photo taken at an event."""
+
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="photos", verbose_name=_("Event"))
+    picture = models.ImageField(upload_to="events/gallery/", verbose_name=_("Picture"))
+
+    class Meta:
+        verbose_name = _("Event photo")
+        verbose_name_plural = _("Event photos")
+
+    def __str__(self):
+        return f"Photo for {self.event.title}"

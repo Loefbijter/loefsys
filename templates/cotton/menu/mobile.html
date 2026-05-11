@@ -1,1 +1,35 @@
-<nav>TBD</nav>
+{% load static %}
+<nav class="flex flex-col bg-primary text-primary-foreground shadow-md relative z-50">
+    <div class="flex items-center justify-between p-4">
+        <!-- Back Button -->
+        <button onclick="window.history.back()" class="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors flex items-center justify-center" aria-label="Terug">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+
+        <!-- Logo -->
+        <div class="flex-grow flex justify-center">
+            <c-logo/>
+        </div>
+
+        <!-- Profile Icon -->
+        <c-profile-icon/>
+    </div>
+
+    <!-- Bottom Navigation Bar (Fixed to bottom of screen) -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around items-center p-2 pb-safe shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] text-gray-500 pb-4">
+        <a href="{% url 'home:home' %}" class="flex flex-col items-center p-2 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            <span class="text-[10px] font-semibold uppercase tracking-wider">Home</span>
+        </a>
+        <a href="{% url 'events:events' %}" class="flex flex-col items-center p-2 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <span class="text-[10px] font-semibold uppercase tracking-wider">Activiteiten</span>
+        </a>
+        <a href="{% url 'events:gallery' %}" class="flex flex-col items-center p-2 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <span class="text-[10px] font-semibold uppercase tracking-wider">Gallerij</span>
+        </a>
+    </div>
+</nav>

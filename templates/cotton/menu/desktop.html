@@ -19,7 +19,9 @@
                 Reserveer
             </c-menu.item>
         {% endrequireapp %}
-        <c-menu.item>Gallerij</c-menu.item>
+        <c-menu.item href="{% url 'events:gallery' %}">
+            Gallerij
+        </c-menu.item>
     </div>
     <c-profile-icon class="ml-auto"/>
 </nav>

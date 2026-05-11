@@ -56,7 +56,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             "registration_active":
                 user_registration is not None,
             "queue_position":
-                user_registration.get_queue_position(self.request.user)
+                user_registration.get_queue_position
                 if user_registration else None,
             "num_registrations":
                 self.object.eventregistration_set.active().count(),
@@ -121,7 +121,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             if not (self.object.registrations_open() and timezone.now() < deadline):
                 return _("Can't deregister")
             
-            if registration.get_queue_position(self.request.user) is not None:
+            if registration.get_queue_position is not None:
                 return _("Leave queue")
             
             if timezone.now() < deadline:
@@ -267,4 +267,17 @@ class EventFeedView(TemplateView, LoginRequiredMixin):
         )
         context["other_event_feed"] = f"{reverse('events:other_event_feed')}?u={token}"
 
+        return context
+
+
+class GalleryView(LoginRequiredMixin, TemplateView):
+    """View for displaying the gallery of events."""
+
+    template_name = "events/gallery.html"
+
+    def get_context_data(self, **kwargs):
+        """Add events with photos to the context."""
+        context = super().get_context_data(**kwargs)
+        # Fetch events that have associated photos
+        context["events"] = Event.objects.filter(photos__isnull=False).distinct().order_by("-start")
         return context
