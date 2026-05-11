@@ -62,8 +62,10 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                 self.object.eventregistration_set.active().count(),
             "registration_button_text":
                 self.get_registration_button_text(user_registration),
-            "registration_disabled":
-                not self.object.registrations_open() and not self.object.cancelation_window_open(),
+            "registration_disabled": (
+                not self.object.registrations_open()
+                and not self.object.cancelation_window_open()
+            ),
         }
 
     def post(self, request, *_args, **_kwargs):
@@ -71,38 +73,38 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         self.object = self.get_object()
         action = request.POST.get("action")
         if action == "register":
-            # Check registration deadline
-            if self.object.registrations_open():
-                try:
-                    register = EventRegistration(
-                        event=self.object,
-                        contact=request.user,
-                        price_at_registration=self.object.price,
-                        fine_at_registration=self.object.fine,
-                        costs_paid=0.00,
-                    )
-                    register.save()
-                    if self.object.has_form_fields:
-                        return redirect("events:registration", slug=self.object.slug)
-                except IntegrityError:
-                    # TODO handle the error
-                    print("Registration already exists")
+            self.create_registration(request.user)
         elif action == "cancel":
-            # Only cancel if cancellation deadline is NOT due or
-            # it is due and consent was given to be fined
-            if (
-                not self.get_object().cancelation_deadline < timezone.now()
-                or request.POST.get("fine-consent") is not None
-            ):
-                self.get_registration_for_current_user().cancel()
+            self.cancel_registration(request)
 
         return redirect(self.object)
-    
-    def create_registration(self):
-        pass
 
-    def cancel_registration(self):
-        pass
+    def create_registration(self, user):
+        """Create a registration for the current user and event."""
+        if self.object.registrations_open():
+            try:
+                register = EventRegistration(
+                    event=self.object,
+                    contact=user,
+                    price_at_registration=self.object.price,
+                    fine_at_registration=self.object.fine,
+                    costs_paid=0.00,
+                )
+                register.save()
+                if self.object.has_form_fields:
+                    return redirect("events:registration", slug=self.object.slug)
+            except IntegrityError:
+                print("Registration already exists")
+
+    def cancel_registration(self, request):
+        """Cancel the registration for the current user and event."""
+        # Only cancel if cancellation deadline is NOT due or
+        # it is due and consent was given to be fined
+        if (
+            not self.get_object().cancelation_deadline < timezone.now()
+            or request.POST.get("fine-consent") is not None
+        ):
+            self.get_registration_for_current_user().cancel()
 
     def get_registration_for_current_user(self):
         """Get active registrations for logged in user."""
@@ -114,38 +116,45 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                     Q(status=RegistrationStatus.QUEUED) )
                 .last()
         )
-    
-    def get_registration_button_text(self, registration):
+
+    def get_registration_button_text(
+            self, registration: EventRegistration | None
+    ) -> str:
+        """Determine the text for the registration button for user and event status."""
+        obj = self.object
+        text = _("Register")  # Default text for users without registration
         if registration:
-            deadline = self.object.cancelation_deadline or self.object.registration_deadline
-            if not (self.object.registrations_open() and timezone.now() < deadline):
-                return _("Can't deregister")
-            
+            deadline = obj.cancelation_deadline or obj.registration_deadline
+            if not (obj.registrations_open() and timezone.now() < deadline):
+                text = _("Can't deregister")
+
             if registration.get_queue_position(self.request.user) is not None:
-                return _("Leave queue")
-            
+                text = _("Leave queue")
+
             if timezone.now() < deadline:
-                return _("Deregister")
-            
-            if self.object.fine > 0:
-                # TODO: implement replacement registration
-                return _("Deregister (with fine)")
-            
-            return _("Registered")
+                text = _("Deregister")
+
+            if obj.fine > 0:
+                # TODO: implement replacement registration when someone is in the queue
+                text = _("Deregister (with fine)")
+
+            text = _("Registered")
         else:
-            if not self.object.registrations_open():
-                return (
-                    _("Can't register yet") 
-                    if timezone.now() < self.object.registration_start 
+            if not obj.registrations_open():
+                text = (
+                    _("Can't register yet")
+                    if timezone.now() < obj.registration_start
                     else _("Registration closed")
                 )
-            
-            if self.object.is_full():
-                return _("Join queue")
-            
+
+            if obj.is_full():
+                text = _("Join queue")
+
             # TODO: implement agreement to fine
-            return _("Register")
-            
+            text = _("Register")
+
+        return text
+
 class RegistrationFormView(LoginRequiredMixin, FormView):
     """View for the registration form."""
 

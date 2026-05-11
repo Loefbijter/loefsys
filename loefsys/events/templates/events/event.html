@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load formatters compress %}
+{% load formatters compress i18n %}
 
 {% block title %}
 {{ event.title }}
@@ -13,12 +13,12 @@
     <c-separator />
   </c-card>
 
-  <div class="flex flex-col space-y-4 xl:space-x-4 xl:space-y-0 xl:flex-row">
+  <div class="flex flex-col space-y-4 lg:space-x-4 lg:space-y-0 lg:flex-row justify-center items-center lg:items-stretch">
 
     {% if event.picture %}
-    <c-card class="flex flex-col justify-around space-y-4 items-center">
+    <c-card class="flex w-full flex-col space-y-4 items-center justify-between lg:w-fit">
       <div
-        class="max-h-full max-w-64 overflow-hidden justify-center aspect-square rounded-lg shadow-2xl bg-background border-4 border-secondary">
+        class="max-h-full max-w-64 flex-none overflow-hidden justify-center aspect-square rounded-lg shadow-2xl bg-background border-4 border-secondary">
         <img class="object-contain" src="{{ event.picture.url }}" alt="Event Picture" />
       </div>
 
@@ -48,13 +48,13 @@
     </c-card>
     {% endif %}
 
-    <div class="flex flex-col space-y-4 grow">
+    <div class="flex flex-col w-full space-y-4 grow">
 
-      <c-card class="flex flex-col justify-around px-5 md:px-24">
+      <c-card class="flex flex-col px-2 md:px-24">
         <c-separator />
 
         <!-- Basic information -->
-        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-10 justify-items-normal">
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-5 justify-items-normal">
           <!-- <div class="grid grid-cols-2 px-10"> -->
           <div class="font-bold">Van:</div>
           <div>{{ event.start|date:"d M y, H:i" }}</div>
@@ -73,11 +73,11 @@
 
       </c-card>
 
-      <c-card class="flex flex-col justify-around px-5 md:px-24">
+      <c-card class="flex flex-col px-4">
         <c-separator />
 
         <!-- Related to registering -->
-        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-10 justify-items-normal">
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-5 justify-items-normal">
           <div class="font-bold">Aanmelden vanaf:</div>
           <div>{{ event.registration_start|date:"d M y, H:i" }}</div>
 
@@ -104,6 +104,6 @@
   </div>
 </div>
 
-<!-- TODO: Create some sort of gallery to list registrations -->
+<!-- TODO, Low Prio: Create some sort of gallery to list registrations -->
 
 {% endblock %}
