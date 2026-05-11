@@ -1,5 +1,6 @@
 db.sqlite*
 .vscode/
+tailwindcss
 loefsys/*/migrations/0*.py
 media/
 

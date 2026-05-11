@@ -394,17 +394,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-classy-settings"
-version = "3.0.7"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/52/ca/e2350391f5c59bf976a1dfd6ddd80ee5a6d956abe09a3c31ac9b27cafaf5/django_classy_settings-3.0.7-py3-none-any.whl", hash = "sha256:c2021f1bcebb9770047867eba003ae8ce280f46cf6a27a75cff8f8635ad64b85", size = 7373, upload-time = "2024-10-16T23:51:22.477Z" },
-]
-
-[[package]]
 name = "django-compressor"
 version = "4.6.0"
 source = { registry = "https://pypi.org/simple" }
@@ -668,7 +657,6 @@ dependencies = [
     { name = "clsx" },
     { name = "dj-database-url" },
     { name = "django" },
-    { name = "django-classy-settings" },
     { name = "django-compressor" },
     { name = "django-cotton" },
     { name = "django-extensions" },
@@ -710,7 +698,6 @@ requires-dist = [
     { name = "clsx", specifier = ">=0.1.1" },
     { name = "dj-database-url", specifier = ">=2.3.0" },
     { name = "django", specifier = ">=5.1.5" },
-    { name = "django-classy-settings", specifier = ">=3.0.7" },
     { name = "django-compressor", specifier = ">=4.6.0" },
     { name = "django-cotton", specifier = ">=2.5.0" },
     { name = "django-extensions", specifier = ">=3.2.3" },

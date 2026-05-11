@@ -2,6 +2,7 @@
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
@@ -47,3 +48,14 @@ class UserProfileEditView(UserProfileMixin, UpdateView):
     context_object_name = "member"
     model = get_user_model()
     template_name = "profiles/profile_edit.html"
+    fields = [
+        "first_name",
+        "last_name",
+        "nickname",
+        "display_name_preference",
+        "phone_number",
+        "picture",
+        "birthday",
+        "show_birthday",
+    ]
+    success_url = reverse_lazy("members:user-profile")

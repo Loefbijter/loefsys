@@ -1,5 +1,6 @@
 """Urls of the members app."""
 
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
 from django.urls import include, path
 
@@ -19,6 +20,37 @@ urlpatterns = [
         LoginView.as_view(template_name="login.html", next_page="/"),
         name="login",
     ),
-    path("reset-password/", ProfileView.as_view(), name="reset-password"),
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(next_page="/"),
+        name="logout",
+    ),
+    path(
+        "reset-password/", 
+        auth_views.PasswordResetView.as_view(
+            template_name="password_reset.html",
+            email_template_name="password_reset_email.html",
+            success_url="/reset-password/done/"
+        ), 
+        name="reset-password"
+    ),
+    path(
+        "reset-password/done/",
+        auth_views.PasswordResetDoneView.as_view(template_name="password_reset_done.html"),
+        name="password_reset_done"
+    ),
+    path(
+        "reset-password/confirm/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name="password_reset_confirm.html",
+            success_url="/reset-password/complete/"
+        ),
+        name="password_reset_confirm"
+    ),
+    path(
+        "reset-password/complete/",
+        auth_views.PasswordResetCompleteView.as_view(template_name="password_reset_complete.html"),
+        name="password_reset_complete"
+    ),
     path("profiles/", include(urlpatterns_profiles)),
 ]

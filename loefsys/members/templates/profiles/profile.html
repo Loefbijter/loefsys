@@ -12,9 +12,17 @@
             <c-card>
                 <div class="flex items-center justify-between">
                     <c-header.h4>Jouw publiek profiel</c-header.h4>
-                    <c-button tag="a" :href="{% url 'members:user-profile-edit' %}">
-                        Profiel Bewerken
-                    </c-button>
+                    <div class="flex gap-2">
+                        <c-button tag="a" href="{% url 'members:user-profile-edit' %}" class="bg-primary text-white hover:bg-secondary">
+                            Profiel Bewerken
+                        </c-button>
+                        <form method="post" action="{% url 'members:logout' %}">
+                            {% csrf_token %}
+                            <c-button type="submit" class="bg-red-600 text-white hover:bg-red-700">
+                                Uitloggen
+                            </c-button>
+                        </form>
+                    </div>
                 </div>
             </c-card>
         {% endif %}
