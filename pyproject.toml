@@ -9,9 +9,11 @@ requires-python = ">=3.12"
 dependencies = [
     "argon2-cffi>=23.1.0",
     "celery[redis]>=5.5.2",
+    "clsx>=0.1.1",
     "dj-database-url>=2.3.0",
     "django>=5.2.14",
     "django-classy-settings>=3.0.7",
+    "django-compressor>=4.6.0",
     "django-cotton>=2.5.0",
     "django-extensions>=3.2.3",
     "django-ical>=1.9.2",
@@ -24,6 +26,7 @@ dependencies = [
     "pyjwt>=2.9.0",
     "pytailwindcss>=0.3.0",
     "python-dotenv>=1.0.1",
+    "starmerge>=0.2.0",
     "user-agent-parser>=0.1.6",
 ]
 

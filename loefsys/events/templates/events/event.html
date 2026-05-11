@@ -1,137 +1,109 @@
 {% extends "base.html" %}
+{% load formatters compress i18n %}
 
 {% block title %}
-    {{ event.title }}
+{{ event.title }}
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
-    <section id="event-details" class="bg-[#2972b3] p-8 flex flex-col">
-        <h1 class="text-6xl font-bold text-white pb-8 mt-4"> {{event.title}}</h1>
 
-    </section>
+<div class="flex-col space-y-4 w-[95%] sm:w-[80%] mx-auto">
+  <c-card class="">
+    <c-header.h1>{{ event.title }}</c-header.h1>
+    <c-separator />
+  </c-card>
 
-    <section id="event-detail" class="bg-[#1BB1E6] flex-auto p-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-2xl">
-            <div class="border p-4 rounded-xl bg-gray-100 col-span-2 flex gap-2">
-                <img class="w-25 mr-4" src="{% if event.picture %} /media/{{ event.picture }} {% else %} /media/events/default.png {% endif %}">
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100 col-span-2 flex gap-2">
-                <span class="font-bold whitespace-nowrap text-lg">Beschrijving: </span>
-                <span class="text-lg">{{ event.description }}</span>
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Starttijd:</span> {{ event.start|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Eindtijd:</span> {{ event.end|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Registratie Start:</span> {{ event.registration_start|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Registratie Deadline:</span> {{ event.registration_deadline|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Annulering Deadline:</span> {{ event.cancelation_deadline|date:"d/m/y H:i" }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Locatie:</span> {{ event.location }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Prijs:</span> {{ event.price }}
-            </div>
-            <div class="border p-4 rounded-xl bg-gray-100">
-                <span class="font-bold">Inschrijvingen:</span>
-                {% if event.capacity %}
-                    {{ num_registrations }} / {{ event.capacity }}
-                {% else %}
-                    {{ num_registrations }}
-                {% endif %}
-            </div>
+  <div class="flex flex-col space-y-4 lg:space-x-4 lg:space-y-0 lg:flex-row justify-center items-center lg:items-stretch">
+
+    {% if event.picture %}
+    <c-card class="flex w-full flex-col space-y-4 items-center justify-between lg:w-fit">
+      <div
+        class="max-h-full max-w-64 flex-none overflow-hidden justify-center aspect-square rounded-lg shadow-2xl bg-background border-4 border-secondary">
+        <img class="object-contain" src="{{ event.picture.url }}" alt="Event Picture" />
+      </div>
+
+      <c-button id="registration-button" class="max-w-64"
+        disabled="{{ registration_disabled|yesno:'true,false' }}">
+        {{ registration_button_text }}
+      </c-button>
+
+      {% if not event.registration_window_open %}
+      {% translate "Register" as register %}
+
+      {% compress js inline %}
+      <script>
+        const timeUntilStartInMiliseconds = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}") - new Date();
+
+        if (timeUntilStartInMiliseconds > 0) {
+          const registrationButton = document.getElementById("registration-button");
+
+          setTimeout(() => {
+            registrationButton.textContent = "{{ register }}";
+            registrationButton.disabled = false;
+          }, timeUntilStartInMiliseconds + 100); // +0.1 second to be sure we're past the start time
+        }
+      </script>
+      {% endcompress %}
+      {% endif %}
+    </c-card>
+    {% endif %}
+
+    <div class="flex flex-col w-full space-y-4 grow">
+
+      <c-card class="flex flex-col px-2 md:px-24">
+        <c-separator />
+
+        <!-- Basic information -->
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-5 justify-items-normal">
+          <!-- <div class="grid grid-cols-2 px-10"> -->
+          <div class="font-bold">Van:</div>
+          <div>{{ event.start|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Tot:</div>
+          <div>{{ event.end|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Locatie:</div>
+          <div>{{ event.location }}</div>
+
+          <div class="font-bold">Prijs:</div>
+          <div>{{ self.object.price|euro }}</div>
+
         </div>
-        {% if registration_active %}
-        <div class="border p-4 rounded-xl bg-gray-100 justify-center mt-4">
-            <span class="font-bold text-2xl">
-                {% if queue_position > 0 %}
-                    {{ queue_position }}e in de wachtrij.</span>
-                {% else %}
-                    Je bent ingeschreven.
-                {% endif %}
-            <form method="post" action="{{ request.path }}" id="cancellation-form" class="flex flex-col">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="cancel">
-                <div class="py-4">
-                    <input required=1 type="hidden" name="fine-consent" value="1" id="fine-consent-checkbox" class="mx-2 scale-175">
-                    <label for="fine-consent" class="hidden font-normal" id="fine-consent-label">Ik weet dat ik me te laat uitschrijf en accepteer de consquenties (€{{ fine_amount_display }} boete)</label>
-                </div>
-                <input type="submit" value="Uitschrijven" id="cancellation-button" class="font-bold text-3xl bg-gray-100 py-2 px-4 rounded">
-            </form>
-            <script>
-                const date = new Date();
-                const cancellationDeadline = new Date("{{ event.cancelation_deadline|date:'Y-m-d H:i:s'}}");
-                if ({queue_position} == 0 && date >= cancellationDeadline) {
-                    // Only show fine consent option if your registration is ACTIVE and the cancellation deadline is due
-                    document.getElementById("fine-consent-label").classList.remove("hidden")
-                    document.getElementById("fine-consent-checkbox").type="checkbox"
-                }
-            </script>
-            {% if event.has_form_fields %}
-            <a href="{% url 'events:registration' slug=event.slug %}">
-                <button>Wijzig formulier</button>
-            </a>
+        <c-separator />
+
+      </c-card>
+
+      <c-card class="flex flex-col px-4">
+        <c-separator />
+
+        <!-- Related to registering -->
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-x-4 mx-auto px-5 justify-items-normal">
+          <div class="font-bold">Aanmelden vanaf:</div>
+          <div>{{ event.registration_start|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Aanmelden tot:</div>
+          <div>{{ event.registration_deadline|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Afmelden tot:</div>
+          <div>{{ event.cancelation_deadline|date:"d M y, H:i" }}</div>
+
+          <div class="font-bold">Inschrijvingen:</div>
+          <div>
+            {% if event.capacity %}
+            {{ num_registrations }} / {{ event.capacity }}
+            {% else %}
+            {{ num_registrations }}
             {% endif %}
+          </div>
         </div>
-        {% else %}
-        <div class="border p-4 rounded-xl bg-gray-100 justify-center mt-4">
-            <button id="registration-button" class="font-bold text-3xl bg-gray-100 py-2 px-4 rounded">
-            </button>
-            <script>
-            const now = new Date();
-            const registrationStart = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}");
-            const registrationDeadline = new Date("{{ event.registration_deadline|date:'Y-m-d H:i:s' }}");
-            const registrationButton = document.getElementById("registration-button");
 
-            if (now >= registrationStart && now <= registrationDeadline) {
-            registrationButton.textContent = "Inschrijven is mogelijk";
-            } else {
-            registrationButton.textContent = "Inschrijven voor dit evenement is niet meer mogelijk";
-            }
+        <c-separator />
+      </c-card>
 
-            registrationButton.addEventListener("click", () => {
-            if (now >= registrationStart && now <= registrationDeadline) {
-                const form = document.createElement("form");
-                form.method = "post";
-                form.action = "";
-
-                const csrfTokenInput = document.createElement("input");
-                csrfTokenInput.type = "hidden";
-                csrfTokenInput.name = "csrfmiddlewaretoken";
-                csrfTokenInput.value = "{{ csrf_token }}";
-
-                const actionInput = document.createElement("input");
-                actionInput.type = "hidden";
-                actionInput.name = "action"
-                actionInput.value = "register"
-
-                const submitInput = document.createElement("input");
-                submitInput.type = "submit";
-                submitInput.value = "Register";
-                submitInput.className = "btn btn-primary";
-
-                form.appendChild(csrfTokenInput);
-                form.appendChild(actionInput);
-                form.appendChild(submitInput);
-
-                document.body.appendChild(form);
-                form.submit();
-                }
-            });
-            </script>
-        </div>
-        {% endif %}
-    </section>
-    {% comment %} {% include "menu.html" %} {% endcomment %}
-
+    </div>
+  </div>
 </div>
+
+<!-- TODO, Low Prio: Create some sort of gallery to list registrations -->
+
 {% endblock %}

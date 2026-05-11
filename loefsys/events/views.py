@@ -1,14 +1,12 @@
 """Module defining the views for events."""
 
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.db.models import Q
-from django.http import Http404, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
@@ -22,100 +20,142 @@ from .models import Event, EventRegistration, RegistrationFormField
 from .models.choices import RegistrationStatus
 
 
-class EventView(DetailView, LoginRequiredMixin):
+class EventDetailView(LoginRequiredMixin, DetailView):
     """View for viewing an event."""
 
     model = Event
+    queryset = Event.objects.filter(published=True)
     template_name = "events/event.html"
-    event = None
 
     def get_context_data(self, **kwargs):
         """Add variables to the context.
 
         The template needs these variables to render the correct page.
         (E.g. whether to render the registration or cancellation button.)
+
+        Returns
+        -------
+        The context data for the template as a dictionary wrapping:
+
+        context.registration_active : bool
+            Whether the user has an active registration for this event.
+
+        context.queue_position : int | None
+            The position in the queue of the user, if applicable.
+
+        context.num_registrations : int
+            The number of active registrations for this event.
+
+        context.fine_amount_display : str
+            The fine amount as a string with two decimals and a comma as decimal
+            separator.
         """
-        if not self.get_object().published:
-            raise Http404("Not found")
+        user_registration = self.get_registration_for_current_user()
 
-        context = super().get_context_data(**kwargs)
-        context["registration_active"] = (
-            self.get_registrations_for_current_user().count() > 0
-        )
-        context["queue_position"] = (
-            0
-            if self.get_object()
-            .eventregistration_set.queued()
-            .filter(contact=self.request.user)
-            .count()
-            == 0
-            else EventRegistration.objects.filter(
-                created__lt=EventRegistration.objects.get(
-                    contact=self.request.user,
-                    event=self.get_object(),
-                    status=RegistrationStatus.QUEUED,
-                ).created,
-                event=self.get_object(),
-                status=RegistrationStatus.QUEUED,
-            ).count()
-            + 1
-        )
-        context["num_registrations"] = (
-            self.get_object().eventregistration_set.active().count()
-        )
-        context["fine_amount_display"] = f"{self.get_object().fine:.2f}".replace(
-            ".", ","
-        )
-        return context
+        return super().get_context_data(**kwargs) | {
+            "registration_active":
+                user_registration is not None,
+            "queue_position":
+                user_registration.get_queue_position(self.request.user)
+                if user_registration else None,
+            "num_registrations":
+                self.object.eventregistration_set.active().count(),
+            "registration_button_text":
+                self.get_registration_button_text(user_registration),
+            "registration_disabled": (
+                not self.object.registrations_open()
+                and not self.object.cancelation_window_open()
+            ),
+        }
 
-    def get_object(self, queryset=None):  # noqa ARG002
-        """Get event object based on url arguments."""
-        if "pk" in self.kwargs:
-            return get_object_or_404(Event, pk=self.kwargs["pk"])
-        return get_object_or_404(Event, slug=self.kwargs["slug"])
-
-    def post(self, request, *args, **kwargs):  # noqa ARG002
+    def post(self, request, *_args, **_kwargs):
         """Handle the post request for the event view."""
-        event = self.get_object()
+        self.object = self.get_object()
         action = request.POST.get("action")
         if action == "register":
-            # Check registration deadline
-            if self.get_object().registrations_open():
-                try:
-                    register = EventRegistration(
-                        event=event,
-                        contact=request.user,
-                        price_at_registration=event.price,
-                        fine_at_registration=event.fine,
-                        costs_paid=0.00,
-                    )
-                    register.save()
-                    if event.has_form_fields:
-                        return redirect("events:registration", slug=event.slug)
-                except IntegrityError:
-                    # TODO handle the error
-                    print("Registration already exists")
+            self.create_registration(request.user)
         elif action == "cancel":
-            # Only cancel if cancellation deadline is NOT due or
-            # it is due and consent was given to be fined
-            if (
-                not self.get_object().cancelation_deadline < timezone.now()
-                or request.POST.get("fine-consent") is not None
-            ):
-                self.get_registrations_for_current_user().first().cancel()
+            self.cancel_registration(request)
 
-        return redirect(event)
+        return redirect(self.object)
 
-    def get_registrations_for_current_user(self):
+    def create_registration(self, user):
+        """Create a registration for the current user and event."""
+        if self.object.registrations_open():
+            try:
+                register = EventRegistration(
+                    event=self.object,
+                    contact=user,
+                    price_at_registration=self.object.price,
+                    fine_at_registration=self.object.fine,
+                    costs_paid=0.00,
+                )
+                register.save()
+                if self.object.has_form_fields:
+                    return redirect("events:registration", slug=self.object.slug)
+            except IntegrityError:
+                print("Registration already exists")
+
+    def cancel_registration(self, request):
+        """Cancel the registration for the current user and event."""
+        # Only cancel if cancellation deadline is NOT due or
+        # it is due and consent was given to be fined
+        if (
+            not self.get_object().cancelation_deadline < timezone.now()
+            or request.POST.get("fine-consent") is not None
+        ):
+            self.get_registration_for_current_user().cancel()
+
+    def get_registration_for_current_user(self):
         """Get active registrations for logged in user."""
-        return EventRegistration.objects.filter(
-            Q(status=RegistrationStatus.ACTIVE) | Q(status=RegistrationStatus.QUEUED),
-            event=self.get_object(),
-            contact=self.request.user,
+        return (
+            self.object.eventregistration_set
+                .for_user(self.request.user)
+                .filter(
+                    Q(status=RegistrationStatus.ACTIVE) |
+                    Q(status=RegistrationStatus.QUEUED) )
+                .last()
         )
 
+    def get_registration_button_text(
+            self, registration: EventRegistration | None
+    ) -> str:
+        """Determine the text for the registration button for user and event status."""
+        obj = self.object
+        text = _("Register")  # Default text for users without registration
+        if registration:
+            deadline = obj.cancelation_deadline or obj.registration_deadline
+            if not (obj.registrations_open() and timezone.now() < deadline):
+                text = _("Can't deregister")
 
-class RegistrationFormView(FormView, LoginRequiredMixin):
+            if registration.get_queue_position(self.request.user) is not None:
+                text = _("Leave queue")
+
+            if timezone.now() < deadline:
+                text = _("Deregister")
+
+            if obj.fine > 0:
+                # TODO: implement replacement registration when someone is in the queue
+                text = _("Deregister (with fine)")
+
+            text = _("Registered")
+        else:
+            if not obj.registrations_open():
+                text = (
+                    _("Can't register yet")
+                    if timezone.now() < obj.registration_start
+                    else _("Registration closed")
+                )
+
+            if obj.is_full():
+                text = _("Join queue")
+
+            # TODO: implement agreement to fine
+            text = _("Register")
+
+        return text
+
+class RegistrationFormView(LoginRequiredMixin, FormView):
     """View for the registration form."""
 
     template_name = "events/registration_form.html"
@@ -191,13 +231,10 @@ class RegistrationFormView(FormView, LoginRequiredMixin):
         return redirect(self.success_url)
 
 
-class CalendarView(DetailView, LoginRequiredMixin):
+class CalendarView(LoginRequiredMixin, TemplateView):
     """View for displaying the event calendar."""
 
-    @method_decorator(login_required)
-    def get(self, request):
-        """Return the calendar view."""
-        return render(request, "events/calendar.html")
+    template_name = "events/calendar.html"
 
 
 class EventFillerView(View):

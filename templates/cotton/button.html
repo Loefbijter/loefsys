@@ -1,0 +1,4 @@
+{% load styling %}
+<c-vars tag="button" variant size class="" />
+{% variants 'button' variant=variant size=size as variant_classes %}
+<{{ tag }} class="{% cn variant_classes class %}" {{ attrs }}>{{ slot }}</{{ tag }}>

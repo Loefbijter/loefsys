@@ -278,7 +278,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         num_active = self.eventregistration_set.active().count()
         num_queued = self.eventregistration_set.queued().count()
         if not num_queued or num_active >= self.capacity:
-            return
+            return 
 
         num_available = self.capacity - num_active
         num_to_add = min(num_available, num_queued)
@@ -303,6 +303,39 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
             A boolean that defines whether registrations are in the registration window.
         """
         return self.start < timezone.now() < self.end
+    
+    def cancelation_window_open(self) -> bool:
+        """Determine whether it is possible for users to cancel their registration.
+
+        For events with required registration, cancellation is only possible when the
+        event is published and in the cancellation window defined by
+        :attr:`.start` and :attr:`.cancelation_deadline`.
+
+        Returns
+        -------
+        bool
+            A boolean that defines whether cancellations are in the cancellation window.
+        """
+        if not self.published:
+            return False
+        deadline = self.cancelation_deadline or self.start
+        return timezone.now() < deadline
+
+    def cancelation_consequences(self) -> str:
+        """Determine whether canceling a registration has consequences.
+
+        Returns
+        -------
+        bool
+            ``True`` when canceling has consequences, otherwise ``False``.
+        """
+        if not self.mandatory_registration():
+            return False
+        if not self.fine or self.fine <= 0:
+            return False
+        
+        deadline = self.cancelation_deadline or self.start
+        return deadline < timezone.now()
 
 
 class EventOrganizer(TimeStampedModel):

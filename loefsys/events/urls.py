@@ -7,15 +7,14 @@ from .views import (
     CalendarView,
     EventFeedView,
     EventFillerView,
-    EventView,
+    EventDetailView,
     RegistrationFormView,
 )
 
 app_name = "events"
 
 urlpatterns = [
-    path("<int:pk>/", EventView.as_view(), name="event"),
-    path("<slug:slug>/", EventView.as_view(), name="event"),
+    path("<slug:slug>/", EventDetailView.as_view(), name="event"),
     path(
         "<slug:slug>/registration/", RegistrationFormView.as_view(), name="registration"
     ),
