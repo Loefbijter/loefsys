@@ -25,7 +25,7 @@ dependencies = [
     "psycopg[binary]>=3.2.4",
     "pyjwt>=2.9.0",
     "pytailwindcss>=0.3.0",
-    "python-dotenv>=1.0.1",
+    "python-dotenv>=1.2.2",
     "starmerge>=0.2.0",
     "user-agent-parser>=0.1.6",
 ]
