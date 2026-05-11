@@ -13,24 +13,22 @@ class CustomComplexityValidator:
         """Validate regular expressions that need to be in the password."""
         if not re.search(r"[A-Z]", password):
             raise ValidationError(
-                _("Het wachtwoord moet minstens één hoofdletter bevatten.")
+                _("The password must contain at least one uppercase letter.")
             )
         if not re.search(r"[a-z]", password):
             raise ValidationError(
-                _("Het wachtwoord moet minstens één kleine letter bevatten.")
+                _("The password must contain at least one lowercase letter.")
             )
         if not re.search(r"\d", password):
-            raise ValidationError(
-                _("Het wachtwoord moet minstens één cijfer bevatten.")
-            )
+            raise ValidationError(_("The password must contain at least one digit."))
         if not re.search(r"[^\w\s]", password):
             raise ValidationError(
-                _("Het wachtwoord moet minstens één speciaal teken bevatten.")
+                _("The password must contain at least one special character.")
             )
 
     def get_help_text(self):
         """Return a message if the requirements are not met."""
         return _(
-            "Het wachtwoord moet minstens één hoofdletter, één kleine letter, één "
-            "cijfer en één speciaal teken bevatten."
+            "The password must contain at least one uppercase letter, one lowercase "
+            "letter, one digit and one special character."
         )
