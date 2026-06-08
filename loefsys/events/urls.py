@@ -5,16 +5,15 @@ from django.urls import path
 from .feeds import OtherEventFeed, RegisteredEventFeed
 from .views import (
     CalendarView,
+    EventDetailView,
     EventFeedView,
     EventFillerView,
-    EventDetailView,
     RegistrationFormView,
 )
 
 app_name = "events"
 
 urlpatterns = [
-    path("<int:pk>/", EventDetailView.as_view(), name="event"),
     path("<slug:slug>/", EventDetailView.as_view(), name="event"),
     path(
         "<slug:slug>/registration/", RegistrationFormView.as_view(), name="registration"
