@@ -5,9 +5,9 @@ from django.urls import path
 from .feeds import OtherEventFeed, RegisteredEventFeed
 from .views import (
     CalendarView,
+    EventDetailView,
     EventFeedView,
     EventFillerView,
-    EventDetailView,
     RegistrationFormView,
 )
 
