@@ -14,6 +14,7 @@ from .views import (
 app_name = "events"
 
 urlpatterns = [
+    path("<int:pk>/", EventDetailView.as_view(), name="event"),
     path("<slug:slug>/", EventDetailView.as_view(), name="event"),
     path(
         "<slug:slug>/registration/", RegistrationFormView.as_view(), name="registration"

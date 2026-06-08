@@ -11,6 +11,9 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 from loefsys.events.exceptions import NoUserObjectError
 from loefsys.events.models.feed_token import FeedToken
 
@@ -20,6 +23,7 @@ from .models import Event, EventRegistration, RegistrationFormField
 from .models.choices import RegistrationStatus
 
 
+@method_decorator(ensure_csrf_cookie, name="dispatch")
 class EventDetailView(LoginRequiredMixin, DetailView):
     """View for viewing an event."""
 
@@ -56,7 +60,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             "registration_active":
                 user_registration is not None,
             "queue_position":
-                user_registration.get_queue_position(self.request.user)
+                user_registration.get_queue_position
                 if user_registration else None,
             "num_registrations":
                 self.object.eventregistration_set.active().count(),
@@ -128,7 +132,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             if not (obj.registrations_open() and timezone.now() < deadline):
                 text = _("Can't deregister")
 
-            if registration.get_queue_position(self.request.user) is not None:
+            if registration.get_queue_position is not None:
                 text = _("Leave queue")
 
             if timezone.now() < deadline:
@@ -147,7 +151,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                     else _("Registration closed")
                 )
 
-            if obj.is_full():
+            if obj.max_capacity_reached():
                 text = _("Join queue")
 
             # TODO: implement agreement to fine
