@@ -33,13 +33,20 @@ class Reservation(TimeStampedModel):
         The item for which a reservation is made.
     user : ~loefsys.users.models.member.User
         The user making a reservation.
-    request : ~loefsys.requests.models.request.Request
-        The request for this reservation.
     start : ~datetime.datetime
         The start timestamp of the reservation.
     end : ~datetime.datetime
         The end timestamp of the reservation.
+    request_status : ~loefsys.reservations.models.reservation.ReservationStatus
+        The status of the reservation.
+    request_response : str
+        A string containing clarification of the acceptance/decline of the request.
     """
+
+    class RequestStatus(models.IntegerChoices):
+        PENDING = 0, _("Pending")
+        APPROVED = 1, _("Approved")
+        DENIED = 2, _("Denied")
 
     reservable = models.ForeignKey(
         Reservable,
@@ -54,25 +61,36 @@ class Reservation(TimeStampedModel):
     start = models.DateTimeField(verbose_name=_("Start time"))
     end = models.DateTimeField(verbose_name=_("End time"))
 
+    request_status = models.PositiveSmallIntegerField(
+        choices=RequestStatus,
+        default=RequestStatus.PENDING,
+        verbose_name=_("Request status")
+    )
+    request_response = models.TextField(verbose_name=_("Request response"),)
+
     class Meta:
         constraints = (
             CheckConstraint(
                 condition=Q(end__gt=F("start")),
                 name="end_gt_start",
-                violation_error_message="End time cannot be before the start time.",
+                violation_error_message=_("End time cannot be before the start time."),
             ),
         )
 
     def __str__(self) -> str:
-        return f"Reservation {self.reservable} from {self.start} to {self.end} by {self.user}"
+        return (
+            f"Reservation {self.reservable} "
+                f"from {self.start} to {self.end} by {self.user}"
+        )
 
     def clean_timeslot(self):
         """Validate the timeslot of the reservation."""
-        if (Reservation.objects
-                .exclude(pk=self.pk).filter(reservable=self.reservable)
-                .filter(start__lt=self.end, end__gt=self.start)  # If both are true, timeslots overlap
-                .exists()):
-            raise ValidationError("A reservation already exists for the given timeslot.")
+        if (Reservation.objects.exclude(pk=self.pk)
+                .filter(reservable=self.reservable)
+                .filter(request_status=self.RequestStatus.APPROVED)
+                # If other.start < self.end and other.end > self.start, then it overlaps
+                .filter(start__lt=self.end, end__gt=self.start).exists()):
+            raise ValidationError(_("A reservation already exists for this timeslot."))
 
     def clean(self):
         """Validate the reservation.
@@ -84,6 +102,7 @@ class Reservation(TimeStampedModel):
         # First we validate the timeslot.
         self.clean_timeslot()
 
-        # Then we let the reservable validate the reservation. The reservable can add additional requirements, for
-        # example a boat can require an authorized skipper to be set.
+        # Then we let the reservable validate the reservation. The reservable can add
+        # additional requirements, for example a boat can require an authorized skipper
+        # to be set.
         self.reservable.validate_reservation(self)
