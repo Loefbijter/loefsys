@@ -3,7 +3,6 @@
 from django.urls import path
 
 from .views import (
-    LogCreateView,
     ReservationCreateView,
     ReservationDeleteView,
     ReservationDetailView,
@@ -33,5 +32,4 @@ urlpatterns = [
         ReservationUpdateView.check_availability,
         name="check-availability",
     ),
-    path("add/log/<int:pk>", LogCreateView.as_view(), name="log-add"),
 ]

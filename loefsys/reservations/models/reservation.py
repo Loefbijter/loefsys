@@ -3,18 +3,15 @@
 from django.db import models
 from django.db.models import CheckConstraint, F, Q
 from django.forms import ValidationError
-from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django_extensions.db.models import TimeStampedModel
 
 from loefsys.members.models.user import User
 
-# from loefsys.members.models.user_skippership import UserSkippership
-from loefsys.reservations.models.boat import Boat
-from loefsys.reservations.models.choices import ReservableCategories
-from loefsys.reservations.models.reservable import ReservableItem
+from .reservable import Reservable
 
 
-class Reservation(models.Model):
+class Reservation(TimeStampedModel):
     """Model describing a reservation of a reservable item.
 
     A reservation is a 'time-claim' anyone can put on a reservable item. It has a start
@@ -32,40 +29,30 @@ class Reservation(models.Model):
 
     Attributes
     ----------
-    reserved_item : ~loefsys.reservations.models.reservable.ReservableItem
-        The ForeignKey.
-    reservee_user : ~loefsys.users.models.member.User
-        The person reserving the item, is null if a group is reserving the item.
-    reservee_group : ~loefsys.groups.models.group.LoefBijterGroup
-        The group reserving the item, is null if a person is reserving the item.
-    #authorized_userskippership : ~loefsys.users.models.user_skippership.UserSkippership
-    #     The person who is the authorized skipper for a boat.
+    reservable : ~loefsys.reservations.models.reservable.Reservable
+        The item for which a reservation is made.
+    user : ~loefsys.users.models.member.User
+        The user making a reservation.
+    request : ~loefsys.requests.models.request.Request
+        The request for this reservation.
     start : ~datetime.datetime
         The start timestamp of the reservation.
     end : ~datetime.datetime
         The end timestamp of the reservation.
     """
 
-    reserved_item = models.ForeignKey(ReservableItem, on_delete=models.CASCADE)
-    reservee_user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="reservee_user_reservation_set"
+    reservable = models.ForeignKey(
+        Reservable,
+        on_delete=models.CASCADE
     )
-    # TODO reservee_user is a temporary field which should be replaced
-    # by the fields reservee_member and reservee_group once Member(ship)
-    # has been added to the admin page (see GitHub history from before
-    # 2 June 2025).
-    # authorized_userskippership = models.ForeignKey(
-    #     UserSkippership,
-    #     on_delete=models.CASCADE,
-    #     null=True,
-    #     blank=True,
-    #     related_name="authorized_skipper_reservation_set",
-    #     verbose_name=_("Authorized skipper"),
-    # )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="reservations_set"
+    )
 
     start = models.DateTimeField(verbose_name=_("Start time"))
     end = models.DateTimeField(verbose_name=_("End time"))
-    date_of_creation = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = (
@@ -77,55 +64,26 @@ class Reservation(models.Model):
         )
 
     def __str__(self) -> str:
-        return f"Reservation for {self.reserved_item}"
+        return f"Reservation {self.reservable} from {self.start} to {self.end} by {self.user}"
 
-    def get_absolute_url(self):
-        """Return the detail page url for this reservation."""
-        return reverse("reservation-detail", kwargs={"pk": self.pk})
+    def clean_timeslot(self):
+        """Validate the timeslot of the reservation."""
+        if (Reservation.objects
+                .exclude(pk=self.pk).filter(reservable=self.reservable)
+                .filter(start__lt=self.end, end__gt=self.start)  # If both are true, timeslots overlap
+                .exists()):
+            raise ValidationError("A reservation already exists for the given timeslot.")
 
     def clean(self):
-        """Check whether any of the other reservations overlap and if the boat requires a skippership.
+        """Validate the reservation.
 
         Raises
         ------
-            ValidationError: This item has already been reserved during this timeslot.
-            ValidationError: This item is not reservable at the moment.
-            ValidationError: The boat selected requires an authorized skipper to be set.
-            ValidationError: The skipper set is not authorized for this boat.
-        """  # noqa: E501
-        try:
-            Reservation.objects.get(
-                ~Q(pk=self.pk)
-                & Q(reserved_item=self.reserved_item)
-                & (
-                    Q(start__range=(self.start, self.end))
-                    | Q(end__range=(self.start, self.end))
-                    | Q(start__lt=self.start, end__gt=self.end)
-                )
-            )
-            raise ValidationError(
-                "This item has already been reserved during this timeslot."
-            )
-        except Reservation.DoesNotExist:
-            if not self.reserved_item.is_reservable:
-                raise ValidationError("This item is not reservable at the moment.")
+            ValidationError
+        """
+        # First we validate the timeslot.
+        self.clean_timeslot()
 
-            if self.reserved_item.reservable_type.category == ReservableCategories.BOAT:
-                requires_skippership = Boat.objects.get(
-                    pk=self.reserved_item.pk
-                ).requires_skippership
-                if requires_skippership:
-                    # if not self.authorized_userskippership:
-                    #     raise ValidationError(
-                    #         "The boat selected requires an authorized skipper to be set."  # noqa: E501
-                    #     )
-
-                    # if (
-                    #     requires_skippership
-                    #     != self.authorized_userskippership.skippership
-                    # ):
-                    #     raise ValidationError(
-                    #         "The skipper set is not authorized for this boat."
-                    #     )
-                    raise NameError("Skipperships are currently disabled.")
-            return
+        # Then we let the reservable validate the reservation. The reservable can add additional requirements, for
+        # example a boat can require an authorized skipper to be set.
+        self.reservable.validate_reservation(self)

@@ -1,14 +1,14 @@
 """Module defining models for reservable items."""
 
-from decimal import Decimal
+from typing import TYPE_CHECKING
 
-from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
-from ...members.models.choices import MembershipTypes
-from .choices import Locations, ReservableCategories
+if TYPE_CHECKING:
+    from . import Reservation
 
 
 class ReservableType(TimeStampedModel):
@@ -28,10 +28,25 @@ class ReservableType(TimeStampedModel):
         An additional description of the type.
     """
 
+    class Category(models.IntegerChoices):
+        """The various categories that reservables are part of."""
+
+        OTHER = (0, _("Other"))
+        """Used for types that do not fall under the other categories."""
+
+        BOAT = (1, _("Boat"))
+        """Used for boat types."""
+
+        ROOM = (2, _("Room"))
+        """Used for room types."""
+
+        MATERIAL = (3, _("Material"))
+        """Used for material types."""
+
     name = models.CharField(max_length=40, verbose_name=_("Material type"), unique=True)
     category = models.PositiveSmallIntegerField(
-        choices=ReservableCategories,
-        default=ReservableCategories.OTHER,
+        choices=Category,
+        default=Category.OTHER,
         verbose_name=_("Reservable category"),
     )
     description = models.TextField(verbose_name=_("Type description"))
@@ -40,48 +55,12 @@ class ReservableType(TimeStampedModel):
         return self.name
 
 
-class ReservableTypePricing(TimeStampedModel):
-    """Pricing for the type of reservable.
-
-    With this model, the pricing for a given ReservableType can be set for any
-    membership defined by the Memberships enum.
-
-    Attributes
-    ----------
-    reservable_type : ~loefsys.reservations.models.reservable.ReservableType
-        The type for which the pricing is set.
-    membership_type : ~loefsys.contacts.models.choices.MembershipTypes
-        The membership type for which the pricing is set.
-    price : ~decimal.Decimal
-        The price in euro's.
-    """
-
-    reservable_type = models.OneToOneField(
-        to=ReservableType, on_delete=models.CASCADE, verbose_name=_("Reservable type")
-    )
-    membership_type = models.PositiveSmallIntegerField(
-        choices=MembershipTypes, verbose_name=_("Membership type")
-    )
-    price = models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        default=Decimal("0.00"),
-        validators=[MinValueValidator(0)],
-        verbose_name=_("Price"),
-    )
-
-    class Meta:
-        unique_together = ("reservable_type", "membership_type")
-
-
-class ReservableItem(TimeStampedModel):
+class Reservable(TimeStampedModel):
     """The base model for a reservable item.
 
     A reservable item is an object that can be reserved. It can be set as
     non-reservable, for example due to maintenance. Additionally, it has a location and
-    has a list of known complications.
-
-    TODO Add complications.
+    later known complications will be added. TODO add complications.
 
     Attributes
     ----------
@@ -89,8 +68,6 @@ class ReservableItem(TimeStampedModel):
         The name of the item.
     description : str
         A description of the item.
-    reservable_type : ~loefsys.reservations.models.reservable.ReservableType
-        The type for which the pricing is set.
     location : ~loefsys.reservations.models.choices.Locations
         The location of the item.
     is_reservable : bool
@@ -100,13 +77,36 @@ class ReservableItem(TimeStampedModel):
         `False`.
     """
 
-    name = models.CharField(max_length=40, verbose_name=_("Name"))
-    description = models.TextField(verbose_name=_("Description"))
-    reservable_type = models.ForeignKey(
-        ReservableType, on_delete=models.CASCADE, verbose_name=_("Reservable type")
+    class Location(models.IntegerChoices):
+        """Locations where a reservable can be retrieved."""
+
+        OTHER = (0, _("Other"))
+        """Used when the other locations aren't applicable."""
+
+        BOARDROOM = (1, _("Boardroom"))
+        """Used when an item is located in the boardroom."""
+
+        BASTION = (2, _("Bastion"))
+        """Used when an item is located at the Bastion."""
+
+        KRAAIJ = (3, _("Kraaijenbergse Plassen"))
+        """Used when an item is located at the Kraaijenbergse Plassen."""
+
+    name = models.CharField(
+        max_length=40,
+        verbose_name=_("Name")
+    )
+    description = models.TextField(
+        verbose_name=_("Description")
+    )
+    type = models.ForeignKey(
+        ReservableType,
+        on_delete=models.CASCADE,
     )
     location = models.PositiveSmallIntegerField(
-        choices=Locations, default=Locations.OTHER, verbose_name=_("Location")
+        choices=Location,
+        default=Location.OTHER,
+        verbose_name=_("Location")
     )
     is_reservable = models.BooleanField(
         default=True,
@@ -119,3 +119,20 @@ class ReservableItem(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def validate_reservation(self, reservation: "Reservation") -> None:
+        """Check if this item can be reserved.
+
+        Checks if the item can be reserved. Subclasses of the ReservableItem class can override this and add additional requirements.
+
+        Parameters
+        ----------
+        reservation : ~loefsys.reservations.models.reservable.Reservation
+            The reservation that is attempted to be done.
+
+        Raises
+        ------
+            ValidationError
+        """
+        if not self.is_reservable:
+            raise ValidationError(_("This item cannot be reserved."))

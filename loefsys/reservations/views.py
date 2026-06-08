@@ -10,14 +10,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 
-from loefsys.reservations.forms import (
-    CreateLogForm,
-    CreateReservationForm,
-    SortByReservationForm,
-)
-from loefsys.reservations.models.choices import ReservableCategories
-from loefsys.reservations.models.log import Log, Question
-from loefsys.reservations.models.reservable import ReservableItem, ReservableType
+from loefsys.reservations.forms import CreateReservationForm, SortByReservationForm
+from loefsys.reservations.models.reservable import Reservable, ReservableType
 from loefsys.reservations.models.reservation import Reservation
 
 
@@ -64,7 +58,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         """Include the location in the form."""
         form = super().get_form(*args, **kwargs)
 
-        form.fields["reserved_item"].queryset = ReservableItem.objects.filter(
+        form.fields["reserved_item"].queryset = Reservable.objects.filter(
             location=self.kwargs.get("location")
         ).order_by("-is_reservable")
 
@@ -72,7 +66,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
             name=self.request.GET.get("reservable_type")
         ).first()
         if reservable_type:
-            form.fields["reserved_item"].queryset = ReservableItem.objects.filter(
+            form.fields["reserved_item"].queryset = Reservable.objects.filter(
                 location=self.kwargs.get("location"), reservable_type=reservable_type
             ).order_by("-is_reservable")
 
@@ -87,9 +81,6 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         """Include the location in the context data."""
         context = super().get_context_data(**kwargs)
         context["location"] = self.kwargs.get("location")
-        context["reservable_types"] = ReservableType.objects.filter(
-            category=ReservableCategories.BOAT
-        )
         context["selected_reservable_type"] = self.request.GET.get("reservable_type")
         return context
 
@@ -125,7 +116,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
         """Include the location in the form."""
         form = super().get_form(*args, **kwargs)
 
-        form.fields["reserved_item"].queryset = ReservableItem.objects.filter(
+        form.fields["reserved_item"].queryset = Reservable.objects.filter(
             location=self.kwargs.get("location")
         ).order_by("-is_reservable")
 
@@ -133,7 +124,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
             name=self.request.GET.get("reservable_type")
         ).first()
         if reservable_type:
-            form.fields["reserved_item"].queryset = ReservableItem.objects.filter(
+            form.fields["reserved_item"].queryset = Reservable.objects.filter(
                 location=self.kwargs.get("location"), reservable_type=reservable_type
             ).order_by("-is_reservable")
 
@@ -148,9 +139,6 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
         """Include the location in the context data."""
         context = super().get_context_data(**kwargs)
         context["location"] = self.kwargs.get("location")
-        context["reservable_types"] = ReservableType.objects.filter(
-            category=ReservableCategories.BOAT
-        )
         context["selected_reservable_type"] = self.request.GET.get("reservable_type")
         return context
 
@@ -202,30 +190,3 @@ class ReservationDetailView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         """Only show instances of Reservation made by the user."""
         return Reservation.objects.filter(reservee_user=self.request.user)
-
-
-class LogCreateView(LoginRequiredMixin, CreateView):
-    """Reservation create view."""
-
-    model = Question  # TODO Replace by a model storing the filled in log.
-    form_class = CreateLogForm
-
-    def get_form_kwargs(self):
-        """Get form keyword arguments."""
-        kwargs = super().get_form_kwargs()
-
-        test = Question.objects.filter(log=Log.objects.all().first())
-        kwargs["form_fields"] = [
-            (
-                item.pk,
-                {
-                    "subject": item.subject,
-                    "type": item.type,
-                    "description": item.description,
-                    "required": item.required,
-                },
-            )
-            for item in test
-        ]
-
-        return kwargs
