@@ -47,11 +47,11 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Deploy to Github Pages
-        id: deployment
+        id: deploy
         uses: actions/deploy-pages@v5
         with:
           artifact_name: html-docs
