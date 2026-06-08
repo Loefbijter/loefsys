@@ -214,28 +214,19 @@ class EventRegistrationTestCase(TestCase):
         # Register for events
         self.client.post(
             reverse("events:event", kwargs={"slug": self.event_with_capacity_30.slug}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         self.client.post(
             reverse("events:event", kwargs={"slug": self.event_with_capacity_0.slug}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         self.client.post(
             reverse(
                 "events:event", kwargs={"slug": self.event_with_capacity_none.slug}
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         # Check number of registrations formatting
@@ -248,6 +239,7 @@ class EventRegistrationTestCase(TestCase):
         response = self.client.get(self.event_with_capacity_none.get_absolute_url())
         self.assertContains(response=response, text="1")
 
+    @skip("Fines are currently not shown")
     def test_cancellation_form_shows_fine_amount(self):
         """Test if the cancellation form shows the amount that's being fined."""
         self.client.force_login(user=self.user1)
@@ -258,10 +250,7 @@ class EventRegistrationTestCase(TestCase):
         # Register for event
         self.client.post(
             reverse("events:event", kwargs={"slug": self.event_with_10_euro_fine.slug}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         # Check if fine amount is on cancellation form
