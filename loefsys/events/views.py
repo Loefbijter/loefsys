@@ -54,7 +54,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
         return super().get_context_data(**kwargs) | {
             "registration_active": user_registration is not None,
-            "queue_position": user_registration.get_queue_position(self.request.user)
+            "queue_position": user_registration.get_queue_position
             if user_registration
             else None,
             "num_registrations": self.object.eventregistration_set.active().count(),
@@ -127,7 +127,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             if not (obj.registrations_open() and timezone.now() < deadline):
                 text = _("Can't deregister")
 
-            if registration.get_queue_position(self.request.user) is not None:
+            if registration.get_queue_position is not None:
                 text = _("Leave queue")
 
             if timezone.now() < deadline:
@@ -146,7 +146,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                     else _("Registration closed")
                 )
 
-            if obj.is_full():
+            if obj.max_capacity_reached():
                 text = _("Join queue")
 
             # TODO: implement agreement to fine
