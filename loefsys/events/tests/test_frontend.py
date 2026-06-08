@@ -213,7 +213,7 @@ class EventRegistrationTestCase(TestCase):
 
         # Register for events
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.event_with_capacity_30.pk}),
+            reverse("events:event", kwargs={"slug": self.event_with_capacity_30.slug}),
             data={
                 "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
                 "action": "register",
@@ -221,7 +221,7 @@ class EventRegistrationTestCase(TestCase):
         )
 
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.event_with_capacity_0.pk}),
+            reverse("events:event", kwargs={"slug": self.event_with_capacity_0.slug}),
             data={
                 "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
                 "action": "register",
@@ -229,7 +229,9 @@ class EventRegistrationTestCase(TestCase):
         )
 
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.event_with_capacity_none.pk}),
+            reverse(
+                "events:event", kwargs={"slug": self.event_with_capacity_none.slug}
+            ),
             data={
                 "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
                 "action": "register",
@@ -255,7 +257,7 @@ class EventRegistrationTestCase(TestCase):
 
         # Register for event
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.event_with_10_euro_fine.pk}),
+            reverse("events:event", kwargs={"slug": self.event_with_10_euro_fine.slug}),
             data={
                 "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
                 "action": "register",

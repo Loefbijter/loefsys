@@ -53,15 +53,14 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         user_registration = self.get_registration_for_current_user()
 
         return super().get_context_data(**kwargs) | {
-            "registration_active":
-                user_registration is not None,
-            "queue_position":
-                user_registration.get_queue_position(self.request.user)
-                if user_registration else None,
-            "num_registrations":
-                self.object.eventregistration_set.active().count(),
-            "registration_button_text":
-                self.get_registration_button_text(user_registration),
+            "registration_active": user_registration is not None,
+            "queue_position": user_registration.get_queue_position
+            if user_registration
+            else None,
+            "num_registrations": self.object.eventregistration_set.active().count(),
+            "registration_button_text": self.get_registration_button_text(
+                user_registration
+            ),
             "registration_disabled": (
                 not self.object.registrations_open()
                 and not self.object.cancelation_window_open()
@@ -109,16 +108,16 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     def get_registration_for_current_user(self):
         """Get active registrations for logged in user."""
         return (
-            self.object.eventregistration_set
-                .for_user(self.request.user)
-                .filter(
-                    Q(status=RegistrationStatus.ACTIVE) |
-                    Q(status=RegistrationStatus.QUEUED) )
-                .last()
+            self.object.eventregistration_set.for_user(self.request.user)
+            .filter(
+                Q(status=RegistrationStatus.ACTIVE)
+                | Q(status=RegistrationStatus.QUEUED)
+            )
+            .last()
         )
 
     def get_registration_button_text(
-            self, registration: EventRegistration | None
+        self, registration: EventRegistration | None
     ) -> str:
         """Determine the text for the registration button for user and event status."""
         obj = self.object
@@ -128,7 +127,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             if not (obj.registrations_open() and timezone.now() < deadline):
                 text = _("Can't deregister")
 
-            if registration.get_queue_position(self.request.user) is not None:
+            if registration.get_queue_position is not None:
                 text = _("Leave queue")
 
             if timezone.now() < deadline:
@@ -147,13 +146,14 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                     else _("Registration closed")
                 )
 
-            if obj.is_full():
+            if obj.max_capacity_reached():
                 text = _("Join queue")
 
             # TODO: implement agreement to fine
             text = _("Register")
 
         return text
+
 
 class RegistrationFormView(LoginRequiredMixin, FormView):
     """View for the registration form."""
