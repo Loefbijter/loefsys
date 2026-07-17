@@ -38,7 +38,7 @@ class ReservationListView(LoginRequiredMixin, ListView):
                     sort_by = form.cleaned_data["sort_by"]
 
         return Reservation.objects.filter(
-            reservee_user=self.request.user, start__gt=timezone.now()
+            user=self.request.user, start__gt=timezone.now()
         ).order_by(sort_by)
 
     def get_context_data(self, **kwargs):

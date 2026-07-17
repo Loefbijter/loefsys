@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
+<div class="flex flex-col">
     <section id="reservations" class="bg-[#2972b3] p-8 flex flex-col">
         <h1 class="text-6xl font-bold text-white pb-8 mt-4">MIJN RESERVERINGEN</h1>
         {% if reservations %}
@@ -37,14 +37,11 @@
     <!-- Create new Reservation -->
     <section id="create reservation" class="bg-[#1BB1E6] flex-auto p-8">
         <h1 class="text-5xl font-bold">MAAK NIEUWE RESERVERING</h1>
-        <a href="{% url 'reservation-add' '1' %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 block text-center">
+        <a href="{% url 'reservations:reservation-add' '1' %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">
                 Maak reservering
             </span>
         </a>
     </section>
-    <div class="pb-27">
-        {% include "menu.html" %}
-    </div>
 </div>
 {% endblock %}
