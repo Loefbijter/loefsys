@@ -47,6 +47,7 @@ class ReservationListView(LoginRequiredMixin, ListView):
         """Include the sort form in the context data."""
         context = super().get_context_data(**kwargs)
         context["form"] = SortByReservationForm(self.request.GET)
+        context["RequestStatus"] = Reservation.RequestStatus
         return context
 
 
