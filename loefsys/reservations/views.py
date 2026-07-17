@@ -112,6 +112,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
 
     model = Reservation
     form_class = CreateReservationForm
+    success_url = reverse_lazy("reservations:reservations")
 
     def get_form(self, *args, **kwargs):
         """Include the location in the form."""
@@ -133,7 +134,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         """Add the user who made the reservation to the Reservation instance."""
-        form.instance.reservee_user = self.request.user
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -145,7 +146,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         """Only show instances of Reservation made by the user."""
-        return Reservation.objects.filter(reservee_user=self.request.user)
+        return Reservation.objects.filter(user=self.request.user)
 
     @staticmethod
     def check_availability(request):
@@ -180,7 +181,7 @@ class ReservationDeleteView(LoginRequiredMixin, DeleteView):
 
     model = Reservation
     template_name = "reservations/reservation_confirm_delete.html"
-    success_url = reverse_lazy("reservations")
+    success_url = reverse_lazy("reservations:reservations")
 
 
 class ReservationDetailView(LoginRequiredMixin, DetailView):

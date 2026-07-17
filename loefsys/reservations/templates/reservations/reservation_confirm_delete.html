@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
-    <section id="reservation detail" class="bg-[#2972b3] p-8" flex flex-col>
+<div class="flex flex-col">
+    <section id="reservation detail" class="bg-[#2972b3] p-8 flex flex-col">
         <h1 class="text-6xl font-bold text-white pb-8 mt-4">VERWIJDER RESERVERING</h1>
 
         <div class="p-4 border-2 border-red-500 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white text-left">
@@ -46,10 +46,9 @@
             </button>
         </form>
 
-        <a href="{% url 'reservation-detail' pk=object.pk %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
+        <a href="{% url 'reservations:reservation-detail' pk=object.pk %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">Annuleer</span>
         </a>
     </section>
-    {% include "menu.html" %}
 </div>
 {% endblock %}
