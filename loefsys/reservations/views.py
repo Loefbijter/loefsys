@@ -33,13 +33,15 @@ class ReservationListView(LoginRequiredMixin, ListView):
                 case "A-Z":
                     sort_by = Lower("reservable__name")
                 case "type":
-                    sort_by = "reservable__type"
+                    sort_by = "reservable__type__name"
                 case _:
                     sort_by = form.cleaned_data["sort_by"]
 
-        return Reservation.objects.filter(
-            user=self.request.user, start__gt=timezone.now()
-        ).order_by(sort_by)
+        return (
+            Reservation.objects.filter(user=self.request.user, start__gt=timezone.now())
+            .exclude(request_status=Reservation.RequestStatus.DENIED)
+            .order_by(sort_by)
+        )
 
     def get_context_data(self, **kwargs):
         """Include the sort form in the context data."""
