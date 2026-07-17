@@ -18,7 +18,7 @@
 
         <!-- List of Reservations made by user -->
         {% for reservation in reservations %}
-            <a href="{% url 'reservation-detail' pk=reservation.id %}" class="btn btn-primary p-4 border-2 border-red-500 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 text-left">
+            <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}" class="btn btn-primary p-4 border-2 border-red-500 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 text-left">
                 <span class="font-bold text-3xl">
                     <span class="font-bold text-5xl">
                         {{ reservation }}

@@ -36,7 +36,7 @@ class SortByReservationForm(forms.Form):
         ("start", "Starttijd"),
         ("end", "Eindtijd"),
         ("location", "Locatie"),
-        ("-date_of_creation", "Nieuwste eerst"),
+        ("-created", "Nieuwste eerst"),
         ("A-Z", "A-Z"),
         ("type", "Type"),
     )

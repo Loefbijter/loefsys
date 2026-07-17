@@ -29,11 +29,11 @@ class ReservationListView(LoginRequiredMixin, ListView):
         if form.is_valid() and form.cleaned_data["sort_by"]:
             match form.cleaned_data["sort_by"]:
                 case "location":
-                    sort_by = "reserved_item__location"
+                    sort_by = "reservable__location"
                 case "A-Z":
-                    sort_by = Lower("reserved_item__name")
+                    sort_by = Lower("reservable__name")
                 case "type":
-                    sort_by = "reserved_item__reservable_type"
+                    sort_by = "reservable__type"
                 case _:
                     sort_by = form.cleaned_data["sort_by"]
 
@@ -53,6 +53,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
 
     model = Reservation
     form_class = CreateReservationForm
+    success_url = reverse_lazy("reservations:reservations")
 
     def get_form(self, *args, **kwargs):
         """Include the location in the form."""
@@ -74,7 +75,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """Add the user who made the reservation to the Reservation instance."""
-        form.instance.reservee_user = self.request.user
+        form.instance.user = self.request.user
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
