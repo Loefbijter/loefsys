@@ -190,4 +190,4 @@ class ReservationDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         """Only show instances of Reservation made by the user."""
-        return Reservation.objects.filter(reservee_user=self.request.user)
+        return Reservation.objects.filter(user=self.request.user)
