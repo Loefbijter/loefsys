@@ -181,8 +181,15 @@ class ReservationDeleteView(LoginRequiredMixin, DeleteView):
     """Reservation delete view."""
 
     model = Reservation
+    context_object_name = "reservation"
     template_name = "reservations/reservation_confirm_delete.html"
     success_url = reverse_lazy("reservations:reservations")
+
+    def get_context_data(self, **kwargs):
+        """Include the request status in the context data."""
+        context = super().get_context_data(**kwargs)
+        context["RequestStatus"] = Reservation.RequestStatus
+        return context
 
 
 class ReservationDetailView(LoginRequiredMixin, DetailView):

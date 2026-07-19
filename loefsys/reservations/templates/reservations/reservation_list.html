@@ -10,7 +10,7 @@
     <section id="reservations" class="bg-secondary p-8 flex flex-col">
         <h1 class="text-6xl font-bold text-white pb-8 mt-4">{% trans "MIJN RESERVERINGEN" %}</h1>
         {% if reservations %}
-            <form method="get" class="bg-white p-8 rounded-3xl shadow-lg w-4/5 mx-auto text-3xl font-bold">
+            <form method="get" class="bg-white/90 p-8 rounded-3xl shadow-lg w-4/5 mx-auto text-3xl font-bold">
                 {% csrf_token %}
                 {{ form }}
                 <input type="submit" value="{% trans "Toepassen" %}" class="rounded-3xl w-1/2 border-4 hover:bg-gray-400">
@@ -63,7 +63,7 @@
     <!-- Create new Reservation -->
     <section id="create reservation" class="bg-primary flex-auto p-8">
         <h1 class="text-5xl font-bold">{% trans "MAAK NIEUWE RESERVERING" %}</h1>
-        <a href="{% url 'reservations:reservation-add' '1' %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 block text-center">
+        <a href="{% url 'reservations:reservation-add' '1' %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white/90 hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">
                 {% trans "Maak reservering" %}
             </span>

@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="bg-[#1BB1E6] relative flex flex-col">
-    <section class="bg-[#2972b3] p-8 w-full">
+<div class="bg-primary relative flex flex-col">
+    <section class="bg-secondary p-8 w-full">
         <h1 class="text-5xl font-bold text-white">{% trans "RESERVEREN" %}</h1>
         <div class="flex justify-center items-center">
             <ul class="flex flex-wrap text-4xl font-medium text-center text-gray-500 dark:text-gray-400">
@@ -56,7 +56,7 @@
             <div class="text-red-600">
                 {{ form.non_field_errors }}
             </div>
-            <div class="bg-white p-4 rounded-3xl border-4 border-black shadow-lg w-4/5 mx-auto text-left">
+            <div class="bg-white/90 p-4 rounded-3xl border-4 border-black shadow-lg w-4/5 mx-auto text-left">
                 <div class="flex flex-wrap gap-4 justify-center">
                     {% for field in form %}
                     {% if field.name != 'reserved_item' and field.name != 'authorized_userskippership' %}
@@ -212,17 +212,17 @@
     </section>
 
     <!-- Submit Reservation or cancel -->
-    <section id="submit reservation" class="bg-[#1BB1E6] flex flex-col p-8 pb-30">
-        <h1 class="text-5xl font-bold">{% trans "RESERVERING INDIENEN" %}</h1>
+    <section id="submit reservation" class="bg-primary flex flex-col p-8 pb-8">
+        <h1 class="text-5xl font-bold pb-8 mt-4">{% trans "RESERVERING INDIENEN" %}</h1>
         <form method="post" class="w-4/5 mx-auto">
             {% csrf_token %}
             <button type="submit" form="reservationform"
-                    class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-full bg-gray-200 hover:bg-gray-400 block text-center">
+                    class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-full bg-white/90 hover:bg-gray-400 block text-center">
                 <span class="font-bold text-3xl">{% trans "Reservering indienen" %}</span>
             </button>
         </form>
         <a href="{% url 'reservations:reservations' %}"
-           class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
+           class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white/90 hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">{% trans "Annuleer" %}</span>
         </a>
     </section>

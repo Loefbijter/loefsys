@@ -61,12 +61,12 @@
     <!-- Edit Reservation Zonder Kleur-->
     <section id="delete reservation" class="bg-primary flex-auto p-8">
         <h1 class="text-5xl font-bold">{% trans "BEWERK RESERVERING" %}</h1>
-        <a href="{% url 'reservations:reservation-update' pk=object.id location=reservation.reservable.location %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
+        <a href="{% url 'reservations:reservation-update' pk=object.id location=reservation.reservable.location %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white/90 hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">
                 {% trans "Bewerk reservering" %}
             </span>
         </a>
-        <a href="{% url 'reservations:reservation-delete' pk=object.id %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
+        <a href="{% url 'reservations:reservation-delete' pk=object.id %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white/90 hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">
                 {% trans "Verwijder reservering" %}
             </span>
