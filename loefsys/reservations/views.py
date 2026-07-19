@@ -191,6 +191,13 @@ class ReservationDetailView(LoginRequiredMixin, DetailView):
     """Reservation detail view."""
 
     model = Reservation
+    context_object_name = "reservation"
+
+    def get_context_data(self, **kwargs):
+        """Include the request status in the context data."""
+        context = super().get_context_data(**kwargs)
+        context["RequestStatus"] = Reservation.RequestStatus
+        return context
 
     def get_queryset(self):
         """Only show instances of Reservation made by the user."""

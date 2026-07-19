@@ -1,6 +1,7 @@
 """Module defining the forms for the reservations."""
 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .models import Reservable, Reservation
 
@@ -33,11 +34,11 @@ class SortByReservationForm(forms.Form):
     """A form to sort reservations."""
 
     CHOICES = (
-        ("start", "Starttijd"),
-        ("end", "Eindtijd"),
-        ("location", "Locatie"),
-        ("-created", "Nieuwste eerst"),
-        ("A-Z", "A-Z"),
-        ("type", "Type"),
+        ("start", _("Starttijd")),
+        ("end", _("Eindtijd")),
+        ("location", _("Locatie")),
+        ("-created", _("Nieuwste eerst")),
+        ("A-Z", _("A-Z")),
+        ("type", _("Type")),
     )
-    sort_by = forms.ChoiceField(choices=CHOICES, required=False)
+    sort_by = forms.ChoiceField(label=_("Sorteer op"), choices=CHOICES, required=False)

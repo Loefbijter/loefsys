@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="flex flex-col">
-    <section id="reservations" class="bg-[#2972b3] p-8 flex flex-col">
+    <section id="reservations" class="bg-secondary p-8 flex flex-col">
         <h1 class="text-6xl font-bold text-white pb-8 mt-4">MIJN RESERVERINGEN</h1>
         {% if reservations %}
             <form method="get" class="bg-white p-8 rounded-3xl shadow-lg w-4/5 mx-auto text-3xl font-bold">
@@ -44,23 +44,23 @@
                 {% endif %}
                 "
             >
-                <span class="font-bold text-3xl">
-                    <span class="font-bold text-5xl">
-                        {{ reservation }}
+                <div>
+                    <div class="font-bold text-5xl">
+                        {{ reservation.reservable }}
+                    </div>
+
+                    <div class="font-bold text-4xl">
+                        Starttijd: {{ reservation.start|date:"d-m-Y H:i" }}
                         <br/>
-                    </span>
-                    <span class="text-4xl">
-                        Starttijd: {{ reservation.start }}
-                        <br/>
-                        Eindtijd: {{ reservation.end }}
-                    </span>
-                </span>
+                        Eindtijd: {{ reservation.end|date:"d-m-Y H:i" }}
+                    </div>
+                </div>
             </a>
         {% endfor %}
     </section>
 
     <!-- Create new Reservation -->
-    <section id="create reservation" class="bg-[#1BB1E6] flex-auto p-8">
+    <section id="create reservation" class="bg-primary flex-auto p-8">
         <h1 class="text-5xl font-bold">MAAK NIEUWE RESERVERING</h1>
         <a href="{% url 'reservations:reservation-add' '1' %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">

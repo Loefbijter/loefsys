@@ -102,7 +102,7 @@ Bewerk reservering
                     {% else %}
                     <div
                          class="not-available border-black py-4 mb-4 border-4 shadow-lg ">
-                            Niet Beschikbaar
+                            Niet beschikbaar
                     </div>
                     {% endif %}
 
@@ -215,7 +215,7 @@ Bewerk reservering
             {% csrf_token %}
             <button type="submit" form="reservationform"
                     class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-full bg-gray-200 hover:bg-gray-400 block text-center">
-                <span class="font-bold text-3xl">Reservering Indienen</span>
+                <span class="font-bold text-3xl">Reservering indienen</span>
             </button>
         </form>
         <a href="{% url 'reservations:reservations' %}"
