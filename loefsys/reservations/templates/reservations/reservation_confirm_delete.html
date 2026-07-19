@@ -1,33 +1,34 @@
 
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Bevestig verwijdering reservering
+    {% trans "Bevestig verwijdering reservering" %}
 {% endblock %}
 
 {% block content %}
 <div class="flex flex-col">
     <section id="reservation detail" class="bg-[#2972b3] p-8 flex flex-col">
-        <h1 class="text-6xl font-bold text-white pb-8 mt-4">VERWIJDER RESERVERING</h1>
+        <h1 class="text-6xl font-bold text-white pb-8 mt-4">{% trans "VERWIJDER RESERVERING" %}</h1>
 
         <div class="p-4 border-2 border-red-500 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white text-left">
             <h2 class="font-bold text-5xl mb-4">{{ object }}</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-2xl">
                 <div class="border p-4 rounded-xl bg-gray-100 col-span-2 flex gap-2">
-                    <span class="font-bold whitespace-nowrap">Beschrijving: </span> {{ reservation.reserved_item.description }}
+                    <span class="font-bold whitespace-nowrap">{% trans "Beschrijving" %}: </span> {{ reservation.reserved_item.description }}
                 </div>
                 <div class="border p-4 rounded-xl bg-gray-100">
-                    <span class="font-bold">Starttijd:</span> {{ reservation.start }}
+                    <span class="font-bold">{% trans "Starttijd" %}:</span> {{ reservation.start }}
                 </div>
                 <div class="border p-4 rounded-xl bg-gray-100">
-                    <span class="font-bold">Eindtijd:</span> {{ reservation.end }}
+                    <span class="font-bold">{% trans "Eindtijd" %}:</span> {{ reservation.end }}
                 </div>
                 <div class="border p-4 rounded-xl bg-gray-100">
-                    <span class="font-bold">Locatie:</span> {{ reservation.reserved_item.get_location_display }}
+                    <span class="font-bold">{% trans "Locatie" %}:</span> {{ reservation.reserved_item.get_location_display }}
                 </div>
                 <div class="border p-4 rounded-xl bg-gray-100">
-                    <span class="font-bold">Type:</span> {{ reservation.reserved_item.reservable_type.name }}
+                    <span class="font-bold">{% trans "Type" %}:</span> {{ reservation.reserved_item.reservable_type.name }}
                 </div>
             </div>
 
@@ -36,18 +37,18 @@
 
     <!-- Delete Reservation -->
     <section id="delete reservation" class="bg-[#1BB1E6] flex-auto p-8">
-        <h1 class="text-5xl font-bold"> VERWIJDER RESERVERING </h1>
+        <h1 class="text-5xl font-bold">{% trans "VERWIJDER RESERVERING" %}</h1>
         <p class="text-2xl mb-4"><br> Weet je zeker dat je deze reservering wil verwijderen?</p>
 
         <form method="post" class="w-4/5 mx-auto">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-full bg-gray-200 hover:bg-gray-400 block text-center">
-                <span class="font-bold text-3xl">Verwijder Reservering</span>
+                <span class="font-bold text-3xl">{% trans "Verwijder reservering" %}</span>
             </button>
         </form>
 
         <a href="{% url 'reservations:reservation-detail' pk=object.pk %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">
-            <span class="font-bold text-3xl">Annuleer</span>
+            <span class="font-bold text-3xl">{% trans "Annuleer" %}</span>
         </a>
     </section>
 </div>

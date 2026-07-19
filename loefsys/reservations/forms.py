@@ -9,16 +9,20 @@ from .models import Reservable, Reservation
 class CreateReservationForm(forms.ModelForm):
     """A form to create reservations."""
 
-    reserved_item = forms.ModelChoiceField(
-        queryset=Reservable.objects.none(), widget=forms.RadioSelect
+    reservable = forms.ModelChoiceField(
+        label=_("Te reserveren item"),
+        queryset=Reservable.objects.none(),
+        widget=forms.RadioSelect,
     )
     start = forms.DateTimeField(
+        label=_("Starttijd"),
         input_formats=["%I:%M %p %d-%b-%Y"],
         widget=forms.DateTimeInput(
             attrs={"type": "datetime-local"}, format="%I:%M %p %d-%b-%Y"
         ),
     )
     end = forms.DateTimeField(
+        label=_("Eindtijd"),
         input_formats=["%I:%M %p %d-%b-%Y"],
         widget=forms.DateTimeInput(
             attrs={"type": "datetime-local"}, format="%I:%M %p %d-%b-%Y"

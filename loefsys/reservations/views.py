@@ -62,7 +62,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         """Include the location in the form."""
         form = super().get_form(*args, **kwargs)
 
-        form.fields["reserved_item"].queryset = Reservable.objects.filter(
+        form.fields["reservable"].queryset = Reservable.objects.filter(
             location=self.kwargs.get("location")
         ).order_by("-is_reservable")
 
@@ -70,7 +70,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
             name=self.request.GET.get("reservable_type")
         ).first()
         if reservable_type:
-            form.fields["reserved_item"].queryset = Reservable.objects.filter(
+            form.fields["reservable"].queryset = Reservable.objects.filter(
                 location=self.kwargs.get("location"), reservable_type=reservable_type
             ).order_by("-is_reservable")
 
@@ -93,12 +93,10 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         """Check if an item is available during the given timeslot."""
         start = request.GET.get("start")
         end = request.GET.get("end")
-        reserved_item_id = request.GET.get("reserved_item")
+        reservable_id = request.GET.get("reservable")
 
         if start < end:
-            conflicts = Reservation.objects.filter(
-                reserved_item_id=reserved_item_id
-            ).filter(
+            conflicts = Reservation.objects.filter(reservable_id=reservable_id).filter(
                 Q(start__range=(start, end))
                 | Q(end__range=(start, end))
                 | Q(start__lt=start, end__gt=end)
@@ -121,7 +119,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
         """Include the location in the form."""
         form = super().get_form(*args, **kwargs)
 
-        form.fields["reserved_item"].queryset = Reservable.objects.filter(
+        form.fields["reservable"].queryset = Reservable.objects.filter(
             location=self.kwargs.get("location")
         ).order_by("-is_reservable")
 
@@ -129,7 +127,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
             name=self.request.GET.get("reservable_type")
         ).first()
         if reservable_type:
-            form.fields["reserved_item"].queryset = Reservable.objects.filter(
+            form.fields["reservable"].queryset = Reservable.objects.filter(
                 location=self.kwargs.get("location"), reservable_type=reservable_type
             ).order_by("-is_reservable")
 
@@ -159,13 +157,13 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
         """
         start = request.GET.get("start")
         end = request.GET.get("end")
-        reserved_item_id = request.GET.get("reserved_item")
+        reservable_id = request.GET.get("reservable")
         object_pk = request.GET.get("object_pk")
 
         if start < end:
             conflicts = (
                 Reservation.objects.exclude(pk=object_pk)
-                .filter(reserved_item_id=reserved_item_id)
+                .filter(reservable_id=reservable_id)
                 .filter(
                     Q(start__range=(start, end))
                     | Q(end__range=(start, end))
