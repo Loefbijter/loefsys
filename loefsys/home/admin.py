@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from .models import Announcement
+from .models import Announcement, StaticPage
 
 
 @admin.register(Announcement)
@@ -22,4 +22,15 @@ class AnnouncementAdmin(admin.ModelAdmin):
         "created_at",
         "updated_at",
     )
+    readonly_fields = ("created_at", "updated_at")
+
+
+@admin.register(StaticPage)
+class StaticPageAdmin(admin.ModelAdmin):
+    """Admin interface for managing static information pages."""
+
+    list_display = ("title", "slug")
+    search_fields = ("title", "content")
+    ordering = ("title",)
+    fields = ("title", "slug", "content", "created_at", "updated_at")
     readonly_fields = ("created_at", "updated_at")

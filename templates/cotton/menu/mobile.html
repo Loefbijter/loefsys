@@ -1,1 +1,28 @@
-<nav>TBD</nav>
+<nav class="md:hidden flex items-center justify-between gap-4 p-4 bg-primary text-primary-foreground">
+    <c-logo />
+    <div class="flex items-center gap-2">
+        <div class="relative" id="mobile-about-menu">
+            <button id="about-toggle-mobile" data-target="#about-dropdown-mobile" aria-expanded="false" aria-haspopup="true" class="about-toggle font-bold hover:underline flex items-center gap-1 py-2 px-3 rounded whitespace-nowrap">
+                Over ons
+                <svg class="about-chevron w-4 h-4 transition-transform duration-200 flex-shrink-0" style="transform: rotate(0deg);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div id="about-dropdown-mobile" role="menu" class="about-dropdown hidden absolute right-0 mt-2 w-56 bg-white rounded shadow-xl border border-gray-200 z-50">
+                <a href="{% url 'home:association-information' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    Over de Vereniging
+                </a>
+                <a href="{% url 'home:schipperschap' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    Schipperschap
+                </a>
+                <a href="{% url 'home:styleguide' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    Styleguide
+                </a>
+                <a href="{% url 'home:verenigingslied' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    Verenigingslied
+                </a>
+            </div>
+        </div>
+    </div>
+    <c-profile-icon class="ml-auto" />
+</nav>

@@ -84,4 +84,3 @@ class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ig
             A query containing registrations for the specified user.
         """
         return self.filter(contact=user)
-
