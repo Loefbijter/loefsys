@@ -36,6 +36,14 @@ class Locations(models.IntegerChoices):
     """Used when an item is located at the Kraaijenbergse Plassen."""
 
 
+class ReservationStatus(models.TextChoices):
+    """Approval state of a reservation."""
+
+    PENDING = ("pending", _("Pending"))
+    ACCEPTED = ("accepted", _("Accepted"))
+    DENIED = ("denied", _("Denied"))
+
+
 class FleetChoices(models.IntegerChoices):
     """Choices for the fleet."""
 

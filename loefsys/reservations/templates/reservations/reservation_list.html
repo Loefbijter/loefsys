@@ -24,6 +24,10 @@
                         {{ reservation }}
                         <br/>
                     </span>
+                        <span class="text-2xl">
+                            Status: {{ reservation.get_status_display }}
+                            <br/>
+                        </span>
                     <span class="text-4xl">
                         Starttijd: {{ reservation.start }}
                         <br/>

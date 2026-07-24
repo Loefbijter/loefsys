@@ -10,7 +10,7 @@ from loefsys.members.models.user import User
 
 # from loefsys.members.models.user_skippership import UserSkippership
 from loefsys.reservations.models.boat import Boat
-from loefsys.reservations.models.choices import ReservableCategories
+from loefsys.reservations.models.choices import ReservableCategories, ReservationStatus
 from loefsys.reservations.models.reservable import ReservableItem
 
 
@@ -66,6 +66,13 @@ class Reservation(models.Model):
     start = models.DateTimeField(verbose_name=_("Start time"))
     end = models.DateTimeField(verbose_name=_("End time"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20,
+        choices=ReservationStatus.choices,
+        default=ReservationStatus.PENDING,
+        verbose_name=_("Status"),
+    )
+    denial_reason = models.TextField(blank=True, verbose_name=_("Denial reason"))
 
     class Meta:
         constraints = (
@@ -93,39 +100,52 @@ class Reservation(models.Model):
             ValidationError: The boat selected requires an authorized skipper to be set.
             ValidationError: The skipper set is not authorized for this boat.
         """  # noqa: E501
-        try:
-            Reservation.objects.get(
-                ~Q(pk=self.pk)
-                & Q(reserved_item=self.reserved_item)
-                & (
-                    Q(start__range=(self.start, self.end))
-                    | Q(end__range=(self.start, self.end))
-                    | Q(start__lt=self.start, end__gt=self.end)
-                )
+        if not self.reserved_item_id or self.start is None or self.end is None:
+            return
+
+        has_overlapping_reservation = Reservation.objects.filter(
+            ~Q(pk=self.pk)
+            & Q(reserved_item=self.reserved_item)
+            & (
+                Q(start__range=(self.start, self.end))
+                | Q(end__range=(self.start, self.end))
+                | Q(start__lt=self.start, end__gt=self.end)
             )
+        ).exists()
+        if has_overlapping_reservation:
             raise ValidationError(
                 "This item has already been reserved during this timeslot."
             )
-        except Reservation.DoesNotExist:
-            if not self.reserved_item.is_reservable:
-                raise ValidationError("This item is not reservable at the moment.")
 
-            if self.reserved_item.reservable_type.category == ReservableCategories.BOAT:
+        if not self.reserved_item.is_reservable:
+            raise ValidationError("This item is not reservable at the moment.")
+
+        if self.reserved_item.reservable_type.category == ReservableCategories.BOAT:
+            try:
                 requires_skippership = Boat.objects.get(
                     pk=self.reserved_item.pk
                 ).requires_skippership
-                if requires_skippership:
-                    # if not self.authorized_userskippership:
-                    #     raise ValidationError(
-                    #         "The boat selected requires an authorized skipper to be set."  # noqa: E501
-                    #     )
+            except Boat.DoesNotExist:
+                requires_skippership = False
 
-                    # if (
-                    #     requires_skippership
-                    #     != self.authorized_userskippership.skippership
-                    # ):
-                    #     raise ValidationError(
-                    #         "The skipper set is not authorized for this boat."
-                    #     )
-                    raise NameError("Skipperships are currently disabled.")
-            return
+            if requires_skippership:
+                # if not self.authorized_userskippership:
+                #     raise ValidationError(
+                #         "The boat selected requires an authorized skipper to be set."  # noqa: E501
+                #     )
+
+                # if (
+                #     requires_skippership
+                #     != self.authorized_userskippership.skippership
+                # ):
+                #     raise ValidationError(
+                #         "The skipper set is not authorized for this boat."
+                #     )
+                raise NameError("Skipperships are currently disabled.")
+
+        if self.status == ReservationStatus.DENIED and not self.denial_reason.strip():
+            raise ValidationError(
+                {"denial_reason": "A denial reason is required when denying a reservation."}
+            )
+
+        return

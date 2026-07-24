@@ -8,7 +8,11 @@ from django_dynamic_fixture import G
 
 from loefsys.members.models.user import User
 from loefsys.reservations.models import Boat, Material, ReservableType, Reservation
-from loefsys.reservations.models.choices import Locations, ReservableCategories
+from loefsys.reservations.models.choices import (
+    Locations,
+    ReservableCategories,
+    ReservationStatus,
+)
 from loefsys.reservations.models.reservable import ReservableItem
 
 
@@ -264,3 +268,31 @@ class ReservationTestCase(TestCase):
             )
             reservation.save()
             reservation.clean()
+
+    def test_denied_requires_reason(self):
+        """Tests that denying a reservation requires a denial reason."""
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            status=ReservationStatus.DENIED,
+        )
+
+        with self.assertRaises(ValidationError):
+            reservation.full_clean()
+
+    def test_denied_with_reason_is_valid(self):
+        """Tests that denying a reservation with a reason is valid."""
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            status=ReservationStatus.DENIED,
+            denial_reason="Boat already reserved for a club activity.",
+        )
+
+        reservation.full_clean()
+        reservation.save()
+        self.assertEqual(reservation.status, ReservationStatus.DENIED)
