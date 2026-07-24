@@ -75,7 +75,6 @@ class CreateLogForm(forms.ModelForm):
                         max_length=4096,
                         widget=forms.Textarea(
                             attrs={
-                                "class": "w-full text-base p4 border border-gray-400 rounded-md",  # noqa ES01
                                 "rows": 5,
                                 "placeholder": "Lorem Ipsum",
                             }
