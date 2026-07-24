@@ -30,27 +30,25 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         """Add variables to the context.
 
-        The template needs these variables to render the correct page.
-        (E.g. whether to render the registration or cancellation button.)
-
         Returns
         -------
         The context data for the template as a dictionary wrapping:
 
         context.registration_active : bool
             Whether the user has an active registration for this event.
-
         context.queue_position : int | None
             The position in the queue of the user, if applicable.
-
         context.num_registrations : int
             The number of active registrations for this event.
-
-        context.fine_amount_display : str
-            The fine amount as a string with two decimals and a comma as decimal
-            separator.
+        context.registration_disabled : bool
+            Whether the registration button should be disabled.
+        context.can_view_attendees : bool
+            Whether the current user is allowed to see the attendee list.
+        context.attendees : QuerySet[EventRegistration] | None
+            The active registrations for this event, if the user has permission.
         """
         user_registration = self.get_registration_for_current_user()
+        can_view_attendees = self.request.user.has_perm("events.view_eventregistration")
 
         return super().get_context_data(**kwargs) | {
             "registration_active": user_registration is not None,
@@ -64,6 +62,12 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             "registration_disabled": (
                 not self.object.registrations_open()
                 and not self.object.cancelation_window_open()
+            ),
+            "can_view_attendees": can_view_attendees,
+            "attendees": (
+                self.object.eventregistration_set.active().select_related("contact")
+                if can_view_attendees
+                else None
             ),
         }
 
