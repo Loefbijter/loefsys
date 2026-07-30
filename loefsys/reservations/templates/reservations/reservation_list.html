@@ -1,27 +1,57 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Reserveringen
+    {% trans "Reserveringen" %}
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
-    <section id="reservations" class="bg-[#2972b3] p-8 flex flex-col">
-        <h1 class="text-6xl font-bold text-white pb-8 mt-4">MIJN RESERVERINGEN</h1>
+<div class="flex flex-col">
+    <section id="reservations" class="bg-secondary p-8 flex flex-col">
+        <h1 class="text-6xl font-bold text-white pb-8 mt-4">{% trans "MIJN RESERVERINGEN" %}</h1>
         {% if reservations %}
-            <form method="get" class="bg-white p-8 rounded-3xl shadow-lg w-4/5 mx-auto text-3xl font-bold">
+            <form method="get" class="bg-white/90 p-8 rounded-3xl shadow-lg w-4/5 mx-auto text-3xl font-bold">
                 {% csrf_token %}
                 {{ form }}
-                <input type="submit" value="Toepassen" class="rounded-3xl w-1/2 border-4 hover:bg-gray-400">
+                <input type="submit" value="{% trans "Toepassen" %}" class="rounded-3xl w-1/2 border-4 hover:bg-gray-400">
             </form>
         {% endif %}
 
         <!-- List of Reservations made by user -->
         {% for reservation in reservations %}
-            <a href="{% url 'reservation-detail' pk=reservation.id %}" class="btn btn-primary p-4 border-2 border-red-500 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 text-left">
-                <span class="font-bold text-3xl">
-                    <span class="font-bold text-5xl">
-                        {{ reservation }}
+            <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
+            class="
+                p-4
+                rounded-3xl
+                shadow-lg
+                mx-auto
+                my-3
+                w-4/5
+                text-left
+                border-2
+
+                {% if reservation.request_status == RequestStatus.PENDING %}
+                    bg-alert
+                    hover:bg-alert-accent
+                    border-alert
+                {% elif reservation.request_status == RequestStatus.APPROVED %}
+                    bg-success
+                    hover:bg-success-accent
+                    border-success
+                {% elif reservation.request_status == RequestStatus.DENIED %}
+                    bg-destructive
+                    hover:bg-destructive-accent
+                    border-destructive
+                {% endif %}
+                "
+            >
+                <div>
+                    <div class="font-bold text-5xl">
+                        {{ reservation.reservable }}
+                    </div>
+
+                    <div class="font-bold text-4xl">
+                        {% trans "Starttijd" %}: {{ reservation.start|date:"d-m-Y H:i" }}
                         <br/>
                     </span>
                         <span class="text-2xl">
@@ -39,16 +69,13 @@
     </section>
 
     <!-- Create new Reservation -->
-    <section id="create reservation" class="bg-[#1BB1E6] flex-auto p-8">
-        <h1 class="text-5xl font-bold">MAAK NIEUWE RESERVERING</h1>
-        <a href="{% url 'reservation-add' '1' %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white hover:bg-gray-400 block text-center">
+    <section id="create reservation" class="bg-primary flex-auto p-8">
+        <h1 class="text-5xl font-bold">{% trans "MAAK NIEUWE RESERVERING" %}</h1>
+        <a href="{% url 'reservations:reservation-add' '1' %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white/90 hover:bg-gray-400 block text-center">
             <span class="font-bold text-3xl">
-                Maak reservering
+                {% trans "Maak reservering" %}
             </span>
         </a>
     </section>
-    <div class="pb-27">
-        {% include "menu.html" %}
-    </div>
 </div>
 {% endblock %}

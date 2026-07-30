@@ -22,6 +22,8 @@ if TYPE_CHECKING:
     from .membership import Membership
     from .study_registration import StudyRegistration
 
+def twanstest(modeladmin, request, queryset):
+    pass
 
 class UserManager(BaseUserManager):
     """Manager for the User model.

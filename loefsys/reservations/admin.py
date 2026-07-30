@@ -3,10 +3,18 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from loefsys.reservations.models.log import Log, Question
-from loefsys.reservations.models.user_log import UserLog
+from .models import (
+    ReservableBoat,
+    ReservableMaterial,
+    ReservableRoom,
+    ReservableType,
+    Reservation,
+)
 
-from .models import Boat, Material, ReservableType, Reservation, Room
+admin.site.register(ReservableType)
+admin.site.register(ReservableBoat)
+admin.site.register(ReservableMaterial)
+admin.site.register(ReservableRoom)
 
 
 @admin.register(Boat, Material, Room, ReservableType)
@@ -52,15 +60,7 @@ class ReservationAdmin(admin.ModelAdmin):
                 )
             },
         ),
-        (
-            _("Approval"),
-            {
-                "fields": (
-                    "status",
-                    "denial_reason",
-                )
-            },
-        ),
+        (_("Approval"), {"fields": ("status", "denial_reason")}),
     )
 
     def get_readonly_fields(self, request, obj=None):
@@ -68,27 +68,8 @@ class ReservationAdmin(admin.ModelAdmin):
         if obj is None:
             return self.readonly_fields
 
-        return (
-            *self.readonly_fields,
-            "reserved_item",
-            "reservee_user",
-            "start",
-            "end",
-        )
+        return (*self.readonly_fields, "reserved_item", "reservee_user", "start", "end")
 
-
-class QuestionInline(admin.TabularInline):
-    """Inline for questions."""
-
-    model = Question
-    extra = 1
-
-
-class LogAdmin(admin.ModelAdmin):
-    """Admin interface for creating a log."""
-
-    inlines = (QuestionInline,)
-
-
-admin.site.register(Log, LogAdmin)
-admin.site.register(UserLog)
+    list_display = ("reservable", "user", "start", "end", "request_status")
+    list_filter = ("request_status",)
+    readonly_fields = ("created", "modified")

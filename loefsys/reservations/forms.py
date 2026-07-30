@@ -1,51 +1,49 @@
 """Module defining the forms for the reservations."""
 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
-from loefsys.members.models.user_skippership import UserSkippership
-from loefsys.reservations.models.log import Question
-
-from .models import ReservableItem, Reservation
+from .models import Reservable, Reservation
 
 
 class CreateReservationForm(forms.ModelForm):
     """A form to create reservations."""
 
-    reserved_item = forms.ModelChoiceField(
-        queryset=ReservableItem.objects.none(), widget=forms.RadioSelect
+    reservable = forms.ModelChoiceField(
+        label=_("Te reserveren item"),
+        queryset=Reservable.objects.none(),
+        widget=forms.RadioSelect,
     )
     start = forms.DateTimeField(
-        input_formats=["%I:%M %p %d-%b-%Y"],
+        label=_("Starttijd"),
+        input_formats=["%Y-%m-%dT%H:%M"],
         widget=forms.DateTimeInput(
-            attrs={"type": "datetime-local"}, format="%I:%M %p %d-%b-%Y"
+            attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
         ),
     )
     end = forms.DateTimeField(
-        input_formats=["%I:%M %p %d-%b-%Y"],
+        label=_("Eindtijd"),
+        input_formats=["%Y-%m-%dT%H:%M"],
         widget=forms.DateTimeInput(
-            attrs={"type": "datetime-local"}, format="%I:%M %p %d-%b-%Y"
+            attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
         ),
-    )
-
-    authorized_userskippership = forms.ModelChoiceField(
-        queryset=UserSkippership.objects.all(), required=False
     )
 
     class Meta:
         model = Reservation
-        fields = ("reserved_item", "start", "end", "authorized_userskippership")
+        fields = ("reservable", "start", "end")
 
 
 class SortByReservationForm(forms.Form):
     """A form to sort reservations."""
 
     CHOICES = (
-        ("start", "Starttijd"),
-        ("end", "Eindtijd"),
-        ("location", "Locatie"),
-        ("-date_of_creation", "Nieuwste eerst"),
-        ("A-Z", "A-Z"),
-        ("type", "Type"),
+        ("start", _("Starttijd")),
+        ("end", _("Eindtijd")),
+        ("location", _("Locatie")),
+        ("-created", _("Nieuwste eerst")),
+        ("A-Z", _("A-Z")),
+        ("type", _("Type")),
     )
     sort_by = forms.ChoiceField(choices=CHOICES, required=False)
 
@@ -74,10 +72,7 @@ class CreateLogForm(forms.ModelForm):
                         required=field["required"],
                         max_length=4096,
                         widget=forms.Textarea(
-                            attrs={
-                                "rows": 5,
-                                "placeholder": "Lorem Ipsum",
-                            }
+                            attrs={"rows": 5, "placeholder": "Lorem Ipsum"}
                         ),
                     )
 
