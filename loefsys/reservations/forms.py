@@ -45,4 +45,40 @@ class SortByReservationForm(forms.Form):
         ("A-Z", _("A-Z")),
         ("type", _("Type")),
     )
-    sort_by = forms.ChoiceField(label=_("Sorteer op"), choices=CHOICES, required=False)
+    sort_by = forms.ChoiceField(choices=CHOICES, required=False)
+
+
+class CreateLogForm(forms.ModelForm):
+    """Form for all fields associated with an event."""
+
+    def __init__(self, *args, **kwargs):
+        self.form_fields = kwargs.pop("form_fields")
+        super().__init__(*args, **kwargs)
+
+        for k, field in self.form_fields:
+            key = str(k)
+            match field["type"]:
+                case Question.BOOLEAN_FIELD:
+                    self.fields[key] = forms.BooleanField(required=False)
+                case Question.INTEGER_FIELD:
+                    self.fields[key] = forms.IntegerField(required=field["required"])
+                case Question.DATETIME_FIELD:
+                    self.fields[key] = forms.DateTimeField(
+                        required=field["required"],
+                        widget=forms.DateTimeInput(attrs={"type": "datetime-local"}),
+                    )
+                case _:
+                    self.fields[key] = forms.CharField(
+                        required=field["required"],
+                        max_length=4096,
+                        widget=forms.Textarea(
+                            attrs={"rows": 5, "placeholder": "Lorem Ipsum"}
+                        ),
+                    )
+
+            self.fields[key].label = field["subject"]
+            self.fields[key].help_text = field["description"]
+
+    class Meta:
+        model = Question  # TODO Replace by a model storing the filled in log.
+        fields = ()

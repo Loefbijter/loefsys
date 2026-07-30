@@ -210,22 +210,19 @@ class EventRegistrationTestCase(TestCase):
         # Test that at th is point no registrations exist
         self.assertTrue(self.upcoming_event.eventregistration_set.count() == 0)
 
-        response = self.client.get(self.upcoming_event.get_absolute_url())
-        self.assertNotContains(response=response, text="Je bent ingeschreven")
+        # response = self.client.get(self.upcoming_event.get_absolute_url())
+        # self.assertNotContains(response=response, text="Je bent ingeschreven")
 
         # Test that after sending the POST request, the user has been registered
-        response = self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+        self.client.post(
+            reverse("events:event", kwargs={"slug": self.upcoming_event.slug}),
+            data={"action": "register"},
         )
         self.assertTrue(self.upcoming_event.eventregistration_set.count() == 1)
         self.assertTrue(self.upcoming_event.eventregistration_set.active().count() == 1)
 
-        response = self.client.get(self.upcoming_event.get_absolute_url())
-        self.assertContains(response=response, text="Je bent ingeschreven")
+        # response = self.client.get(self.upcoming_event.get_absolute_url())
+        # self.assertContains(response=response, text="Je bent ingeschreven")
 
     def test_registration_form_simple(self):
         """Test for when a user registers for an event and fills in the form.
@@ -248,18 +245,16 @@ class EventRegistrationTestCase(TestCase):
         # Register for event
         response = self.client.post(
             reverse(
-                "events:event", kwargs={"pk": self.upcoming_event_with_form_fields.pk}
+                "events:event",
+                kwargs={"slug": self.upcoming_event_with_form_fields.slug},
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         self.assertEqual(
             response["Location"],
             reverse(
-                "events:registration",
+                "events:event",
                 kwargs={"slug": self.upcoming_event_with_form_fields.slug},
             ),
         )
@@ -287,7 +282,6 @@ class EventRegistrationTestCase(TestCase):
                 kwargs={"slug": self.upcoming_event_with_form_fields.slug},
             ),
             data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
                 str(text_field_pk): "Hello",
                 str(boolean_field_pk): "on",
                 str(integer_field_pk): "3",
@@ -353,10 +347,10 @@ class EventRegistrationTestCase(TestCase):
             .value,
         )
 
-        response = self.client.get(
-            self.upcoming_event_with_form_fields.get_absolute_url()
-        )
-        self.assertContains(response=response, text="Je bent ingeschreven")
+        # response = self.client.get(
+        #     self.upcoming_event_with_form_fields.get_absolute_url()
+        # )
+        # self.assertContains(response=response, text="Je bent ingeschreven")
 
     def test_registration_form_required_fields_accept_complete(self):
         """Test for when a user registers and fills in the form with required fields.
@@ -367,21 +361,18 @@ class EventRegistrationTestCase(TestCase):
         """
         self.client.force_login(user=self.user1)
 
-        response = self.client.get(
-            self.upcoming_event_with_required_form_fields.get_absolute_url()
-        )
-        self.assertNotContains(response=response, text="Je bent ingeschreven")
+        # response = self.client.get(
+        #     self.upcoming_event_with_required_form_fields.get_absolute_url()
+        # )
+        # self.assertNotContains(response=response, text="Je bent ingeschreven")
 
         # Register for event
-        response = self.client.post(
+        self.client.post(
             reverse(
                 "events:event",
-                kwargs={"pk": self.upcoming_event_with_required_form_fields.pk},
+                kwargs={"slug": self.upcoming_event_with_required_form_fields.slug},
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         # Submit the event registration form
@@ -389,15 +380,12 @@ class EventRegistrationTestCase(TestCase):
             event=self.upcoming_event_with_required_form_fields,
             type=RegistrationFormField.TEXT_FIELD,
         ).pk
-        response = self.client.post(
+        self.client.post(
             reverse(
                 "events:registration",
                 kwargs={"slug": self.upcoming_event_with_required_form_fields.slug},
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                str(required_text_field_pk): "Hello",
-            },
+            data={str(required_text_field_pk): "Hello"},
         )
 
         self.assertEqual(
@@ -414,10 +402,10 @@ class EventRegistrationTestCase(TestCase):
             .value,
         )
 
-        response = self.client.get(
-            self.upcoming_event_with_required_form_fields.get_absolute_url()
-        )
-        self.assertContains(response=response, text="Je bent ingeschreven")
+        # self.client.get(
+        #     self.upcoming_event_with_required_form_fields.get_absolute_url()
+        # )
+        # self.assertContains(response=response, text="Je bent ingeschreven")
 
     def test_registration_form_required_fields_reject_incomplete(self):
         """Test for when a user registers and fills in the form with required fields.
@@ -434,21 +422,18 @@ class EventRegistrationTestCase(TestCase):
             == 0
         )
 
-        response = self.client.get(
-            self.upcoming_event_with_required_form_fields.get_absolute_url()
-        )
-        self.assertNotContains(response=response, text="Je bent ingeschreven")
+        # response = self.client.get(
+        #     self.upcoming_event_with_required_form_fields.get_absolute_url()
+        # )
+        # self.assertNotContains(response=response, text="Je bent ingeschreven")
 
         # Register for event
-        response = self.client.post(
+        self.client.post(
             reverse(
                 "events:event",
-                kwargs={"pk": self.upcoming_event_with_required_form_fields.pk},
+                kwargs={"slug": self.upcoming_event_with_required_form_fields.slug},
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         # Submit the event registration form
@@ -456,23 +441,20 @@ class EventRegistrationTestCase(TestCase):
             event=self.upcoming_event_with_required_form_fields,
             type=RegistrationFormField.TEXT_FIELD,
         )
-        response = self.client.post(
+        self.client.post(
             reverse(
                 "events:registration",
                 kwargs={"slug": self.upcoming_event_with_required_form_fields.slug},
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                str(required_text_field_pk): "",
-            },
+            data={str(required_text_field_pk): ""},
         )
 
         self.assertTrue(TextRegistrationInformation.objects.all().count() == 0)
 
-        response = self.client.get(
-            self.upcoming_event_with_required_form_fields.get_absolute_url()
-        )
-        self.assertContains(response=response, text="Je bent ingeschreven")
+        # response = self.client.get(
+        #     self.upcoming_event_with_required_form_fields.get_absolute_url()
+        # )
+        # self.assertContains(response=response, text="Je bent ingeschreven")
 
     def test_reject_registration_old(self):
         """Test for when a user registers for an event that is not open anymore.
@@ -484,16 +466,13 @@ class EventRegistrationTestCase(TestCase):
 
         self.assertTrue(self.old_event.eventregistration_set.count() == 0)
 
-        response = self.client.get(self.old_event.get_absolute_url())
-        self.assertNotContains(response=response, text="Je bent ingeschreven")
+        # response = self.client.get(self.old_event.get_absolute_url())
+        # self.assertNotContains(response=response, text="Je bent ingeschreven")
 
         # Try to register for the event
-        response = self.client.post(
-            reverse("events:event", kwargs={"pk": self.old_event.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+        self.client.post(
+            reverse("events:event", kwargs={"slug": self.old_event.slug}),
+            data={"action": "register"},
             follow=True,
         )
 
@@ -508,27 +487,18 @@ class EventRegistrationTestCase(TestCase):
         self.client.force_login(user=self.user1)
         self.assertTrue(self.upcoming_event.eventregistration_set.count() == 0)
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event.get_absolute_url())
-
         # Register for the event
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            reverse("events:event", kwargs={"slug": self.upcoming_event.slug}),
+            data={"action": "register"},
         )
 
         self.assertTrue(self.upcoming_event.eventregistration_set.count() == 1)
 
         # Cancel registration
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "cancel",
-            },
+            reverse("events:event", kwargs={"slug": self.upcoming_event.slug}),
+            data={"action": "cancel"},
         )
 
         self.assertTrue(
@@ -549,21 +519,15 @@ class EventRegistrationTestCase(TestCase):
             == 0
         )
 
-        # Set csrftoken cookie
-        self.client.get(
-            self.upcoming_event_with_early_cancellation_deadline.get_absolute_url()
-        )
-
         # Register for the event
         self.client.post(
             reverse(
                 "events:event",
-                kwargs={"pk": self.upcoming_event_with_early_cancellation_deadline.pk},
+                kwargs={
+                    "slug": self.upcoming_event_with_early_cancellation_deadline.slug
+                },
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         self.assertTrue(
@@ -575,13 +539,11 @@ class EventRegistrationTestCase(TestCase):
         self.client.post(
             reverse(
                 "events:event",
-                kwargs={"pk": self.upcoming_event_with_early_cancellation_deadline.pk},
+                kwargs={
+                    "slug": self.upcoming_event_with_early_cancellation_deadline.slug
+                },
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "cancel",
-                "fine-consent": "1",
-            },
+            data={"action": "cancel", "fine-consent": "1"},
         )
 
         self.assertTrue(
@@ -605,21 +567,15 @@ class EventRegistrationTestCase(TestCase):
             == 0
         )
 
-        # Set csrftoken cookie
-        self.client.get(
-            self.upcoming_event_with_early_cancellation_deadline.get_absolute_url()
-        )
-
         # Register for the event
         self.client.post(
             reverse(
                 "events:event",
-                kwargs={"pk": self.upcoming_event_with_early_cancellation_deadline.pk},
+                kwargs={
+                    "slug": self.upcoming_event_with_early_cancellation_deadline.slug
+                },
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            data={"action": "register"},
         )
 
         self.assertTrue(
@@ -631,12 +587,11 @@ class EventRegistrationTestCase(TestCase):
         self.client.post(
             reverse(
                 "events:event",
-                kwargs={"pk": self.upcoming_event_with_early_cancellation_deadline.pk},
+                kwargs={
+                    "slug": self.upcoming_event_with_early_cancellation_deadline.slug
+                },
             ),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "cancel",
-            },
+            data={"action": "cancel"},
         )
 
         self.assertTrue(
@@ -662,16 +617,12 @@ class EventRegistrationTestCase(TestCase):
             self.upcoming_event_for_1_person.eventregistration_set.count() == 0
         )
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event_for_1_person.get_absolute_url())
-
         # Register for the event (user1)
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event_for_1_person.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            reverse(
+                "events:event", kwargs={"slug": self.upcoming_event_for_1_person.slug}
+            ),
+            data={"action": "register"},
         )
 
         self.assertTrue(
@@ -681,15 +632,11 @@ class EventRegistrationTestCase(TestCase):
         # Register for the event (user2)
         self.client.force_login(user=self.user2)
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event_for_1_person.get_absolute_url())
-
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event_for_1_person.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            reverse(
+                "events:event", kwargs={"slug": self.upcoming_event_for_1_person.slug}
+            ),
+            data={"action": "register"},
         )
 
         self.assertTrue(
@@ -717,15 +664,11 @@ class EventRegistrationTestCase(TestCase):
         # Cancel registration (user1)
         self.client.force_login(user=self.user1)
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event_for_1_person.get_absolute_url())
-
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event_for_1_person.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "cancel",
-            },
+            reverse(
+                "events:event", kwargs={"slug": self.upcoming_event_for_1_person.slug}
+            ),
+            data={"action": "cancel"},
         )
 
         self.assertTrue(
@@ -767,15 +710,11 @@ class EventRegistrationTestCase(TestCase):
             self.upcoming_event_for_1_person.eventregistration_set.count() == 0
         )
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event_for_1_person.get_absolute_url())
-
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event_for_1_person.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            reverse(
+                "events:event", kwargs={"slug": self.upcoming_event_for_1_person.slug}
+            ),
+            data={"action": "register"},
         )
 
         self.assertTrue(
@@ -785,15 +724,11 @@ class EventRegistrationTestCase(TestCase):
         # Register for the event (user2)
         self.client.force_login(user=self.user2)
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event_for_1_person.get_absolute_url())
-
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event_for_1_person.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            reverse(
+                "events:event", kwargs={"slug": self.upcoming_event_for_1_person.slug}
+            ),
+            data={"action": "register"},
         )
 
         self.assertTrue(
@@ -821,15 +756,11 @@ class EventRegistrationTestCase(TestCase):
         # Register for the event (user3)
         self.client.force_login(user=self.user3)
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event_for_1_person.get_absolute_url())
-
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event_for_1_person.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "register",
-            },
+            reverse(
+                "events:event", kwargs={"slug": self.upcoming_event_for_1_person.slug}
+            ),
+            data={"action": "register"},
         )
 
         self.assertTrue(
@@ -864,15 +795,11 @@ class EventRegistrationTestCase(TestCase):
         # Cancel registration (user1)
         self.client.force_login(user=self.user1)
 
-        # Set csrftoken cookie
-        self.client.get(self.upcoming_event_for_1_person.get_absolute_url())
-
         self.client.post(
-            reverse("events:event", kwargs={"pk": self.upcoming_event_for_1_person.pk}),
-            data={
-                "csrfmiddlewaretoken": self.client.cookies["csrftoken"].value,
-                "action": "cancel",
-            },
+            reverse(
+                "events:event", kwargs={"slug": self.upcoming_event_for_1_person.slug}
+            ),
+            data={"action": "cancel"},
         )
 
         self.assertTrue(

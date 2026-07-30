@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load formatters compress i18n %}
+{% load formatters compress i18n static %}
 
 {% block title %}
 {{ event.title }}
@@ -104,6 +104,27 @@
   </div>
 </div>
 
-<!-- TODO, Low Prio: Create some sort of gallery to list registrations -->
+<!-- Attendees viewing for event. -->
+{% if can_view_attendees %}
+<c-card class="flex flex-col px-4">
+  <c-header.h4>Aanwezigen</c-header.h4>
+  <c-separator />
+  <div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 gap-4">
+    {% for registration in attendees %}
+    <div class="flex flex-col items-center text-center">
+      {% if registration.contact.picture %}
+      <img class="rounded-full size-16 border-2 border-secondary object-cover"
+           src="{{ registration.contact.picture.url }}" alt="">
+      {% else %}
+      <img class="rounded-full size-16 border-2 border-secondary"
+           src="{% static 'default-profile-picture.svg' %}" alt="">
+      {% endif %}
+      <span class="text-sm leading-tight">{{ registration.contact.first_name }}</span>
+      <span class="text-sm leading-tight">{{ registration.contact.last_name }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</c-card>
+{% endif %}
 
 {% endblock %}

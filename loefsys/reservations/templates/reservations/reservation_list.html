@@ -53,9 +53,17 @@
                     <div class="font-bold text-4xl">
                         {% trans "Starttijd" %}: {{ reservation.start|date:"d-m-Y H:i" }}
                         <br/>
-                        {% trans "Eindtijd" %}: {{ reservation.end|date:"d-m-Y H:i" }}
-                    </div>
-                </div>
+                    </span>
+                        <span class="text-2xl">
+                            Status: {{ reservation.get_status_display }}
+                            <br/>
+                        </span>
+                    <span class="text-4xl">
+                        Starttijd: {{ reservation.start }}
+                        <br/>
+                        Eindtijd: {{ reservation.end }}
+                    </span>
+                </span>
             </a>
         {% endfor %}
     </section>

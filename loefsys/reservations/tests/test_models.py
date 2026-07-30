@@ -5,7 +5,14 @@ from django.test import TestCase
 from django.utils.timezone import make_aware
 from django_dynamic_fixture import G, N
 
-from loefsys.reservations.models import Reservable, Reservation
+from loefsys.members.models.user import User
+from loefsys.reservations.models import ReservableType, Reservation
+from loefsys.reservations.models.choices import (
+    Locations,
+    ReservableCategories,
+    ReservationStatus,
+)
+from loefsys.reservations.models.reservable import ReservableItem
 
 
 class ReservationTimeslotValidationTestCase(TestCase):
@@ -134,7 +141,242 @@ class ReservationTimeslotValidationTestCase(TestCase):
 
 
 class ReservationTestCase(TestCase):
-    def test_clean_not_reservable(self):
-        reservable = G(Reservable, is_reservable=False)
-        new = N(Reservation, reservable=reservable)
-        self.assertRaises(ValidationError, new.clean)
+    """Tests for Reservation model creation and validation."""
+
+    def setUp(self):
+        self.reservable_type = ReservableType(
+            name="Room", category=ReservableCategories.ROOM, description="GiPHouse room"
+        )
+        self.reservable_type.save()
+
+        self.reservable_item = ReservableItem(
+            name="Reservable room",
+            description="A room",
+            reservable_type=self.reservable_type,
+            location=Locations.KRAAIJ,
+            is_reservable=True,
+        )
+        self.reservable_item.save()
+
+        self.unreservable_item = ReservableItem(
+            name="Unreservable room",
+            description="A room",
+            reservable_type=self.reservable_type,
+            location=Locations.KRAAIJ,
+            is_reservable=False,
+        )
+        self.unreservable_item.save()
+
+        self.reservee_user = User.objects.create_user(
+            email="dummy@dummy.nl", password="1234"
+        )
+        self.reservee_user.save()
+
+    def test_create(self):
+        """Tests that Reservation instance can be created."""
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
+        )
+        reservation.save()
+        self.assertIsNotNone(reservation)
+        self.assertIsNotNone(reservation.pk)
+
+    def test_same_start_end(self):
+        """Tests that Reservation instance cannot be created with the same start and end time."""  # noqa: E501
+        with self.assertRaises(IntegrityError):
+            reservation = Reservation(
+                reserved_item=self.reservable_item,
+                reservee_user=self.reservee_user,
+                start=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+            )
+            reservation.save()
+
+    def test_start_after_end(self):
+        """Tests that Reservation instance cannot be created with the start after the end time."""  # noqa: E501
+        with self.assertRaises(IntegrityError):
+            reservation = Reservation(
+                reserved_item=self.reservable_item,
+                reservee_user=self.reservee_user,
+                start=datetime.datetime(
+                    2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+            )
+            reservation.save()
+
+    def test_reserved_twice(self):
+        """Tests that two Reservation instances can be created for the same item on different timeslots."""  # noqa: E501
+        reservation1 = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+        )
+        reservation1.save()
+
+        reservation2 = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=14, minute=0, tzinfo=datetime.UTC),
+        )
+        reservation2.save()
+
+        self.assertIsNotNone(reservation1)
+        self.assertIsNotNone(reservation2)
+
+    def test_reserved_twice_overlap(self):
+        """Tests that two Reservation instances can be created for the same item on overlapping timeslots."""  # noqa: E501
+        with self.assertRaises(ValidationError):
+            reservation1 = Reservation(
+                reserved_item=self.reservable_item,
+                reservee_user=self.reservee_user,
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+            )
+            reservation1.save()
+            reservation1.clean()
+
+            reservation2 = Reservation(
+                reserved_item=self.reservable_item,
+                reservee_user=self.reservee_user,
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC
+                ),
+            )
+            reservation2.save()
+            reservation2.clean()
+
+    def test_duplicate(self):
+        """Tests that two duplicate Reservation instances cannot be created."""
+        with self.assertRaises(ValidationError):
+            reservation1 = Reservation(
+                reserved_item=self.reservable_item,
+                reservee_user=self.reservee_user,
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+            )
+            reservation1.save()
+
+            reservation2 = Reservation(
+                reserved_item=self.reservable_item,
+                reservee_user=self.reservee_user,
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+            )
+            reservation2.clean()
+            reservation2.save()
+
+    def test_reserved_two_overlap(self):
+        """Tests that two Reservation instances can be created for two items on overlapping timeslots."""  # noqa: E501
+        reservable_item2 = ReservableItem(
+            name="Large room",
+            description="A room",
+            reservable_type=self.reservable_type,
+            location=Locations.KRAAIJ,
+            is_reservable=True,
+        )
+        reservable_item2.save()
+
+        reservation1 = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+        )
+        reservation1.save()
+
+        reservation2 = Reservation(
+            reserved_item=reservable_item2,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(
+                2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC
+            ),
+            end=datetime.datetime(2025, 1, 1, hour=13, minute=0, tzinfo=datetime.UTC),
+        )
+        reservation2.clean()
+        reservation2.save()
+
+        self.assertIsNotNone(reservation1)
+        self.assertIsNotNone(reservation2)
+
+    def test_is_reservable(self):
+        """Tests that an item that has the is_reservable field as true can be reserved."""  # noqa: E501
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+        )
+        reservation.save()
+
+        self.assertIsNotNone(reservation)
+
+    def test_is_not_reservable(self):
+        """Tests that an item that has the is_reservable field as true can be reserved."""  # noqa: E501
+        with self.assertRaises(ValidationError):
+            reservation = Reservation(
+                reserved_item=self.unreservable_item,
+                reservee_user=self.reservee_user,
+                start=datetime.datetime(
+                    2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC
+                ),
+                end=datetime.datetime(
+                    2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC
+                ),
+            )
+            reservation.save()
+            reservation.clean()
+
+    def test_denied_requires_reason(self):
+        """Tests that denying a reservation requires a denial reason."""
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            status=ReservationStatus.DENIED,
+        )
+
+        with self.assertRaises(ValidationError):
+            reservation.full_clean()
+
+    def test_denied_with_reason_is_valid(self):
+        """Tests that denying a reservation with a reason is valid."""
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            status=ReservationStatus.DENIED,
+            denial_reason="Boat already reserved for a club activity.",
+        )
+
+        reservation.full_clean()
+        reservation.save()
+        self.assertEqual(reservation.status, ReservationStatus.DENIED)
