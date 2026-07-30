@@ -1,17 +1,16 @@
 """Module defining models for the reservations app."""
 
-from .boat import Boat
-from .material import Material
-from .reservable import ReservableItem, ReservableType, ReservableTypePricing
+from .boat import ReservableBoat
+from .material import ReservableMaterial
+from .reservable import Reservable, ReservableType
 from .reservation import Reservation
-from .room import Room
+from .room import ReservableRoom
 
 __all__ = [
-    "Boat",
-    "Material",
-    "ReservableItem",
+    "Reservable",
+    "ReservableBoat",
+    "ReservableMaterial",
+    "ReservableRoom",
     "ReservableType",
-    "ReservableTypePricing",
     "Reservation",
-    "Room",
 ]

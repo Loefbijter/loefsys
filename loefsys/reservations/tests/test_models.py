@@ -1,55 +1,143 @@
-# TODO remove line too long ignores.
-import datetime
+from datetime import datetime
 
-from django.db import IntegrityError
-from django.forms import ValidationError
+from django.core.exceptions import ValidationError
 from django.test import TestCase
-from django_dynamic_fixture import G
+from django.utils.timezone import make_aware
+from django_dynamic_fixture import G, N
 
 from loefsys.members.models.user import User
-from loefsys.reservations.models import Boat, Material, ReservableType, Reservation
-from loefsys.reservations.models.choices import Locations, ReservableCategories
+from loefsys.reservations.models import ReservableType, Reservation
+from loefsys.reservations.models.choices import (
+    Locations,
+    ReservableCategories,
+    ReservationStatus,
+)
 from loefsys.reservations.models.reservable import ReservableItem
 
 
-class BoatTestCase(TestCase):
-    """Tests for Boat model creation and validation."""
+class ReservationTimeslotValidationTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.reservable = G(Reservable)
+        cls.approved_reservation = G(
+            Reservation,
+            reservable=cls.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 12, 0, 0)),
+            end=make_aware(datetime(2000, 1, 1, 13, 0, 0)),
+        )
 
-    def test_create(self):
-        """Test that Boat instance can be created."""
-        boat = G(Boat)
-        self.assertIsNotNone(boat)
-        self.assertIsNotNone(boat.pk)
+    def test_overlap_start(self):
+        new = N(
+            Reservation,
+            reservable=self.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 12, 59, 59)),
+            end=make_aware(datetime(2000, 1, 1, 13, 59, 59)),
+        )
+        self.assertRaises(ValidationError, new.clean_timeslot)
 
+    def test_overlap_end(self):
+        new = N(
+            Reservation,
+            reservable=self.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 11, 0, 1)),
+            end=make_aware(datetime(2000, 1, 1, 12, 0, 1)),
+        )
+        self.assertRaises(ValidationError, new.clean_timeslot)
 
-class MaterialTestCase(TestCase):
-    """Tests for Material model creation and validation."""
+    def test_overlap_existing_wraps_new(self):
+        new = N(
+            Reservation,
+            reservable=self.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 12, 0, 1)),
+            end=make_aware(datetime(2000, 1, 1, 12, 59, 59)),
+        )
+        self.assertRaises(ValidationError, new.clean_timeslot)
 
-    def test_create(self):
-        """Test that Material instance can be created."""
-        material = G(Material)
-        self.assertIsNotNone(material)
-        self.assertIsNotNone(material.pk)
+    def test_overlap_new_wraps_existing(self):
+        new = N(
+            Reservation,
+            reservable=self.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 11, 59, 59)),
+            end=make_aware(datetime(2000, 1, 1, 13, 0, 1)),
+        )
+        self.assertRaises(ValidationError, new.clean_timeslot)
 
+    def test_overlap_exact(self):
+        new = N(
+            Reservation,
+            reservable=self.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 12, 0, 0)),
+            end=make_aware(datetime(2000, 1, 1, 13, 0, 0)),
+        )
+        self.assertRaises(ValidationError, new.clean_timeslot)
 
-class ReservableTypeTestCase(TestCase):
-    """Tests for ReservableType model creation and validation."""
+    def test_valid_before_existing(self):
+        new = N(
+            Reservation,
+            reservable=self.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 11, 0, 0)),
+            end=make_aware(datetime(2000, 1, 1, 11, 59, 59)),
+        )
+        new.clean_timeslot()
 
-    def test_create(self):
-        """Test that ReservableType instance can be created."""
-        reservable_type = G(ReservableType)
-        self.assertIsNotNone(reservable_type)
-        self.assertIsNotNone(reservable_type.pk)
+    def test_valid_after_existing(self):
+        new = N(
+            Reservation,
+            reservable=self.reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 13, 0, 1)),
+            end=make_aware(datetime(2000, 1, 1, 13, 59, 59)),
+        )
+        new.clean_timeslot()
 
+    def test_pending_does_not_block_timeslot(self):
+        pending_reservable = G(Reservable)
 
-class ReservableTypePricingTestCase(TestCase):
-    """Tests for ReservableTypePricing model creation and validation."""
+        G(
+            Reservation,
+            reservable=pending_reservable,
+            request_status=Reservation.RequestStatus.PENDING,
+            start=make_aware(datetime(2000, 1, 1, 12, 0)),
+            end=make_aware(datetime(2000, 1, 1, 13, 0)),
+        )
 
-    def test_create(self):
-        """Test that ReservableTypePricing instance can be created."""
-        pricing = G(ReservableType)
-        self.assertIsNotNone(pricing)
-        self.assertIsNotNone(pricing.pk)
+        new = N(
+            Reservation,
+            reservable=pending_reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 12, 30)),
+            end=make_aware(datetime(2000, 1, 1, 13, 30)),
+        )
+
+        new.clean_timeslot()
+
+    def test_denied_does_not_block_timeslot(self):
+        denied_reservable = G(Reservable)
+
+        G(
+            Reservation,
+            reservable=denied_reservable,
+            request_status=Reservation.RequestStatus.DENIED,
+            start=make_aware(datetime(2000, 1, 1, 12, 0)),
+            end=make_aware(datetime(2000, 1, 1, 13, 0)),
+        )
+
+        new = N(
+            Reservation,
+            reservable=denied_reservable,
+            request_status=Reservation.RequestStatus.APPROVED,
+            start=make_aware(datetime(2000, 1, 1, 12, 30)),
+            end=make_aware(datetime(2000, 1, 1, 13, 30)),
+        )
+
+        new.clean_timeslot()
 
 
 class ReservationTestCase(TestCase):
@@ -264,3 +352,31 @@ class ReservationTestCase(TestCase):
             )
             reservation.save()
             reservation.clean()
+
+    def test_denied_requires_reason(self):
+        """Tests that denying a reservation requires a denial reason."""
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            status=ReservationStatus.DENIED,
+        )
+
+        with self.assertRaises(ValidationError):
+            reservation.full_clean()
+
+    def test_denied_with_reason_is_valid(self):
+        """Tests that denying a reservation with a reason is valid."""
+        reservation = Reservation(
+            reserved_item=self.reservable_item,
+            reservee_user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            status=ReservationStatus.DENIED,
+            denial_reason="Boat already reserved for a club activity.",
+        )
+
+        reservation.full_clean()
+        reservation.save()
+        self.assertEqual(reservation.status, ReservationStatus.DENIED)

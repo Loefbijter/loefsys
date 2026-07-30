@@ -7,16 +7,13 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("admin", admin.site.urls),
-    path("", include("loefsys.home.urls", namespace="home")),
-    path("", include("loefsys.members.urls", namespace="members")),
-    # path("profile/", include("loefsys.profile.urls", namespace="profile")),
-    # path("reservations/", include(
-    #     "loefsys.reservations.urls",
-    #     namespace="reservations",
-    # )),
-    path("events/", include("loefsys.events.urls", namespace="events")),
-    path("__reload__", include("django_browser_reload.urls")),
+    path("admin/", admin.site.urls),
+    path("", include("loefsys.home.urls"), name="home"),
+    path("", include("loefsys.members.urls"), name="members"),
+    # path("profile/", include("loefsys.profile.urls"), name="profile"),
+    path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
+    path("events/", include("loefsys.events.urls"), name="events"),
+    path("__reload__/", include("django_browser_reload.urls")),
     *debug_toolbar_urls(),
 ]
 

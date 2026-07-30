@@ -3,12 +3,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-# from loefsys.members.models.skippership import Skippership
-from .choices import FleetChoices
-from .reservable import ReservableItem
+from .reservable import Reservable
 
 
-class Boat(ReservableItem):
+class ReservableBoat(Reservable):
     """Describes a boat that can be reserved.
 
     A boat is part of our or any external fleet of boats. It can be any type of boat.
@@ -23,19 +21,26 @@ class Boat(ReservableItem):
         Flag that determines whether the boat has an engine.
     fleet : ~loefsys.reservations.models.choices.FleetChoices
         The provider of the boat.
-    # requires_skippership : ~loefsys.users.models.skippership.Skippership
-    #     The skippership needed to reserve the boat. Can be none.
     """
+
+    class Provider(models.IntegerChoices):
+        """Describes the provider of the boat."""
+
+        OTHER = (0, _("Other"))
+        """Used for boats available from other providers."""
+
+        LOEFBIJTER = (1, _("Loefbijter"))
+        """Used for boats from Loefbijter."""
+
+        CEULEMANS = (2, _("Ceulemans"))
+        """Used for boats from Ceulemans."""
 
     capacity = models.PositiveSmallIntegerField(verbose_name=_("Capacity"))
     has_engine = models.BooleanField(
         default=False, verbose_name=_("Boat has an engine")
     )
-    fleet = models.PositiveSmallIntegerField(
-        choices=FleetChoices,
-        default=FleetChoices.OTHER,
+    provider = models.PositiveSmallIntegerField(
+        choices=Provider,
+        default=Provider.OTHER,
         verbose_name=_("Boat provider"),
     )
-    # requires_skippership = models.ForeignKey(
-    #     Skippership, null=True, blank=True, on_delete=models.CASCADE
-    # )

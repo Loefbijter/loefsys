@@ -52,7 +52,7 @@ class BaseSettings(ClassySettings):
             "loefsys.core",
             "loefsys.events",
             "loefsys.groups",
-            # "loefsys.reservations",
+            "loefsys.reservations",
             "loefsys.members",
             "loefsys.home",
             "loefsys.theme",
