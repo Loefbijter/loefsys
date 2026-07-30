@@ -2,6 +2,24 @@
 
 from django.urls import path
 
-from .views import HomeView
+from .views import (
+    AssociationInformationView,
+    HomeView,
+    SchipperschapView,
+    StyleguideView,
+    VereningingslidView,
+)
 
-urlpatterns = [path("", HomeView.as_view(), name="home")]
+app_name = "home"
+
+urlpatterns = [
+    path("", HomeView.as_view(), name="home"),
+    path(
+        "association-information/",
+        AssociationInformationView.as_view(),
+        name="association-information",
+    ),
+    path("schipperschap/", SchipperschapView.as_view(), name="schipperschap"),
+    path("styleguide/", StyleguideView.as_view(), name="styleguide"),
+    path("verenigingslied/", VereningingslidView.as_view(), name="verenigingslied"),
+]

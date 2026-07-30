@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from django.shortcuts import render
-from django.views.generic import View
+from django.views.generic import TemplateView, View
 
 from loefsys.events.models import Event
 from loefsys.home.models import Announcement
@@ -24,3 +24,27 @@ class HomeView(View):
             events = events.filter(published=True)
         context = {"announcements": announcements, "events": events}
         return render(request, "home/index.html", context)
+
+
+class AssociationInformationView(TemplateView):
+    """View for displaying association information page."""
+
+    template_name = "home/association-information.html"
+
+
+class SchipperschapView(TemplateView):
+    """View for displaying schipperschap page."""
+
+    template_name = "home/schipperschap.html"
+
+
+class StyleguideView(TemplateView):
+    """View for displaying styleguide page."""
+
+    template_name = "home/styleguide.html"
+
+
+class VereningingslidView(TemplateView):
+    """View for displaying verenigingslied page."""
+
+    template_name = "home/verenigingslied.html"

@@ -21,7 +21,6 @@ class TemplateSettings:
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
                 "DIRS": [self.BASE_DIR / "templates"],
-                "APP_DIRS": True,
                 "OPTIONS": {
                     "context_processors": self.templates_context_processors(),
                     "loaders": self.templates_loaders(),
@@ -34,6 +33,7 @@ class TemplateSettings:
             "django.template.context_processors.debug",
             "django.template.context_processors.request",
             "loefsys.core.context_processors.is_mobile",
+            "loefsys.core.context_processors.static_pages",
         )
 
     def templates_loaders(self):  # noqa D102
