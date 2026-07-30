@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- <meta content="translucent-black" name="apple-mobile-web-app-status-bar-style"> -->
     <title>{% block title %}{% endblock %} | Loefbijter</title>
-    <link rel="icon" type="image/x-icon" href="{% static 'loefbijter-logo.svg' %}">
-    <link rel="preload" href="{% tailwind_static 'styles/globals.css' %}" as="style">
-    <link rel="stylesheet" href="{% tailwind_static 'styles/globals.css' %}">
+    <link rel="icon" type="image/svg+xml" sizes="any" href="{% static 'loefbijter-logo.svg' %}">
+    <link rel="preload" href="{% tailwind_static 'globals.css' %}" as="style">
+    <link rel="stylesheet" href="{% tailwind_static 'globals.css' %}">
     {% block head %}{% endblock head %}
 </head>
 <body class="bg-primary text-primary-foreground">

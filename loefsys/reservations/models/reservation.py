@@ -7,10 +7,9 @@ from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
 from loefsys.members.models.user import User
-
-# from loefsys.members.models.user_skippership import UserSkippership
-from loefsys.reservations.models.boat import Boat
+from loefsys.reservations.models.boat import ReservableBoat
 from loefsys.reservations.models.choices import ReservableCategories, ReservationStatus
+from loefsys.reservations.models.reservable import Reservable
 
 
 class Reservation(TimeStampedModel):
@@ -53,6 +52,11 @@ class Reservation(TimeStampedModel):
     reservable = models.ForeignKey(Reservable, on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="reservations_set"
+    )
+    request_status = models.PositiveSmallIntegerField(
+        choices=RequestStatus.choices,
+        default=RequestStatus.PENDING,
+        verbose_name=_("Request status"),
     )
 
     start = models.DateTimeField(verbose_name=_("Start time"))
@@ -103,12 +107,12 @@ class Reservation(TimeStampedModel):
             ValidationError: The boat selected requires an authorized skipper to be set.
             ValidationError: The skipper set is not authorized for this boat.
         """
-        if not self.reserved_item_id or self.start is None or self.end is None:
+        if not self.reservable_id or self.start is None or self.end is None:
             return
 
         has_overlapping_reservation = Reservation.objects.filter(
             ~Q(pk=self.pk)
-            & Q(reserved_item=self.reserved_item)
+            & Q(reservable=self.reservable)
             & (
                 Q(start__range=(self.start, self.end))
                 | Q(end__range=(self.start, self.end))
@@ -120,15 +124,15 @@ class Reservation(TimeStampedModel):
                 "This item has already been reserved during this timeslot."
             )
 
-        if not self.reserved_item.is_reservable:
+        if not self.reservable.is_reservable:
             raise ValidationError("This item is not reservable at the moment.")
 
-        if self.reserved_item.reservable_type.category == ReservableCategories.BOAT:
+        if self.reservable.type.category == ReservableCategories.BOAT:
             try:
-                requires_skippership = Boat.objects.get(
-                    pk=self.reserved_item.pk
+                requires_skippership = ReservableBoat.objects.get(
+                    pk=self.reservable.pk
                 ).requires_skippership
-            except Boat.DoesNotExist:
+            except ReservableBoat.DoesNotExist:
                 requires_skippership = False
 
             if requires_skippership:
@@ -149,7 +153,9 @@ class Reservation(TimeStampedModel):
         if self.status == ReservationStatus.DENIED and not self.denial_reason.strip():
             raise ValidationError(
                 {
-                    "denial_reason": "A denial reason is required when denying a reservation."
+                    "denial_reason": (
+                        "A denial reason is required when denying a reservation."
+                    )
                 }
             )
 

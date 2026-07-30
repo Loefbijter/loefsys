@@ -8,65 +8,83 @@
 {% block content %}
 <div class="bg-primary relative flex flex-col">
     <section class="bg-secondary p-8 w-full">
-        <h1 class="text-5xl font-bold text-white">{% trans "RESERVEREN" %}</h1>
-        <div class="flex justify-center items-center">
-            <ul class="flex flex-wrap text-4xl font-medium text-center text-gray-500 dark:text-gray-400">
-                <li class="me-2">
+        <h1 class="text-5xl font-bold text-white text-center">{% trans "RESERVEREN" %}</h1>
+
+        <!-- Location tabs -->
+        <nav class="flex justify-center items-center mt-6">
+            <ul class="flex flex-wrap text-2xl md:text-3xl font-medium text-center">
+                <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 {% if location == 1 %}text-white active" {% endif %}
-                       aria-current="page">{% trans "Board Room" %}</a>
+                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 1 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       aria-current="{% if location == 1 %}page{% else %}false{% endif %}">
+                        {% trans "Board Room" %}
+                    </a>
                 </li>
-                <li class="me-2">
+                <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '2' %}{% else %}{% url 'reservations:reservation-add' '2' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 {% if location == 2 %}text-white active" {% endif %}
-                       aria-current="page">{% trans "Bastion" %}</a>
+                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 2 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       aria-current="{% if location == 2 %}page{% else %}false{% endif %}">
+                        {% trans "Bastion" %}
+                    </a>
                 </li>
-                <li class="me-2">
+                <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '3' %}{% else %}{% url 'reservations:reservation-add' '3' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 {% if location == 3 %}text-white active" {% endif %}
-                       aria-current="page">{% trans "Kraaij" %}</a>
+                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 3 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       aria-current="{% if location == 3 %}page{% else %}false{% endif %}">
+                        {% trans "Kraaij" %}
+                    </a>
                 </li>
-                <li class="me-2">
+                <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '0' %}{% else %}{% url 'reservations:reservation-add' '0' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 {% if location == 0 %}text-white active" {% endif %}
-                       aria-current="page">{% trans "Overige" %}</a>
+                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 0 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       aria-current="{% if location == 0 %}page{% else %}false{% endif %}">
+                        {% trans "Overige" %}
+                    </a>
                 </li>
             </ul>
-        </div>
+        </nav>
 
         <!-- Filter for boat reservable types -->
-        <div class="text-left ml-55 my-4 grid-cols-1">
-            <form method="get">
+        <div class="flex justify-center my-6">
+            <form method="get" class="flex items-center gap-3">
                 {% csrf_token %}
-                <div class="text-2xl text-white w-3/5 flex justify-center">{% trans "Filter:" %}
-                <select class="text-xl text-black" name="reservable_type" onchange="this.form.submit()">
-                    <option value=""></option>
+                <label for="id_reservable_type" class="text-xl text-white font-semibold">{% trans "Filter:" %}</label>
+                <select id="id_reservable_type"
+                        class="text-lg text-black rounded-lg px-3 py-2 border-2 border-black shadow focus:outline-none focus:ring-2 focus:ring-[#1BB1E6]"
+                        name="reservable_type" onchange="this.form.submit()">
+                    <option value="">{% trans "Alle types" %}</option>
                     {% for reservable_type in reservable_types %}
-                    <option value="{{reservable_type.name}}"
-                    {% if reservable_type.name == selected_reservable_type %} selected {% endif %}>{{reservable_type.name}}</option>
+                    <option value="{{ reservable_type.name }}"
+                        {% if reservable_type.name == selected_reservable_type %}selected{% endif %}>
+                        {{ reservable_type.name }}
+                    </option>
                     {% endfor %}
                 </select>
-                </div>
             </form>
         </div>
 
         <!-- Start time field, end time field, skippership field and error display -->
         <form id="reservationform" method="post">
             {% csrf_token %}
-            <div class="text-red-600">
-                {{ form.non_field_errors }}
+            {% if form.non_field_errors %}
+            <div class="w-full max-w-4xl mx-auto mb-4">
+                {% for error in form.non_field_errors %}
+                <p class="text-red-100 bg-red-600/90 rounded-lg px-4 py-2 font-semibold">{{ error }}</p>
+                {% endfor %}
             </div>
-            <div class="bg-white/90 p-4 rounded-3xl border-4 border-black shadow-lg w-4/5 mx-auto text-left">
-                <div class="flex flex-wrap gap-4 justify-center">
+            {% endif %}
+
+            <div class="bg-white/95 p-6 rounded-3xl border-4 border-black shadow-lg w-full max-w-4xl mx-auto text-left">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {% for field in form %}
                     {% if field.name != 'reserved_item' and field.name != 'authorized_userskippership' %}
-                        <div class="flex flex-col items-center text-center min-w-[200px] space-y-2">
-                            <label for="{{ field.id_for_label }}" class="text-3xl font-bold">
-                                {{ field.label }}:
+                        <div class="flex flex-col space-y-1">
+                            <label for="{{ field.id_for_label }}" class="text-lg font-bold text-[#234193]">
+                                {{ field.label }}
                             </label>
-                            <div class="text-3xl font-bold w-full">{{ field }}</div>
+                            <div class="text-lg">{{ field }}</div>
                             {% if field.help_text %}
-                            <p class="text-sm text-gray-500 font-medium">{{ field.help_text }}</p>
+                            <p class="text-sm text-gray-500">{{ field.help_text }}</p>
                             {% endif %}
                             {% for error in field.errors %}
                             <p class="text-red-600 text-sm font-semibold">{{ error }}</p>
@@ -74,157 +92,147 @@
                         </div>
                     {% endif %}
                     {% endfor %}
-                    <div class="text-2xl font-bold flex w-full justify-center">{% trans "Schipper:" %}{{ form.authorized_userskippership }}</div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t-2 border-gray-200">
+                    <label for="{{ form.authorized_userskippership.id_for_label }}"
+                           class="text-lg font-bold text-[#234193] block mb-2">
+                        {% trans "Schipper" %}
+                    </label>
+                    {{ form.authorized_userskippership }}
+                    {% for error in form.authorized_userskippership.errors %}
+                    <p class="text-red-600 text-sm font-semibold mt-1">{{ error }}</p>
+                    {% endfor %}
                 </div>
             </div>
 
             <!-- List of items -->
-            <div class="grid-cols-1 w-3/5 justify-self-center mt-4">
+            <div class="w-full max-w-4xl mx-auto mt-8 space-y-4">
                 {% for item in form.reserved_item.field.queryset %}
-                    <!-- Item selection -->
-                    <div class="text-3xl font-medium text-gray-900 flex items-stretch grid grid-cols-3" role="group">
-                        <input type="radio"
-                            value="{{ item.pk }}"
-                            name="{{ form.reserved_item.name }}"
-                            id="reserved_item_{{ forloop.counter }}"
-                            class="peer hidden" required>
+                <div class="relative">
+                    <input type="radio"
+                           value="{{ item.pk }}"
+                           name="{{ form.reserved_item.name }}"
+                           id="reserved_item_{{ forloop.counter }}"
+                           class="peer hidden"
+                           required>
 
                     <label for="reserved_item_{{ forloop.counter }}"
-                           class="w-full p-4 mb-4 text-left border-4 border-black rounded-s-3xl shadow-lg bg-white peer-checked:bg-gray-400">
-                        {{ item.name }}
-                    </label>
+                           class="flex flex-col sm:flex-row items-stretch bg-white border-4 border-black rounded-2xl shadow-lg overflow-hidden cursor-pointer transition peer-checked:ring-4 peer-checked:ring-[#1BB1E6] peer-checked:bg-gray-50">
+                        <div class="flex-1 flex items-center p-4">
+                            <span class="text-2xl font-medium text-gray-900">{{ item.name }}</span>
+                        </div>
 
-                    <!-- Availability display -->
-                    {% if item.is_reservable %}
-                    <div id="availability_{{ forloop.counter }}"
-                         class="available border-black py-4 mb-4 border-4 shadow-lg ">
-                            {% trans "Beschikbaar" %}
-                    </div>
-                    {% else %}
-                    <div
-                         class="not-available border-black py-4 mb-4 border-4 shadow-lg ">
-                            {% trans "Niet beschikbaar" %}
-                    </div>
-                    {% endif %}
+                        <div id="availability_{{ forloop.counter }}"
+                             class="{% if item.is_reservable %}available bg-green-100 text-green-800{% else %}not-available bg-red-100 text-red-800{% endif %} flex items-center justify-center px-6 py-4 font-semibold text-lg border-t-4 sm:border-t-0 sm:border-l-4 border-black">
+                            {% if item.is_reservable %}{% trans "Beschikbaar" %}{% else %}{% trans "Niet beschikbaar" %}{% endif %}
+                        </div>
 
-                    <!-- Listener to change availability based on start and end time -->
-                    <script>
-                        {% trans "Beschikbaar" as available_text %}
-                        {% trans "Niet beschikbaar" as unavailable_text %}
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const startInput = document.querySelector("input[name='start']");
-                            const endInput = document.querySelector("input[name='end']");
-                            const statusDiv = document.getElementById("availability_{{ forloop.counter }}");
-
-                            async function validateAvailability() {
-                                const start = startInput?.value;
-                                const end = endInput?.value;
-                                const item = "{{ item.pk }}";
-                                const object_pk = "{{ object.pk }}"
-
-                                if (!start || !end || !item) return;
-
-                                try {
-                                    const response = await fetch(`../check-availability?start=${start}&end=${end}&reserved_item=${item}&object_pk=${object_pk}`);
-                                    const data = await response.json();
-
-                                    if (data.available) {
-                                        statusDiv.textContent = "{{ available_text|escapejs }}";
-                                        statusDiv.classList.remove("not-available");
-                                        statusDiv.classList.add("available");
-                                    }
-                                    else {
-                                        statusDiv.textContent = "{{ unavailable_text|escapejs }}";
-                                        statusDiv.classList.remove("available");
-                                        statusDiv.classList.add("not-available");
-                                    }
-                                }
-                                catch (err) {
-                                    console.error("Error checking availability:", err);
-                                }
-                            }
-
-                            startInput?.addEventListener("change", validateAvailability);
-                            endInput?.addEventListener("change", validateAvailability);
-                        });
-                    </script>
-
-                    <!-- Information display per item -->
-                    <details class="open flex" name="open">
-                        <summary
-                                 class="w-full place-content-center p-4 mb-4 border-4 border-black rounded-e-3xl shadow-lg bg-white hover:bg-gray-200">
+                        <button type="button"
+                                onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('info_{{ forloop.counter }}').classList.remove('hidden')"
+                                class="px-6 py-4 font-semibold text-lg bg-gray-50 hover:bg-gray-200 border-t-4 sm:border-t-0 sm:border-l-4 border-black transition-colors">
                             {% trans "Info" %}
-                        </summary>
-                        <div
-                             class="p-4 py-8 bg-white inset-0 rounded-2xl w-1/2 h-2/5 border-4 border-black my-auto mx-auto fixed">
-                            <span onclick="this.closest('details').removeAttribute('open')"
-                                  class="bg-[#1BB1E6] rounded-full flex items-center justify-center font-bold uppercase absolute -right-4 -top-4 w-10 h-10 text-white hover:bg-blue-300">
-                                X
-                            </span>
-                            <h1 class="text-[#234193] font-bold">
-                                {{ item.name }}
-                            </h1>
-
-                                <p class="text-2xl my-3">
-                                    {{ item.description }}
-                                </p>
-                                {% if item.location != 0 %}
-                                    <p class="text-2xl my-3">
-                                        {% trans "Locatie:" %} {{ item.get_location_display }}
-                                    </p>
-                                {% endif %}
-                                {% if item.reservable_type.category == 1 %}
-                                <div class="text-xl">
-                                    <p class="my-3">
-                                        {% trans "Capaciteit:" %} {{ item.boat.capacity }}
-                                    </p>
-                                    <p class="my-3">
-                                        {% trans "Aanbieder:" %} {{ item.boat.get_fleet_display }}
-                                    </p>
-                                    <p class="my-3">
-                                        {% trans "Motor:" %} {% if item.boat.has_engine %}{% trans "Ja" %}{% else %}{% trans "Nee" %}{% endif %}
-                                    </p>
-                                    <p class="my-3">
-                                        {% if item.boat.requires_skippership != None %}{% trans "Benodigd schipperschap:" %} {{ item.boat.requires_skippership }} {% endif %}
-                                    </p>
-                                </div>
-                                {% elif item.reservable_type.category == 2 %}
-                                <div class="text-xl">
-                                    <p class="my-3">
-                                        {% trans "Capaciteit:" %} {{ item.room.capacity }}
-                                    </p>
-                                </div>
-                                {% elif item.reservable_type.category == 3 %}
-                                <div class="text-xl">
-                                    <p class="my-3">
-                                        {% trans "Maat:" %} {{ item.material.size }}
-                                    </p>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </details>
-
+                        </button>
+                    </label>
                 </div>
+
+                <!-- Information popup per item -->
+                <div id="info_{{ forloop.counter }}"
+                     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+                     onclick="if (event.target === this) this.classList.add('hidden')">
+                    <div class="relative bg-white rounded-2xl border-4 border-black shadow-lg p-6 max-w-lg w-full">
+                        <button type="button"
+                                onclick="document.getElementById('info_{{ forloop.counter }}').classList.add('hidden')"
+                                class="bg-[#1BB1E6] rounded-full flex items-center justify-center font-bold absolute -right-3 -top-3 w-9 h-9 text-white hover:bg-[#234193] transition-colors">
+                            &times;
+                        </button>
+                        <h2 class="text-2xl text-[#234193] font-bold mb-2">{{ item.name }}</h2>
+                        <p class="text-lg text-gray-700 mb-3">{{ item.description }}</p>
+
+                        {% if item.location != 0 %}
+                        <p class="text-lg text-gray-700 mb-1">
+                            <span class="font-semibold">{% trans "Locatie:" %}</span> {{ item.get_location_display }}
+                        </p>
+                        {% endif %}
+
+                        {% if item.reservable_type.category == 1 %}
+                        <div class="text-base text-gray-700 space-y-1 mt-2">
+                            <p><span class="font-semibold">{% trans "Capaciteit:" %}</span> {{ item.boat.capacity }}</p>
+                            <p><span class="font-semibold">{% trans "Aanbieder:" %}</span> {{ item.boat.get_fleet_display }}</p>
+                            <p><span class="font-semibold">{% trans "Motor:" %}</span> {% if item.boat.has_engine %}{% trans "Ja" %}{% else %}{% trans "Nee" %}{% endif %}</p>
+                            {% if item.boat.requires_skippership != None %}
+                            <p><span class="font-semibold">{% trans "Benodigd schipperschap:" %}</span> {{ item.boat.requires_skippership }}</p>
+                            {% endif %}
+                        </div>
+                        {% elif item.reservable_type.category == 2 %}
+                        <div class="text-base text-gray-700 mt-2">
+                            <p><span class="font-semibold">{% trans "Capaciteit:" %}</span> {{ item.room.capacity }}</p>
+                        </div>
+                        {% elif item.reservable_type.category == 3 %}
+                        <div class="text-base text-gray-700 mt-2">
+                            <p><span class="font-semibold">{% trans "Maat:" %}</span> {{ item.material.size }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Listener to change availability based on start and end time -->
+                <script>
+                    {% trans "Beschikbaar" as available_text %}
+                    {% trans "Niet beschikbaar" as unavailable_text %}
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const startInput = document.querySelector("input[name='start']");
+                        const endInput = document.querySelector("input[name='end']");
+                        const statusDiv = document.getElementById("availability_{{ forloop.counter }}");
+
+                        async function validateAvailability() {
+                            const start = startInput?.value;
+                            const end = endInput?.value;
+                            const item = "{{ item.pk }}";
+                            const object_pk = "{{ object.pk }}";
+
+                            if (!start || !end || !item) return;
+
+                            try {
+                                const response = await fetch(`../check-availability?start=${start}&end=${end}&reserved_item=${item}&object_pk=${object_pk}`);
+                                const data = await response.json();
+
+                                if (data.available) {
+                                    statusDiv.textContent = "{{ available_text|escapejs }}";
+                                    statusDiv.classList.remove("not-available", "bg-red-100", "text-red-800");
+                                    statusDiv.classList.add("available", "bg-green-100", "text-green-800");
+                                } else {
+                                    statusDiv.textContent = "{{ unavailable_text|escapejs }}";
+                                    statusDiv.classList.remove("available", "bg-green-100", "text-green-800");
+                                    statusDiv.classList.add("not-available", "bg-red-100", "text-red-800");
+                                }
+                            } catch (err) {
+                                console.error("Error checking availability:", err);
+                            }
+                        }
+
+                        startInput?.addEventListener("change", validateAvailability);
+                        endInput?.addEventListener("change", validateAvailability);
+                    });
+                </script>
                 {% endfor %}
             </div>
-
         </form>
     </section>
 
     <!-- Submit Reservation or cancel -->
-    <section id="submit reservation" class="bg-primary flex flex-col p-8 pb-8">
-        <h1 class="text-5xl font-bold pb-8 mt-4">{% trans "RESERVERING INDIENEN" %}</h1>
-        <form method="post" class="w-4/5 mx-auto">
-            {% csrf_token %}
+    <section id="submit-reservation" class="bg-primary flex flex-col p-8 pb-8">
+        <h1 class="text-4xl font-bold pb-6 text-white text-center">{% trans "RESERVERING INDIENEN" %}</h1>
+        <div class="w-full max-w-2xl mx-auto space-y-4">
             <button type="submit" form="reservationform"
-                    class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-full bg-white/90 hover:bg-gray-400 block text-center">
-                <span class="font-bold text-3xl">{% trans "Reservering indienen" %}</span>
+                    class="w-full p-4 border-4 border-black rounded-2xl shadow-lg bg-[#1BB1E6] hover:bg-[#234193] text-white font-bold text-2xl transition-colors">
+                {% trans "Reservering indienen" %}
             </button>
-        </form>
-        <a href="{% url 'reservations:reservations' %}"
-           class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white/90 hover:bg-gray-400 block text-center">
-            <span class="font-bold text-3xl">{% trans "Annuleer" %}</span>
-        </a>
+            <a href="{% url 'reservations:reservations' %}"
+               class="block w-full p-4 border-4 border-black rounded-2xl shadow-lg bg-white/90 hover:bg-gray-300 text-center font-bold text-2xl transition-colors">
+                {% trans "Annuleer" %}
+            </a>
+        </div>
     </section>
 </div>
 {% endblock %}

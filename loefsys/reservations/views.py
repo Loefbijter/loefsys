@@ -71,7 +71,7 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         ).first()
         if reservable_type:
             form.fields["reservable"].queryset = Reservable.objects.filter(
-                location=self.kwargs.get("location"), reservable_type=reservable_type
+                location=self.kwargs.get("location"), type=reservable_type
             ).order_by("-is_reservable")
 
         return form
@@ -128,7 +128,7 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
         ).first()
         if reservable_type:
             form.fields["reservable"].queryset = Reservable.objects.filter(
-                location=self.kwargs.get("location"), reservable_type=reservable_type
+                location=self.kwargs.get("location"), type=reservable_type
             ).order_by("-is_reservable")
 
         return form
