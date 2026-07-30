@@ -44,6 +44,10 @@
   --color-destructive-foreground: oklch(1 0 0);
   --color-destructive-accent: oklch(0.65 0.2 30);
 
+  --color-success: oklch(0.7 0.15 145);
+  --color-success-foreground: oklch(0.15 0 0);
+  --color-success-accent: oklch(0.8 0.15 145);
+
   --radius: 0.5rem;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);

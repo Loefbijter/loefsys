@@ -3,10 +3,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .reservable import ReservableItem
+from .reservable import Reservable
 
 
-class Material(ReservableItem):
+class ReservableMaterial(Reservable):
     """Describes a material item that can be reserved.
 
     A gear-piece is any wearable item used for sailing. It is of a type and has a size

@@ -6,6 +6,7 @@ is loaded to populate the environment variables.
 
 from dotenv import load_dotenv
 
+from .logging import LoggingSettings
 from .storage import StorageSettings
 
 # fmt: off
@@ -40,7 +41,7 @@ class Settings(
     # SecuritySettings,
     AuthSettings,
     EmailSettings,
-    # LoggingSettings,
+    LoggingSettings,
     TemplateSettings,
     BaseSettings,
     TestSettings,
