@@ -236,6 +236,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         """
         if not self.published or not self.registration_deadline:
             return False
+        if self.registration_start is None:
+            return timezone.now() < self.registration_deadline
         return self.registration_start < timezone.now() < self.registration_deadline
 
     def max_capacity_reached(self) -> bool:

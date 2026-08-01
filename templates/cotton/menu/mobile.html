@@ -1,28 +1,57 @@
-<nav class="md:hidden flex items-center justify-between gap-4 p-4 bg-primary text-primary-foreground">
-    <c-logo />
-    <div class="flex items-center gap-2">
-        <div class="relative" id="mobile-about-menu">
-            <button id="about-toggle-mobile" data-target="#about-dropdown-mobile" aria-expanded="false" aria-haspopup="true" class="about-toggle font-bold hover:underline flex items-center gap-1 py-2 px-3 rounded whitespace-nowrap">
-                Over ons
-                <svg class="about-chevron w-4 h-4 transition-transform duration-200 flex-shrink-0" style="transform: rotate(0deg);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg>
-            </button>
-            <div id="about-dropdown-mobile" role="menu" class="about-dropdown hidden absolute right-0 mt-2 w-56 bg-white rounded shadow-xl border border-gray-200 z-50">
-                <a href="{% url 'home:association-information' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
-                    Over de Vereniging
-                </a>
-                <a href="{% url 'home:schipperschap' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
-                    Schipperschap
-                </a>
-                <a href="{% url 'home:styleguide' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
-                    Styleguide
-                </a>
-                <a href="{% url 'home:verenigingslied' %}" role="menuitem" class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
-                    Verenigingslied
-                </a>
-            </div>
-        </div>
+{% load static %}
+<style>
+#mobile-menu-toggle-checkbox:checked ~ #mobile-slide-overlay {
+    display: block;
+    opacity: 0.4;
+}
+#mobile-menu-toggle-checkbox:checked ~ #mobile-slide-menu {
+    transform: translateX(0);
+}
+#mobile-slide-overlay {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+#mobile-slide-menu {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+</style>
+<input id="mobile-menu-toggle-checkbox" type="checkbox" class="hidden" aria-hidden="true">
+<nav class="sticky top-0 z-50 bg-primary text-primary-foreground shadow-sm">
+    <div class="flex items-center justify-between gap-3 p-4">
+        <label for="mobile-menu-toggle-checkbox" class="flex items-center gap-3 rounded-full border border-primary-foreground/20 bg-background/90 px-3 py-2 text-left shadow-sm hover:bg-background transition cursor-pointer">
+            <img src="{% static 'loefbijter-logo.svg' %}" alt="Loefbijter logo" class="w-10 h-auto">
+            <span class="sr-only">Toggle navigation</span>
+        </label>
+        <c-profile-icon />
     </div>
-    <c-profile-icon class="ml-auto" />
 </nav>
+<label for="mobile-menu-toggle-checkbox" id="mobile-slide-overlay" class="fixed inset-0 bg-black/30 opacity-0" style="z-index:950;"></label>
+<div id="mobile-slide-menu" class="fixed inset-y-0 left-0 flex w-72 max-w-full flex-col overflow-y-auto border-r border-gray-200 bg-white text-foreground shadow-xl" style="z-index:1100;">
+    <div class="flex items-center justify-between gap-3 border-b border-gray-200 p-4">
+        <div class="flex items-center gap-3">
+            <img src="{% static 'loefbijter-logo.svg' %}" alt="Loefbijter logo" class="w-10 h-auto">
+            <span class="font-semibold">Loefbijter</span>
+        </div>
+        <label for="mobile-menu-toggle-checkbox" aria-label="Close navigation" class="rounded-full p-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </label>
+    </div>
+    <nav class="flex-1 p-4 space-y-2" aria-label="Mobile navigation">
+        <a href="{% url 'events:events' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Activiteiten</a>
+        <a href="{% url 'reservations:reservations' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Reserveringen</a>
+        <!-- <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Reserveer</a>
+        <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Gallerij</a> -->
+        <div class="border-t border-gray-200 pt-4 mt-4">
+            <p class="px-4 pb-2 text-xs uppercase tracking-wide text-gray-500">Over ons</p>
+            <a href="{% url 'home:association-information' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Over de Vereniging</a>
+            <a href="{% url 'home:schipperschap' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Schipperschap</a>
+            <a href="{% url 'home:styleguide' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Styleguide</a>
+            <a href="{% url 'home:verenigingslied' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Verenigingslied</a>
+        </div>
+    </nav>
+</div>
+<script src="{% static 'JS/navbar.js' %}" defer></script>

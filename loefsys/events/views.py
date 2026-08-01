@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.formats import date_format
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
@@ -59,9 +60,9 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             "registration_button_text": self.get_registration_button_text(
                 user_registration
             ),
-            "registration_disabled": (
-                not self.object.registrations_open()
-                and not self.object.cancelation_window_open()
+            "registration_disabled": self.get_registration_disabled(user_registration),
+            "registration_disabled_reason": self.get_registration_disabled_reason(
+                user_registration
             ),
             "can_view_attendees": can_view_attendees,
             "attendees": (
@@ -104,7 +105,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         # Only cancel if cancellation deadline is NOT due or
         # it is due and consent was given to be fined
         if (
-            not self.get_object().cancelation_deadline < timezone.now()
+            self.get_object().cancelation_window_open()
             or request.POST.get("fine-consent") is not None
         ):
             self.get_registration_for_current_user().cancel()
@@ -125,38 +126,72 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     ) -> str:
         """Determine the text for the registration button for user and event status."""
         obj = self.object
-        text = _("Register")  # Default text for users without registration
+        text = _("Inschrijven")  # Default text for users without registration
         if registration:
             deadline = obj.cancelation_deadline or obj.registration_deadline
-            if not (obj.registrations_open() and timezone.now() < deadline):
-                text = _("Can't deregister")
-
             if registration.get_queue_position is not None:
-                text = _("Leave queue")
-
-            if timezone.now() < deadline:
-                text = _("Deregister")
-
-            if obj.fine > 0:
-                # TODO: implement replacement registration when someone is in the queue
-                text = _("Deregister (with fine)")
-
-            text = _("Registered")
+                text = _("Verlaat wachtrij")
+            elif obj.cancelation_window_open():
+                text = _("Afmelden")
+            elif obj.fine_on_cancellation():
+                text = _("Afmelden (met boete)")
+            else:
+                text = _("Kan niet afmelden")
+        elif not obj.registrations_open():
+            if obj.registration_start and timezone.now() < obj.registration_start:
+                text = _("Inschrijven vanaf %(date)s") % {
+                    "date": date_format(obj.registration_start, "DATETIME_FORMAT")
+                }
+            else:
+                text = _("Inschrijvingen gesloten")
+        elif obj.max_capacity_reached():
+            text = _("In wachtrij")
         else:
-            if not obj.registrations_open():
-                text = (
-                    _("Can't register yet")
-                    if timezone.now() < obj.registration_start
-                    else _("Registration closed")
-                )
-
-            if obj.max_capacity_reached():
-                text = _("Join queue")
-
-            # TODO: implement agreement to fine
-            text = _("Register")
+            text = _("Inschrijven")
 
         return text
+
+    def get_registration_disabled(self, registration: EventRegistration | None) -> bool:
+        """Determine whether the registration button should be disabled."""
+        if registration is not None:
+            return not self.object.cancelation_window_open()
+
+        return not self.object.registrations_open()
+
+    def get_registration_disabled_reason(
+        self, registration: EventRegistration | None
+    ) -> str:
+        """Return the reason why registration is disabled."""
+        obj = self.object
+        if registration is not None:
+            if obj.cancelation_window_open():
+                return ""
+            if obj.fine_on_cancellation():
+                return _("Afmelden kan leiden tot een boete.")
+            return _("Afmelden is niet meer mogelijk.")
+
+        if not obj.published:
+            return _(
+                "Inschrijvingen zijn niet geopend omdat dit evenement niet gepubliceerd is."
+            )
+        if (
+            obj.registration_start is not None
+            and timezone.now() < obj.registration_start
+        ):
+            return _("Inschrijven vanaf %(date)s.") % {
+                "date": date_format(obj.registration_start, "DATETIME_FORMAT")
+            }
+        if (
+            obj.registration_deadline is None
+            or timezone.now() > obj.registration_deadline
+        ):
+            if obj.registration_deadline is None:
+                return _("Inschrijvingen zijn gesloten.")
+            return _("Inschrijvingen zijn gesloten op %(date)s.") % {
+                "date": date_format(obj.registration_deadline, "DATETIME_FORMAT")
+            }
+
+        return _("Inschrijvingen zijn momenteel gesloten.")
 
 
 class RegistrationFormView(LoginRequiredMixin, FormView):

@@ -9,7 +9,7 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("loefsys.home.urls"), name="home"),
-    path("", include("loefsys.members.urls"), name="members"),
+    path("", include("loefsys.members.urls", namespace="members")),
     # path("profile/", include("loefsys.profile.urls"), name="profile"),
     path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
     path("events/", include("loefsys.events.urls"), name="events"),

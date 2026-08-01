@@ -15,20 +15,37 @@
 
   <div class="flex flex-col space-y-4 lg:space-x-4 lg:space-y-0 lg:flex-row justify-center items-center lg:items-stretch">
 
-    {% if event.picture %}
     <c-card class="flex w-full flex-col space-y-4 items-center justify-between lg:w-fit">
       <div
         class="max-h-full max-w-64 flex-none overflow-hidden justify-center aspect-square rounded-lg shadow-2xl bg-background border-4 border-secondary">
+        {% if event.picture %}
         <img class="object-contain" src="{{ event.picture.url }}" alt="Event Picture" />
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-400 text-6xl">
+          <i class="bi bi-calendar-event"></i>
+        </div>
+        {% endif %}
       </div>
 
-      <c-button id="registration-button" class="max-w-64"
-        disabled="{{ registration_disabled|yesno:'true,false' }}">
-        {{ registration_button_text }}
-      </c-button>
+      <form method="post" class="w-full flex flex-col items-center justify-center">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="{% if registration_active %}cancel{% else %}register{% endif %}" />
+        <button id="registration-button" type="submit"
+          class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 bg-secondary text-secondary-foreground border-t-2 border-secondary-accent hover:bg-tertiary hover:text-tertiary-foreground hover:border-tertiary-accent h-8 px-4 py-2 max-w-64"
+          {% if registration_disabled %}disabled{% endif %}
+          title="{{ registration_disabled_reason }}">
+          {{ registration_button_text }}
+        </button>
+        {% if registration_disabled and registration_disabled_reason %}
+        <span class="mt-2 inline-flex items-center gap-1 text-xs text-gray-500 cursor-help"
+          title="{{ registration_disabled_reason }}" aria-label="{{ registration_disabled_reason }}">
+          <i class="bi bi-question-circle"></i>
+        </span>
+        {% endif %}
+      </form>
 
       {% if not event.registration_window_open %}
-      {% translate "Register" as register %}
+      {% translate "Inschrijven" as register %}
 
       {% compress js inline %}
       <script>
@@ -46,7 +63,6 @@
       {% endcompress %}
       {% endif %}
     </c-card>
-    {% endif %}
 
     <div class="flex flex-col w-full space-y-4 grow">
 
