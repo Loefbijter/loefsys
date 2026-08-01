@@ -3,6 +3,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from loefsys.members.models.user import User
+
 from .models import Reservable, Reservation
 
 
@@ -13,6 +15,14 @@ class CreateReservationForm(forms.ModelForm):
         label=_("Te reserveren item"),
         queryset=Reservable.objects.none(),
         widget=forms.RadioSelect,
+    )
+    authorized_userskippership = forms.ModelChoiceField(
+        label=_("Kies een schipper"),
+        queryset=User.objects.filter(is_active=True).order_by(
+            "last_name", "first_name"
+        ),
+        required=False,
+        empty_label=_("Geen schipper geselecteerd"),
     )
     start = forms.DateTimeField(
         label=_("Starttijd"),
@@ -29,9 +39,14 @@ class CreateReservationForm(forms.ModelForm):
         ),
     )
 
+    @property
+    def reserved_item(self):
+        """Return the selected reservable item."""
+        return self["reservable"]
+
     class Meta:
         model = Reservation
-        fields = ("reservable", "start", "end")
+        fields = ("reservable", "start", "end", "authorized_userskippership")
 
 
 class SortByReservationForm(forms.Form):

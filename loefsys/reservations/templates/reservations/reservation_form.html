@@ -6,233 +6,591 @@
 {% endblock %}
 
 {% block content %}
-<div class="bg-primary relative flex flex-col">
-    <section class="bg-secondary p-8 w-full">
-        <h1 class="text-5xl font-bold text-white text-center">{% trans "RESERVEREN" %}</h1>
+<div class="bg-primary relative flex flex-col min-h-screen pb-32">
+
+    <!-- ============ HEADER ============ -->
+    <section class="bg-secondary p-6 sm:p-8 w-full">
+        <h1 class="text-4xl sm:text-5xl font-bold text-white text-center">{% trans "RESERVEREN" %}</h1>
+        <p class="text-white/80 text-center text-lg mt-2 max-w-xl mx-auto">
+            {% trans "Kies een locatie, een periode en de boot of ruimte die je wilt reserveren." %}
+        </p>
 
         <!-- Location tabs -->
         <nav class="flex justify-center items-center mt-6">
-            <ul class="flex flex-wrap text-2xl md:text-3xl font-medium text-center">
+            <ul class="flex flex-wrap gap-2 text-lg sm:text-xl font-semibold text-center">
                 <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 1 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       class="uppercase inline-block px-5 py-2.5 rounded-full border-2 transition-colors duration-200 {% if location == 1 %}bg-white text-secondary border-white{% else %}bg-transparent text-white border-white/40 hover:border-white{% endif %}"
                        aria-current="{% if location == 1 %}page{% else %}false{% endif %}">
                         {% trans "Board Room" %}
                     </a>
                 </li>
                 <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '2' %}{% else %}{% url 'reservations:reservation-add' '2' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 2 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       class="uppercase inline-block px-5 py-2.5 rounded-full border-2 transition-colors duration-200 {% if location == 2 %}bg-white text-secondary border-white{% else %}bg-transparent text-white border-white/40 hover:border-white{% endif %}"
                        aria-current="{% if location == 2 %}page{% else %}false{% endif %}">
                         {% trans "Bastion" %}
                     </a>
                 </li>
                 <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '3' %}{% else %}{% url 'reservations:reservation-add' '3' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 3 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       class="uppercase inline-block px-5 py-2.5 rounded-full border-2 transition-colors duration-200 {% if location == 3 %}bg-white text-secondary border-white{% else %}bg-transparent text-white border-white/40 hover:border-white{% endif %}"
                        aria-current="{% if location == 3 %}page{% else %}false{% endif %}">
                         {% trans "Kraaij" %}
                     </a>
                 </li>
                 <li>
                     <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '0' %}{% else %}{% url 'reservations:reservation-add' '0' %}{% endif %}"
-                       class="uppercase inline-block px-4 py-3 border-b-4 transition-colors duration-200 {% if location == 0 %}border-white text-white font-bold{% else %}border-transparent text-gray-300 hover:text-white{% endif %}"
+                       class="uppercase inline-block px-5 py-2.5 rounded-full border-2 transition-colors duration-200 {% if location == 0 %}bg-white text-secondary border-white{% else %}bg-transparent text-white border-white/40 hover:border-white{% endif %}"
                        aria-current="{% if location == 0 %}page{% else %}false{% endif %}">
                         {% trans "Overige" %}
                     </a>
                 </li>
             </ul>
         </nav>
+    </section>
 
-        <!-- Filter for boat reservable types -->
-        <div class="flex justify-center my-6">
-            <form method="get" class="flex items-center gap-3">
-                {% csrf_token %}
-                <label for="id_reservable_type" class="text-xl text-white font-semibold">{% trans "Filter:" %}</label>
-                <select id="id_reservable_type"
-                        class="text-lg text-black rounded-lg px-3 py-2 border-2 border-black shadow focus:outline-none focus:ring-2 focus:ring-[#1BB1E6]"
-                        name="reservable_type" onchange="this.form.submit()">
-                    <option value="">{% trans "Alle types" %}</option>
-                    {% for reservable_type in reservable_types %}
-                    <option value="{{ reservable_type.name }}"
-                        {% if reservable_type.name == selected_reservable_type %}selected{% endif %}>
-                        {{ reservable_type.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </form>
+    <form id="reservationform" method="post" class="w-full">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="w-full max-w-4xl mx-auto mt-6 px-4">
+            {% for error in form.non_field_errors %}
+            <p class="text-red-100 bg-red-600/90 rounded-lg px-4 py-2 font-semibold">{{ error }}</p>
+            {% endfor %}
         </div>
+        {% endif %}
 
-        <!-- Start time field, end time field, skippership field and error display -->
-        <form id="reservationform" method="post">
-            {% csrf_token %}
-            {% if form.non_field_errors %}
-            <div class="w-full max-w-4xl mx-auto mb-4">
-                {% for error in form.non_field_errors %}
-                <p class="text-red-100 bg-red-600/90 rounded-lg px-4 py-2 font-semibold">{{ error }}</p>
-                {% endfor %}
-            </div>
-            {% endif %}
+        <div class="max-w-4xl mx-auto px-4 sm:px-0 space-y-6 mt-6">
 
-            <div class="bg-white/95 p-6 rounded-3xl border-4 border-black shadow-lg w-full max-w-4xl mx-auto text-left">
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- ============ STEP 1: PERIOD ============ -->
+            <div class="bg-white/95 p-6 rounded-3xl border-4 border-black shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-9 h-9 rounded-full bg-[#234193] text-white font-bold text-lg shrink-0">1</span>
+                    <h2 class="text-2xl font-bold text-[#234193]">{% trans "Kies de periode" %}</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {% for field in form %}
-                    {% if field.name != 'reserved_item' and field.name != 'authorized_userskippership' %}
-                        <div class="flex flex-col space-y-1">
-                            <label for="{{ field.id_for_label }}" class="text-lg font-bold text-[#234193]">
-                                {{ field.label }}
-                            </label>
-                            <div class="text-lg">{{ field }}</div>
-                            {% if field.help_text %}
-                            <p class="text-sm text-gray-500">{{ field.help_text }}</p>
-                            {% endif %}
-                            {% for error in field.errors %}
-                            <p class="text-red-600 text-sm font-semibold">{{ error }}</p>
-                            {% endfor %}
-                        </div>
+                    {% if field.name == 'start' or field.name == 'end' %}
+                    <div class="flex flex-col space-y-1">
+                        <label for="{{ field.id_for_label }}" class="text-lg font-bold text-gray-800">
+                            {% if field.name == 'start' %}{% trans "Van" %}{% else %}{% trans "Tot" %}{% endif %}
+                        </label>
+                        <div class="text-lg">{{ field }}</div>
+                        {% if field.help_text %}
+                        <p class="text-sm text-gray-500">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <p class="text-red-600 text-sm font-semibold">{{ error }}</p>
+                        {% endfor %}
+                    </div>
                     {% endif %}
                     {% endfor %}
                 </div>
 
-                <div class="mt-6 pt-6 border-t-2 border-gray-200">
-                    <label for="{{ form.authorized_userskippership.id_for_label }}"
-                           class="text-lg font-bold text-[#234193] block mb-2">
-                        {% trans "Schipper" %}
+                <!-- Quick duration helpers -->
+                <div class="mt-4">
+                    <p class="text-sm text-gray-500 mb-2">
+                        {% trans "Snel instellen (past de eindtijd automatisch aan):" %}
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" data-duration-hours="1"
+                                class="quick-duration px-4 py-2 rounded-full border-2 border-black bg-gray-50 hover:bg-[#1BB1E6] hover:text-white font-semibold transition-colors">
+                            1 {% trans "uur" %}
+                        </button>
+                        <button type="button" data-duration-hours="2"
+                                class="quick-duration px-4 py-2 rounded-full border-2 border-black bg-gray-50 hover:bg-[#1BB1E6] hover:text-white font-semibold transition-colors">
+                            2 {% trans "uur" %}
+                        </button>
+                        <button type="button" data-duration-hours="3"
+                                class="quick-duration px-4 py-2 rounded-full border-2 border-black bg-gray-50 hover:bg-[#1BB1E6] hover:text-white font-semibold transition-colors">
+                            3 {% trans "uur" %}
+                        </button>
+                        <button type="button" id="quick-fullday"
+                                class="quick-duration px-4 py-2 rounded-full border-2 border-black bg-gray-50 hover:bg-[#1BB1E6] hover:text-white font-semibold transition-colors">
+                            {% trans "Hele dag" %}
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">
+                        {% trans "Wil je meerdere dagen reserveren? Kies gewoon een latere einddatum." %}
+                    </p>
+                </div>
+            </div>
+
+            <!-- ============ STEP 2: TYPE FILTER ============ -->
+            <div class="bg-white/95 p-6 rounded-3xl border-4 border-black shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-9 h-9 rounded-full bg-[#234193] text-white font-bold text-lg shrink-0">2</span>
+                    <h2 class="text-2xl font-bold text-[#234193]">{% trans "Filter op type" %}</h2>
+                </div>
+                <div class="flex flex-wrap gap-2" role="group" aria-label="{% trans 'Filter op type' %}">
+                    <label class="filter-chip">
+                        <input type="radio" name="reservable_type_display" value="" class="hidden peer"
+                               {% if not selected_reservable_type %}checked{% endif %}
+                               onchange="document.getElementById('reservable_type_hidden').value=''; document.getElementById('filterform').submit();">
+                        <span class="inline-block px-4 py-2 rounded-full border-2 border-black cursor-pointer font-semibold transition-colors peer-checked:bg-[#1BB1E6] peer-checked:text-white hover:bg-gray-100">
+                            {% trans "Alles" %}
+                        </span>
+                    </label>
+                    {% for reservable_type in reservable_types %}
+                    <label class="filter-chip {% if forloop.counter > 4 and reservable_type.name != selected_reservable_type %}hidden extra-reservable-type{% endif %}">
+                        <input type="radio" name="reservable_type_display" value="{{ reservable_type.name }}" class="hidden peer"
+                               {% if reservable_type.name == selected_reservable_type %}checked{% endif %}
+                               onchange="document.getElementById('reservable_type_hidden').value='{{ reservable_type.name|escapejs }}'; document.getElementById('filterform').submit();">
+                        <span class="inline-block px-4 py-2 rounded-full border-2 border-black cursor-pointer font-semibold transition-colors peer-checked:bg-[#1BB1E6] peer-checked:text-white hover:bg-gray-100">
+                            {{ reservable_type.name }}
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% if reservable_types|length > 4 %}
+                <div class="mt-3">
+                    <button type="button" id="toggle-reservable-types" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-black bg-white font-semibold text-gray-900 hover:bg-gray-100 transition-colors">
+                        <span>{% trans "Toon meer" %}</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- ============ STEP 3: BOATS / ITEMS ============ -->
+            <div class="bg-white/95 p-6 rounded-3xl border-4 border-black shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-9 h-9 rounded-full bg-[#234193] text-white font-bold text-lg shrink-0">3</span>
+                    <h2 class="text-2xl font-bold text-[#234193]">{% trans "Kies een boot of ruimte" %}</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="item-grid">
+                    {% for item in form.reservable.field.queryset %}
+                    <div class="relative {% if forloop.counter > 6 and item.pk|stringformat:'s' != form.reservable.value|stringformat:'s' %}hidden extra-reservable-item{% endif %}">
+                        <input type="radio"
+                               value="{{ item.pk }}"
+                               name="{{ form.reservable.name }}"
+                               id="reservable_{{ forloop.counter }}"
+                               data-item-name="{{ item.name }}"
+                               class="peer hidden item-radio"
+                               required>
+
+                        <label for="reservable_{{ forloop.counter }}"
+                               class="flex items-center gap-3 bg-white border-2 border-black rounded-xl shadow-sm px-4 py-3 cursor-pointer transition hover:shadow-md peer-checked:ring-4 peer-checked:ring-[#1BB1E6] peer-checked:bg-blue-50">
+
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <p class="font-bold text-gray-900 truncate">{{ item.name }}</p>
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] uppercase font-semibold text-slate-700">
+                                        <i class="bi bi-tag"></i>
+                                        {{ item.type.name }}
+                                    </span>
+                                    {% if item.type.category == 3 %}
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700">
+                                        <i class="bi bi-rulers"></i>
+                                        {{ item.material.size }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                {% if item.location != 0 %}
+                                <p class="text-xs text-gray-500 mt-1 inline-flex items-center gap-1">
+                                    <i class="bi bi-geo-alt"></i> {{ item.get_location_display }}
+                                </p>
+                                {% endif %}
+                            </div>
+
+                            <span id="availability_{{ forloop.counter }}"
+                                  data-item-pk="{{ item.pk }}"
+                                  class="item-availability shrink-0 {% if item.is_reservable %}available bg-green-100 text-green-800{% else %}not-available bg-red-100 text-red-800{% endif %} rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-center">
+                                {% if item.is_reservable %}{% trans "Vrij" %}{% else %}{% trans "Bezet" %}{% endif %}
+                            </span>
+
+                            <button type="button"
+                                    onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('info_{{ forloop.counter }}').classList.remove('hidden')"
+                                    class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full border-2 border-gray-300 text-gray-500 hover:border-[#1BB1E6] hover:text-[#1BB1E6] transition-colors"
+                                    aria-label="{% trans 'Meer info' %}">
+                                <i class="bi bi-info-lg"></i>
+                            </button>
+                        </label>
+                    </div>
+
+                    <!-- Info popup per item -->
+                    <div id="info_{{ forloop.counter }}"
+                         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+                         onclick="if (event.target === this) this.classList.add('hidden')">
+                        <div class="relative bg-white rounded-2xl border-4 border-black shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto">
+                            <div class="bg-[#234193] rounded-t-xl px-6 py-5 relative">
+                                <button type="button"
+                                        onclick="document.getElementById('info_{{ forloop.counter }}').classList.add('hidden')"
+                                        class="bg-[#1BB1E6] rounded-full flex items-center justify-center font-bold absolute -right-3 -top-3 w-9 h-9 text-white hover:bg-white hover:text-[#234193] transition-colors">
+                                    &times;
+                                </button>
+                                <p class="text-white/70 text-xs uppercase font-semibold tracking-wide">{{ item.type.name }}</p>
+                                <h2 class="text-2xl text-white font-bold">{{ item.name }}</h2>
+                                <span class="inline-block mt-2 {% if item.is_reservable %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %} rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide">
+                                    {% if item.is_reservable %}{% trans "Beschikbaar" %}{% else %}{% trans "Niet beschikbaar" %}{% endif %}
+                                </span>
+                            </div>
+
+                            <div class="p-6 space-y-4">
+                                <p class="text-gray-700 leading-relaxed">{{ item.description }}</p>
+
+                                {% if item.location != 0 %}
+                                <p class="inline-flex items-center gap-1 text-sm text-gray-500">
+                                    <i class="bi bi-geo-alt"></i> {{ item.get_location_display }}
+                                </p>
+                                {% endif %}
+
+                                {% if item.type.category == 1 %}
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+                                        <i class="bi bi-people-fill text-xl text-[#234193]"></i>
+                                        <div>
+                                            <p class="text-[11px] uppercase font-semibold text-gray-500">{% trans "Capaciteit" %}</p>
+                                            <p class="font-bold text-gray-900">{{ item.boat.capacity }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+                                        <i class="bi bi-fuel-pump text-xl text-[#234193]"></i>
+                                        <div>
+                                            <p class="text-[11px] uppercase font-semibold text-gray-500">{% trans "Motor" %}</p>
+                                            <p class="font-bold text-gray-900">{% if item.boat.has_engine %}{% trans "Ja" %}{% else %}{% trans "Nee" %}{% endif %}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+                                        <i class="bi bi-anchor text-xl text-[#234193]"></i>
+                                        <div>
+                                            <p class="text-[11px] uppercase font-semibold text-gray-500">{% trans "Aanbieder" %}</p>
+                                            <p class="font-bold text-gray-900">{{ item.boat.get_fleet_display }}</p>
+                                        </div>
+                                    </div>
+                                    {% if item.boat.requires_skippership != None %}
+                                    <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+                                        <i class="bi bi-mortarboard-fill text-xl text-[#234193]"></i>
+                                        <div>
+                                            <p class="text-[11px] uppercase font-semibold text-gray-500">{% trans "Schipperschap" %}</p>
+                                            <p class="font-bold text-gray-900">{{ item.boat.requires_skippership }}</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% elif item.type.category == 2 %}
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+                                        <i class="bi bi-people-fill text-xl text-[#234193]"></i>
+                                        <div>
+                                            <p class="text-[11px] uppercase font-semibold text-gray-500">{% trans "Capaciteit" %}</p>
+                                            <p class="font-bold text-gray-900">{{ item.room.capacity }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% elif item.type.category == 3 %}
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="flex items-center gap-3 bg-gray-100 rounded-xl p-3">
+                                        <i class="bi bi-rulers text-xl text-[#234193]"></i>
+                                        <div>
+                                            <p class="text-[11px] uppercase font-semibold text-gray-500">{% trans "Maat" %}</p>
+                                            <p class="font-bold text-gray-900">{{ item.material.size }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if form.reservable.field.queryset|length > 6 %}
+                <div class="mt-4">
+                    <button type="button" id="toggle-item-list" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-black bg-white font-semibold text-gray-900 hover:bg-gray-100 transition-colors">
+                        <span>{% trans "Toon meer" %}</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- ============ STEP 4: SCHIPPER ============ -->
+            <div class="bg-white/95 p-6 rounded-3xl border-4 border-black shadow-lg">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="flex items-center justify-center w-9 h-9 rounded-full bg-[#234193] text-white font-bold text-lg shrink-0">4</span>
+                    <h2 class="text-2xl font-bold text-[#234193]">{% trans "Schipper" %}</h2>
+                </div>
+
+                <div class="flex gap-2 mb-4" role="group" aria-label="{% trans 'Schipper keuze' %}">
+                    <label class="skipper-mode-option">
+                        <input type="radio" name="skipper_mode" value="existing" class="hidden peer" checked>
+                        <span class="inline-block px-4 py-2 rounded-full border-2 border-black cursor-pointer font-semibold transition-colors peer-checked:bg-[#234193] peer-checked:text-white hover:bg-gray-100">
+                            {% trans "Bestaande schipper" %}
+                        </span>
+                    </label>
+                    <label class="skipper-mode-option">
+                        <input type="radio" name="skipper_mode" value="new" class="hidden peer">
+                        <span class="inline-block px-4 py-2 rounded-full border-2 border-black cursor-pointer font-semibold transition-colors peer-checked:bg-[#234193] peer-checked:text-white hover:bg-gray-100">
+                            {% trans "Nieuwe schipper toevoegen" %}
+                        </span>
+                    </label>
+                </div>
+
+                <div id="skipper-existing-wrap">
+                    <label for="{{ form.authorized_userskippership.id_for_label }}" class="text-lg font-bold text-gray-800 block mb-2">
+                        {% trans "Kies een schipper" %}
                     </label>
                     {{ form.authorized_userskippership }}
                     {% for error in form.authorized_userskippership.errors %}
                     <p class="text-red-600 text-sm font-semibold mt-1">{{ error }}</p>
                     {% endfor %}
                 </div>
-            </div>
 
-            <!-- List of items -->
-            <div class="w-full max-w-4xl mx-auto mt-8 space-y-4">
-                {% for item in form.reserved_item.field.queryset %}
-                <div class="relative">
-                    <input type="radio"
-                           value="{{ item.pk }}"
-                           name="{{ form.reserved_item.name }}"
-                           id="reserved_item_{{ forloop.counter }}"
-                           class="peer hidden"
-                           required>
-
-                    <label for="reserved_item_{{ forloop.counter }}"
-                           class="flex flex-col sm:flex-row items-stretch bg-white border-4 border-black rounded-2xl shadow-lg overflow-hidden cursor-pointer transition peer-checked:ring-4 peer-checked:ring-[#1BB1E6] peer-checked:bg-gray-50">
-                        <div class="flex-1 flex items-center p-4">
-                            <span class="text-2xl font-medium text-gray-900">{{ item.name }}</span>
-                        </div>
-
-                        <div id="availability_{{ forloop.counter }}"
-                             class="{% if item.is_reservable %}available bg-green-100 text-green-800{% else %}not-available bg-red-100 text-red-800{% endif %} flex items-center justify-center px-6 py-4 font-semibold text-lg border-t-4 sm:border-t-0 sm:border-l-4 border-black">
-                            {% if item.is_reservable %}{% trans "Beschikbaar" %}{% else %}{% trans "Niet beschikbaar" %}{% endif %}
-                        </div>
-
-                        <button type="button"
-                                onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('info_{{ forloop.counter }}').classList.remove('hidden')"
-                                class="px-6 py-4 font-semibold text-lg bg-gray-50 hover:bg-gray-200 border-t-4 sm:border-t-0 sm:border-l-4 border-black transition-colors">
-                            {% trans "Info" %}
-                        </button>
+                <div id="skipper-new-wrap" class="hidden">
+                    <label for="id_new_skipper_name" class="text-lg font-bold text-gray-800 block mb-2">
+                        {% trans "Naam nieuwe schipper" %}
                     </label>
+                    <input type="text" id="id_new_skipper_name" name="new_skipper_name"
+                           placeholder="{% trans 'Volledige naam' %}"
+                           class="w-full text-lg rounded-lg px-3 py-2 border-2 border-black shadow focus:outline-none focus:ring-2 focus:ring-[#1BB1E6]">
+                    <p class="text-sm text-gray-500 mt-1">
+                        {% trans "Deze schipper staat nog niet in het systeem. We nemen contact op om dit te bevestigen." %}
+                    </p>
                 </div>
-
-                <!-- Information popup per item -->
-                <div id="info_{{ forloop.counter }}"
-                     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-                     onclick="if (event.target === this) this.classList.add('hidden')">
-                    <div class="relative bg-white rounded-2xl border-4 border-black shadow-lg p-6 max-w-lg w-full">
-                        <button type="button"
-                                onclick="document.getElementById('info_{{ forloop.counter }}').classList.add('hidden')"
-                                class="bg-[#1BB1E6] rounded-full flex items-center justify-center font-bold absolute -right-3 -top-3 w-9 h-9 text-white hover:bg-[#234193] transition-colors">
-                            &times;
-                        </button>
-                        <h2 class="text-2xl text-[#234193] font-bold mb-2">{{ item.name }}</h2>
-                        <p class="text-lg text-gray-700 mb-3">{{ item.description }}</p>
-
-                        {% if item.location != 0 %}
-                        <p class="text-lg text-gray-700 mb-1">
-                            <span class="font-semibold">{% trans "Locatie:" %}</span> {{ item.get_location_display }}
-                        </p>
-                        {% endif %}
-
-                        {% if item.reservable_type.category == 1 %}
-                        <div class="text-base text-gray-700 space-y-1 mt-2">
-                            <p><span class="font-semibold">{% trans "Capaciteit:" %}</span> {{ item.boat.capacity }}</p>
-                            <p><span class="font-semibold">{% trans "Aanbieder:" %}</span> {{ item.boat.get_fleet_display }}</p>
-                            <p><span class="font-semibold">{% trans "Motor:" %}</span> {% if item.boat.has_engine %}{% trans "Ja" %}{% else %}{% trans "Nee" %}{% endif %}</p>
-                            {% if item.boat.requires_skippership != None %}
-                            <p><span class="font-semibold">{% trans "Benodigd schipperschap:" %}</span> {{ item.boat.requires_skippership }}</p>
-                            {% endif %}
-                        </div>
-                        {% elif item.reservable_type.category == 2 %}
-                        <div class="text-base text-gray-700 mt-2">
-                            <p><span class="font-semibold">{% trans "Capaciteit:" %}</span> {{ item.room.capacity }}</p>
-                        </div>
-                        {% elif item.reservable_type.category == 3 %}
-                        <div class="text-base text-gray-700 mt-2">
-                            <p><span class="font-semibold">{% trans "Maat:" %}</span> {{ item.material.size }}</p>
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Listener to change availability based on start and end time -->
-                <script>
-                    {% trans "Beschikbaar" as available_text %}
-                    {% trans "Niet beschikbaar" as unavailable_text %}
-                    document.addEventListener("DOMContentLoaded", function () {
-                        const startInput = document.querySelector("input[name='start']");
-                        const endInput = document.querySelector("input[name='end']");
-                        const statusDiv = document.getElementById("availability_{{ forloop.counter }}");
-
-                        async function validateAvailability() {
-                            const start = startInput?.value;
-                            const end = endInput?.value;
-                            const item = "{{ item.pk }}";
-                            const object_pk = "{{ object.pk }}";
-
-                            if (!start || !end || !item) return;
-
-                            try {
-                                const response = await fetch(`../check-availability?start=${start}&end=${end}&reserved_item=${item}&object_pk=${object_pk}`);
-                                const data = await response.json();
-
-                                if (data.available) {
-                                    statusDiv.textContent = "{{ available_text|escapejs }}";
-                                    statusDiv.classList.remove("not-available", "bg-red-100", "text-red-800");
-                                    statusDiv.classList.add("available", "bg-green-100", "text-green-800");
-                                } else {
-                                    statusDiv.textContent = "{{ unavailable_text|escapejs }}";
-                                    statusDiv.classList.remove("available", "bg-green-100", "text-green-800");
-                                    statusDiv.classList.add("not-available", "bg-red-100", "text-red-800");
-                                }
-                            } catch (err) {
-                                console.error("Error checking availability:", err);
-                            }
-                        }
-
-                        startInput?.addEventListener("change", validateAvailability);
-                        endInput?.addEventListener("change", validateAvailability);
-                    });
-                </script>
-                {% endfor %}
             </div>
-        </form>
-    </section>
 
-    <!-- Submit Reservation or cancel -->
-    <section id="submit-reservation" class="bg-primary flex flex-col p-8 pb-8">
-        <h1 class="text-4xl font-bold pb-6 text-white text-center">{% trans "RESERVERING INDIENEN" %}</h1>
-        <div class="w-full max-w-2xl mx-auto space-y-4">
-            <button type="submit" form="reservationform"
-                    class="w-full p-4 border-4 border-black rounded-2xl shadow-lg bg-[#1BB1E6] hover:bg-[#234193] text-white font-bold text-2xl transition-colors">
-                {% trans "Reservering indienen" %}
-            </button>
-            <a href="{% url 'reservations:reservations' %}"
-               class="block w-full p-4 border-4 border-black rounded-2xl shadow-lg bg-white/90 hover:bg-gray-300 text-center font-bold text-2xl transition-colors">
-                {% trans "Annuleer" %}
-            </a>
+            <!-- ============ OTHER FIELDS (if any) ============ -->
+            {% for field in form %}
+            {% if field.name != 'reservable' and field.name != 'authorized_userskippership' and field.name != 'start' and field.name != 'end' %}
+            <div class="bg-white/95 p-6 rounded-3xl border-4 border-black shadow-lg other-fields-card">
+                <div class="flex flex-col space-y-1">
+                    <label for="{{ field.id_for_label }}" class="text-lg font-bold text-gray-800">
+                        {{ field.label }}
+                    </label>
+                    <div class="text-lg">{{ field }}</div>
+                    {% if field.help_text %}
+                    <p class="text-sm text-gray-500">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <p class="text-red-600 text-sm font-semibold">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
         </div>
-    </section>
+    </form>
+
+    <!-- Hidden GET form used purely to re-submit the type filter -->
+    <form id="filterform" method="get" class="hidden">
+        <input type="hidden" id="reservable_type_hidden" name="reservable_type" value="{{ selected_reservable_type|default:'' }}">
+        <input type="hidden" name="start" value="{{ request.GET.start|default:'' }}">
+        <input type="hidden" name="end" value="{{ request.GET.end|default:'' }}">
+    </form>
+
+    <!-- ============ FIXED SUBMIT BAR ============ -->
+    <div class="fixed bottom-0 left-0 right-0 z-30 bg-secondary/95 backdrop-blur border-t-4 border-black">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center gap-3">
+            <div class="flex-1 text-center sm:text-left">
+                <p class="text-white/70 text-sm">{% trans "Geselecteerd" %}</p>
+                <p id="selected-item-label" class="text-white text-xl font-bold">{% trans "Nog geen boot of ruimte gekozen" %}</p>
+            </div>
+            <div class="flex gap-3 w-full sm:w-auto">
+                <a href="{% url 'reservations:reservations' %}"
+                   class="flex-1 sm:flex-none text-center px-6 py-3 rounded-2xl border-4 border-black shadow-lg bg-white/90 hover:bg-gray-300 font-bold text-lg transition-colors">
+                    {% trans "Annuleer" %}
+                </a>
+                <button type="submit" form="reservationform"
+                        class="flex-1 sm:flex-none px-6 py-3 rounded-2xl border-4 border-black shadow-lg bg-[#1BB1E6] hover:bg-[#234193] text-white font-bold text-lg transition-colors">
+                    {% trans "Reserveren" %}
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    {% trans "Beschikbaar" as available_text %}
+    {% trans "Niet beschikbaar" as unavailable_text %}
+    {% trans "Vrij" as available_text_short %}
+    {% trans "Bezet" as unavailable_text_short %}
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // --- Quick duration helpers ---
+        const startInput = document.querySelector("input[name='start']");
+        const endInput = document.querySelector("input[name='end']");
+
+        function parseDT(value) {
+            if (!value) return null;
+            const iso = value.includes("T") ? value : value.replace(" ", "T");
+            const d = new Date(iso);
+            return isNaN(d) ? null : d;
+        }
+
+        function formatDT(date, sampleValue) {
+            const pad = (n) => String(n).padStart(2, "0");
+            const sep = sampleValue && sampleValue.includes(" ") && !sampleValue.includes("T") ? " " : "T";
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}${sep}${pad(date.getHours())}:${pad(date.getMinutes())}`;
+        }
+
+        function fireChange(el) {
+            el.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+
+        function ensureStart() {
+            let start = parseDT(startInput?.value);
+            if (!start) {
+                start = new Date();
+                start.setMinutes(start.getMinutes() < 30 ? 30 : 0);
+                if (start.getMinutes() === 0) start.setHours(start.getHours() + 1);
+                if (startInput) {
+                    startInput.value = formatDT(start, endInput?.value || "");
+                    fireChange(startInput);
+                }
+            }
+            return start;
+        }
+
+        document.querySelectorAll(".quick-duration[data-duration-hours]").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const hours = parseFloat(btn.dataset.durationHours);
+                const start = ensureStart();
+                const end = new Date(start.getTime() + hours * 60 * 60 * 1000);
+                if (endInput) {
+                    endInput.value = formatDT(end, startInput?.value || "");
+                    fireChange(endInput);
+                }
+            });
+        });
+
+        const fullDayBtn = document.getElementById("quick-fullday");
+        fullDayBtn?.addEventListener("click", function () {
+            const start = ensureStart();
+            const end = new Date(start);
+            end.setHours(23, 59, 0, 0);
+            if (endInput) {
+                endInput.value = formatDT(end, startInput?.value || "");
+                fireChange(endInput);
+            }
+        });
+
+        // --- Skipper toggle ---
+        const existingWrap = document.getElementById("skipper-existing-wrap");
+        const newWrap = document.getElementById("skipper-new-wrap");
+        const newSkipperInput = document.getElementById("id_new_skipper_name");
+
+        document.querySelectorAll("input[name='skipper_mode']").forEach((radio) => {
+            radio.addEventListener("change", function () {
+                if (this.value === "new") {
+                    existingWrap.classList.add("hidden");
+                    newWrap.classList.remove("hidden");
+                } else {
+                    newWrap.classList.add("hidden");
+                    existingWrap.classList.remove("hidden");
+                    if (newSkipperInput) newSkipperInput.value = "";
+                }
+            });
+        });
+
+        // --- Sticky bar: show which boat/item is selected ---
+        const selectedLabel = document.getElementById("selected-item-label");
+        document.querySelectorAll(".item-radio").forEach((radio) => {
+            radio.addEventListener("change", function () {
+                if (this.checked && selectedLabel) {
+                    selectedLabel.textContent = this.dataset.itemName;
+                }
+            });
+        });
+
+        // --- Type filter collapse ---
+        const toggleTypeButton = document.getElementById("toggle-reservable-types");
+        const extraTypeChips = Array.from(document.querySelectorAll(".extra-reservable-type"));
+
+        if (toggleTypeButton && extraTypeChips.length) {
+            let expanded = false;
+
+            const updateTypeButton = () => {
+                toggleTypeButton.innerHTML = expanded
+                    ? `{% trans "Toon minder" %} <i class="bi bi-chevron-up"></i>`
+                    : `{% trans "Toon meer" %} <i class="bi bi-chevron-down"></i>`;
+            };
+
+            const setTypeVisibility = () => {
+                extraTypeChips.forEach((chip) => {
+                    chip.classList.toggle("hidden", !expanded && !chip.querySelector("input:checked"));
+                });
+            };
+
+            toggleTypeButton.addEventListener("click", function () {
+                expanded = !expanded;
+                setTypeVisibility();
+                updateTypeButton();
+            });
+
+            expanded = extraTypeChips.some((chip) => chip.querySelector("input:checked"));
+            setTypeVisibility();
+            updateTypeButton();
+        }
+
+        // --- Item list collapse ---
+        const toggleItemButton = document.getElementById("toggle-item-list");
+        const extraItemCards = Array.from(document.querySelectorAll(".extra-reservable-item"));
+
+        if (toggleItemButton && extraItemCards.length) {
+            let itemsExpanded = false;
+
+            const updateItemButton = () => {
+                toggleItemButton.innerHTML = itemsExpanded
+                    ? `{% trans "Toon minder" %} <i class="bi bi-chevron-up"></i>`
+                    : `{% trans "Toon meer" %} <i class="bi bi-chevron-down"></i>`;
+            };
+
+            const setItemVisibility = () => {
+                extraItemCards.forEach((card) => {
+                    card.classList.toggle("hidden", !itemsExpanded && !card.querySelector("input:checked"));
+                });
+            };
+
+            toggleItemButton.addEventListener("click", function () {
+                itemsExpanded = !itemsExpanded;
+                setItemVisibility();
+                updateItemButton();
+            });
+
+            itemsExpanded = extraItemCards.some((card) => card.querySelector("input:checked"));
+            setItemVisibility();
+            updateItemButton();
+        }
+
+        // --- Availability check (single consolidated handler for all items) ---
+        const objectPk = "{{ object.pk }}";
+        const availabilityEls = Array.from(document.querySelectorAll(".item-availability"));
+
+        async function validateAvailability() {
+            const start = startInput?.value;
+            const end = endInput?.value;
+            if (!start || !end || !availabilityEls.length) return;
+
+            await Promise.all(availabilityEls.map(async (el) => {
+                const itemPk = el.dataset.itemPk;
+                try {
+                    const response = await fetch(`../check-availability?start=${start}&end=${end}&reservable=${itemPk}&object_pk=${objectPk}`);
+                    const data = await response.json();
+
+                    if (data.available) {
+                        el.textContent = "{{ available_text_short|escapejs }}";
+                        el.title = "{{ available_text|escapejs }}";
+                        el.classList.remove("not-available", "bg-red-100", "text-red-800");
+                        el.classList.add("available", "bg-green-100", "text-green-800");
+                    } else {
+                        el.textContent = "{{ unavailable_text_short|escapejs }}";
+                        el.title = "{{ unavailable_text|escapejs }}";
+                        el.classList.remove("available", "bg-green-100", "text-green-800");
+                        el.classList.add("not-available", "bg-red-100", "text-red-800");
+                    }
+                } catch (err) {
+                    console.error("Error checking availability:", err);
+                }
+            }));
+        }
+
+        startInput?.addEventListener("change", validateAvailability);
+        endInput?.addEventListener("change", validateAvailability);
+    });
+</script>
 {% endblock %}

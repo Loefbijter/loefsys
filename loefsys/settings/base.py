@@ -69,6 +69,7 @@ class BaseSettings(ClassySettings):
         middleware = (
             "loefsys.core.middleware.UserAgentMiddleware",
             "django_browser_reload.middleware.BrowserReloadMiddleware",
+            "loefsys.core.middleware.ErrorPageMiddleware",
         )
         debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
         return middleware + debug_middleware if self.DEBUG else middleware

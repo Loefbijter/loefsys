@@ -17,5 +17,8 @@ urlpatterns = [
     *debug_toolbar_urls(),
 ]
 
+handler404 = "django.views.defaults.page_not_found"
+handler500 = "django.views.defaults.server_error"
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

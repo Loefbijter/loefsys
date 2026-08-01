@@ -38,7 +38,7 @@ class ReservationListView(LoginRequiredMixin, ListView):
                     sort_by = form.cleaned_data["sort_by"]
 
         return (
-            Reservation.objects.filter(user=self.request.user, start__gt=timezone.now())
+            Reservation.objects.filter(user=self.request.user, end__gt=timezone.now())
             .exclude(request_status=Reservation.RequestStatus.DENIED)
             .order_by(sort_by)
         )
@@ -82,10 +82,16 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
-        """Include the location in the context data."""
+        """Include the location and available type filters in the context data."""
         context = super().get_context_data(**kwargs)
-        context["location"] = self.kwargs.get("location")
+        location = self.kwargs.get("location")
+        context["location"] = location
         context["selected_reservable_type"] = self.request.GET.get("reservable_type")
+        context["reservable_types"] = (
+            ReservableType.objects.filter(reservable__location=location)
+            .distinct()
+            .order_by("name")
+        )
         return context
 
     @staticmethod
@@ -139,10 +145,16 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
-        """Include the location in the context data."""
+        """Include the location and available type filters in the context data."""
         context = super().get_context_data(**kwargs)
-        context["location"] = self.kwargs.get("location")
+        location = self.kwargs.get("location")
+        context["location"] = location
         context["selected_reservable_type"] = self.request.GET.get("reservable_type")
+        context["reservable_types"] = (
+            ReservableType.objects.filter(reservable__location=location)
+            .distinct()
+            .order_by("name")
+        )
         return context
 
     def get_queryset(self):

@@ -6,7 +6,7 @@ from django.forms import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
-from loefsys.members.models.user import User
+from loefsys.members.models import User, UserSkippership
 from loefsys.reservations.models.boat import ReservableBoat
 from loefsys.reservations.models.choices import ReservableCategories, ReservationStatus
 from loefsys.reservations.models.reservable import Reservable
@@ -45,13 +45,21 @@ class Reservation(TimeStampedModel):
     """
 
     class RequestStatus(models.IntegerChoices):
-        PENDING = 0, _("Pending")
-        APPROVED = 1, _("Approved")
-        DENIED = 2, _("Denied")
+        PENDING = 0, _("In behandeling")
+        APPROVED = 1, _("Goedgekeurd")
+        DENIED = 2, _("Geweigerd")
 
     reservable = models.ForeignKey(Reservable, on_delete=models.CASCADE)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="reservations_set"
+    )
+    authorized_userskippership = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="authorized_userskippership_reservations",
+        verbose_name=_("Authorized skipper"),
     )
     request_status = models.PositiveSmallIntegerField(
         choices=RequestStatus.choices,
@@ -84,6 +92,11 @@ class Reservation(TimeStampedModel):
             f"Reservation {self.reservable} "
             f"from {self.start} to {self.end} by {self.user}"
         )
+
+    @property
+    def reserved_item(self) -> Reservable:
+        """Alias for compatibility with older reservation templates."""
+        return self.reservable
 
     def clean_timeslot(self):
         """Validate the timeslot of the reservation."""
@@ -135,20 +148,32 @@ class Reservation(TimeStampedModel):
             except ReservableBoat.DoesNotExist:
                 requires_skippership = False
 
-            if requires_skippership:
-                # if not self.authorized_userskippership:
-                #     raise ValidationError(
-                #         "The boat selected requires an authorized skipper to be set."  # noqa: E501
-                #     )
+            if requires_skippership and not self.authorized_userskippership:
+                raise ValidationError(
+                    {
+                        "authorized_userskippership": _(
+                            "The selected boat requires an authorized skipper "
+                            "to be set."
+                        )
+                    }
+                )
 
-                # if (
-                #     requires_skippership
-                #     != self.authorized_userskippership.skippership
-                # ):
-                #     raise ValidationError(
-                #         "The skipper set is not authorized for this boat."
-                #     )
-                raise NameError("Skipperships are currently disabled.")
+            if (
+                requires_skippership
+                and self.authorized_userskippership
+                and not UserSkippership.objects.filter(
+                    user=self.authorized_userskippership,
+                    skippership__name=requires_skippership,
+                ).exists()
+            ):
+                raise ValidationError(
+                    {
+                        "authorized_userskippership": _(
+                            "The selected skipper does not have the required "
+                            "skippership."
+                        )
+                    }
+                )
 
         if self.status == ReservationStatus.DENIED and not self.denial_reason.strip():
             raise ValidationError(

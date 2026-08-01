@@ -4,12 +4,31 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
+from .models import Skippership, User, UserSkippership
+
+
+class UserSkippershipInline(admin.TabularInline):
+    """Inline admin for assigning skipperships to a user."""
+
+    model = UserSkippership
+    extra = 1
+    autocomplete_fields = ("skippership", "given_by")
+
+
+class SkippershipUserInline(admin.TabularInline):
+    """Inline admin for viewing and assigning users to a skippership."""
+
+    model = UserSkippership
+    fk_name = "skippership"
+    extra = 1
+    autocomplete_fields = ("user", "given_by")
 
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Admin class for the User model."""
+
+    inlines = (UserSkippershipInline,)
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
@@ -49,3 +68,12 @@ class UserAdmin(BaseUserAdmin):
         if not obj:
             return self.add_fieldsets
         return super().get_fieldsets(request, obj)
+
+
+@admin.register(Skippership)
+class SkippershipAdmin(admin.ModelAdmin):
+    """Admin class for the Skippership model."""
+
+    list_display = ("name",)
+    search_fields = ("name",)
+    inlines = (SkippershipUserInline,)
