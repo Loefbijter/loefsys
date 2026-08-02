@@ -217,6 +217,8 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                 "Inschrijvingen zijn niet geopend omdat dit evenement "
                 "niet gepubliceerd is."
             )
+        elif obj.registrations_open():
+            reason = ""
         elif (
             obj.registration_start is not None
             and timezone.now() < obj.registration_start

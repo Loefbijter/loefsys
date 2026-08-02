@@ -45,7 +45,6 @@
           {% if registration_disabled %}disabled{% endif %}
           {% if event.has_form_fields and not registration_active %}data-open-registration-modal="true"{% endif %}
           title="{{ registration_disabled_reason }}">
-          <i class="bi {% if registration_active %}bi-x-circle{% else %}bi-check-circle{% endif %}"></i>
           {{ registration_button_text }}
         </button>
 

@@ -339,18 +339,18 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         return timezone.now() < self.start
 
     def cancellation_fine_required(self) -> bool:
-        """Determine whether canceling now should incur a fine.
+        """Determine whether canceling now should require explicit consent.
 
         Returns
         -------
         bool
-            ``True`` if the cancellation deadline has passed and a fine is defined.
+            ``True`` when cancellation happens after the cancellation deadline.
         """
         if not self.can_cancel_registration():
             return False
         if self.cancelation_window_open():
             return False
-        return bool(self.fine and self.fine > 0)
+        return True
 
     def cancelation_consequences(self) -> str:
         """Determine whether canceling a registration has consequences.
