@@ -323,6 +323,35 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         deadline = self.cancelation_deadline or self.start
         return timezone.now() < deadline
 
+    def can_cancel_registration(self) -> bool:
+        """Determine whether cancellation is allowed at all.
+
+        Cancellations are permitted until the event starts, but may incur a fine if the
+        cancellation deadline has passed.
+
+        Returns
+        -------
+        bool
+            ``True`` if cancellation is allowed, otherwise ``False``.
+        """
+        if not self.published:
+            return False
+        return timezone.now() < self.start
+
+    def cancellation_fine_required(self) -> bool:
+        """Determine whether canceling now should incur a fine.
+
+        Returns
+        -------
+        bool
+            ``True`` if the cancellation deadline has passed and a fine is defined.
+        """
+        if not self.can_cancel_registration():
+            return False
+        if self.cancelation_window_open():
+            return False
+        return bool(self.fine and self.fine > 0)
+
     def cancelation_consequences(self) -> str:
         """Determine whether canceling a registration has consequences.
 

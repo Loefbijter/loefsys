@@ -17,7 +17,7 @@ from loefsys.events.models.feed_token import FeedToken
 
 from .exceptions import RegistrationError
 from .forms import EventFieldsForm
-from .models import Event, EventRegistration, RegistrationFormField
+from .models import Event, EventOrganizer, EventRegistration, RegistrationFormField
 from .models.choices import RegistrationStatus
 
 
@@ -51,6 +51,11 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         user_registration = self.get_registration_for_current_user()
         can_view_attendees = self.request.user.has_perm("events.view_eventregistration")
 
+        try:
+            organizer = self.object.eventorganizer
+        except EventOrganizer.DoesNotExist:
+            organizer = None
+
         return super().get_context_data(**kwargs) | {
             "registration_active": user_registration is not None,
             "queue_position": user_registration.get_queue_position
@@ -70,6 +75,10 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                 if can_view_attendees
                 else None
             ),
+            "registration_form": self.get_registration_form(user_registration),
+            "show_registration_modal": self.request.GET.get("show_registration_modal")
+            == "1",
+            "organizer": organizer,
         }
 
     def post(self, request, *_args, **_kwargs):
@@ -77,6 +86,10 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         self.object = self.get_object()
         action = request.POST.get("action")
         if action == "register":
+            if self.object.has_form_fields:
+                return redirect(
+                    f"{self.object.get_absolute_url()}?show_registration_modal=1"
+                )
             self.create_registration(request.user)
         elif action == "cancel":
             self.cancel_registration(request)
@@ -95,20 +108,22 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                     costs_paid=0.00,
                 )
                 register.save()
-                if self.object.has_form_fields:
-                    return redirect("events:registration", slug=self.object.slug)
             except IntegrityError:
                 print("Registration already exists")
 
     def cancel_registration(self, request):
         """Cancel the registration for the current user and event."""
-        # Only cancel if cancellation deadline is NOT due or
-        # it is due and consent was given to be fined
+        event = self.get_object()
+        if not event.can_cancel_registration():
+            return
+
         if (
-            self.get_object().cancelation_window_open()
-            or request.POST.get("fine-consent") is not None
+            event.cancellation_fine_required()
+            and request.POST.get("fine-consent") is None
         ):
-            self.get_registration_for_current_user().cancel()
+            return
+
+        self.get_registration_for_current_user().cancel()
 
     def get_registration_for_current_user(self):
         """Get active registrations for logged in user."""
@@ -121,6 +136,30 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             .last()
         )
 
+    def get_registration_form(self, registration=None):
+        """Create the form for additional event registration fields."""
+        if not self.object.has_form_fields:
+            return None
+
+        return EventFieldsForm(
+            form_fields=[
+                (
+                    field.pk,
+                    {
+                        "subject": field.subject,
+                        "type": field.type,
+                        "description": field.description,
+                        "required": field.required,
+                        "default": field.default,
+                        "value": field.get_value_for(registration)
+                        if registration is not None
+                        else None,
+                    },
+                )
+                for field in self.object.registrationformfield_set.all()
+            ]
+        )
+
     def get_registration_button_text(
         self, registration: EventRegistration | None
     ) -> str:
@@ -128,13 +167,14 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         obj = self.object
         text = _("Inschrijven")  # Default text for users without registration
         if registration:
-            deadline = obj.cancelation_deadline or obj.registration_deadline
             if registration.get_queue_position is not None:
                 text = _("Verlaat wachtrij")
+            elif not obj.can_cancel_registration():
+                text = _("Kan niet afmelden")
+            elif obj.cancellation_fine_required():
+                text = _("Afmelden (met boete)")
             elif obj.cancelation_window_open():
                 text = _("Afmelden")
-            elif obj.fine_on_cancellation():
-                text = _("Afmelden (met boete)")
             else:
                 text = _("Kan niet afmelden")
         elif not obj.registrations_open():
@@ -154,7 +194,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     def get_registration_disabled(self, registration: EventRegistration | None) -> bool:
         """Determine whether the registration button should be disabled."""
         if registration is not None:
-            return not self.object.cancelation_window_open()
+            return not self.object.can_cancel_registration()
 
         return not self.object.registrations_open()
 
@@ -163,35 +203,37 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     ) -> str:
         """Return the reason why registration is disabled."""
         obj = self.object
-        if registration is not None:
-            if obj.cancelation_window_open():
-                return ""
-            if obj.fine_on_cancellation():
-                return _("Afmelden kan leiden tot een boete.")
-            return _("Afmelden is niet meer mogelijk.")
+        reason = ""
 
-        if not obj.published:
-            return _(
-                "Inschrijvingen zijn niet geopend omdat dit evenement niet gepubliceerd is."
+        if registration is not None:
+            if not obj.can_cancel_registration():
+                reason = _("Afmelden is niet meer mogelijk.")
+            elif obj.cancellation_fine_required():
+                reason = _("Afmelden kan leiden tot een boete.")
+            else:
+                reason = ""
+        elif not obj.published:
+            reason = _(
+                "Inschrijvingen zijn niet geopend omdat dit evenement "
+                "niet gepubliceerd is."
             )
-        if (
+        elif (
             obj.registration_start is not None
             and timezone.now() < obj.registration_start
         ):
-            return _("Inschrijven vanaf %(date)s.") % {
+            reason = _("Inschrijven vanaf %(date)s.") % {
                 "date": date_format(obj.registration_start, "DATETIME_FORMAT")
             }
-        if (
-            obj.registration_deadline is None
-            or timezone.now() > obj.registration_deadline
-        ):
-            if obj.registration_deadline is None:
-                return _("Inschrijvingen zijn gesloten.")
-            return _("Inschrijvingen zijn gesloten op %(date)s.") % {
+        elif obj.registration_deadline is None:
+            reason = _("Inschrijvingen zijn gesloten.")
+        elif timezone.now() > obj.registration_deadline:
+            reason = _("Inschrijvingen zijn gesloten op %(date)s.") % {
                 "date": date_format(obj.registration_deadline, "DATETIME_FORMAT")
             }
+        else:
+            reason = _("Inschrijvingen zijn momenteel gesloten.")
 
-        return _("Inschrijvingen zijn momenteel gesloten.")
+        return reason
 
 
 class RegistrationFormView(LoginRequiredMixin, FormView):
@@ -215,10 +257,16 @@ class RegistrationFormView(LoginRequiredMixin, FormView):
                 event=event,
                 contact=contact,
             )
-        except EventRegistration.DoesNotExist as error:
-            raise RegistrationError(
-                _("You are not registered for this event.")
-            ) from error
+        except EventRegistration.DoesNotExist:
+            registration = EventRegistration(
+                event=event,
+                contact=contact,
+                price_at_registration=event.price,
+                fine_at_registration=event.fine,
+                costs_paid=0.00,
+            )
+            registration.save()
+            return registration
         except EventRegistration.MultipleObjectsReturned as error:
             raise RegistrationError(
                 _("Unable to find the right registration.")
@@ -241,10 +289,10 @@ class RegistrationFormView(LoginRequiredMixin, FormView):
                     "description": field.description,
                     "required": field.required,
                     "default": field.default,
-                    "value": value,
+                    "value": field.get_value_for(registration),
                 },
             )
-            for field, value in registration.form_fields
+            for field in self.event.registrationformfield_set.all()
         ]
 
         return kwargs
@@ -259,6 +307,12 @@ class RegistrationFormView(LoginRequiredMixin, FormView):
             field.set_value_for(registration, field_value)
 
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        """Add the event and registration form to the template context."""
+        context = super().get_context_data(**kwargs)
+        context["event"] = self.event
+        return context
 
     def dispatch(self, request, *args, **kwargs):
         """Return the proper response to a request."""
@@ -291,6 +345,12 @@ class EventFillerView(View):
                         "start": event.start,
                         "end": event.end,
                         "url": event.get_absolute_url(),
+                        "picture_url": (
+                            event.picture.url
+                            if getattr(event, "picture", None)
+                            and getattr(event.picture, "url", None)
+                            else None
+                        ),
                     }
                 )
         return JsonResponse(data, safe=False)
