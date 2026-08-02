@@ -1,11 +1,16 @@
 """Module defining the view for the index page."""
 
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView, View
 
+# Length used when building a short preview of long descriptions
+DESCRIPTION_PREVIEW_LEN = 300
+
 from loefsys.events.models import Event
 from loefsys.home.models import Announcement
+from loefsys.members.models import UserSkippership
 from loefsys.reservations.models.reservation import Reservation
 
 
@@ -56,8 +61,8 @@ class HomeView(View):
                 ev.get_category_display() if hasattr(ev, "get_category_display") else ""
             )
             if ev.description:
-                ev.description_preview = ev.description[:300] + (
-                    "..." if len(ev.description) > 300 else ""
+                ev.description_preview = ev.description[:DESCRIPTION_PREVIEW_LEN] + (
+                    "..." if len(ev.description) > DESCRIPTION_PREVIEW_LEN else ""
                 )
             else:
                 ev.description_preview = ""
@@ -95,6 +100,70 @@ class AssociationInformationView(TemplateView):
     """View for displaying association information page."""
 
     template_name = "home/association-information.html"
+
+
+def _is_ancestor_of(skippership, ancestor):
+    """Return whether ``ancestor`` is part of the parent chain for ``skippership``."""
+    current = skippership
+    while current is not None:
+        if current.pk == ancestor.pk:
+            return True
+        current = current.parent
+    return False
+
+
+class SchippersView(TemplateView):
+    """View for displaying all skippers grouped by their furthest skippership."""
+
+    template_name = "home/schippers.html"
+
+    def get_context_data(self, **kwargs):
+        """Add a grouped list of skippers to the page context."""
+        context = super().get_context_data(**kwargs)
+
+        user_skipperships = list(
+            UserSkippership.objects.select_related("user", "skippership").order_by(
+                "user__first_name", "user__last_name", "skippership__name"
+            )
+        )
+        user_skipperships_by_user = {}
+        for user_skippership in user_skipperships:
+            user_skipperships_by_user.setdefault(user_skippership.user_id, []).append(
+                user_skippership
+            )
+
+        grouped_skippers = {}
+        for entries in user_skipperships_by_user.values():
+            user = entries[0].user
+            for entry in entries:
+                if any(
+                    _is_ancestor_of(other.skippership, entry.skippership)
+                    for other in entries
+                    if other.skippership_id != entry.skippership_id
+                ):
+                    continue
+
+                grouped_skippers.setdefault(entry.skippership.name, []).append(
+                    {
+                        "user": user,
+                        "skippership": entry.skippership,
+                        "profile_url": reverse(
+                            "members:profile", kwargs={"slug": user.slug}
+                        ),
+                    }
+                )
+
+        skippers_by_group = []
+        for group_name in sorted(grouped_skippers):
+            group_entries = sorted(
+                grouped_skippers[group_name],
+                key=lambda entry: entry["user"].display_name.lower(),
+            )
+            skippers_by_group.append({"label": group_name, "schippers": group_entries})
+
+        context["skippers_by_level"] = skippers_by_group
+        context["skipper_groups"] = skippers_by_group
+        return context
 
 
 class SchipperschapView(TemplateView):

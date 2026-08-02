@@ -3,12 +3,14 @@
 from django.db import models
 from django.db.models import CheckConstraint, F, Q
 from django.forms import ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
 from loefsys.members.models import User, UserSkippership
 from loefsys.reservations.models.boat import ReservableBoat
 from loefsys.reservations.models.choices import ReservableCategories, ReservationStatus
+from loefsys.reservations.models.logbook import BoatLogbook
 from loefsys.reservations.models.reservable import Reservable
 
 
@@ -97,6 +99,21 @@ class Reservation(TimeStampedModel):
     def reserved_item(self) -> Reservable:
         """Alias for compatibility with older reservation templates."""
         return self.reservable
+
+    @property
+    def is_boat_reservation(self) -> bool:
+        """Return whether this reservation is for a boat."""
+        return self.reservable.type.category == ReservableCategories.BOAT
+
+    @property
+    def can_fill_logbook(self) -> bool:
+        """Return whether a logbook can be filled for this reservation."""
+        return self.is_boat_reservation and self.start <= timezone.now()
+
+    @property
+    def has_boat_logbook(self) -> bool:
+        """Return whether a logbook has already been filled for this reservation."""
+        return BoatLogbook.objects.filter(reservation=self).exists()
 
     def clean_timeslot(self):
         """Validate the timeslot of the reservation."""

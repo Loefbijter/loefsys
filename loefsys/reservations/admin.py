@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from .models import (
+    BoatDamageRecord,
+    BoatLogbook,
     ReservableBoat,
     ReservableMaterial,
     ReservableRoom,
@@ -15,6 +17,8 @@ admin.site.register(ReservableType)
 admin.site.register(ReservableBoat)
 admin.site.register(ReservableMaterial)
 admin.site.register(ReservableRoom)
+admin.site.register(BoatDamageRecord)
+admin.site.register(BoatLogbook)
 
 
 @admin.register(Reservation)

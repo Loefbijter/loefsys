@@ -46,3 +46,53 @@ class UserProfileViewTestCase(TestCase):
         self.assertContains(response, "Assessor Bastion")
         self.assertContains(response, "Schipperschappen")
         self.assertContains(response, "Kielboot")
+
+    def test_profile_page_shows_only_furthest_child_skippership(self):
+        """If a user has multiple skipperships in a parent chain,
+        show only the deepest one.
+        """
+        user = G(get_user_model())
+        self.client.force_login(user)
+        first = G(Skippership, name="KB1")
+        second = G(Skippership, name="KB2", parent=first)
+        G(UserSkippership, user=user, skippership=first)
+        G(UserSkippership, user=user, skippership=second)
+
+        response = self.client.get(reverse("members:user-profile"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "KB2")
+        self.assertNotContains(response, "KB1")
+
+    def test_profile_edit_page_saves_pod_link_without_showing_it_publicly(self):
+        """The profile edit form stores a POD link privately and it stays
+        off the public profile.
+        """
+        user = G(get_user_model())
+        self.client.force_login(user)
+        pod_link = "https://docs.google.com/spreadsheets/d/example/edit"
+
+        response = self.client.post(
+            reverse("members:user-profile-edit"),
+            {
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "initials": user.initials,
+                "nickname": user.nickname,
+                "display_name_preference": user.display_name_preference,
+                "pod_link": pod_link,
+                "gender": user.gender,
+                "birthday": user.birthday or "",
+                "show_birthday": user.show_birthday,
+                "note": user.note,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        user.refresh_from_db()
+        self.assertEqual(user.pod_link, pod_link)
+
+        profile_response = self.client.get(reverse("members:user-profile"))
+
+        self.assertEqual(profile_response.status_code, 200)
+        self.assertNotContains(profile_response, pod_link)

@@ -92,6 +92,21 @@
                     {% trans "Bewerk reservering" %}
                 </span>
             </a>
+            {% if object.can_fill_logbook %}
+            <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
+               class="btn btn-primary p-3 font-bold border-2 border-black rounded-3xl shadow-lg block text-center bg-primary/90 text-white hover:bg-primary transition-colors">
+                <span class="font-bold text-lg sm:text-3xl">
+                    {% trans "Vul logboek in" %}
+                </span>
+            </a>
+            {% elif object.has_boat_logbook %}
+            <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
+               class="btn btn-primary p-3 font-bold border-2 border-black rounded-3xl shadow-lg block text-center bg-white hover:bg-gray-200 transition-colors">
+                <span class="font-bold text-lg sm:text-3xl">
+                    {% trans "Bekijk logboek" %}
+                </span>
+            </a>
+            {% endif %}
             <a href="{% url 'reservations:reservation-delete' pk=object.id %}"
                class="btn btn-primary p-3 font-bold border-2 border-black rounded-3xl shadow-lg block text-center bg-destructive/90 text-white hover:bg-destructive transition-colors">
                 <span class="font-bold text-lg sm:text-3xl">

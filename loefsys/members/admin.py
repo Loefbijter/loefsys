@@ -42,6 +42,7 @@ class UserAdmin(BaseUserAdmin):
                     "title",
                     "is_active",
                     "phone_number",
+                    "pod_link",
                     "picture",
                     "note",
                 )
@@ -62,6 +63,7 @@ class UserAdmin(BaseUserAdmin):
                     "lichting",
                     "title",
                     "phone_number",
+                    "pod_link",
                     "note",
                 )
             },

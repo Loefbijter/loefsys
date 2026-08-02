@@ -56,6 +56,7 @@ class ReservableBoat(Reservable):
         max_length=10,
         choices=RequiredSkippership.choices,
         blank=True,
-        verbose_name=_("Required skippership"),
-        help_text=_("The skippership required to use this boat."),
+       null=True,
+       verbose_name=_("Required skippership"),
+       help_text=_("The skippership required to use this boat."),
     )

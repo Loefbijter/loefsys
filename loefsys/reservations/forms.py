@@ -1,11 +1,13 @@
 """Module defining the forms for the reservations."""
 
+from typing import ClassVar
+
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from loefsys.members.models.user import User
 
-from .models import Reservable, Reservation
+from .models import BoatLogbook, Reservable, Reservation
 
 
 class CreateReservationForm(forms.ModelForm):
@@ -61,3 +63,49 @@ class SortByReservationForm(forms.Form):
         ("type", _("Type")),
     )
     sort_by = forms.ChoiceField(choices=CHOICES, required=False)
+
+
+class BoatLogbookForm(forms.ModelForm):
+    """A form to fill in a boat logbook after a reservation."""
+
+    has_new_damage = forms.BooleanField(
+        label=_("Heb je nieuwe schade ontdekt?"),
+        required=False,
+    )
+    new_damage_description = forms.CharField(
+        label=_("Beschrijf de nieuwe schade"),
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 4}),
+    )
+
+    class Meta:
+        model = BoatLogbook
+        fields = (
+            "wind_force",
+            "motor_hours",
+            "refueled",
+            "has_new_damage",
+            "new_damage_description",
+            "photo",
+        )
+        labels: ClassVar[dict[str, str]] = {
+            "wind_force": _("Wat was de windkracht? (Bft)"),
+            "motor_hours": _("Hoeveel motoruren heb je gemaakt?"),
+            "refueled": _("Heb je de boot afgetankt?"),
+            "photo": _("Voeg een foto van de boot toe"),
+        }
+
+    def clean(self):
+        """Require a damage description when the user reports new damage."""
+        cleaned_data = super().clean()
+        if cleaned_data.get("has_new_damage") and not cleaned_data.get(
+            "new_damage_description"
+        ).strip():
+            self.add_error(
+                "new_damage_description",
+                _(
+                    "Beschrijf de nieuwe schade als je aangeeft dat er nieuwe "
+                    "schade is."
+                ),
+            )
+        return cleaned_data

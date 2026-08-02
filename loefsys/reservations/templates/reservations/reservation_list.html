@@ -39,50 +39,66 @@
         <!-- List of Reservations made by user -->
         {% if reservations %}
         <div class="w-full sm:w-4/5 mx-auto space-y-3">
-            {% for reservation in reservations %}
-            <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
-               class="block rounded-2xl shadow-md border-2 px-5 py-4 transition-colors
+           {% for reservation in reservations %}
+           <div class="rounded-2xl shadow-md border-2 px-5 py-4 transition-colors
                    {% if reservation.request_status == RequestStatus.PENDING %}
-                       bg-alert hover:bg-alert-accent border-alert
+                       bg-alert border-alert
                    {% elif reservation.request_status == RequestStatus.APPROVED %}
-                       bg-success hover:bg-success-accent border-success
+                       bg-success border-success
                    {% elif reservation.request_status == RequestStatus.DENIED %}
-                       bg-destructive hover:bg-destructive-accent border-destructive
+                       bg-destructive border-destructive
                    {% endif %}">
-                <div class="flex items-start justify-between gap-3 flex-wrap">
-                    <div class="min-w-0">
-                        <p class="text-xl sm:text-2xl font-bold text-gray-900 truncate">
-                            {{ reservation.reservable }}
-                        </p>
-                        <p class="text-sm sm:text-base text-gray-800 mt-1">
-                            {% if reservation.start.date == reservation.end.date %}
-                                <span class="inline-flex items-center gap-1">
-                                    <i class="bi bi-calendar-event"></i>
-                                    {{ reservation.start|date:"j M Y" }}
-                                </span>
-                                &nbsp;·&nbsp;
-                                <span class="inline-flex items-center gap-1">
-                                    <i class="bi bi-clock"></i>
-                                    {{ reservation.start|date:"H:i" }} - {{ reservation.end|date:"H:i" }}
-                                </span>
-                            {% else %}
-                                <span class="inline-flex items-center gap-1">
-                                    <i class="bi bi-calendar-event"></i>
-                                    {{ reservation.start|date:"j M Y, H:i" }}
-                                </span>
-                                <i class="bi bi-arrow-right-short"></i>
-                                <span class="inline-flex items-center gap-1">
-                                    {{ reservation.end|date:"j M Y, H:i" }}
-                                </span>
-                            {% endif %}
-                        </p>
-                    </div>
-                    <span class="shrink-0 text-xs sm:text-sm font-bold uppercase px-3 py-1 rounded-full bg-white/80 text-gray-900">
-                        {{ reservation.get_request_status_display }}
-                    </span>
-                </div>
-            </a>
-            {% endfor %}
+               <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}" class="block">
+                   <div class="flex items-start justify-between gap-3 flex-wrap">
+                       <div class="min-w-0">
+                           <p class="text-xl sm:text-2xl font-bold text-gray-900 truncate">
+                               {{ reservation.reservable }}
+                           </p>
+                           <p class="text-sm sm:text-base text-gray-800 mt-1">
+                               {% if reservation.start.date == reservation.end.date %}
+                                   <span class="inline-flex items-center gap-1">
+                                       <i class="bi bi-calendar-event"></i>
+                                       {{ reservation.start|date:"j M Y" }}
+                                   </span>
+                                   &nbsp;·&nbsp;
+                                   <span class="inline-flex items-center gap-1">
+                                       <i class="bi bi-clock"></i>
+                                       {{ reservation.start|date:"H:i" }} - {{ reservation.end|date:"H:i" }}
+                                   </span>
+                               {% else %}
+                                   <span class="inline-flex items-center gap-1">
+                                       <i class="bi bi-calendar-event"></i>
+                                       {{ reservation.start|date:"j M Y, H:i" }}
+                                   </span>
+                                   <i class="bi bi-arrow-right-short"></i>
+                                   <span class="inline-flex items-center gap-1">
+                                       {{ reservation.end|date:"j M Y, H:i" }}
+                                   </span>
+                               {% endif %}
+                           </p>
+                       </div>
+                       <span class="shrink-0 text-xs sm:text-sm font-bold uppercase px-3 py-1 rounded-full bg-white/80 text-gray-900">
+                           {{ reservation.get_request_status_display }}
+                       </span>
+                   </div>
+               </a>
+               {% if reservation.can_fill_logbook %}
+               <div class="mt-3 flex justify-end">
+                   <a href="{% url 'reservations:boat-logbook' pk=reservation.id %}"
+                      class="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 transition-colors">
+                       {% trans "Vul logboek in" %}
+                   </a>
+               </div>
+               {% elif reservation.has_boat_logbook %}
+               <div class="mt-3 flex justify-end">
+                   <a href="{% url 'reservations:boat-logbook' pk=reservation.id %}"
+                      class="rounded-full border border-gray-400 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                       {% trans "Bekijk logboek" %}
+                   </a>
+               </div>
+               {% endif %}
+           </div>
+           {% endfor %}
         </div>
         {% else %}
         <div class="w-full sm:w-4/5 mx-auto bg-white/90 rounded-2xl shadow-md px-6 py-8 text-center">

@@ -13,11 +13,22 @@ class Skippership(models.Model):
     ----------
     name : str
         The name of the skippership.
+    parent : ~loefsys.members.models.skippership.Skippership | None
+        The skippership that must be obtained before this one.
     skippers : ~django.db.models.query.QuerySet of UserSkippership
         The users that have obtained the skippership.
     """
 
     name = models.CharField(max_length=40, verbose_name=_("Skippership"), unique=True)
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="children",
+        verbose_name=_("Parent skippership"),
+        help_text=_("The skippership that must be obtained before this one."),
+    )
     skippers = models.ManyToManyField(
         User,
         through="UserSkippership",
