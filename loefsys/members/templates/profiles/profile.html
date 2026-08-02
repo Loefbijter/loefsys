@@ -11,40 +11,81 @@
         {% if is_user_profile %}
             <c-card>
                 <div class="flex items-center justify-between">
-                    <c-header.h4>Jouw publiek profiel</c-header.h4>
-                    <c-button tag="a" :href="{% url 'members:user-profile-edit' %}">
+                    <c-header.h4>
+                        <i class="bi bi-person-circle mr-1"></i>
+                        Jouw publiek profiel
+                    </c-header.h4>
+                    <a
+                        href="{% url 'members:user-profile-edit' %}"
+                        class="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary hover:text-tertiary-foreground"
+                    >
+                        <i class="bi bi-pencil-fill"></i>
                         Profiel Bewerken
-                    </c-button>
+                    </a>
                 </div>
             </c-card>
         {% endif %}
 
         <div class="flex flex-col sm:flex-row justify-between items-center sm:space-x-4 space-y-4 sm:space-y-0">
-            <div class="max-h-64 max-w-64">
+            <div class="shrink-0">
                 {% if member.picture %}
-                    <img class="rounded-full shadow-2xl border-6 border-secondary" src="{{ member.picture.url }}"
-                         alt="Profile Picture"/>
+                    <img class="rounded-full shadow-2xl border-4 border-secondary size-64 object-cover"
+                         src="{{ member.picture.url }}" alt="Profielfoto van {{ member.display_name }}"/>
                 {% else %}
-                    <img class="rounded-full shadow-2xl border-6 border-secondary size-64"
-                         src="{% static 'default-profile-picture.svg' %}" alt="Profile Picture"/>
+                    <img class="rounded-full shadow-2xl border-4 border-secondary size-64 object-cover"
+                         src="{% static 'default-profile-picture.svg' %}" alt="Profielfoto van {{ member.display_name }}"/>
                 {% endif %}
             </div>
             <c-card class="grow self-stretch">
-                <c-header.h4>{{ member.display_name }}</c-header.h4>
-                <ul>
-                    <li>{{ member.email }}</li>
-                    <li>{{ member.phone_number }}</li>
+                <div class="flex items-center justify-between gap-2">
+                    <c-header.h4>{{ member.display_name }}</c-header.h4>
+                    <span class="inline-flex items-center gap-1 rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Actief Lid
+                    </span>
+                </div>
+
+                <ul class="space-y-2 mt-3 text-sm sm:text-white text-slate-700">
+                    <li class="flex items-center gap-2">
+                        <i class="bi bi-envelope text-secondary w-4 shrink-0"></i>
+                        {{ member.email }}
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="bi bi-telephone text-secondary w-4 shrink-0"></i>
+                        {{ member.phone_number }}
+                    </li>
                     {% if member.show_birthday %}
-                        <li>{{ member.birthday }}</li>{% endif %}
-                    <li>Lid sinds: 1 september 2020</li>
-                    <li>Lidmaatschap: Actief Lid</li>
+                        <li class="flex items-center gap-2">
+                            <i class="bi bi-cake2 text-secondary w-4 shrink-0"></i>
+                            {{ member.birthday|date:"j M Y" }}
+                        </li>
+                    {% endif %}
+                    {% if member.lichting %}
+                        <li class="flex items-center gap-2">
+                            {{ member.lichting }}
+                        </li>
+                    {% endif %}
+                    {% if member.title %}
+                        <li class="flex items-center gap-2">
+                            {{ member.title }}
+                        </li>
+                    {% endif %}
                 </ul>
-                {#  only if member has done at least one board year #}
-                <c-separator/>
-                <ul>
-                    <li>56e "Lancerend": Assessor Bastion</li>
-                    <li>56e "Lancerend": Abactis (Interim)</li>
-                </ul>
+
+                {% if member.user_skipperships.all %}
+                   <c-separator/>
+                   <div>
+                       <p class="font-semibold mb-2 flex items-center gap-2">
+                           <i class="bi bi-award-fill text-secondary"></i>
+                           Schipperschappen
+                       </p>
+                       <ul class="list-disc list-inside space-y-1 text-sm sm:text-white text-slate-700">
+                           {% for skippership in member.user_skipperships.all %}
+                               <li>{{ skippership.skippership.name }}</li>
+                           {% endfor %}
+                       </ul>
+                   </div>
+                {% endif %}
             </c-card>
         </div>
 <!-- schipperschappen en groups cards! -->

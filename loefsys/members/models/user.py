@@ -22,8 +22,11 @@ if TYPE_CHECKING:
     from .membership import Membership
     from .study_registration import StudyRegistration
 
-def twanstest(modeladmin, request, queryset):
-    pass
+
+def twanstest(_modeladmin, _request, _queryset):
+    """Perform no action for the member admin configuration."""
+    return None
+
 
 class UserManager(BaseUserManager):
     """Manager for the User model.
@@ -187,6 +190,18 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
     initials = models.CharField(max_length=20, verbose_name=_("Initials"), blank=True)
     nickname = models.CharField(max_length=30, verbose_name=_("Nickname"), blank=True)
+    lichting = models.CharField(
+        max_length=100,
+        verbose_name=_("Lichting"),
+        blank=True,
+        help_text=_("The member's lichting, for example '57e lichting'."),
+    )
+    title = models.CharField(
+        max_length=100,
+        verbose_name=_("Title"),
+        blank=True,
+        help_text=_("Additional title for the user, editable by the board."),
+    )
 
     display_name_preference = models.PositiveSmallIntegerField(
         choices=DisplayNamePreferences, default=DisplayNamePreferences.FULL
@@ -241,6 +256,12 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     def full_name(self) -> str:
         """Return the full name of the person."""
         return f"{self.first_name} {self.last_name}".strip()
+
+    @property
+    def member_since(self):
+        """Return the earliest known membership start date for the user."""
+        membership = self.membership_set.order_by("start").first()
+        return membership.start if membership else None
 
     @property
     def display_name(self) -> str:

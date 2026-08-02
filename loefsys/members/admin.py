@@ -38,6 +38,8 @@ class UserAdmin(BaseUserAdmin):
                 "fields": (
                     "first_name",
                     "last_name",
+                    "lichting",
+                    "title",
                     "is_active",
                     "phone_number",
                     "picture",
@@ -53,7 +55,16 @@ class UserAdmin(BaseUserAdmin):
         (None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),
         (
             _("Personal info"),
-            {"fields": ("first_name", "last_name", "phone_number", "note")},
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "lichting",
+                    "title",
+                    "phone_number",
+                    "note",
+                )
+            },
         ),
         (_("Permissions"), {"fields": ("is_staff", "is_superuser")}),
         (_("Groups"), {"fields": ("groups",)}),
