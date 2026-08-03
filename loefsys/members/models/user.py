@@ -243,11 +243,22 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     # )
 
     phone_number = PhoneNumberField(blank=True)
-    pod_link = models.URLField(
+    pod_kb_link = models.URLField(
         max_length=512,
         blank=True,
-        verbose_name=_("POD link"),
-        help_text=_("Paste the link to your POD (Google Sheets) so it can be edited."),
+        verbose_name=_("KB POD link"),
+        help_text=_(
+            "Paste the link to your KB POD (Google Sheets) so it can be edited."
+        ),
+    )
+
+    pod_zb_link = models.URLField(
+        max_length=512,
+        blank=True,
+        verbose_name=_("ZB POD link"),
+        help_text=_(
+            "Paste the link to your ZB POD (Google Sheets) so it can be edited."
+        ),
     )
 
     # TODO: Refactor

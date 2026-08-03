@@ -6,66 +6,70 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col min-h-screen">
+<div class="bg-background min-h-screen flex flex-col">
 
-    <!-- Dark blue top section -->
-    <section class="bg-[#234193] flex flex-col p-6 sm:p-10 flex-grow items-center text-white">
-        <h1 class="text-3xl sm:text-5xl font-bold mb-8 text-center tracking-tight">{% trans "PAS JE PROFIEL AAN" %}</h1>
+    <!-- ============ HEADER ============ -->
+    <section class="bg-white border-b border-black/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground">{% trans "Pas je profiel aan" %}</h1>
+            <p class="text-sm text-foreground/60 mt-1">{% trans "Werk je gegevens bij en sla de wijzigingen op." %}</p>
+        </div>
+    </section>
 
-        <form action="{% url 'members:user-profile-edit' %}" method="post" enctype="multipart/form-data"
-              class="w-full max-w-4xl">
+    <div class="max-w-4xl mx-auto w-full px-4 sm:px-6 py-8">
+        <form action="{% url 'members:user-profile-edit' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <!-- Profile photo -->
             {% for field in user_form %}
             {% if field.field.widget.input_type == "file" %}
-            <div class="bg-white/95 p-6 rounded-3xl border border-black/10 shadow-lg text-left mb-6 max-w-md mx-auto">
+            <div class="bg-white p-6 rounded-2xl border border-black/5 shadow-sm text-left mb-6 max-w-md mx-auto">
                 <div class="flex flex-col items-center text-center gap-4">
                     <div id="photo-preview"
-                         class="w-24 h-24 rounded-full bg-gray-100 border-4 border-[#234193] flex items-center justify-center overflow-hidden text-4xl text-gray-400">
+                         class="w-24 h-24 rounded-full bg-black/[0.03] border-2 border-black/10 flex items-center justify-center overflow-hidden text-3xl text-foreground/30">
                         <i class="bi bi-person-fill"></i>
                     </div>
                     <div>
-                        <label for="{{ field.id_for_label }}" class="block text-lg font-bold text-[#234193] mb-2">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-foreground/70 mb-2">
                             {{ field.label }}
                         </label>
                         <label for="{{ field.id_for_label }}"
-                               class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1BB1E6] hover:bg-[#234193] text-white font-bold text-base sm:text-lg cursor-pointer transition-colors shadow-md">
+                               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 text-primary hover:bg-primary/5 font-semibold text-sm cursor-pointer transition-colors">
                             <i class="bi bi-camera-fill"></i>
                             {% trans "Foto kiezen" %}
                         </label>
                         <div class="hidden">{{ field }}</div>
-                        <p id="photo-filename" class="text-sm text-gray-500 mt-2">{% trans "Geen foto gekozen" %}</p>
+                        <p id="photo-filename" class="text-xs text-foreground/50 mt-2">{% trans "Geen foto gekozen" %}</p>
                     </div>
                     {% if field.help_text %}
-                    <p class="text-xs text-gray-500">{{ field.help_text }}</p>
+                    <p class="text-xs text-foreground/50">{{ field.help_text }}</p>
                     {% endif %}
                     {% if field.errors %}
-                    <p class="text-red-600 text-xs font-semibold">{{ field.errors|join:", " }}</p>
+                    <p class="text-destructive text-xs font-medium">{{ field.errors|join:", " }}</p>
                     {% endif %}
                 </div>
             </div>
             {% endif %}
             {% endfor %}
 
-            <div class="grid grid-cols-1 {% if member_form %}md:grid-cols-2{% endif %} gap-6 {% if not member_form %}max-w-xl mx-auto{% endif %}">
+            <div class="grid grid-cols-1 {% if member_form %}md:grid-cols-2{% endif %} gap-5 {% if not member_form %}max-w-xl mx-auto{% endif %}">
 
                 <!-- Personal information -->
-                <div class="bg-white/95 p-6 sm:p-8 rounded-3xl border border-black/10 shadow-lg text-left">
-                    <h2 class="text-xl sm:text-2xl font-bold text-[#234193] mb-6">{% trans "Gebruikersgegevens" %}</h2>
-                    <div class="space-y-5">
+                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm text-left">
+                    <h2 class="text-lg font-bold text-foreground mb-5">{% trans "Gebruikersgegevens" %}</h2>
+                    <div class="space-y-4">
                         {% for field in user_form %}
                         {% if field.field.widget.input_type != "file" %}
                         <div class="flex flex-col space-y-1.5">
-                            <label for="{{ field.id_for_label }}" class="text-sm font-bold text-gray-700">
+                            <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-foreground/70">
                                 {{ field.label }}
                             </label>
                             {{ field }}
                             {% if field.help_text %}
-                            <p class="text-xs text-gray-500">{{ field.help_text }}</p>
+                            <p class="text-xs text-foreground/50">{{ field.help_text }}</p>
                             {% endif %}
                             {% if field.errors %}
-                            <p class="text-red-600 text-xs font-semibold">{{ field.errors|join:", " }}</p>
+                            <p class="text-destructive text-xs font-medium">{{ field.errors|join:", " }}</p>
                             {% endif %}
                         </div>
                         {% endif %}
@@ -75,20 +79,20 @@
 
                 <!-- Member information -->
                 {% if member_form %}
-                <div class="bg-white/95 p-6 sm:p-8 rounded-3xl border border-black/10 shadow-lg text-left">
-                    <h2 class="text-xl sm:text-2xl font-bold text-[#234193] mb-6">{% trans "Lidgegevens" %}</h2>
-                    <div class="space-y-5">
+                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm text-left">
+                    <h2 class="text-lg font-bold text-foreground mb-5">{% trans "Lidgegevens" %}</h2>
+                    <div class="space-y-4">
                         {% for field in member_form %}
                         <div class="flex flex-col space-y-1.5">
-                            <label for="{{ field.id_for_label }}" class="text-sm font-bold text-gray-700">
+                            <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-foreground/70">
                                 {{ field.label }}
                             </label>
                             {{ field }}
                             {% if field.help_text %}
-                            <p class="text-xs text-gray-500">{{ field.help_text }}</p>
+                            <p class="text-xs text-foreground/50">{{ field.help_text }}</p>
                             {% endif %}
                             {% if field.errors %}
-                            <p class="text-red-600 text-xs font-semibold">{{ field.errors|join:", " }}</p>
+                            <p class="text-destructive text-xs font-medium">{{ field.errors|join:", " }}</p>
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -98,20 +102,19 @@
 
             </div>
 
-            <button type="submit"
-                    class="mt-8 p-3 border border-black/10 rounded-3xl shadow-lg mx-auto w-full sm:w-4/5 block bg-white hover:bg-gray-100 text-[#234193] text-lg sm:text-2xl font-bold transition-colors">
-                {% trans "Nieuwe informatie opslaan" %}
-            </button>
+            <!-- Form actions -->
+            <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-center gap-3">
+                <a href="{% url 'members:user-profile' %}"
+                   class="text-center rounded-xl border border-black/10 bg-white px-6 py-2.5 text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
+                    {% trans "Annuleren" %}
+                </a>
+                <button type="submit"
+                        class="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors">
+                    {% trans "Nieuwe informatie opslaan" %}
+                </button>
+            </div>
         </form>
-    </section>
-
-    <!-- Light blue bottom section -->
-    <section class="bg-[#1BB1E6] p-6 sm:p-8 flex flex-col items-center">
-        <a href="{% url 'members:user-profile' %}"
-           class="w-full sm:w-4/5 p-3 border border-black/10 rounded-3xl shadow-lg bg-white/90 hover:bg-white text-center block transition-colors">
-            <span class="font-bold text-lg sm:text-2xl text-gray-900">{% trans "Annuleren" %}</span>
-        </a>
-    </section>
+    </div>
 </div>
 
 <script>

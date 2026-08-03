@@ -47,16 +47,16 @@
 
                 <ul class="space-y-2 mt-3 text-sm sm:text-white text-slate-700">
                     <li class="flex items-center gap-2">
-                        <i class="bi bi-envelope text-secondary w-4 shrink-0"></i>
+                        <i class="bi bi-envelope text-white w-4 shrink-0"></i>
                         {{ member.email }}
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="bi bi-telephone text-secondary w-4 shrink-0"></i>
+                        <i class="bi bi-telephone text-white w-4 shrink-0"></i>
                         {{ member.phone_number }}
                     </li>
                     {% if member.show_birthday %}
                         <li class="flex items-center gap-2">
-                            <i class="bi bi-cake2 text-secondary w-4 shrink-0"></i>
+                            <i class="bi bi-cake2 text-white w-4 shrink-0"></i>
                             {{ member.birthday|date:"j M Y" }}
                         </li>
                     {% endif %}
@@ -76,7 +76,7 @@
                    <c-separator/>
                    <div>
                        <p class="font-semibold mb-2 flex items-center gap-2">
-                           <i class="bi bi-award-fill text-secondary"></i>
+                           <i class="bi bi-award-fill text-white"></i>
                            Schipperschappen
                        </p>
                        <ul class="list-disc list-inside space-y-1 text-sm sm:text-white text-slate-700">

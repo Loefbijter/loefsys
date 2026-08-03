@@ -1,11 +1,12 @@
 """Views for the member profiles."""
 
+from typing import ClassVar
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
-from typing import ClassVar, List
 
 
 class UserProfileMixin(SingleObjectMixin):
@@ -82,14 +83,15 @@ class UserProfileEditView(LoginRequiredMixin, UserProfileMixin, UpdateView):
     template_name = "profiles/profile_edit.html"
 
     # Explicitly declare which fields are editable to avoid ImproperlyConfigured
-    fields: ClassVar[List[str]] = [
+    fields: ClassVar[list[str]] = [
         "first_name",
         "last_name",
         "initials",
         "nickname",
         "display_name_preference",
         "phone_number",
-        "pod_link",
+        "pod_kb_link",
+        "pod_zb_link",
         "picture",
         "gender",
         "birthday",

@@ -48,7 +48,8 @@ class UserProfileViewTestCase(TestCase):
         self.assertContains(response, "Kielboot")
 
     def test_profile_page_shows_only_furthest_child_skippership(self):
-        """If a user has multiple skipperships in a parent chain,
+        """If a user has multiple skipperships in a parent chain.
+
         show only the deepest one.
         """
         user = G(get_user_model())
@@ -65,12 +66,14 @@ class UserProfileViewTestCase(TestCase):
         self.assertNotContains(response, "KB1")
 
     def test_profile_edit_page_saves_pod_link_without_showing_it_publicly(self):
-        """The profile edit form stores a POD link privately and it stays
+        """The profile edit form stores a POD link privately and it stays.
+
         off the public profile.
         """
         user = G(get_user_model())
         self.client.force_login(user)
-        pod_link = "https://docs.google.com/spreadsheets/d/example/edit"
+        pod_kb_link = "https://docs.google.com/spreadsheets/d/example_kb/edit"
+        pod_zb_link = "https://docs.google.com/spreadsheets/d/example_zb/edit"
 
         response = self.client.post(
             reverse("members:user-profile-edit"),
@@ -80,7 +83,8 @@ class UserProfileViewTestCase(TestCase):
                 "initials": user.initials,
                 "nickname": user.nickname,
                 "display_name_preference": user.display_name_preference,
-                "pod_link": pod_link,
+                "pod_kb_link": pod_kb_link,
+                "pod_zb_link": pod_zb_link,
                 "gender": user.gender,
                 "birthday": user.birthday or "",
                 "show_birthday": user.show_birthday,
@@ -90,9 +94,11 @@ class UserProfileViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 302)
         user.refresh_from_db()
-        self.assertEqual(user.pod_link, pod_link)
+        self.assertEqual(user.pod_kb_link, pod_kb_link)
+        self.assertEqual(user.pod_zb_link, pod_zb_link)
 
         profile_response = self.client.get(reverse("members:user-profile"))
 
         self.assertEqual(profile_response.status_code, 200)
-        self.assertNotContains(profile_response, pod_link)
+        self.assertNotContains(profile_response, pod_kb_link)
+        self.assertNotContains(profile_response, pod_zb_link)

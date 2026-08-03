@@ -6,114 +6,127 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col">
-    <section id="reservation-detail" class="bg-secondary p-6 sm:p-8 flex flex-col">
-        <a href="{% url 'reservations:reservations' %}"
-           class="text-white/80 hover:text-white font-semibold text-sm sm:text-base mb-4 inline-flex items-center gap-2 w-fit">
-            <i class="bi bi-arrow-left-short"></i>
-            {% trans "Terug naar overzicht" %}
-        </a>
+<div class="bg-background min-h-screen flex flex-col">
 
-        <h1 class="text-3xl sm:text-6xl font-bold text-white pb-6 sm:pb-8">{% trans "RESERVERINGSDETAILS" %}</h1>
+    <!-- ============ HEADER ============ -->
+    <section class="bg-white border-b border-black/5">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+            <a href="{% url 'reservations:reservations' %}"
+               class="text-foreground/50 hover:text-foreground font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors">
+                <i class="bi bi-arrow-left-short text-lg"></i>
+                {% trans "Terug naar overzicht" %}
+            </a>
 
-        <div class="p-5 sm:p-6 border-2 rounded-3xl shadow-lg mx-auto w-full sm:w-4/5 text-left
-                {% if reservation.request_status == RequestStatus.PENDING %}
-                    bg-alert border-alert
-                {% elif reservation.request_status == RequestStatus.APPROVED %}
-                    bg-success border-success
-                {% elif reservation.request_status == RequestStatus.DENIED %}
-                    bg-destructive border-destructive
-                {% endif %}">
-
-            <div class="flex items-start justify-between gap-3 flex-wrap mb-4">
-                <h2 class="font-bold text-2xl sm:text-4xl text-gray-900">
-                    {{ reservation.reservable.name }}
-                </h2>
-                <span class="shrink-0 text-xs sm:text-sm font-bold uppercase px-3 py-1 rounded-full bg-white/80 text-gray-900">
+            <div class="flex items-start justify-between gap-3 flex-wrap">
+                <h1 class="text-2xl sm:text-3xl font-bold text-foreground">{% trans "Reserveringsdetails" %}</h1>
+                <span class="shrink-0 text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full
+                    {% if reservation.request_status == RequestStatus.PENDING %}bg-alert/15 text-alert
+                    {% elif reservation.request_status == RequestStatus.APPROVED %}bg-success/15 text-success
+                    {% elif reservation.request_status == RequestStatus.DENIED %}bg-destructive/15 text-destructive
+                    {% endif %}">
                     {{ object.get_request_status_display }}
                 </span>
             </div>
+        </div>
+    </section>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base sm:text-lg">
-                <div class="border p-4 rounded-xl bg-gray-100 sm:col-span-2">
-                    <p class="font-bold text-gray-600 text-sm mb-1 inline-flex items-center gap-2">
-                        <i class="bi bi-card-text"></i> {% trans "Beschrijving" %}
-                    </p>
-                    <p class="text-gray-900">{{ object.reserved_item.description }}</p>
-                </div>
+    <div class="max-w-3xl mx-auto w-full px-4 sm:px-6 py-8 space-y-5">
 
-                <div class="border p-4 rounded-xl bg-gray-100">
-                    <p class="font-bold text-gray-600 text-sm mb-1 inline-flex items-center gap-2">
-                        <i class="bi bi-clock"></i> {% trans "Starttijd" %}
-                    </p>
-                    <p class="text-gray-900">{{ object.start|date:"j M Y, H:i" }}</p>
-                </div>
+        <!-- ============ DETAIL CARD ============ -->
+        <div class="relative bg-white rounded-2xl border border-black/5 shadow-sm overflow-hidden">
+            <span class="absolute inset-y-0 left-0 w-1.5
+                {% if reservation.request_status == RequestStatus.PENDING %}bg-alert
+                {% elif reservation.request_status == RequestStatus.APPROVED %}bg-success
+                {% elif reservation.request_status == RequestStatus.DENIED %}bg-destructive
+                {% endif %}"></span>
 
-                <div class="border p-4 rounded-xl bg-gray-100">
-                    <p class="font-bold text-gray-600 text-sm mb-1 inline-flex items-center gap-2">
-                        <i class="bi bi-clock"></i> {% trans "Eindtijd" %}
-                    </p>
-                    <p class="text-gray-900">{{ object.end|date:"j M Y, H:i" }}</p>
-                </div>
+            <div class="p-5 sm:p-6 pl-6 sm:pl-8">
+                <h2 class="font-bold text-xl sm:text-2xl text-foreground mb-4">
+                    {{ reservation.reservable.name }}
+                </h2>
 
-                <div class="border p-4 rounded-xl bg-gray-100">
-                    <p class="font-bold text-gray-600 text-sm mb-1 inline-flex items-center gap-2">
-                        <i class="bi bi-geo-alt"></i> {% trans "Locatie" %}
-                    </p>
-                    <p class="text-gray-900">{{ object.reserved_item.get_location_display }}</p>
-                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div class="p-4 rounded-xl bg-black/[0.03] sm:col-span-2">
+                        <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                            <i class="bi bi-card-text"></i> {% trans "Beschrijving" %}
+                        </p>
+                        <p class="text-foreground">{{ object.reserved_item.description }}</p>
+                    </div>
 
-                <div class="border p-4 rounded-xl bg-gray-100">
-                    <p class="font-bold text-gray-600 text-sm mb-1 inline-flex items-center gap-2">
-                        <i class="bi bi-tag"></i> {% trans "Type" %}
-                    </p>
-                    <p class="text-gray-900">{{ object.reserved_item.type.name }}</p>
-                </div>
+                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                        <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                            <i class="bi bi-clock"></i> {% trans "Starttijd" %}
+                        </p>
+                        <p class="text-foreground font-medium">{{ object.start|date:"j M Y, H:i" }}</p>
+                    </div>
 
-                {% if object.status == "denied" and object.denial_reason %}
-                <div class="border p-4 rounded-xl bg-gray-100 sm:col-span-2">
-                    <p class="font-bold text-gray-600 text-sm mb-1 inline-flex items-center gap-2">
-                        <i class="bi bi-exclamation-triangle-fill"></i> {% trans "Afwijsreden" %}
-                    </p>
-                    <p class="text-gray-900">{{ object.denial_reason }}</p>
+                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                        <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                            <i class="bi bi-clock"></i> {% trans "Eindtijd" %}
+                        </p>
+                        <p class="text-foreground font-medium">{{ object.end|date:"j M Y, H:i" }}</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                        <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                            <i class="bi bi-geo-alt"></i> {% trans "Locatie" %}
+                        </p>
+                        <p class="text-foreground font-medium">{{ object.reserved_item.get_location_display }}</p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                        <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                            <i class="bi bi-tag"></i> {% trans "Type" %}
+                        </p>
+                        <p class="text-foreground font-medium">{{ object.reserved_item.type.name }}</p>
+                    </div>
+
+                    {% if object.status == "denied" and object.denial_reason %}
+                    <div class="p-4 rounded-xl bg-destructive/10 border border-destructive/20 sm:col-span-2">
+                        <p class="font-semibold text-destructive text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                            <i class="bi bi-exclamation-triangle-fill"></i> {% trans "Afwijsreden" %}
+                        </p>
+                        <p class="text-foreground">{{ object.denial_reason }}</p>
+                    </div>
+                    {% endif %}
                 </div>
-                {% endif %}
             </div>
         </div>
-    </section>
 
-    <!-- Edit / delete reservation -->
-    <section id="manage-reservation" class="bg-[#1BB1E6] flex-auto p-6 sm:p-8">
-        <h1 class="text-2xl sm:text-5xl font-bold text-white">{% trans "BEHEER RESERVERING" %}</h1>
-        <div class="w-full sm:w-4/5 mx-auto mt-4 space-y-3">
-            <a href="{% url 'reservations:reservation-update' pk=object.id location=object.reserved_item.location %}"
-               class="btn btn-primary p-3 font-bold border-2 border-black rounded-3xl shadow-lg block text-center bg-white hover:bg-gray-200 transition-colors">
-                <span class="font-bold text-lg sm:text-3xl">
+        <!-- ============ MANAGE RESERVATION ============ -->
+        <div class="bg-white rounded-2xl border border-black/5 shadow-sm p-5 sm:p-6">
+            <h3 class="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-4">
+                {% trans "Beheer reservering" %}
+            </h3>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-3">
+                <a href="{% url 'reservations:reservation-update' pk=object.id location=object.reserved_item.location %}"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors">
+                    <i class="bi bi-pencil"></i>
                     {% trans "Bewerk reservering" %}
-                </span>
-            </a>
-            {% if object.can_fill_logbook %}
-            <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
-               class="btn btn-primary p-3 font-bold border-2 border-black rounded-3xl shadow-lg block text-center bg-primary/90 text-white hover:bg-primary transition-colors">
-                <span class="font-bold text-lg sm:text-3xl">
+                </a>
+
+                {% if object.can_fill_logbook %}
+                <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-success px-5 py-2.5 text-sm font-semibold text-white hover:bg-success-accent transition-colors">
+                    <i class="bi bi-journal-plus"></i>
                     {% trans "Vul logboek in" %}
-                </span>
-            </a>
-            {% elif object.has_boat_logbook %}
-            <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
-               class="btn btn-primary p-3 font-bold border-2 border-black rounded-3xl shadow-lg block text-center bg-white hover:bg-gray-200 transition-colors">
-                <span class="font-bold text-lg sm:text-3xl">
+                </a>
+                {% elif object.has_boat_logbook %}
+                <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors">
+                    <i class="bi bi-journal-text"></i>
                     {% trans "Bekijk logboek" %}
-                </span>
-            </a>
-            {% endif %}
-            <a href="{% url 'reservations:reservation-delete' pk=object.id %}"
-               class="btn btn-primary p-3 font-bold border-2 border-black rounded-3xl shadow-lg block text-center bg-destructive/90 text-white hover:bg-destructive transition-colors">
-                <span class="font-bold text-lg sm:text-3xl">
+                </a>
+                {% endif %}
+
+                <a href="{% url 'reservations:reservation-delete' pk=object.id %}"
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-destructive px-5 py-2.5 text-sm font-semibold text-destructive-foreground hover:bg-destructive-accent transition-colors sm:ml-auto">
+                    <i class="bi bi-trash3"></i>
                     {% trans "Verwijder reservering" %}
-                </span>
-            </a>
+                </a>
+            </div>
         </div>
-    </section>
+
+    </div>
 </div>
 {% endblock %}
