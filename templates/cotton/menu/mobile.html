@@ -42,6 +42,11 @@
     </div>
     <nav class="flex-1 p-4 space-y-2" aria-label="Mobile navigation">
         <a href="{% url 'events:events' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Activiteiten</a>
+        {% if request.user.is_authenticated %}
+            {% if request.user.organizer.exists %}
+                <a href="{% url 'events:my_events' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Mijn events</a>
+            {% endif %}
+        {% endif %}
         <a href="{% url 'reservations:reservations' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Reserveringen</a>
         <!-- <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Reserveer</a>
         <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Gallerij</a> -->

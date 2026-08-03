@@ -8,8 +8,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event, EventRegistration
-from loefsys.events.models.choices import RegistrationStatus
+from loefsys.events.models import Event, EventOrganizer, EventRegistration
+from loefsys.events.models.choices import EventCategories, RegistrationStatus
 
 
 class EventDetailAttendeesTestCase(TestCase):
@@ -121,3 +121,78 @@ class EventFillerViewTestCase(TestCase):
         self.assertContains(response, event.description)
         self.assertContains(response, 'name="fine-consent"')
         self.assertContains(response, "Afmelden (met boete)")
+
+
+class MyEventsFeatureTestCase(TestCase):
+    """Tests for the organizer event list and detail pages."""
+
+    def setUp(self):
+        self.organizer = G(get_user_model())
+        self.attendee = G(
+            get_user_model(),
+            first_name="Test",
+            last_name="Attendee",
+            email="attendee@example.com",
+            phone_number="+31612345678",
+            pod_kb_link="https://docs.google.com/spreadsheets/d/testkb",
+            pod_zb_link="https://docs.google.com/spreadsheets/d/testzb",
+        )
+        now = timezone.now()
+        self.event = G(
+            Event,
+            title="Training Event",
+            start=now + timezone.timedelta(days=7),
+            end=now + timezone.timedelta(days=8),
+            registration_start=now - timezone.timedelta(days=1),
+            registration_deadline=now + timezone.timedelta(days=6),
+            cancelation_deadline=now + timezone.timedelta(days=6),
+            category=EventCategories.TRAINING,
+            capacity=10,
+            price=0.00,
+            fine=0.00,
+            location="Nederland",
+            is_open_event=True,
+            published=True,
+            send_cancel_email=False,
+        )
+        self.event_organizer = G(EventOrganizer, event=self.event)
+        self.event_organizer.user.add(self.organizer)
+        G(EventRegistration, event=self.event, contact=self.attendee)
+        self.client.force_login(self.organizer)
+
+    def test_menu_shows_mijn_events_for_organizer(self):
+        response = self.client.get("/")
+        self.assertContains(response, "Mijn events")
+        self.assertContains(response, reverse("events:my_events"))
+
+    def test_my_events_list_shows_organized_events(self):
+        response = self.client.get(reverse("events:my_events"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.event.title)
+        self.assertContains(
+            response,
+            reverse("events:my_events_event", kwargs={"slug": self.event.slug}),
+        )
+
+    def test_organized_event_detail_shows_attendee_profiles_and_training_data(self):
+        response = self.client.get(
+            reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.event.title)
+        self.assertContains(response, self.event.get_absolute_url())
+        self.assertContains(response, self.attendee.display_name)
+        self.assertContains(
+            response, reverse("members:profile", kwargs={"slug": self.attendee.slug})
+        )
+        self.assertContains(response, self.attendee.phone_number)
+        self.assertContains(response, self.attendee.pod_kb_link)
+        self.assertContains(response, self.attendee.pod_zb_link)
+
+    def test_non_organizer_cannot_access_organized_event_detail(self):
+        other_user = G(get_user_model())
+        self.client.force_login(other_user)
+        response = self.client.get(
+            reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+        )
+        self.assertEqual(response.status_code, 404)

@@ -277,6 +277,10 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         if not self.mandatory_registration():
             return
 
+        # mandatory_registration() ensures capacity is non-null and > 0,
+        # make that explicit for static type checkers.
+        assert self.capacity is not None
+
         num_active = self.eventregistration_set.active().count()
         num_queued = self.eventregistration_set.queued().count()
         if not num_queued or num_active >= self.capacity:
@@ -352,7 +356,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
             return False
         return True
 
-    def cancelation_consequences(self) -> str:
+    def cancelation_consequences(self) -> bool:
         """Determine whether canceling a registration has consequences.
 
         Returns
@@ -396,6 +400,6 @@ class EventOrganizer(TimeStampedModel):
         to=LoefbijterGroup, related_name="organizing_group", blank=True
     )
 
-    user = models.ManyToManyField(
+    user: models.ManyToManyField = models.ManyToManyField(
         to=get_user_model(), related_name="organizer", blank=True
     )

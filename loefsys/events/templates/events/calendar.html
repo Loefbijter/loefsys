@@ -75,6 +75,40 @@
     .fc .fc-list-event:active {
       background-color: color-mix(in srgb, var(--color-secondary) 8%, transparent);
     }
+    .fc .fc-event,
+    .fc .fc-event *,
+    .fc .fc-event .fc-event-title,
+    .fc .fc-event .fc-event-time,
+    .fc .fc-event .fc-event-main,
+    .fc .fc-event-custom-content {
+      color: #ffffff !important;
+    }
+    .fc .fc-daygrid-event,
+    .fc .fc-daygrid-event .fc-event-main,
+    .fc .fc-daygrid-event .fc-event-custom-content,
+    .fc .fc-timegrid-event .fc-event-main,
+    .fc .fc-timegrid-event .fc-event-custom-content {
+      min-height: 3rem;
+      padding: 0.45rem 0.75rem;
+      display: flex;
+      align-items: center;
+    }
+    .fc .fc-daygrid-event {
+      min-height: 3rem;
+    }
+
+    /* List view override: use dark text for the "Lijst" feed-style items */
+    .fc .fc-list-event .fc-event-list-item,
+    .fc .fc-list-event .fc-event-list-item *,
+    .fc .fc-list-event .fc-event-list-item .fc-event-title,
+    .fc .fc-list-event .fc-event-list-item .fc-event-time {
+      color: #111827 !important;
+    }
+    /* Also color the separate time column cell used by FullCalendar's list table */
+    .fc .fc-list-table .fc-list-event-time,
+    .fc .fc-list-table .fc-list-event-time * {
+      color: #111827 !important;
+    }
     .fc .fc-list-day-cushion {
       background: color-mix(in srgb, var(--color-secondary) 6%, transparent) !important;
       font-weight: 700;
@@ -148,38 +182,71 @@
           if (viewSelect) viewSelect.value = info.view.type;
         },
         eventContent: function (arg) {
-          if (!arg.view.type.startsWith('list')) {
-            return null;
+          if (arg.view.type.startsWith('list')) {
+            var link = document.createElement('a');
+            link.href = arg.event.url || '#';
+            link.className = 'fc-event-list-item flex items-center gap-3 w-full no-underline';
+            link.style.color = 'inherit';
+            link.style.textDecoration = 'none';
+            link.style.display = 'flex';
+            link.style.alignItems = 'center';
+
+            if (arg.event.extendedProps.picture_url) {
+              var img = document.createElement('img');
+              img.src = arg.event.extendedProps.picture_url;
+              img.alt = arg.event.title || '';
+              img.className = 'w-16 h-16 rounded-xl object-cover flex-shrink-0';
+              link.appendChild(img);
+            } else {
+              var placeholder = document.createElement('div');
+              placeholder.className = 'w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 text-slate-400';
+              placeholder.innerHTML = '<i class="bi bi-calendar-event"></i>';
+              link.appendChild(placeholder);
+            }
+
+            var textContainer = document.createElement('div');
+            textContainer.className = 'flex-1 min-w-0';
+
+            var titleElInner = document.createElement('div');
+            titleElInner.className = 'fc-event-title font-semibold truncate';
+            titleElInner.textContent = arg.event.title;
+            textContainer.appendChild(titleElInner);
+
+            var timeText = arg.timeText;
+            if (!timeText && arg.event.start) {
+              var startDate = arg.event.start;
+              var hours = startDate.getHours().toString().padStart(2, '0');
+              var minutes = startDate.getMinutes().toString().padStart(2, '0');
+              timeText = hours + ':' + minutes;
+            }
+            if (timeText) {
+              var timeEl = document.createElement('div');
+              timeEl.className = 'fc-event-time text-sm';
+              timeEl.textContent = timeText;
+              textContainer.appendChild(timeEl);
+            }
+
+            link.appendChild(textContainer);
+
+            var chevron = document.createElement('i');
+            chevron.className = 'bi bi-chevron-right text-slate-300 flex-shrink-0';
+            link.appendChild(chevron);
+
+            return { domNodes: [link] };
           }
 
-          var link = document.createElement('a');
-          link.href = arg.event.url || '#';
-          link.className = 'fc-event-list-item flex items-center gap-3 w-full no-underline';
-          link.style.color = 'inherit';
-          link.style.textDecoration = 'none';
-          link.style.display = 'flex';
-          link.style.alignItems = 'center';
+          var eventContainer = document.createElement('div');
+          eventContainer.className = 'fc-event-custom-content w-full h-full flex items-center justify-between gap-2';
+          eventContainer.style.width = '100%';
+          eventContainer.style.height = '100%';
+          eventContainer.style.display = 'flex';
+          eventContainer.style.alignItems = 'center';
+          eventContainer.style.justifyContent = 'space-between';
 
-          if (arg.event.extendedProps.picture_url) {
-            var img = document.createElement('img');
-            img.src = arg.event.extendedProps.picture_url;
-            img.alt = arg.event.title || '';
-            img.className = 'w-16 h-16 rounded-xl object-cover flex-shrink-0';
-            link.appendChild(img);
-          } else {
-            var placeholder = document.createElement('div');
-            placeholder.className = 'w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 text-slate-400';
-            placeholder.innerHTML = '<i class="bi bi-calendar-event"></i>';
-            link.appendChild(placeholder);
-          }
-
-          var textContainer = document.createElement('div');
-          textContainer.className = 'flex-1 min-w-0';
-
-          var titleElInner = document.createElement('div');
-          titleElInner.className = 'fc-event-title font-semibold truncate';
-          titleElInner.textContent = arg.event.title;
-          textContainer.appendChild(titleElInner);
+          var titleEl = document.createElement('div');
+          titleEl.className = 'fc-event-title font-semibold truncate';
+          titleEl.textContent = arg.event.title;
+          eventContainer.appendChild(titleEl);
 
           var timeText = arg.timeText;
           if (!timeText && arg.event.start) {
@@ -188,20 +255,15 @@
             var minutes = startDate.getMinutes().toString().padStart(2, '0');
             timeText = hours + ':' + minutes;
           }
+
           if (timeText) {
             var timeEl = document.createElement('div');
-            timeEl.className = 'fc-event-time text-sm text-slate-600';
+            timeEl.className = 'fc-event-time text-sm text-white';
             timeEl.textContent = timeText;
-            textContainer.appendChild(timeEl);
+            eventContainer.appendChild(timeEl);
           }
 
-          link.appendChild(textContainer);
-
-          var chevron = document.createElement('i');
-          chevron.className = 'bi bi-chevron-right text-slate-300 flex-shrink-0';
-          link.appendChild(chevron);
-
-          return { domNodes: [link] };
+          return { domNodes: [eventContainer] };
         },
       });
 

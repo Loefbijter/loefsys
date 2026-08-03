@@ -5,6 +5,11 @@
     <div class="hidden md:flex gap-4 items-center">
         {% requireapp "loefsys.events" %}
         <c-menu.item href="{% url 'events:events' %}">Activiteiten</c-menu.item>
+        {% if request.user.is_authenticated %}
+            {% if request.user.organizer.exists %}
+                <c-menu.item href="{% url 'events:my_events' %}">Mijn events</c-menu.item>
+            {% endif %}
+        {% endif %}
         {% endrequireapp %}
         {% requireapp "loefsys.reservations" %}
         <c-menu.item href="{% url 'reservations:reservations' %}">Reserveringen</c-menu.item>

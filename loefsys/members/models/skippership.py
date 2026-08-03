@@ -29,7 +29,7 @@ class Skippership(models.Model):
         verbose_name=_("Parent skippership"),
         help_text=_("The skippership that must be obtained before this one."),
     )
-    skippers = models.ManyToManyField(
+    skippers: models.ManyToManyField = models.ManyToManyField(
         User,
         through="UserSkippership",
         verbose_name=_("Skippers"),

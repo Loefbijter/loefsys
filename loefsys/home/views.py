@@ -1,17 +1,19 @@
 """Module defining the view for the index page."""
 
+from typing import Any, cast
+
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import TemplateView, View
 
-# Length used when building a short preview of long descriptions
-DESCRIPTION_PREVIEW_LEN = 300
-
 from loefsys.events.models import Event
 from loefsys.home.models import Announcement
 from loefsys.members.models import UserSkippership
 from loefsys.reservations.models.reservation import Reservation
+
+# Length used when building a short preview of long descriptions
+DESCRIPTION_PREVIEW_LEN = 300
 
 
 class HomeView(View):
@@ -30,7 +32,11 @@ class HomeView(View):
         # Show top 4 upcoming events as a preview
         raw_upcoming = list(events[:4])
         upcoming_events = []
+
         for ev in raw_upcoming:
+            # Treat event as Any for dynamic attributes added below to satisfy static
+            # type checkers that do not know about these ad-hoc attributes.
+            ev = cast(Any, ev)
             # Picture URL if available
             ev.picture_url = (
                 ev.picture.url
@@ -126,13 +132,13 @@ class SchippersView(TemplateView):
                 "user__first_name", "user__last_name", "skippership__name"
             )
         )
-        user_skipperships_by_user = {}
+        user_skipperships_by_user: dict[int, list] = {}
         for user_skippership in user_skipperships:
             user_skipperships_by_user.setdefault(user_skippership.user_id, []).append(
                 user_skippership
             )
 
-        grouped_skippers = {}
+        grouped_skippers: dict[str, list] = {}
         for entries in user_skipperships_by_user.values():
             user = entries[0].user
             for entry in entries:

@@ -1,6 +1,6 @@
 """Module defining the user account model for the website."""
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
@@ -39,7 +39,8 @@ class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         """Create and save a user with the given email and password."""
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        # Cast to the concrete User type for the benefit of static type checkers.
+        user = cast("User", self.model(email=email, **extra_fields))
         user.password = make_password(password)
         user.save(using=self._db)
         return user

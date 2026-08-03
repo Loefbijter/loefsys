@@ -163,7 +163,7 @@ class Reservation(TimeStampedModel):
                     pk=self.reservable.pk
                 ).requires_skippership
             except ReservableBoat.DoesNotExist:
-                requires_skippership = False
+                requires_skippership = None
 
             if requires_skippership and not self.authorized_userskippership:
                 raise ValidationError(

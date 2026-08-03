@@ -4,10 +4,17 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import LoginView
 from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # Provide a top-level named login URL to support templates using {% url 'login' %}.
+    path(
+        "login/",
+        LoginView.as_view(template_name="login.html", next_page="/"),
+        name="login",
+    ),
     path("", include("loefsys.home.urls"), name="home"),
     path("", include("loefsys.members.urls", namespace="members")),
     # path("profile/", include("loefsys.profile.urls"), name="profile"),

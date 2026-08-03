@@ -45,9 +45,7 @@ class ReservableType(TimeStampedModel):
 
     name = models.CharField(max_length=40, verbose_name=_("Material type"), unique=True)
     category = models.PositiveSmallIntegerField(
-        choices=Category,
-        default=Category.OTHER,
-        verbose_name=_("Reservable category"),
+        choices=Category, default=Category.OTHER, verbose_name=_("Reservable category")
     )
     description = models.TextField(verbose_name=_("Type description"))
 
@@ -92,21 +90,11 @@ class Reservable(TimeStampedModel):
         KRAAIJ = (3, _("Kraaijenbergse Plassen"))
         """Used when an item is located at the Kraaijenbergse Plassen."""
 
-    name = models.CharField(
-        max_length=40,
-        verbose_name=_("Name")
-    )
-    description = models.TextField(
-        verbose_name=_("Description")
-    )
-    type = models.ForeignKey(
-        ReservableType,
-        on_delete=models.CASCADE,
-    )
+    name = models.CharField(max_length=40, verbose_name=_("Name"))
+    description = models.TextField(verbose_name=_("Description"))
+    type = models.ForeignKey(ReservableType, on_delete=models.CASCADE)
     location = models.PositiveSmallIntegerField(
-        choices=Location,
-        default=Location.OTHER,
-        verbose_name=_("Location")
+        choices=Location, default=Location.OTHER, verbose_name=_("Location")
     )
     is_reservable = models.BooleanField(
         default=True,
@@ -120,19 +108,19 @@ class Reservable(TimeStampedModel):
     def __str__(self):
         return self.name
 
-    def validate_reservation(self, reservation: "Reservation") -> None:
-        """Check if this item can be reserved.
+    def validate_reservation(self, _reservation: "Reservation") -> None:
+        """Check whether this item can be reserved.
 
-        Checks if the item can be reserved. Subclasses of the ReservableItem class can override this and add additional requirements.
+        Subclasses can override and add additional requirements.
 
         Parameters
         ----------
-        reservation : ~loefsys.reservations.models.reservable.Reservation
+        _reservation : ~loefsys.reservations.models.reservable.Reservation
             The reservation that is attempted to be done.
 
         Raises
         ------
-            ValidationError
+        ValidationError
         """
         if not self.is_reservable:
             raise ValidationError(_("This item cannot be reserved."))

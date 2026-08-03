@@ -33,16 +33,13 @@ class BoatLogbook(TimeStampedModel):
     wind_force = models.PositiveSmallIntegerField(verbose_name=_("Wind force (Bft)"))
     motor_hours = models.PositiveIntegerField(verbose_name=_("Motor hours"))
     refueled = models.BooleanField(
-        default=False,
-        verbose_name=_("Did you refuel the boat?"),
+        default=False, verbose_name=_("Did you refuel the boat?")
     )
     has_new_damage = models.BooleanField(
-        default=False,
-        verbose_name=_("Did you discover new damage?"),
+        default=False, verbose_name=_("Did you discover new damage?")
     )
     new_damage_description = models.TextField(
-        blank=True,
-        verbose_name=_("New damage description"),
+        blank=True, verbose_name=_("New damage description")
     )
     photo = models.ImageField(
         upload_to="reservations/boat-logbooks/",

@@ -69,8 +69,7 @@ class BoatLogbookForm(forms.ModelForm):
     """A form to fill in a boat logbook after a reservation."""
 
     has_new_damage = forms.BooleanField(
-        label=_("Heb je nieuwe schade ontdekt?"),
-        required=False,
+        label=_("Heb je nieuwe schade ontdekt?"), required=False
     )
     new_damage_description = forms.CharField(
         label=_("Beschrijf de nieuwe schade"),
@@ -88,7 +87,9 @@ class BoatLogbookForm(forms.ModelForm):
             "new_damage_description",
             "photo",
         )
-        labels: ClassVar[dict[str, str]] = {
+        # Labels may be lazy translation strings; use a wide type to satisfy
+        # static checkers while remaining compatible with Django forms.
+        labels: ClassVar[dict[str, object]] = {
             "wind_force": _("Wat was de windkracht? (Bft)"),
             "motor_hours": _("Hoeveel motoruren heb je gemaakt?"),
             "refueled": _("Heb je de boot afgetankt?"),
@@ -98,14 +99,16 @@ class BoatLogbookForm(forms.ModelForm):
     def clean(self):
         """Require a damage description when the user reports new damage."""
         cleaned_data = super().clean()
-        if cleaned_data.get("has_new_damage") and not cleaned_data.get(
-            "new_damage_description"
-        ).strip():
-            self.add_error(
-                "new_damage_description",
-                _(
-                    "Beschrijf de nieuwe schade als je aangeeft dat er nieuwe "
-                    "schade is."
-                ),
-            )
+        # Be defensive: the description can be None, so coerce to empty string
+        # before calling string operations.
+        if cleaned_data.get("has_new_damage"):
+            desc = cleaned_data.get("new_damage_description") or ""
+            if not desc.strip():
+                self.add_error(
+                    "new_damage_description",
+                    _(
+                        "Beschrijf de nieuwe schade als je aangeeft dat er nieuwe "
+                        "schade is."
+                    ),
+                )
         return cleaned_data

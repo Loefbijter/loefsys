@@ -24,9 +24,7 @@ class BoatLogbookViewTestCase(TestCase):
             last_name="Book",
         )
         self.boat_type = ReservableType.objects.create(
-            name="Boat",
-            category=ReservableCategories.BOAT,
-            description="A boat type",
+            name="Boat", category=ReservableCategories.BOAT, description="A boat type"
         )
         self.boat = ReservableBoat.objects.create(
             name="Test boat",
@@ -47,8 +45,7 @@ class BoatLogbookViewTestCase(TestCase):
             request_status=Reservation.RequestStatus.APPROVED,
         )
         self.existing_damage = BoatDamageRecord.objects.create(
-            boat=self.boat,
-            description="Een kras op de romp.",
+            boat=self.boat, description="Een kras op de romp."
         )
 
     def test_logbook_form_renders_existing_damage_records(self):
@@ -94,8 +91,7 @@ class BoatLogbookViewTestCase(TestCase):
         self.assertRedirects(
             response,
             reverse(
-                "reservations:reservation-detail",
-                kwargs={"pk": self.reservation.pk},
+                "reservations:reservation-detail", kwargs={"pk": self.reservation.pk}
             ),
         )
 
@@ -106,8 +102,7 @@ class BoatLogbookViewTestCase(TestCase):
         self.assertTrue(logbook.has_new_damage)
         self.assertTrue(
             BoatDamageRecord.objects.filter(
-                boat=self.boat,
-                description="Een nieuwe deuk in de boeg.",
+                boat=self.boat, description="Een nieuwe deuk in de boeg."
             ).exists()
         )
 
@@ -127,4 +122,6 @@ class BoatLogbookViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Beschrijf de nieuwe schade")
-        self.assertFalse(BoatLogbook.objects.filter(reservation=self.reservation).exists())
+        self.assertFalse(
+            BoatLogbook.objects.filter(reservation=self.reservation).exists()
+        )

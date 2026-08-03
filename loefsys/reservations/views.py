@@ -217,9 +217,7 @@ class BoatLogbookView(LoginRequiredMixin, FormView):
     def dispatch(self, request, *args, **kwargs):
         """Find the reservation and ensure the logbook can be filled."""
         self.reservation = get_object_or_404(
-            Reservation,
-            pk=kwargs["pk"],
-            user=request.user,
+            Reservation, pk=kwargs["pk"], user=request.user
         )
         if not self.reservation.can_fill_logbook:
             return redirect("reservations:reservation-detail", pk=self.reservation.pk)
@@ -263,8 +261,7 @@ class BoatLogbookView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Redirect back to the reservation detail page."""
         return reverse(
-            "reservations:reservation-detail",
-            kwargs={"pk": self.reservation.pk},
+            "reservations:reservation-detail", kwargs={"pk": self.reservation.pk}
         )
 
 

@@ -24,7 +24,10 @@ class GroupMembershipManager(models.Manager["GroupMembership"]):
             ~loefsys.groups.models.membership.GroupMembership
             A query of filtered memberships that are active.
         """
-        return self.filter(member_until__lte=Now())
+        # Active when no end date or end date not passed.
+        return self.filter(
+            models.Q(member_until__isnull=True) | models.Q(member_until__gte=Now())
+        )
 
 
 class GroupMembership(TimeStampedModel):
@@ -85,4 +88,4 @@ class GroupMembership(TimeStampedModel):
     note = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
-        return f"Membership of {self.contact} for {self.group}"
+        return f"Membership of {self.user} for {self.group}"

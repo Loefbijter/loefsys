@@ -18,7 +18,7 @@ from loefsys.events.models.feed_token import FeedToken
 from .exceptions import RegistrationError
 from .forms import EventFieldsForm
 from .models import Event, EventOrganizer, EventRegistration, RegistrationFormField
-from .models.choices import RegistrationStatus
+from .models.choices import EventCategories, RegistrationStatus
 
 
 class EventDetailView(LoginRequiredMixin, DetailView):
@@ -377,4 +377,43 @@ class EventFeedView(TemplateView, LoginRequiredMixin):
         )
         context["other_event_feed"] = f"{reverse('events:other_event_feed')}?u={token}"
 
+        return context
+
+
+class MyEventsView(LoginRequiredMixin, TemplateView):
+    """View for listing the current user's organized events."""
+
+    template_name = "events/my_events.html"
+
+    def get_context_data(self, **kwargs):
+        """Return context containing events organized by the current user."""
+        context = super().get_context_data(**kwargs)
+        context["events"] = (
+            Event.objects.filter(eventorganizer__user=self.request.user)
+            .distinct()
+            .order_by("start")
+        )
+        return context
+
+
+class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
+    """View for organizers to inspect their own event registrations."""
+
+    model = Event
+    template_name = "events/my_event_detail.html"
+    context_object_name = "event"
+
+    def get_queryset(self):
+        """Return events organized by the current user for this view."""
+        return Event.objects.filter(eventorganizer__user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        """Return context with event details and attendees."""
+        context = super().get_context_data(**kwargs)
+        context["event_page_url"] = self.object.get_absolute_url()
+        context["attendees"] = (
+            self.object.eventregistration_set.active().select_related("contact")
+        )
+        context["event_categories"] = EventCategories
+        context["training_event"] = self.object.category == EventCategories.TRAINING
         return context
