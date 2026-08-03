@@ -85,10 +85,6 @@ class Migration(migrations.Migration):
             model_name='gearreservation',
             name='gear',
         ),
-        migrations.RemoveField(
-            model_name='gearreservation',
-            name='reservation_ptr',
-        ),
         migrations.DeleteModel(
             name='Log',
         ),
@@ -99,10 +95,6 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='roomreservation',
             name='room',
-        ),
-        migrations.RemoveField(
-            model_name='roomreservation',
-            name='reservation_ptr',
         ),
         migrations.AlterModelOptions(
             name='reservable',
