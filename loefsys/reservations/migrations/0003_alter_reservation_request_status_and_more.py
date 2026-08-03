@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
                 ("created", django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name="created")),
                 ("modified", django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name="modified")),
                 ("description", models.TextField(verbose_name="Damage description")),
-                ("boat", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="damage_records", to="reservations.reservableboat", verbose_name="Boat")),
+                ("boat", models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name="damage_records", to="reservations.boat", verbose_name="Boat")),
             ],
             options={
                 "get_latest_by": "modified",
