@@ -1,98 +1,144 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Profiel Bewerken
+    {% trans "Profiel bewerken" %}
 {% endblock %}
 
 {% block content %}
-    {% comment %} <h1>Account information</h1>
+<div class="bg-background min-h-screen flex flex-col">
 
-<form class="" action="{% url 'accountinfoedit' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="flex flex-row" id="account-information">
-        <div class="flex flex-col grow" id="personal-information">
-            <h2>User details</h2>
-            {{ user_form.as_p }}
+    <!-- ============ HEADER ============ -->
+    <section class="bg-white border-b border-black/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground">{% trans "Pas je profiel aan" %}</h1>
+            <p class="text-sm text-foreground/60 mt-1">{% trans "Werk je gegevens bij en sla de wijzigingen op." %}</p>
         </div>
-        {% if member_form %}
-        <div class="flex flex-col grow" id="member-information">
-            <h2>Member details</h2>
-            {{ member_form.as_p }}
-        </div>
-        {% endif %}
-    </div>
-    <button class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-gray-200 hover:bg-gray-400 block text-center">Save account information</button>
-</form>
-{% endcomment %}
+    </section>
 
+    <div class="max-w-4xl mx-auto w-full px-4 sm:px-6 py-8">
+        <form action="{% url 'members:user-profile-edit' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-    <div class="flex flex-col h-screen">
-
-        <!-- Dark Blue top Section -->
-        <section class="bg-[#234193] flex flex-col p-8 flex-grow items-center text-white">
-            <p class="text-6xl font-bold mb-6">PAS JE PROFIEL AAN</p>
-            <form action="{% url 'accountinfoedit' %}" method="post" enctype="multipart/form-data" class="w-full">
-                {% csrf_token %}
-                <div class=" space-y-6 flex flex-col md:flex-row gap-12" id="account-information">
-
-                    <!-- Personal Information -->
-                    <div class="flex-col" id="personal-information">
-                        <p class="text-5xl font-semibold mb-6">User details</p>
-                        <div class="space-y-6">
-                            {% for field in user_form %}
-                                <div class="flex flex-col w-4/5 mx-auto text-black text-5xl center">
-                                    <label for="{{ field.id_for_label }}" class="mb-1 font-bold text-white">
-                                        {{ field.label }}
-                                    </label>
-                                    {{ field }}
-                                </div>
-                            {% endfor %}
-                        </div>
+            <!-- Profile photo -->
+            {% for field in user_form %}
+            {% if field.field.widget.input_type == "file" %}
+            <div class="bg-white p-6 rounded-2xl border border-black/5 shadow-sm text-left mb-6 max-w-md mx-auto">
+                <div class="flex flex-col items-center text-center gap-4">
+                    <div id="photo-preview"
+                         class="w-24 h-24 rounded-full bg-black/[0.03] border-2 border-black/10 flex items-center justify-center overflow-hidden text-3xl text-foreground/30">
+                        <i class="bi bi-person-fill"></i>
                     </div>
-
-                    <!-- Member Information -->
-                    {% if member_form %}
-                        <div class="flex-1" id="member-information">
-                            <p class="text-2xl font-semibold mb-6">Member details</h2>
-                            <div class="space-y-6">
-                                {% for field in member_form %}
-                                    <div class="flex flex-col">
-                                        <label for="{{ field.id_for_label }}" class="mb-1 font-medium text-white">
-                                            {{ field.label }}
-                                        </label>
-                                        {{ field }}
-                                        {% if field.errors %}
-                                            <p class="text-red-300 text-sm mt-1">{{ field.errors|join:", " }}</p>
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-foreground/70 mb-2">
+                            {{ field.label }}
+                        </label>
+                        <label for="{{ field.id_for_label }}"
+                               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 text-primary hover:bg-primary/5 font-semibold text-sm cursor-pointer transition-colors">
+                            <i class="bi bi-camera-fill"></i>
+                            {% trans "Foto kiezen" %}
+                        </label>
+                        <div class="hidden">{{ field }}</div>
+                        <p id="photo-filename" class="text-xs text-foreground/50 mt-2">{% trans "Geen foto gekozen" %}</p>
+                    </div>
+                    {% if field.help_text %}
+                    <p class="text-xs text-foreground/50">{{ field.help_text }}</p>
                     {% endif %}
+                    {% if field.errors %}
+                    <p class="text-destructive text-xs font-medium">{{ field.errors|join:", " }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
 
+            <div class="grid grid-cols-1 {% if member_form %}md:grid-cols-2{% endif %} gap-5 {% if not member_form %}max-w-xl mx-auto{% endif %}">
+
+                <!-- Personal information -->
+                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm text-left">
+                    <h2 class="text-lg font-bold text-foreground mb-5">{% trans "Gebruikersgegevens" %}</h2>
+                    <div class="space-y-4">
+                        {% for field in user_form %}
+                        {% if field.field.widget.input_type != "file" %}
+                        <div class="flex flex-col space-y-1.5">
+                            <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-foreground/70">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% if field.help_text %}
+                            <p class="text-xs text-foreground/50">{{ field.help_text }}</p>
+                            {% endif %}
+                            {% if field.errors %}
+                            <p class="text-destructive text-xs font-medium">{{ field.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div>
-                    <br>
-                    <br>
-                    <button class="mt-10 p-3 border-2 rounded-5xl shadow-lg mx-auto w-4/5 bg-gray-200 hover:bg-gray-400 text-black text-5xl font-semibold">
-                        Nieuwe informatie opslaan
-                    </button>
+                <!-- Member information -->
+                {% if member_form %}
+                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm text-left">
+                    <h2 class="text-lg font-bold text-foreground mb-5">{% trans "Lidgegevens" %}</h2>
+                    <div class="space-y-4">
+                        {% for field in member_form %}
+                        <div class="flex flex-col space-y-1.5">
+                            <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-foreground/70">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% if field.help_text %}
+                            <p class="text-xs text-foreground/50">{{ field.help_text }}</p>
+                            {% endif %}
+                            {% if field.errors %}
+                            <p class="text-destructive text-xs font-medium">{{ field.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </form>
-        </section>
+                {% endif %}
 
-        <!-- Light Blue Bottom Section -->
-        <section class="bg-[#1BB1E6] p-8 flex flex-auto items-center flex-col">
-            <p class="text-6xl font-bold text-white pb-8 mt-4 text-center">Annuleren</p>
-            <a href="{% url 'accountinfo' %}"
-               class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-4/5 bg-gray-200 hover:bg-gray-400 text-center">
-                <h1 class="font-bold text-3xl">Annuleren</h1>
-            </a>
-        </section>
-        <div class="pb-27">
-            {% include "menu.html" %}
-        </div>
+            </div>
+
+            <!-- Form actions -->
+            <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-center gap-3">
+                <a href="{% url 'members:user-profile' %}"
+                   class="text-center rounded-xl border border-black/10 bg-white px-6 py-2.5 text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
+                    {% trans "Annuleren" %}
+                </a>
+                <button type="submit"
+                        class="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors">
+                    {% trans "Nieuwe informatie opslaan" %}
+                </button>
+            </div>
+        </form>
     </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.querySelector("input[type='file']");
+        const preview = document.getElementById("photo-preview");
+        const filenameLabel = document.getElementById("photo-filename");
+
+        fileInput?.addEventListener("change", function () {
+            const file = this.files && this.files[0];
+            if (!file) {
+                if (filenameLabel) filenameLabel.textContent = "{% trans 'Geen foto gekozen' %}";
+                return;
+            }
+            if (filenameLabel) filenameLabel.textContent = file.name;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                if (preview) {
+                    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" alt="{% trans 'Voorbeeld profielfoto' %}">`;
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 {% endblock %}

@@ -3,6 +3,7 @@
 from django.urls import path
 
 from .views import (
+    BoatLogbookView,
     ReservationCreateView,
     ReservationDeleteView,
     ReservationDetailView,
@@ -22,6 +23,7 @@ urlpatterns = [
     ),
     path("delete/<int:pk>", ReservationDeleteView.as_view(), name="reservation-delete"),
     path("detail/<int:pk>", ReservationDetailView.as_view(), name="reservation-detail"),
+    path("logbook/<int:pk>", BoatLogbookView.as_view(), name="boat-logbook"),
     path(
         "check-availability",
         ReservationCreateView.check_availability,

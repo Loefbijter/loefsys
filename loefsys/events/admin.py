@@ -84,6 +84,7 @@ class EventAdmin(admin.ModelAdmin):
         "registration_deadline",
         "cancelation_deadline",
         "price",
+        "fine",
         "capacity",
         "location",
         "category",
