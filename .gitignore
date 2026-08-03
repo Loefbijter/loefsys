@@ -1,6 +1,8 @@
 db.sqlite*
 .vscode/
 loefsys/*/migrations/0*.py
+!loefsys/members/migrations/0004_user_pod_link.py
+!loefsys/reservations/migrations/0003_alter_reservation_request_status_and_more.py
 media/
 
 ### Python template

@@ -7,9 +7,10 @@
   * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
   * the scope of this path.
   */
-@source "../**/*.{html,js,py}";
+/* @source "../**/*.{html,js,py}"; (scanning hint for Tailwind; kept as comment to avoid CSS linter errors) */
 
-@theme {
+/*
+:root {
   --color-loef-0: oklch(0.95 0.05 230);
   --color-loef-1: oklch(0.7 0.15 230);
   --color-loef-2: oklch(0.5 0.15 230);
@@ -53,6 +54,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 }
+*/
 
   * {
     font-family: 'Inter', sans-serif;

@@ -3,6 +3,7 @@
 from django.contrib.auth.models import Permission
 from django.db import models
 from django.db.models import CheckConstraint, Q
+from django.utils.dateparse import parse_date
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
@@ -85,10 +86,20 @@ class LoefbijterGroup(TimeStampedModel):
     @property
     def active(self):
         """Return whether the group is currently active."""
-        return (
-            self.date_discontinuation is None
-            or self.date_discontinuation >= now().__str__()
-        )
+        # If no discontinuation date is set, the group is active.
+        if self.date_discontinuation is None:
+            return True
+
+        # The field may contain a date or a string in some contexts/tests —
+        # ensure we compare date objects.
+        dd = self.date_discontinuation
+        if isinstance(dd, str):
+            dd = parse_date(dd)
+            if dd is None:
+                # If parsing fails, treat as inactive for safety.
+                return False
+
+        return dd >= now().date()
 
     display_members = models.BooleanField(_("Display group members"))
 

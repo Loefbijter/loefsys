@@ -1,6 +1,6 @@
 """Module defining the user account model for the website."""
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
@@ -22,8 +22,11 @@ if TYPE_CHECKING:
     from .membership import Membership
     from .study_registration import StudyRegistration
 
-def twanstest(modeladmin, request, queryset):
-    pass
+
+def twanstest(_modeladmin, _request, _queryset):
+    """Perform no action for the member admin configuration."""
+    return None
+
 
 class UserManager(BaseUserManager):
     """Manager for the User model.
@@ -36,7 +39,8 @@ class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         """Create and save a user with the given email and password."""
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        # Cast to the concrete User type for the benefit of static type checkers.
+        user = cast("User", self.model(email=email, **extra_fields))
         user.password = make_password(password)
         user.save(using=self._db)
         return user
@@ -187,6 +191,18 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
     initials = models.CharField(max_length=20, verbose_name=_("Initials"), blank=True)
     nickname = models.CharField(max_length=30, verbose_name=_("Nickname"), blank=True)
+    lichting = models.CharField(
+        max_length=100,
+        verbose_name=_("Lichting"),
+        blank=True,
+        help_text=_("The member's lichting, for example '57e lichting'."),
+    )
+    title = models.CharField(
+        max_length=100,
+        verbose_name=_("Title"),
+        blank=True,
+        help_text=_("Additional title for the user, editable by the board."),
+    )
 
     display_name_preference = models.PositiveSmallIntegerField(
         choices=DisplayNamePreferences, default=DisplayNamePreferences.FULL
@@ -228,6 +244,23 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     # )
 
     phone_number = PhoneNumberField(blank=True)
+    pod_kb_link = models.URLField(
+        max_length=512,
+        blank=True,
+        verbose_name=_("KB POD link"),
+        help_text=_(
+            "Paste the link to your KB POD (Google Sheets) so it can be edited."
+        ),
+    )
+
+    pod_zb_link = models.URLField(
+        max_length=512,
+        blank=True,
+        verbose_name=_("ZB POD link"),
+        help_text=_(
+            "Paste the link to your ZB POD (Google Sheets) so it can be edited."
+        ),
+    )
 
     # TODO: Refactor
     note = models.TextField(blank=True)
@@ -241,6 +274,12 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     def full_name(self) -> str:
         """Return the full name of the person."""
         return f"{self.first_name} {self.last_name}".strip()
+
+    @property
+    def member_since(self):
+        """Return the earliest known membership start date for the user."""
+        membership = self.membership_set.order_by("start").first()
+        return membership.start if membership else None
 
     @property
     def display_name(self) -> str:

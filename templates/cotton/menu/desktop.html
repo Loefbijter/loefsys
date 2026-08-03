@@ -5,12 +5,17 @@
     <div class="hidden md:flex gap-4 items-center">
         {% requireapp "loefsys.events" %}
         <c-menu.item href="{% url 'events:events' %}">Activiteiten</c-menu.item>
+        {% if request.user.is_authenticated %}
+            {% if request.user.organizer.exists %}
+                <c-menu.item href="{% url 'events:my_events' %}">Mijn events</c-menu.item>
+            {% endif %}
+        {% endif %}
         {% endrequireapp %}
         {% requireapp "loefsys.reservations" %}
         <c-menu.item href="{% url 'reservations:reservations' %}">Reserveringen</c-menu.item>
-        <c-menu.item href="">Reserveer</c-menu.item>
+        <!-- <c-menu.item href="">Reserveer</c-menu.item> -->
         {% endrequireapp %}
-        <c-menu.item>Gallerij</c-menu.item>
+        <!-- <c-menu.item>Gallerij</c-menu.item> -->
 
         {# About dropdown #}
         <div class="relative" id="about-menu">
@@ -28,6 +33,10 @@
                 <a href="{% url 'home:association-information' %}" role="menuitem"
                     class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
                     Over de Vereniging
+                </a>
+                <a href="{% url 'home:schippers' %}" role="menuitem"
+                    class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    Schippers
                 </a>
                 <a href="{% url 'home:schipperschap' %}" role="menuitem"
                     class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">

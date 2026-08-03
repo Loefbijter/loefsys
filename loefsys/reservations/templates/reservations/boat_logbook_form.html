@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans "Logboek" %}
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50">
+
+    <!-- ============ HEADER ============ -->
+    <section class="bg-white border-b border-gray-200">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
+            <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
+               class="text-gray-400 hover:text-gray-600 font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors">
+                <i class="bi bi-arrow-left-short text-lg"></i>
+                {% trans "Terug naar reservering" %}
+            </a>
+
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{% trans "Logboek" %}</h1>
+            <p class="text-sm sm:text-base text-gray-500 mt-1.5">
+                {% blocktrans with boat_name=reservation.reservable.name %}
+                    Vul het logboek in voor {{ boat_name }}.
+                {% endblocktrans %}
+            </p>
+        </div>
+    </section>
+
+    <div class="max-w-3xl mx-auto w-full px-4 sm:px-6 py-8 space-y-5">
+
+        <!-- ============ CURRENT DAMAGE INFO ============ -->
+        {% if damage_records %}
+        <div class="bg-alert/10 border border-alert/20 rounded-2xl p-5 sm:p-6">
+            <h2 class="text-sm font-semibold text-alert mb-3 inline-flex items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                {% trans "Huidige schade-informatie" %}
+            </h2>
+            <ul class="space-y-2">
+                {% for damage_record in damage_records %}
+                <li class="flex items-start gap-2 text-sm text-gray-700">
+                    <span class="mt-1.5 w-1 h-1 rounded-full bg-alert shrink-0"></span>
+                    {{ damage_record.description }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- ============ LOGBOOK FORM ============ -->
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 sm:p-6">
+            <form method="post" enctype="multipart/form-data" class="space-y-5">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="rounded-xl border border-destructive/20 bg-destructive/10 p-3.5 text-sm text-destructive">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div class="flex flex-col gap-1.5">
+                        <label for="{{ form.wind_force.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.wind_force.label }}</label>
+                        {{ form.wind_force }}
+                        {% for error in form.wind_force.errors %}
+                        <p class="text-xs font-medium text-destructive">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label for="{{ form.motor_hours.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.motor_hours.label }}</label>
+                        {{ form.motor_hours }}
+                        {% for error in form.motor_hours.errors %}
+                        <p class="text-xs font-medium text-destructive">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="flex flex-col gap-1.5 md:col-span-2">
+                        <label for="{{ form.refueled.id_for_label }}"
+                               class="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 cursor-pointer">
+                            {{ form.refueled }}
+                            {{ form.refueled.label }}
+                        </label>
+                        {% for error in form.refueled.errors %}
+                        <p class="text-xs font-medium text-destructive">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="flex flex-col gap-1.5 md:col-span-2">
+                        <label for="{{ form.has_new_damage.id_for_label }}"
+                               class="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 cursor-pointer">
+                            {{ form.has_new_damage }}
+                            {{ form.has_new_damage.label }}
+                        </label>
+                        {% for error in form.has_new_damage.errors %}
+                        <p class="text-xs font-medium text-destructive">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="flex flex-col gap-1.5 md:col-span-2">
+                        <label for="{{ form.new_damage_description.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.new_damage_description.label }}</label>
+                        {{ form.new_damage_description }}
+                        {% for error in form.new_damage_description.errors %}
+                        <p class="text-xs font-medium text-destructive">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="flex flex-col gap-1.5 md:col-span-2">
+                        <label for="{{ form.photo.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.photo.label }}</label>
+                        {{ form.photo }}
+                        {% for error in form.photo.errors %}
+                        <p class="text-xs font-medium text-destructive">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
+                    <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
+                       class="text-center rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+                        {% trans "Annuleren" %}
+                    </a>
+                    <button type="submit"
+                            class="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors">
+                        {% trans "Opslaan" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

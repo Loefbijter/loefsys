@@ -51,6 +51,9 @@ class AuthSettings(TemplateSettings, BaseSettings):
             "django.contrib.sessions.middleware.SessionMiddleware",
             "django.middleware.csrf.CsrfViewMiddleware",
             "django.contrib.auth.middleware.AuthenticationMiddleware",
+            # Require login for anonymous users across most pages. Public
+            # paths are whitelisted separately.
+            "loefsys.core.middleware.RequireLoginMiddleware",
         )
 
     def templates_context_processors(self) -> Sequence[str]:  # noqa D102

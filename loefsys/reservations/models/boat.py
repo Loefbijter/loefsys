@@ -19,8 +19,10 @@ class ReservableBoat(Reservable):
         The capacity of the boat.
     has_engine : bool
         Flag that determines whether the boat has an engine.
-    fleet : ~loefsys.reservations.models.choices.FleetChoices
+    provider : ~loefsys.reservations.models.boat.ReservableBoat.Provider
         The provider of the boat.
+    requires_skippership : str | None
+        The skippership required to reserve this boat.
     """
 
     class Provider(models.IntegerChoices):
@@ -35,12 +37,25 @@ class ReservableBoat(Reservable):
         CEULEMANS = (2, _("Ceulemans"))
         """Used for boats from Ceulemans."""
 
+    class RequiredSkippership(models.TextChoices):
+        """The skippership that is required to use this boat."""
+
+        KB1 = ("KB1", _("KB1"))
+        KB2 = ("KB2", _("KB2"))
+        KB3 = ("KB3", _("KB3"))
+        PICO = ("Pico", _("Pico"))
+
     capacity = models.PositiveSmallIntegerField(verbose_name=_("Capacity"))
     has_engine = models.BooleanField(
         default=False, verbose_name=_("Boat has an engine")
     )
     provider = models.PositiveSmallIntegerField(
-        choices=Provider,
-        default=Provider.OTHER,
-        verbose_name=_("Boat provider"),
+        choices=Provider, default=Provider.OTHER, verbose_name=_("Boat provider")
+    )
+    requires_skippership = models.CharField(
+        max_length=10,
+        choices=RequiredSkippership.choices,
+        blank=True,
+        verbose_name=_("Required skippership"),
+        help_text=_("The skippership required to use this boat."),
     )

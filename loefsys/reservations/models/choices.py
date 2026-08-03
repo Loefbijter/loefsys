@@ -39,9 +39,9 @@ class Locations(models.IntegerChoices):
 class ReservationStatus(models.TextChoices):
     """Approval state of a reservation."""
 
-    PENDING = ("pending", _("Pending"))
-    ACCEPTED = ("accepted", _("Accepted"))
-    DENIED = ("denied", _("Denied"))
+    PENDING = ("pending", _("In behandeling"))
+    ACCEPTED = ("accepted", _("Goedgekeurd"))
+    DENIED = ("denied", _("Geweigerd"))
 
 
 class FleetChoices(models.IntegerChoices):
