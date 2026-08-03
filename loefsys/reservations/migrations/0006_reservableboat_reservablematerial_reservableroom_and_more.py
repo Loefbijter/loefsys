@@ -134,7 +134,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='reservation',
-            constraint=models.CheckConstraint(condition=models.Q(('end__gt', models.F('start'))), name='end_gt_start', violation_error_message='End time cannot be before the start time.'),
+            constraint=models.CheckConstraint(condition=models.Q(end__gt=models.F('start')), name='end_gt_start', violation_error_message='End time cannot be before the start time.'),
         ),
         migrations.DeleteModel(
             name='Boat',
