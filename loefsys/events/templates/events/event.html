@@ -55,9 +55,9 @@
                 <input type="hidden" name="action" value="{% if registration_active %}cancel{% else %}register{% endif %}" />
                 {% with registration_button_classes=registration_active|yesno:'bg-white text-secondary border-2 border-secondary hover:bg-secondary/5,bg-secondary text-secondary-foreground hover:bg-tertiary' %}
                   {% if event.has_form_fields and not registration_active %}
-                    <button id="registration-button" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold text-base transition-colors disabled:pointer-events-none disabled:opacity-50 h-12 px-8 shadow-sm {{ registration_button_classes }}" data-open-registration-modal="true" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
+                    <button id="registration-button" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold text-base transition-colors disabled:pointer-events-none disabled:opacity-50 h-12 px-8 shadow-sm {{ registration_button_classes }} cursor-pointer" data-open-registration-modal="true" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
                   {% else %}
-                    <button id="registration-button" type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold text-base transition-colors disabled:pointer-events-none disabled:opacity-50 h-12 px-8 shadow-sm {{ registration_button_classes }}" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
+                    <button id="registration-button" type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold text-base transition-colors disabled:pointer-events-none disabled:opacity-50 h-12 px-8 shadow-sm {{ registration_button_classes }} cursor-pointer" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
                   {% endif %}
                 {% endwith %}
 
@@ -87,14 +87,14 @@
               </form>
 
               {% if event.has_form_fields %}
-                <div id="registration-modal" data-show-registration-modal="{{ show_registration_modal|yesno:'true,false' }}" class="fixed inset-0 z-[100] hidden flex-col items-start sm:items-center justify-center bg-black/60 px-4 pb-6 pt-20 sm:pt-6 backdrop-blur-sm overflow-y-auto">
+                <div id="registration-modal" data-show-registration-modal="{{ show_registration_modal|yesno:'true,false' }}" class="fixed inset-0 z-[100] hidden flex-col items-start sm:items-center justify-center bg-black/60 px-4 pb-6 pt-20 sm:pt-6 backdrop-blur-sm overflow-y-auto cursor-pointer">
                   <div class="mx-auto my-auto flex max-h-[calc(100dvh-6rem)] sm:max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
                     <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
                       <div>
                         <h3 class="text-lg font-semibold text-gray-900">Vul je gegevens in</h3>
                         <p class="mt-1 text-sm text-gray-500">Deze inschrijving heeft extra vragen. Vul ze in om jouw plek te bevestigen.</p>
                       </div>
-                      <button type="button" class="rounded-full p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600" data-close-registration-modal="true" aria-label="Sluiten"><i class="bi bi-x-lg"></i></button>
+                      <button type="button" class="rounded-full p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 cursor-pointer" data-close-registration-modal="true" aria-label="Sluiten"><i class="bi bi-x-lg"></i></button>
                     </div>
                     <div class="flex-1 overflow-y-auto px-6 py-6">
                       <form method="post" action="{% url 'events:registration' event.slug %}" class="space-y-4">
@@ -128,8 +128,8 @@
                           </div>
                         {% endfor %}
                         <div class="flex justify-end gap-3 pt-2">
-                          <button type="button" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 transition hover:bg-gray-100" data-close-registration-modal="true">Annuleren</button>
-                          <button type="submit" class="rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary">Inschrijven</button>
+                          <button type="button" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 transition hover:bg-gray-100 cursor-pointer" data-close-registration-modal="true">Annuleren</button>
+                          <button type="submit" class="rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary cursor-pointer">Inschrijven</button>
                         </div>
                       </form>
                     </div>
@@ -295,7 +295,7 @@
 
           <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
             {% for registration in attendees %}
-              <button type="button" class="attendee-avatar group relative flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-full" aria-label="{{ registration.contact.first_name }} {{ registration.contact.last_name }}">
+              <button type="button" class="attendee-avatar group relative flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-full cursor-pointer" aria-label="{{ registration.contact.first_name }} {{ registration.contact.last_name }}">
                 {% if registration.contact.picture %}
                   <img class="rounded-full size-10 sm:size-12 md:size-14 border border-gray-200 object-cover" src="{{ registration.contact.picture.url }}" alt="" />
                 {% else %}

@@ -251,60 +251,66 @@
         },
         eventContent: function (arg) {
           if (arg.view.type.startsWith('list')) {
-            var link = document.createElement('a');
-            link.href = arg.event.url || '#';
+          var link = document.createElement('button');
+          link.type = 'button';
             link.className = 'fc-event-list-item flex items-center gap-3 w-full no-underline';
             link.style.color = 'inherit';
             link.style.textDecoration = 'none';
             link.style.display = 'flex';
             link.style.alignItems = 'center';
+          link.style.cursor = 'pointer';
 
-            if (arg.event.extendedProps.picture_url) {
-              var img = document.createElement('img');
-              img.src = arg.event.extendedProps.picture_url;
-              img.alt = arg.event.title || '';
-              img.className = 'w-16 h-16 rounded-xl object-cover flex-shrink-0';
-              link.appendChild(img);
-            } else {
-              var placeholder = document.createElement('div');
-              placeholder.className = 'w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 text-slate-400';
-              placeholder.innerHTML = '<i class="bi bi-calendar-event"></i>';
-              link.appendChild(placeholder);
-            }
+          if (arg.event.extendedProps.picture_url) {
+            var img = document.createElement('img');
+            img.src = arg.event.extendedProps.picture_url;
+            img.alt = arg.event.title || '';
+            img.className = 'w-16 h-16 rounded-xl object-cover flex-shrink-0';
+            link.appendChild(img);
+          } else {
+            var placeholder = document.createElement('div');
+            placeholder.className = 'w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 text-slate-400';
+            placeholder.innerHTML = '<i class="bi bi-calendar-event"></i>';
+            link.appendChild(placeholder);
+          }
 
-            var textContainer = document.createElement('div');
-            textContainer.className = 'flex-1 min-w-0';
+          var textContainer = document.createElement('div');
+          textContainer.className = 'flex-1 min-w-0';
 
-            var titleElInner = document.createElement('div');
-            titleElInner.className = 'fc-event-title font-semibold';
-            titleElInner.style.display = 'block';
-            titleElInner.style.overflow = 'hidden';
-            titleElInner.style.textOverflow = 'ellipsis';
-            titleElInner.style.whiteSpace = 'nowrap';
-            titleElInner.textContent = arg.event.title;
-            textContainer.appendChild(titleElInner);
+          var titleElInner = document.createElement('div');
+          titleElInner.className = 'fc-event-title font-semibold';
+          titleElInner.style.display = 'block';
+          titleElInner.style.overflow = 'hidden';
+          titleElInner.style.textOverflow = 'ellipsis';
+          titleElInner.style.whiteSpace = 'nowrap';
+          titleElInner.textContent = arg.event.title;
+          textContainer.appendChild(titleElInner);
 
-            var timeText = arg.timeText;
-            if (!timeText && arg.event.start) {
-              var startDate = arg.event.start;
-              var hours = startDate.getHours().toString().padStart(2, '0');
-              var minutes = startDate.getMinutes().toString().padStart(2, '0');
-              timeText = hours + ':' + minutes;
-            }
-            if (timeText) {
-              var timeEl = document.createElement('div');
-              timeEl.className = 'fc-event-time text-sm';
-              timeEl.textContent = timeText;
-              textContainer.appendChild(timeEl);
-            }
+          var timeText = arg.timeText;
+          if (!timeText && arg.event.start) {
+            var startDate = arg.event.start;
+            var hours = startDate.getHours().toString().padStart(2, '0');
+            var minutes = startDate.getMinutes().toString().padStart(2, '0');
+            timeText = hours + ':' + minutes;
+          }
+          if (timeText) {
+            var timeEl = document.createElement('div');
+            timeEl.className = 'fc-event-time text-sm';
+            timeEl.textContent = timeText;
+            textContainer.appendChild(timeEl);
+          }
 
-            link.appendChild(textContainer);
+          link.appendChild(textContainer);
 
-            var chevron = document.createElement('i');
-            chevron.className = 'bi bi-chevron-right text-slate-300 flex-shrink-0';
-            link.appendChild(chevron);
+          var chevron = document.createElement('i');
+          chevron.className = 'bi bi-chevron-right text-slate-300 flex-shrink-0';
+          link.appendChild(chevron);
 
-            return { domNodes: [link] };
+          // If the event has a URL, navigate to it on click. Keep visual styling identical to the original anchor.
+          if (arg.event.url) {
+            link.addEventListener('click', function () { window.location.href = arg.event.url; });
+          }
+
+          return { domNodes: [link] };
           }
 
           var eventContainer = document.createElement('div');
@@ -391,15 +397,15 @@
       <!-- Prev / Today / Next -->
       <div class="order-1 flex items-center gap-1">
         <button id="cal-prev" type="button" aria-label="Vorige periode"
-                class="cal-icon-btn flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors">
+                class="cal-icon-btn flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
           <i class="bi bi-chevron-left"></i>
         </button>
         <button id="cal-today" type="button"
-                class="px-3 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                class="px-3 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
           Vandaag
         </button>
         <button id="cal-next" type="button" aria-label="Volgende periode"
-                class="cal-icon-btn flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors">
+                class="cal-icon-btn flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
           <i class="bi bi-chevron-right"></i>
         </button>
       </div>
@@ -407,20 +413,20 @@
       <!-- View picker + sync -->
       <div class="order-2 ml-auto flex items-center gap-2 sm:order-3 sm:ml-0">
         <select id="cal-view-select"
-                class="text-sm rounded-full border-2 border-gray-200 pl-3 pr-2 py-2 font-semibold text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]">
+                class="text-sm rounded-full border-2 border-gray-200 pl-3 pr-2 py-2 font-semibold text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] cursor-pointer">
           <option value="listWeek">Lijst</option>
           <option value="timeGridWeek">Week</option>
           <option value="dayGridMonth">Maand</option>
         </select>
         <button id="cal-birthdays-toggle" type="button" aria-pressed="false"
-                class="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100">
+                class="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 cursor-pointer">
           <span class="toggle-track relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors" aria-hidden="true">
             <span class="toggle-thumb inline-block h-4 w-4 translate-x-1 rounded-full bg-white shadow transition-transform"></span>
           </span>
           Toon verjaardagen
         </button>
         <button id="cal-sync" type="button"
-                class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
+                class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
           <i class="bi bi-arrow-repeat"></i>
           Synchroniseer
         </button>

@@ -12,7 +12,7 @@
     <section class="bg-white border-b border-gray-200">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
-               class="text-gray-400 hover:text-gray-600 font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors">
+               class="text-gray-400 hover:text-gray-600 font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors cursor-pointer">
                 <i class="bi bi-arrow-left-short text-lg"></i>
                 {% trans "Terug naar reservering" %}
             </a>
@@ -115,11 +115,11 @@
 
                 <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
                     <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
-                       class="text-center rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">
+                       class="text-center rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
                         {% trans "Annuleren" %}
                     </a>
                     <button type="submit"
-                            class="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors">
+                            class="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors cursor-pointer">
                         {% trans "Opslaan" %}
                     </button>
                 </div>

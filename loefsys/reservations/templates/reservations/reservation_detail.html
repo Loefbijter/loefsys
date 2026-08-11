@@ -12,7 +12,7 @@
     <section class="bg-white border-b border-black/5">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <a href="{% url 'reservations:reservations' %}"
-               class="text-foreground/50 hover:text-foreground font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors">
+               class="text-foreground/50 hover:text-foreground font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors cursor-pointer">
                 <i class="bi bi-arrow-left-short text-lg"></i>
                 {% trans "Terug naar overzicht" %}
             </a>
@@ -100,27 +100,27 @@
             </h3>
             <div class="flex flex-col sm:flex-row flex-wrap gap-3">
                 <a href="{% url 'reservations:reservation-update' pk=object.id location=object.reserved_item.location %}"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors">
+                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors cursor-pointer">
                     <i class="bi bi-pencil"></i>
                     {% trans "Bewerk reservering" %}
                 </a>
 
                 {% if object.can_fill_logbook %}
                 <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-success px-5 py-2.5 text-sm font-semibold text-white hover:bg-success-accent transition-colors">
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-success px-5 py-2.5 text-sm font-semibold text-white hover:bg-success-accent transition-colors cursor-pointer">
                     <i class="bi bi-journal-plus"></i>
                     {% trans "Vul logboek in" %}
                 </a>
                 {% elif object.has_boat_logbook %}
                 <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors">
+                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors cursor-pointer">
                     <i class="bi bi-journal-text"></i>
                     {% trans "Bekijk logboek" %}
                 </a>
                 {% endif %}
 
                 <a href="{% url 'reservations:reservation-delete' pk=object.id %}"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-destructive px-5 py-2.5 text-sm font-semibold text-destructive-foreground hover:bg-destructive-accent transition-colors sm:ml-auto">
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-destructive px-5 py-2.5 text-sm font-semibold text-destructive-foreground hover:bg-destructive-accent transition-colors sm:ml-auto cursor-pointer">
                     <i class="bi bi-trash3"></i>
                     {% trans "Verwijder reservering" %}
                 </a>

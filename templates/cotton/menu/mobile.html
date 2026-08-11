@@ -27,7 +27,7 @@
         <c-profile-icon />
     </div>
 </nav>
-<label for="mobile-menu-toggle-checkbox" id="mobile-slide-overlay" class="fixed inset-0 bg-black/30 opacity-0" style="z-index:950;"></label>
+<label for="mobile-menu-toggle-checkbox" id="mobile-slide-overlay" class="fixed inset-0 bg-black/30 opacity-0 cursor-pointer" style="z-index:950;"></label>
 <div id="mobile-slide-menu" class="fixed inset-y-0 left-0 flex w-72 max-w-full flex-col overflow-y-auto border-r border-gray-200 bg-white text-foreground shadow-xl" style="z-index:1100;">
     <div class="flex items-center justify-between gap-3 border-b border-gray-200 p-4">
         <div class="flex items-center gap-3">
@@ -51,7 +51,7 @@
         <!-- <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Reserveer</a>
         <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Gallerij</a> -->
         <div class="border-t border-gray-200 pt-4 mt-4">
-            <p class="px-4 pb-2 text-xs uppercase tracking-wide text-gray-500">Over ons</p>
+            <p class="px-4 pb-2 text-xs uppercase tracking-wide text-gray-500 cursor-pointer">Over ons</p>
             <a href="{% url 'home:association-information' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Over de Vereniging</a>
             <a href="{% url 'home:schippers' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Schippers</a>
             <a href="{% url 'home:schipperschap' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Schipperschap</a>
