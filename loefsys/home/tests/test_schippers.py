@@ -36,3 +36,22 @@ class SchippersViewTestCase(TestCase):
         self.assertContains(response, "KB3")
         self.assertNotContains(response, "KB1")
         self.assertNotContains(response, "KB2")
+
+    def test_schippers_page_truncates_extended_display_names(self):
+        """Long generated names stay within a safe display length in compact lists."""
+        long_first_name = "A" * 50
+        long_last_name = "B" * 50
+        user = G(
+            get_user_model(),
+            first_name=long_first_name,
+            last_name=long_last_name,
+            display_name_preference=0,
+        )
+        skippership = G(Skippership, name="KB1")
+        G(UserSkippership, user=user, skippership=skippership)
+
+        response = self.client.get(reverse("home:schippers"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertLessEqual(len(user.display_name), 64)
+        self.assertContains(response, user.display_name)

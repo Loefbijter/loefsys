@@ -2,11 +2,50 @@
 
 from typing import ClassVar
 
+from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
+
+
+class UserProfileEditForm(forms.ModelForm):
+    """Profile form with a Dutch-friendly birthday format."""
+
+    birthday = forms.DateField(
+        required=False,
+        input_formats=["%d-%m-%Y", "%Y-%m-%d"],
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "dd-mm-jjjj",
+                "inputmode": "numeric",
+                "autocomplete": "bday",
+                "maxlength": "10",
+                "pattern": r"\d{2}-\d{2}-\d{4}",
+            }
+        ),
+    )
+
+    class Meta:
+        """Configure editable user fields."""
+
+        model = get_user_model()
+        fields: ClassVar[list[str]] = [
+            "first_name",
+            "last_name",
+            "initials",
+            "nickname",
+            "display_name_preference",
+            "phone_number",
+            "pod_kb_link",
+            "pod_zb_link",
+            "picture",
+            "gender",
+            "birthday",
+            "show_birthday",
+            "note",
+        ]
 
 
 class UserProfileMixin(SingleObjectMixin):
@@ -81,23 +120,7 @@ class UserProfileEditView(LoginRequiredMixin, UserProfileMixin, UpdateView):
     context_object_name = "member"
     model = get_user_model()
     template_name = "profiles/profile_edit.html"
-
-    # Explicitly declare which fields are editable to avoid ImproperlyConfigured
-    fields: ClassVar[list[str]] = [
-        "first_name",
-        "last_name",
-        "initials",
-        "nickname",
-        "display_name_preference",
-        "phone_number",
-        "pod_kb_link",
-        "pod_zb_link",
-        "picture",
-        "gender",
-        "birthday",
-        "show_birthday",
-        "note",
-    ]
+    form_class = UserProfileEditForm
 
     # After successful update, redirect to the user's own profile page
     success_url = reverse_lazy("members:user-profile")

@@ -359,10 +359,11 @@ class ReservationTestCase(TestCase):
         )
         skipper_user.save()
 
-        skippership = Skippership(name="KB1")
-        skippership.save()
+        skippership, _ = Skippership.objects.get_or_create(name="KB1")
 
         UserSkippership.objects.create(user=skipper_user, skippership=skippership)
+
+        required_skippership = skippership
 
         boat = ReservableBoat(
             name="Test boat",
@@ -373,7 +374,7 @@ class ReservationTestCase(TestCase):
             capacity=4,
             has_engine=True,
             provider=ReservableBoat.Provider.LOEFBIJTER,
-            requires_skippership=ReservableBoat.RequiredSkippership.KB1,
+            requires_skippership=required_skippership,
         )
         boat.save()
 

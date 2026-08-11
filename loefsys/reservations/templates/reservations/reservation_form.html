@@ -6,6 +6,31 @@
 {% endblock %}
 
 {% block content %}
+<style>
+    .reservation-datetime-input {
+        width: 100%;
+        min-height: 52px;
+        font-size: 1rem;
+        line-height: 1.5;
+        padding: 0.75rem 0.875rem;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        border-radius: 0.875rem;
+        background: white;
+        color: #0f172a;
+        touch-action: manipulation;
+    }
+
+    .reservation-datetime-input::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        transform: scale(1.15);
+    }
+
+    @media (max-width: 640px) {
+        .reservation-datetime-input {
+            min-height: 3rem;
+        }
+    }
+</style>
 <div class="bg-background relative flex flex-col min-h-screen pb-32">
 
     <!-- ============ HEADER ============ -->
@@ -23,7 +48,7 @@
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
                            class="inline-block px-4 py-2 rounded-full transition-colors duration-200 {% if location == 1 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %}"
                            aria-current="{% if location == 1 %}page{% else %}false{% endif %}">
-                            {% trans "Board Room" %}
+                            {% trans "Bestuurskamer" %}
                         </a>
                     </li>
                     <li>
@@ -263,12 +288,12 @@
                                             <p class="font-semibold text-foreground">{{ item.boat.get_fleet_display }}</p>
                                         </div>
                                     </div>
-                                    {% if item.boat.requires_skippership != None %}
+                                    {% if item.boat.requires_skippership %}
                                     <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
                                         <i class="bi bi-mortarboard-fill text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% trans "Schipperschap" %}</p>
-                                            <p class="font-semibold text-foreground">{{ item.boat.requires_skippership }}</p>
+                                            <p class="font-semibold text-foreground">{{ item.boat.requires_skippership.name }}</p>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -315,21 +340,6 @@
                 <div class="flex items-center gap-3 mb-4">
                     <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">4</span>
                     <h2 class="text-lg sm:text-xl font-bold text-foreground">{% trans "Schipper" %}</h2>
-                </div>
-
-                <div class="flex gap-2 mb-4" role="group" aria-label="{% trans 'Schipper keuze' %}">
-                    <label class="skipper-mode-option">
-                        <input type="radio" name="skipper_mode" value="existing" class="hidden peer" checked>
-                        <span class="inline-block px-4 py-1.5 rounded-full border border-black/10 cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-black/5">
-                            {% trans "Bestaande schipper" %}
-                        </span>
-                    </label>
-                    <label class="skipper-mode-option">
-                        <input type="radio" name="skipper_mode" value="new" class="hidden peer">
-                        <span class="inline-block px-4 py-1.5 rounded-full border border-black/10 cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-black/5">
-                            {% trans "Nieuwe schipper toevoegen" %}
-                        </span>
-                    </label>
                 </div>
 
                 <div id="skipper-existing-wrap">
@@ -466,9 +476,18 @@
 
         const fullDayBtn = document.getElementById("quick-fullday");
         fullDayBtn?.addEventListener("click", function () {
-            const start = ensureStart();
-            const end = new Date(start);
+            const currentStart = ensureStart();
+            const start = new Date(currentStart);
+            start.setHours(0, 0, 0, 0);
+
+            const end = new Date(currentStart);
             end.setHours(23, 59, 0, 0);
+
+            if (startInput) {
+                startInput.value = formatDT(start, endInput?.value || "");
+                fireChange(startInput);
+            }
+
             if (endInput) {
                 endInput.value = formatDT(end, startInput?.value || "");
                 fireChange(endInput);

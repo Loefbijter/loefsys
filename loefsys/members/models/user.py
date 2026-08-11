@@ -82,6 +82,9 @@ class OverwriteStorage(FileSystemStorage):
 class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     """The user model for authentication on the Loefbijter website.
 
+    The display names shown across the site are kept within a safe length to avoid
+    layout overflow in compact lists and cards.
+
     A user account can be made for two use cases. First, when a member registers at
     Loefbijter, an account is made for them as it is necessary for them to interact with
     loefsys for their membership. Additionally, it is also possible that a user account
@@ -267,13 +270,23 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
+    DISPLAY_NAME_MAX_LENGTH = 64
 
     objects = UserManager()
+
+    @staticmethod
+    def _truncate_name(value: str, max_length: int) -> str:
+        """Return a safe display name that fits in the available layout width."""
+        if not value:
+            return ""
+        return value.strip()[:max_length].rstrip()
 
     @property
     def full_name(self) -> str:
         """Return the full name of the person."""
-        return f"{self.first_name} {self.last_name}".strip()
+        return self._truncate_name(
+            f"{self.first_name} {self.last_name}".strip(), self.DISPLAY_NAME_MAX_LENGTH
+        )
 
     @property
     def member_since(self):
@@ -286,15 +299,16 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         """Return the display name of the user based on their preference."""
         match self.display_name_preference:
             case DisplayNamePreferences.FULL_WITH_NICKNAME:
-                return f"{self.first_name} '{self.nickname}' {self.last_name}".strip()
+                value = f"{self.first_name} '{self.nickname}' {self.last_name}".strip()
             case DisplayNamePreferences.NICKNAME_LASTNAME:
-                return f"'{self.nickname}' {self.last_name}".strip()
+                value = f"'{self.nickname}' {self.last_name}".strip()
             case DisplayNamePreferences.INITIALS_LASTNAME:
-                return f"{self.initials} {self.last_name}".strip()
+                value = f"{self.initials} {self.last_name}".strip()
             case DisplayNamePreferences.FIRSTNAME_ONLY:
-                return self.first_name.strip()
+                value = self.first_name.strip()
             case _:
-                return f"{self.first_name} {self.last_name}".strip()
+                value = f"{self.first_name} {self.last_name}".strip()
+        return self._truncate_name(value, self.DISPLAY_NAME_MAX_LENGTH)
 
     class Meta:
         """Meta options for the User model."""

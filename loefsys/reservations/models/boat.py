@@ -3,6 +3,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from loefsys.members.models import Skippership
+
 from .reservable import Reservable
 
 
@@ -21,7 +23,7 @@ class ReservableBoat(Reservable):
         Flag that determines whether the boat has an engine.
     provider : ~loefsys.reservations.models.boat.ReservableBoat.Provider
         The provider of the boat.
-    requires_skippership : str | None
+    requires_skippership : ~loefsys.members.models.skippership.Skippership | None
         The skippership required to reserve this boat.
     """
 
@@ -37,14 +39,6 @@ class ReservableBoat(Reservable):
         CEULEMANS = (2, _("Ceulemans"))
         """Used for boats from Ceulemans."""
 
-    class RequiredSkippership(models.TextChoices):
-        """The skippership that is required to use this boat."""
-
-        KB1 = ("KB1", _("KB1"))
-        KB2 = ("KB2", _("KB2"))
-        KB3 = ("KB3", _("KB3"))
-        PICO = ("Pico", _("Pico"))
-
     capacity = models.PositiveSmallIntegerField(verbose_name=_("Capacity"))
     has_engine = models.BooleanField(
         default=False, verbose_name=_("Boat has an engine")
@@ -52,10 +46,12 @@ class ReservableBoat(Reservable):
     provider = models.PositiveSmallIntegerField(
         choices=Provider, default=Provider.OTHER, verbose_name=_("Boat provider")
     )
-    requires_skippership = models.CharField(
-        max_length=10,
-        choices=RequiredSkippership.choices,
+    requires_skippership = models.ForeignKey(
+        Skippership,
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
+        related_name="required_boats",
         verbose_name=_("Required skippership"),
         help_text=_("The skippership required to use this boat."),
     )

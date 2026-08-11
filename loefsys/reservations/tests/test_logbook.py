@@ -35,7 +35,7 @@ class BoatLogbookViewTestCase(TestCase):
             capacity=4,
             has_engine=True,
             provider=ReservableBoat.Provider.LOEFBIJTER,
-            requires_skippership="",
+            requires_skippership=None,
         )
         self.reservation = Reservation.objects.create(
             reservable=self.boat,

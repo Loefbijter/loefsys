@@ -86,6 +86,38 @@ class EventFillerViewTestCase(TestCase):
                 self.assertEqual(data[0]["picture_url"], event.picture.url)
                 self.assertEqual(data[0]["url"], event.get_absolute_url())
 
+    def test_event_filler_toggle_includes_only_public_birthdays(self):
+        """Birthdays should stay hidden by default and require an explicit toggle."""
+        public_birthday = timezone.now().date().replace(year=2000)
+        private_birthday = timezone.now().date().replace(year=2001)
+        G(
+            get_user_model(),
+            first_name="Public",
+            last_name="Person",
+            birthday=public_birthday,
+            show_birthday=True,
+        )
+        G(
+            get_user_model(),
+            first_name="Private",
+            last_name="Person",
+            birthday=private_birthday,
+            show_birthday=False,
+        )
+
+        default_response = self.client.get(reverse("events:event_filler"))
+        self.assertEqual(default_response.status_code, 200)
+        self.assertEqual(default_response.json(), [])
+
+        birthday_response = self.client.get(
+            reverse("events:event_filler"), {"show_birthdays": "1"}
+        )
+        self.assertEqual(birthday_response.status_code, 200)
+        data = birthday_response.json()
+        self.assertEqual(len(data), 1)
+        self.assertIn("Public Person", data[0]["title"])
+        self.assertEqual(data[0]["allDay"], True)
+
     def test_event_detail_shows_description_and_fine_consent_checkbox(self):
         """Event detail should display description and fine consent."""
         user = G(get_user_model())
@@ -173,6 +205,59 @@ class MyEventsFeatureTestCase(TestCase):
             response,
             reverse("events:my_events_event", kwargs={"slug": self.event.slug}),
         )
+
+    def test_my_events_archive_view_splits_recent_and_older_events(self):
+        now = timezone.now()
+        recent_event = G(
+            Event,
+            title="Recente training",
+            start=now - timezone.timedelta(days=3),
+            end=now - timezone.timedelta(days=2),
+            registration_start=now - timezone.timedelta(days=10),
+            registration_deadline=now - timezone.timedelta(days=5),
+            cancelation_deadline=now - timezone.timedelta(days=4),
+            category=EventCategories.TRAINING,
+            capacity=10,
+            price=0.00,
+            fine=0.00,
+            location="Nederland",
+            is_open_event=True,
+            published=True,
+            send_cancel_email=False,
+        )
+        archive_event = G(
+            Event,
+            title="Oude training",
+            start=now - timezone.timedelta(days=20),
+            end=now - timezone.timedelta(days=15),
+            registration_start=now - timezone.timedelta(days=30),
+            registration_deadline=now - timezone.timedelta(days=25),
+            cancelation_deadline=now - timezone.timedelta(days=23),
+            category=EventCategories.TRAINING,
+            capacity=10,
+            price=0.00,
+            fine=0.00,
+            location="Nederland",
+            is_open_event=True,
+            published=True,
+            send_cancel_email=False,
+        )
+        recent_organizer = G(EventOrganizer, event=recent_event)
+        recent_organizer.user.add(self.organizer)
+        archive_organizer = G(EventOrganizer, event=archive_event)
+        archive_organizer.user.add(self.organizer)
+
+        response = self.client.get(reverse("events:my_events"))
+        self.assertContains(response, "Actief")
+        self.assertContains(response, recent_event.title)
+        self.assertNotContains(response, archive_event.title)
+
+        archive_response = self.client.get(
+            reverse("events:my_events"), {"view": "archive"}
+        )
+        self.assertContains(archive_response, "Archief")
+        self.assertContains(archive_response, archive_event.title)
+        self.assertNotContains(archive_response, recent_event.title)
 
     def test_organized_event_detail_shows_attendee_profiles_and_training_data(self):
         response = self.client.get(

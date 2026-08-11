@@ -159,13 +159,13 @@ class Reservation(TimeStampedModel):
 
         if self.reservable.type.category == ReservableCategories.BOAT:
             try:
-                requires_skippership = ReservableBoat.objects.get(
+                required_skippership = ReservableBoat.objects.get(
                     pk=self.reservable.pk
                 ).requires_skippership
             except ReservableBoat.DoesNotExist:
-                requires_skippership = None
+                required_skippership = None
 
-            if requires_skippership and not self.authorized_userskippership:
+            if required_skippership and not self.authorized_userskippership:
                 raise ValidationError(
                     {
                         "authorized_userskippership": _(
@@ -176,11 +176,11 @@ class Reservation(TimeStampedModel):
                 )
 
             if (
-                requires_skippership
+                required_skippership
                 and self.authorized_userskippership
                 and not UserSkippership.objects.filter(
                     user=self.authorized_userskippership,
-                    skippership__name=requires_skippership,
+                    skippership=required_skippership,
                 ).exists()
             ):
                 raise ValidationError(

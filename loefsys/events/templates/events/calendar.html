@@ -88,13 +88,46 @@
     .fc .fc-daygrid-event .fc-event-custom-content,
     .fc .fc-timegrid-event .fc-event-main,
     .fc .fc-timegrid-event .fc-event-custom-content {
-      min-height: 3rem;
-      padding: 0.45rem 0.75rem;
+      min-height: 2.1rem;
+      padding: 0.25rem 0.5rem;
       display: flex;
       align-items: center;
+      border-radius: 0.75rem;
+      overflow: hidden;
     }
     .fc .fc-daygrid-event {
-      min-height: 3rem;
+      min-height: 2.1rem;
+      border: none;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    }
+    .fc .fc-event-title,
+    .fc .fc-event-time,
+    .fc .fc-event-custom-content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .fc .fc-event-main,
+    .fc .fc-event-custom-content {
+      min-width: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .fc .fc-daygrid-event .fc-event-main,
+    .fc .fc-timegrid-event .fc-event-main {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .fc .fc-event-title {
+      line-height: 1.2;
+      max-width: 100%;
+    }
+    .fc .fc-event-time {
+      flex-shrink: 0;
+      margin-left: 0.35rem;
+      opacity: 0.9;
     }
 
     /* List view override: use dark text for the "Lijst" feed-style items */
@@ -103,6 +136,16 @@
     .fc .fc-list-event .fc-event-list-item .fc-event-title,
     .fc .fc-list-event .fc-event-list-item .fc-event-time {
       color: #111827 !important;
+    }
+    .fc .fc-list-event .fc-event-list-item .fc-event-title,
+    .fc .fc-list-event .fc-event-list-item .fc-event-time {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .fc .fc-list-event .fc-event-list-item .fc-event-title {
+      min-width: 0;
+      max-width: 100%;
     }
     /* Also color the separate time column cell used by FullCalendar's list table */
     .fc .fc-list-table .fc-list-event-time,
@@ -146,6 +189,28 @@
       var calendarEl = document.getElementById('calendar');
       var titleEl = document.getElementById('cal-title');
       var viewSelect = document.getElementById('cal-view-select');
+      var birthdayToggle = document.getElementById('cal-birthdays-toggle');
+      var showBirthdays = false;
+
+      function updateBirthdayToggle() {
+        if (!birthdayToggle) return;
+        var toggleTrack = birthdayToggle.querySelector('.toggle-track');
+        var toggleThumb = birthdayToggle.querySelector('.toggle-thumb');
+
+        birthdayToggle.setAttribute('aria-pressed', String(showBirthdays));
+        birthdayToggle.classList.toggle('border-secondary', showBirthdays);
+        birthdayToggle.classList.toggle('bg-secondary/10', showBirthdays);
+        birthdayToggle.classList.toggle('text-secondary', showBirthdays);
+
+        if (toggleTrack) {
+          toggleTrack.classList.toggle('bg-secondary', showBirthdays);
+          toggleTrack.classList.toggle('bg-gray-300', !showBirthdays);
+        }
+        if (toggleThumb) {
+          toggleThumb.classList.toggle('translate-x-6', showBirthdays);
+          toggleThumb.classList.toggle('translate-x-1', !showBirthdays);
+        }
+      }
 
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'listWeek',
@@ -169,6 +234,9 @@
         events: {
           url: "/events/event_filler",
           method: 'GET',
+          extraParams: {
+            show_birthdays: '0',
+          },
         },
         eventTimeFormat: {
           hour: '2-digit',
@@ -208,7 +276,11 @@
             textContainer.className = 'flex-1 min-w-0';
 
             var titleElInner = document.createElement('div');
-            titleElInner.className = 'fc-event-title font-semibold truncate';
+            titleElInner.className = 'fc-event-title font-semibold';
+            titleElInner.style.display = 'block';
+            titleElInner.style.overflow = 'hidden';
+            titleElInner.style.textOverflow = 'ellipsis';
+            titleElInner.style.whiteSpace = 'nowrap';
             titleElInner.textContent = arg.event.title;
             textContainer.appendChild(titleElInner);
 
@@ -244,7 +316,11 @@
           eventContainer.style.justifyContent = 'space-between';
 
           var titleEl = document.createElement('div');
-          titleEl.className = 'fc-event-title font-semibold truncate';
+          titleEl.className = 'fc-event-title font-semibold';
+          titleEl.style.minWidth = '0';
+          titleEl.style.overflow = 'hidden';
+          titleEl.style.textOverflow = 'ellipsis';
+          titleEl.style.whiteSpace = 'nowrap';
           titleEl.textContent = arg.event.title;
           eventContainer.appendChild(titleEl);
 
@@ -259,6 +335,8 @@
           if (timeText) {
             var timeEl = document.createElement('div');
             timeEl.className = 'fc-event-time text-sm text-white';
+            timeEl.style.flexShrink = '0';
+            timeEl.style.marginLeft = '0.35rem';
             timeEl.textContent = timeText;
             eventContainer.appendChild(timeEl);
           }
@@ -268,6 +346,7 @@
       });
 
       calendar.render();
+      updateBirthdayToggle();
 
       // ---------- Custom app-style header controls ----------
       document.getElementById('cal-prev')?.addEventListener('click', function () {
@@ -281,6 +360,18 @@
       });
       viewSelect?.addEventListener('change', function () {
         calendar.changeView(this.value);
+      });
+      birthdayToggle?.addEventListener('click', function () {
+        showBirthdays = !showBirthdays;
+        updateBirthdayToggle();
+        calendar.setOption('events', {
+          url: '/events/event_filler',
+          method: 'GET',
+          extraParams: {
+            show_birthdays: showBirthdays ? '1' : '0',
+          },
+        });
+        calendar.refetchEvents();
       });
       document.getElementById('cal-sync')?.addEventListener('click', function () {
         window.location.href = '/events/feed';
@@ -321,6 +412,13 @@
           <option value="timeGridWeek">Week</option>
           <option value="dayGridMonth">Maand</option>
         </select>
+        <button id="cal-birthdays-toggle" type="button" aria-pressed="false"
+                class="inline-flex items-center gap-2 rounded-full border-2 border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100">
+          <span class="toggle-track relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors" aria-hidden="true">
+            <span class="toggle-thumb inline-block h-4 w-4 translate-x-1 rounded-full bg-white shadow transition-transform"></span>
+          </span>
+          Toon verjaardagen
+        </button>
         <button id="cal-sync" type="button"
                 class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">
           <i class="bi bi-arrow-repeat"></i>

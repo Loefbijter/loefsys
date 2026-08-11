@@ -20,9 +20,12 @@ urlpatterns = [
     # path("profile/", include("loefsys.profile.urls"), name="profile"),
     path("reservations/", include("loefsys.reservations.urls"), name="reservations"),
     path("events/", include("loefsys.events.urls"), name="events"),
-    path("__reload__/", include("django_browser_reload.urls")),
-    *debug_toolbar_urls(),
 ]
+
+if settings.DEBUG and settings.BROWSER_RELOAD_ENABLED:
+    urlpatterns.append(path("__reload__/", include("django_browser_reload.urls")))
+
+urlpatterns += debug_toolbar_urls()
 
 handler404 = "django.views.defaults.page_not_found"
 handler500 = "django.views.defaults.server_error"

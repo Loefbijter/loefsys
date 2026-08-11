@@ -1,11 +1,24 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}
     {% trans "Profiel bewerken" %}
 {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+
+<style>
+    .profile-cropper .cropper-view-box,
+    .profile-cropper .cropper-face {
+        border-radius: 50%;
+    }
+    .profile-cropper .cropper-view-box {
+        outline: 0;
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+    }
+</style>
+
 <div class="bg-background min-h-screen flex flex-col">
 
     <!-- ============ HEADER ============ -->
@@ -26,20 +39,34 @@
             <div class="bg-white p-6 rounded-2xl border border-black/5 shadow-sm text-left mb-6 max-w-md mx-auto">
                 <div class="flex flex-col items-center text-center gap-4">
                     <div id="photo-preview"
+                         data-current-photo="{% if member.picture %}{{ member.picture.url }}{% endif %}"
                          class="w-24 h-24 rounded-full bg-black/[0.03] border-2 border-black/10 flex items-center justify-center overflow-hidden text-3xl text-foreground/30">
-                        <i class="bi bi-person-fill"></i>
+                        {% if member.picture %}
+                           <img src="{{ member.picture.url }}" alt="{% trans 'Huidige profielfoto' %}" class="w-full h-full object-cover">
+                        {% else %}
+                           <i class="bi bi-person-fill"></i>
+                        {% endif %}
                     </div>
                     <div>
                         <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-foreground/70 mb-2">
-                            {{ field.label }}
+                           {{ field.label }}
                         </label>
-                        <label for="{{ field.id_for_label }}"
-                               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 text-primary hover:bg-primary/5 font-semibold text-sm cursor-pointer transition-colors">
-                            <i class="bi bi-camera-fill"></i>
-                            {% trans "Foto kiezen" %}
-                        </label>
+                        <div class="flex flex-wrap justify-center gap-2">
+                           <button id="photo-select-button" type="button"
+                                   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 text-primary hover:bg-primary/5 font-semibold text-sm cursor-pointer transition-colors">
+                               <i class="bi bi-camera-fill"></i>
+                               {% trans "Foto kiezen" %}
+                           </button>
+                           <button id="photo-remove-button" type="button"
+                                   class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-destructive/30 text-destructive hover:bg-destructive/5 font-semibold text-sm cursor-pointer transition-colors">
+                               <i class="bi bi-trash3"></i>
+                               {% trans "Verwijderen" %}
+                           </button>
+                        </div>
                         <div class="hidden">{{ field }}</div>
-                        <p id="photo-filename" class="text-xs text-foreground/50 mt-2">{% trans "Geen foto gekozen" %}</p>
+                        <p id="photo-filename" class="text-xs text-foreground/50 mt-2">
+                           {% if member.picture %}{{ member.picture.name|default:"" }}{% else %}{% trans "Geen foto gekozen" %}{% endif %}
+                        </p>
                     </div>
                     {% if field.help_text %}
                     <p class="text-xs text-foreground/50">{{ field.help_text }}</p>
@@ -117,28 +144,268 @@
     </div>
 </div>
 
+<div id="photo-crop-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+    <div class="w-full max-w-xl rounded-2xl bg-white p-5 shadow-2xl">
+        <div class="flex items-center justify-between gap-4">
+            <h2 class="text-lg font-bold text-foreground">{% trans "Pas je profielfoto aan" %}</h2>
+            <button id="close-crop-modal" type="button" class="rounded-full border border-black/10 p-2 text-foreground/70 transition hover:bg-black/5" aria-label="{% trans 'Sluiten' %}">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+
+        <p class="mt-2 text-sm text-foreground/60">{% trans "Versleep en zoom de afbeelding zodat je gezicht in de cirkel past." %}</p>
+
+        <div class="profile-cropper mt-4 overflow-hidden rounded-full border border-black/10 bg-black/[0.03] mx-auto w-72 h-72">
+            <img id="crop-image" src="" alt="{% trans 'Profielfoto bijsnijden' %}" class="block max-w-full max-h-full">
+        </div>
+
+        <div class="mt-5 flex justify-end gap-3">
+            <button id="cancel-crop" type="button" class="rounded-xl border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
+                {% trans "Annuleren" %}
+            </button>
+            <button id="apply-crop" type="button" class="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors">
+                {% trans "Foto opslaan" %}
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const fileInput = document.querySelector("input[type='file']");
         const preview = document.getElementById("photo-preview");
         const filenameLabel = document.getElementById("photo-filename");
+        const selectButton = document.getElementById("photo-select-button");
+        const removeButton = document.getElementById("photo-remove-button");
+        const clearCheckbox = document.querySelector("input[name$='-clear']");
+        const cropModal = document.getElementById("photo-crop-modal");
+        const cropImage = document.getElementById("crop-image");
+        const applyCropButton = document.getElementById("apply-crop");
+        const cancelCropButton = document.getElementById("cancel-crop");
+        const closeCropModalButton = document.getElementById("close-crop-modal");
+        let cropper = null;
+        let pendingFile = null;
 
-        fileInput?.addEventListener("change", function () {
-            const file = this.files && this.files[0];
-            if (!file) {
-                if (filenameLabel) filenameLabel.textContent = "{% trans 'Geen foto gekozen' %}";
+        const setPlaceholder = () => {
+            if (!preview) return;
+            preview.innerHTML = '<i class="bi bi-person-fill"></i>';
+        };
+
+        const setPreviewFromDataUrl = (dataUrl, altText) => {
+            if (!preview) return;
+            preview.innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover" alt="${altText}">`;
+        };
+
+        const setFilename = (name) => {
+            if (!filenameLabel) return;
+            filenameLabel.textContent = name || "{% trans 'Geen foto gekozen' %}";
+        };
+
+        const closeCropModal = () => {
+            if (cropModal) {
+                cropModal.classList.add("hidden");
+                cropModal.classList.remove("flex");
+            }
+            if (cropper && cropImage) {
+                cropper.destroy();
+                cropper = null;
+            }
+            if (cropImage) {
+                cropImage.src = "";
+            }
+        };
+
+        const resetPhoto = () => {
+            if (clearCheckbox) {
+                clearCheckbox.checked = true;
+            }
+            if (fileInput) {
+                fileInput.value = "";
+            }
+            setPlaceholder();
+            setFilename("{% trans 'Geen foto gekozen' %}");
+        };
+
+        if (selectButton && fileInput) {
+            selectButton.addEventListener("click", function () {
+                fileInput.click();
+            });
+        }
+
+        if (removeButton) {
+            removeButton.addEventListener("click", resetPhoto);
+        }
+
+        if (clearCheckbox) {
+            clearCheckbox.addEventListener("change", function () {
+                if (!this.checked) {
+                    return;
+                }
+                setPlaceholder();
+                setFilename("{% trans 'Geen foto gekozen' %}");
+                if (fileInput) {
+                    fileInput.value = "";
+                }
+            });
+        }
+
+        if (fileInput) {
+            fileInput.addEventListener("change", function () {
+                const file = this.files && this.files[0];
+                if (!file) {
+                    resetPhoto();
+                    return;
+                }
+
+                pendingFile = file;
+                if (clearCheckbox) {
+                    clearCheckbox.checked = false;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    if (!cropModal || !cropImage || typeof Cropper === "undefined") {
+                        setPreviewFromDataUrl(event.target.result, "{% trans 'Voorbeeld profielfoto' %}");
+                        setFilename(file.name);
+                        return;
+                    }
+
+                    cropImage.src = event.target.result;
+                    cropModal.classList.remove("hidden");
+                    cropModal.classList.add("flex");
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    cropper = new Cropper(cropImage, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        dragMode: "move",
+                        movable: true,
+                        scalable: true,
+                        zoomable: true,
+                        rotatable: false,
+                        cropBoxMovable: true,
+                        cropBoxResizable: true,
+                        autoCropArea: 0.9,
+                        background: false,
+                    });
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        const finalizeCrop = () => {
+            if (!cropper || !fileInput) {
                 return;
             }
-            if (filenameLabel) filenameLabel.textContent = file.name;
 
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                if (preview) {
-                    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover" alt="{% trans 'Voorbeeld profielfoto' %}">`;
+            const canvas = cropper.getCroppedCanvas({
+                width: 512,
+                height: 512,
+                imageSmoothingQuality: "high",
+            });
+
+            canvas.toBlob(function (blob) {
+                if (!blob) {
+                    closeCropModal();
+                    return;
                 }
+
+                const croppedFile = new File([blob], pendingFile?.name || "profile-picture.jpg", {
+                    type: blob.type || "image/jpeg",
+                });
+
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(croppedFile);
+                fileInput.files = dataTransfer.files;
+                if (clearCheckbox) {
+                    clearCheckbox.checked = false;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    setPreviewFromDataUrl(event.target.result, "{% trans 'Profielfoto' %}");
+                    setFilename(croppedFile.name);
+                };
+                reader.readAsDataURL(blob);
+                closeCropModal();
+            }, "image/jpeg", 0.92);
+        };
+
+        if (applyCropButton) {
+            applyCropButton.addEventListener("click", finalizeCrop);
+        }
+
+        if (cancelCropButton) {
+            cancelCropButton.addEventListener("click", () => {
+                closeCropModal();
+                resetPhoto();
+            });
+        }
+
+        if (closeCropModalButton) {
+            closeCropModalButton.addEventListener("click", () => {
+                closeCropModal();
+                resetPhoto();
+            });
+        }
+
+        const birthdayInput = document.querySelector("input[name='birthday']");
+        if (birthdayInput) {
+            const clampSegment = (value, max) => {
+                if (!value) return "";
+                const numeric = Number(value);
+                if (Number.isNaN(numeric)) return "";
+                return String(Math.min(numeric, max)).padStart(2, "0");
             };
-            reader.readAsDataURL(file);
-        });
+
+            const formatBirthday = () => {
+                const digits = birthdayInput.value.replace(/\D/g, "").slice(0, 8);
+                if (!digits.length) {
+                    birthdayInput.value = "";
+                    return;
+                }
+
+                let day = digits.slice(0, 2);
+                let month = digits.slice(2, 4);
+                const year = digits.slice(4, 8);
+
+                if (day.length === 2) day = clampSegment(day, 31);
+                if (month.length === 2) month = clampSegment(month, 12);
+
+                if (digits.length <= 2) {
+                    birthdayInput.value = day;
+                    return;
+                }
+                if (digits.length <= 4) {
+                    birthdayInput.value = `${day}-${month}`;
+                    return;
+                }
+                birthdayInput.value = `${day}-${month}-${year}`;
+            };
+
+            birthdayInput.placeholder = "dd-mm-jjjj";
+            birthdayInput.inputMode = "numeric";
+            birthdayInput.maxLength = 10;
+            birthdayInput.addEventListener("input", formatBirthday);
+            birthdayInput.addEventListener("blur", () => {
+                const digits = birthdayInput.value.replace(/\D/g, "");
+                if (digits.length === 8) {
+                    birthdayInput.value = `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4, 8)}`;
+                }
+            });
+
+            if (birthdayInput.value && birthdayInput.value.includes("-")) {
+                const isoMatch = birthdayInput.value.match(/^\d{4}-\d{2}-\d{2}$/);
+                if (isoMatch) {
+                    const [year, month, day] = birthdayInput.value.split("-");
+                    birthdayInput.value = `${day}-${month}-${year}`;
+                }
+            }
+        }
     });
 </script>
 {% endblock %}

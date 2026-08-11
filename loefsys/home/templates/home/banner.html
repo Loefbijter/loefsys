@@ -1,37 +1,70 @@
 {% load i18n %}
-<div class="p-4 sm:p-8">
-    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
+<div class="px-4 py-6 sm:px-6 sm:py-10 lg:py-14">
+
+    {% if announcements %}
+    <section class="max-w-5xl mx-auto mb-6 sm:mb-8 rounded-3xl bg-white shadow-sm p-5 sm:p-7">
+        <div class="flex items-center gap-2 mb-4 sm:mb-5">
+            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#234193]/10 text-[#234193]">
+                <i class="bi bi-megaphone text-base"></i>
+            </span>
+            <h2 class="text-lg sm:text-xl font-semibold text-slate-900">{% trans "Berichten" %}</h2>
+        </div>
+
+        <div class="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {% for announcement in announcements %}
+            <article class="rounded-2xl border border-slate-100 bg-slate-50 p-5 transition-colors duration-150 hover:bg-slate-100/70">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                    <span class="text-[10px] font-semibold uppercase tracking-wider text-[#234193]">
+                        {% trans "Nieuws" %}
+                    </span>
+                    {% if announcement.announcement_start %}
+                    <time class="text-xs text-slate-400">{{ announcement.announcement_start|date:"d M Y" }}</time>
+                    {% endif %}
+                </div>
+                <h3 class="text-base font-semibold text-slate-900 leading-snug">{{ announcement.title }}</h3>
+                <p class="mt-1.5 text-sm leading-6 text-slate-600">{{ announcement.content|linebreaksbr }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
 
         <!-- ============ UPCOMING EVENTS ============ -->
-        <section class="bg-white/95 rounded-3xl border-4 border-black shadow-lg p-5 sm:p-6">
-            <div class="flex items-center gap-2 mb-4">
-                <i class="bi bi-calendar-event text-2xl text-[#234193]"></i>
-                <h2 class="text-xl sm:text-2xl font-bold text-[#234193]">{% trans "Aankomende evenementen" %}</h2>
+        <section class="rounded-3xl bg-white shadow-sm p-5 sm:p-7">
+            <div class="flex items-center justify-between gap-2 mb-4 sm:mb-5">
+                <div class="flex items-center gap-2">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#234193]/10 text-[#234193]">
+                        <i class="bi bi-calendar-event text-base"></i>
+                    </span>
+                    <h2 class="text-lg sm:text-xl font-semibold text-slate-900">{% trans "Aankomende evenementen" %}</h2>
+                </div>
             </div>
 
             {% if upcoming_events %}
-            <ul class="space-y-3">
+            <ul class="space-y-2.5">
                 {% for event in upcoming_events %}
                 <li>
                     <a href="{{ event.url }}"
-                       class="flex gap-3 items-start bg-gray-50 hover:bg-gray-100 rounded-2xl border-2 border-black p-3 transition-colors">
+                       class="flex gap-3 items-start rounded-2xl border border-slate-100 bg-slate-50 p-3.5 transition-colors duration-150 hover:border-slate-200 hover:bg-slate-100/70 active:bg-slate-100">
                         {% if event.picture_url %}
                         <img src="{{ event.picture_url }}" alt="{{ event.title }}"
-                             class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover shrink-0">
+                             class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0">
                         {% else %}
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 text-slate-400 text-2xl">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 text-slate-300 text-xl">
                             <i class="bi bi-calendar-event"></i>
                         </div>
                         {% endif %}
 
                         <div class="min-w-0 flex-1">
-                            <p class="font-bold text-gray-900 truncate">{{ event.title }}</p>
-                            <p class="text-sm text-gray-600 inline-flex items-center gap-1">
-                                <i class="bi bi-clock"></i>
+                            <p class="font-semibold text-sm sm:text-base text-slate-900 truncate">{{ event.title }}</p>
+                            <p class="text-xs sm:text-sm text-slate-500 inline-flex items-center gap-1 mt-0.5">
+                                <i class="bi bi-clock text-[11px]"></i>
                                 {{ event.start|date:"SHORT_DATETIME_FORMAT" }} – {{ event.end|date:"SHORT_DATETIME_FORMAT" }}
                             </p>
 
-                            <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-gray-500 mt-1">
+                            <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-400 mt-1.5">
                                 {% if event.location %}
                                 <span class="inline-flex items-center gap-1"><i class="bi bi-geo-alt"></i>{{ event.location }}</span>
                                 {% endif %}
@@ -50,71 +83,82 @@
                             </div>
 
                             {% if not event.published or event.registrations_open_flag or event.max_capacity_reached_flag or event.is_open_event %}
-                            <div class="flex flex-wrap gap-1 mt-2">
+                            <div class="flex flex-wrap gap-1.5 mt-2">
                                 {% if not event.published %}
-                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-gray-200 text-gray-700">{% trans "Concept" %}</span>
+                                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{% trans "Concept" %}</span>
                                 {% endif %}
                                 {% if event.max_capacity_reached_flag %}
-                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-destructive/15 text-destructive">{% trans "Vol" %}</span>
+                                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-destructive/10 text-destructive">{% trans "Vol" %}</span>
                                 {% elif event.registrations_open_flag %}
-                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-success/15 text-success">{% trans "Inschrijving open" %}</span>
+                                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-success/10 text-success">{% trans "Inschrijving open" %}</span>
                                 {% endif %}
                                 {% if event.is_open_event %}
-                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-[#1BB1E6]/15 text-[#234193]">{% trans "Open evenement" %}</span>
+                                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-[#1BB1E6]/10 text-[#234193]">{% trans "Open evenement" %}</span>
                                 {% endif %}
                             </div>
                             {% endif %}
                         </div>
+
+                        <i class="bi bi-chevron-right text-slate-300 self-center text-sm hidden sm:block"></i>
                     </a>
                 </li>
                 {% endfor %}
             </ul>
             {% if upcoming_events|length > 4 %}
             <a href="{% url 'events:events' %}"
-               class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#234193] hover:text-[#1BB1E6] transition-colors">
-                {% trans "Bekijk alle evenementen" %} <i class="bi bi-chevron-right"></i>
+               class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[#234193] hover:text-[#1BB1E6] transition-colors">
+                {% trans "Bekijk alle evenementen" %} <i class="bi bi-arrow-right"></i>
             </a>
             {% endif %}
             {% else %}
-            <p class="text-gray-500 text-sm">{% trans "Geen aankomende evenementen." %}</p>
+            <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-10 text-center">
+                <i class="bi bi-calendar-x text-2xl text-slate-300"></i>
+                <p class="text-slate-400 text-sm mt-2">{% trans "Geen aankomende evenementen." %}</p>
+            </div>
             {% endif %}
         </section>
 
         <!-- ============ RESERVATIONS ============ -->
-        <section class="bg-white/95 rounded-3xl border-4 border-black shadow-lg p-5 sm:p-6">
-            <div class="flex items-center gap-2 mb-4">
-                <i class="bi bi-bookmark-check text-2xl text-[#234193]"></i>
-                <h2 class="text-xl sm:text-2xl font-bold text-[#234193]">{% trans "Jouw reserveringen" %}</h2>
+        <section class="rounded-3xl bg-white shadow-sm p-5 sm:p-7">
+            <div class="flex items-center gap-2 mb-4 sm:mb-5">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-[#234193]/10 text-[#234193]">
+                    <i class="bi bi-bookmark-check text-base"></i>
+                </span>
+                <h2 class="text-lg sm:text-xl font-semibold text-slate-900">{% trans "Jouw reserveringen" %}</h2>
             </div>
 
             {% if user_reservations %}
-            <ul class="space-y-2">
+            <ul class="space-y-2.5">
                 {% for r in user_reservations %}
-                <li class="flex items-center justify-between gap-2 bg-gray-50 rounded-xl border-2 border-black px-3 py-2 text-sm">
-                    <span class="truncate">
-                        <span class="font-bold text-gray-900">{{ r.reservable.name }}</span>
-                        <span class="text-gray-500"> · {{ r.start|date:"SHORT_DATETIME_FORMAT" }} – {{ r.end|date:"SHORT_DATETIME_FORMAT" }}</span>
+                <li class="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3 text-sm">
+                    <span class="min-w-0 truncate">
+                        <span class="font-semibold text-slate-900">{{ r.reservable.name }}</span>
+                        <span class="block sm:inline text-slate-500 text-xs sm:text-sm"> {{ r.start|date:"SHORT_DATETIME_FORMAT" }} – {{ r.end|date:"SHORT_DATETIME_FORMAT" }}</span>
                     </span>
                     {% if r.request_status == RequestStatus.PENDING %}
-                    <span class="shrink-0 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-alert/20 text-alert">{% trans "In afwachting" %}</span>
+                    <span class="shrink-0 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-alert/10 text-alert">{% trans "In afwachting" %}</span>
                     {% endif %}
                 </li>
                 {% endfor %}
             </ul>
             <a href="{% url 'reservations:reservations' %}"
-               class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-[#234193] hover:text-[#1BB1E6] transition-colors">
-                {% trans "Beheer reserveringen" %} <i class="bi bi-chevron-right"></i>
+               class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[#234193] hover:text-[#1BB1E6] transition-colors">
+                {% trans "Beheer reserveringen" %} <i class="bi bi-arrow-right"></i>
             </a>
             {% elif user.is_authenticated %}
-            <p class="text-gray-500 text-sm">{% trans "Je hebt geen aankomende reserveringen." %}</p>
+            <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-10 text-center">
+                <i class="bi bi-bookmark text-2xl text-slate-300"></i>
+                <p class="text-slate-400 text-sm mt-2">{% trans "Je hebt geen aankomende reserveringen." %}</p>
+            </div>
             {% else %}
-            <p class="text-gray-500 text-sm">
-                <a href="{% url 'login' %}" class="font-semibold text-[#234193] hover:text-[#1BB1E6]">{% trans "Log in" %}</a>
-                {% trans "om je reserveringen te zien en te beheren." %}
-            </p>
+            <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50 py-10 text-center px-4">
+                <i class="bi bi-lock text-2xl text-slate-300"></i>
+                <p class="text-slate-500 text-sm mt-2">
+                    <a href="{% url 'login' %}" class="font-medium text-[#234193] hover:text-[#1BB1E6]">{% trans "Log in" %}</a>
+                    {% trans "om je reserveringen te zien en te beheren." %}
+                </p>
+            </div>
             {% endif %}
-
-
         </section>
 
     </div>

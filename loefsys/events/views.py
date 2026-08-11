@@ -1,5 +1,8 @@
 """Module defining the views for events."""
 
+from datetime import timedelta
+
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.db.models import Q
@@ -335,26 +338,48 @@ class CalendarView(LoginRequiredMixin, TemplateView):
 class EventFillerView(View):
     """View for the event filler."""
 
-    def get(self, request):  # noqa: ARG002
+    def get(self, request):
         """Get the events for the calendar."""
-        events = Event.objects.all()
+        show_birthdays = request.GET.get("show_birthdays", "0") in {"1", "true", "True"}
         data = []
-        for event in events:
-            if event.published:
+
+        for event in Event.objects.filter(published=True):
+            data.append(
+                {
+                    "title": event.title,
+                    "start": event.start,
+                    "end": event.end,
+                    "url": event.get_absolute_url(),
+                    "picture_url": (
+                        event.picture.url
+                        if getattr(event, "picture", None)
+                        and getattr(event.picture, "url", None)
+                        else None
+                    ),
+                }
+            )
+
+        if show_birthdays:
+            today = timezone.now().date()
+            user_model = get_user_model()
+            for user in user_model.objects.filter(
+                birthday__isnull=False, show_birthday=True
+            ):
+                birthday_this_year = user.birthday.replace(year=today.year)
+                if birthday_this_year < today:
+                    birthday_this_year = user.birthday.replace(year=today.year + 1)
+
                 data.append(
                     {
-                        "title": event.title,
-                        "start": event.start,
-                        "end": event.end,
-                        "url": event.get_absolute_url(),
-                        "picture_url": (
-                            event.picture.url
-                            if getattr(event, "picture", None)
-                            and getattr(event.picture, "url", None)
-                            else None
-                        ),
+                        "title": f"{user.display_name} - Verjaardag",
+                        "start": birthday_this_year.isoformat(),
+                        "end": (birthday_this_year + timedelta(days=1)).isoformat(),
+                        "allDay": True,
+                        "url": reverse("members:profile", kwargs={"slug": user.slug}),
+                        "color": "var(--color-secondary)",
                     }
                 )
+
         return JsonResponse(data, safe=False)
 
 
@@ -385,14 +410,35 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
 
     template_name = "events/my_events.html"
 
+    @staticmethod
+    def _is_recent_event(event, now=None):
+        """Return whether an event should remain in the active organizer list."""
+        now = now or timezone.now()
+        return event.end >= now - timedelta(days=7)
+
     def get_context_data(self, **kwargs):
-        """Return context containing events organized by the current user."""
+        """Return context containing organized events, split into recent and archive."""
         context = super().get_context_data(**kwargs)
-        context["events"] = (
+        all_events = (
             Event.objects.filter(eventorganizer__user=self.request.user)
             .distinct()
-            .order_by("start")
+            .order_by("-start")
         )
+        now = timezone.now()
+        recent_events = []
+        archive_events = []
+        for event in all_events:
+            if self._is_recent_event(event, now):
+                recent_events.append(event)
+            else:
+                archive_events.append(event)
+
+        is_archive_view = self.request.GET.get("view") == "archive"
+        context["events"] = archive_events if is_archive_view else recent_events
+        context["recent_events"] = recent_events
+        context["archive_events"] = archive_events
+        context["is_archive_view"] = is_archive_view
+        context["archive_days"] = 7
         return context
 
 

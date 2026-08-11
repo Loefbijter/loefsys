@@ -19,6 +19,7 @@ class BaseSettings(ClassySettings):
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
     DEBUG = denv.bool(False)
+    BROWSER_RELOAD_ENABLED = denv.bool(False)
     ALLOWED_HOSTS = denv.list("")
 
     ROOT_URLCONF = "loefsys.urls"
@@ -43,9 +44,14 @@ class BaseSettings(ClassySettings):
         return ("django.contrib.contenttypes",)
 
     def THIRD_PARTY_APPS(self) -> Sequence[str]:  # noqa N802 D102
-        apps = ("django_cotton", "django_browser_reload", "compressor")
-        debug_apps = ("debug_toolbar",)
-        return apps + debug_apps if self.DEBUG else apps
+        apps = ("django_cotton", "compressor")
+        browser_reload_apps = (
+            ("django_browser_reload",)
+            if self.DEBUG and self.BROWSER_RELOAD_ENABLED
+            else ()
+        )
+        debug_apps = ("debug_toolbar",) if self.DEBUG else ()
+        return apps + browser_reload_apps + debug_apps
 
     def LOCAL_APPS(self) -> Sequence[str]:  # noqa N802 D102
         return (
@@ -66,10 +72,17 @@ class BaseSettings(ClassySettings):
         )
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
+        browser_reload_middleware = (
+            ("django_browser_reload.middleware.BrowserReloadMiddleware",)
+            if self.DEBUG and self.BROWSER_RELOAD_ENABLED
+            else ()
+        )
         middleware = (
             "loefsys.core.middleware.UserAgentMiddleware",
-            "django_browser_reload.middleware.BrowserReloadMiddleware",
+            *browser_reload_middleware,
             "loefsys.core.middleware.ErrorPageMiddleware",
         )
-        debug_middleware = ("debug_toolbar.middleware.DebugToolbarMiddleware",)
-        return middleware + debug_middleware if self.DEBUG else middleware
+        debug_middleware = (
+            ("debug_toolbar.middleware.DebugToolbarMiddleware",) if self.DEBUG else ()
+        )
+        return middleware + debug_middleware

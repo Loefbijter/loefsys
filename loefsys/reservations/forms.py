@@ -30,14 +30,26 @@ class CreateReservationForm(forms.ModelForm):
         label=_("Starttijd"),
         input_formats=["%Y-%m-%dT%H:%M"],
         widget=forms.DateTimeInput(
-            attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
+            attrs={
+                "type": "datetime-local",
+                "class": "reservation-datetime-input",
+                "step": "1800",
+                "inputmode": "numeric",
+            },
+            format="%Y-%m-%dT%H:%M",
         ),
     )
     end = forms.DateTimeField(
         label=_("Eindtijd"),
         input_formats=["%Y-%m-%dT%H:%M"],
         widget=forms.DateTimeInput(
-            attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M"
+            attrs={
+                "type": "datetime-local",
+                "class": "reservation-datetime-input",
+                "step": "1800",
+                "inputmode": "numeric",
+            },
+            format="%Y-%m-%dT%H:%M",
         ),
     )
 
