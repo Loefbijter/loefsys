@@ -2,11 +2,13 @@
 
 from django.contrib import admin
 
+from loefsys.admin_helpers import ExportableModelAdmin
+
 from .models import Announcement, StaticPage
 
 
 @admin.register(Announcement)
-class AnnouncementAdmin(admin.ModelAdmin):
+class AnnouncementAdmin(ExportableModelAdmin):
     """Admin interface for managing announcements."""
 
     list_display = ("title", "published", "announcement_start", "announcement_end")
@@ -26,7 +28,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
 
 @admin.register(StaticPage)
-class StaticPageAdmin(admin.ModelAdmin):
+class StaticPageAdmin(ExportableModelAdmin):
     """Admin interface for managing static information pages."""
 
     list_display = ("title", "slug")

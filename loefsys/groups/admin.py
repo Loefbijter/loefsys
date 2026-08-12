@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.db.models.functions import Now
 from django.utils.translation import gettext_lazy as _
 
+from loefsys.admin_helpers import ExportableModelAdmin
+
 from .models import Board, Committee, Fraternity, Taskforce, YearClub
 from .models.membership import GroupMembership
 
@@ -39,7 +41,7 @@ class GroupUserInline(admin.TabularInline):
 
 
 @admin.register(Board)
-class BoardAdmin(admin.ModelAdmin):
+class BoardAdmin(ExportableModelAdmin):
     """Admin interface for the board model."""
 
     inlines = (GroupUserInline,)
@@ -50,7 +52,7 @@ class BoardAdmin(admin.ModelAdmin):
 
 
 @admin.register(Committee)
-class CommitteeAdmin(admin.ModelAdmin):
+class CommitteeAdmin(ExportableModelAdmin):
     """Admin interface for the committee model."""
 
     inlines = (GroupUserInline,)
@@ -61,7 +63,7 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Fraternity)
-class FraternityAdmin(admin.ModelAdmin):
+class FraternityAdmin(ExportableModelAdmin):
     """Admin interface for the fraternity model."""
 
     inlines = (GroupUserInline,)
@@ -72,7 +74,7 @@ class FraternityAdmin(admin.ModelAdmin):
 
 
 @admin.register(Taskforce)
-class TaskforceAdmin(admin.ModelAdmin):
+class TaskforceAdmin(ExportableModelAdmin):
     """Admin interface for the taskforce model."""
 
     inlines = (GroupUserInline,)
@@ -83,7 +85,7 @@ class TaskforceAdmin(admin.ModelAdmin):
 
 
 @admin.register(YearClub)
-class YearClubAdmin(admin.ModelAdmin):
+class YearClubAdmin(ExportableModelAdmin):
     """Admin interface for the year club model."""
 
     inlines = (GroupUserInline,)

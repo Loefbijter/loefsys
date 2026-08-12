@@ -3,6 +3,8 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from loefsys.admin_helpers import ExportableModelAdmin
+
 from .models import (
     BoatDamageRecord,
     BoatLogbook,
@@ -13,16 +15,16 @@ from .models import (
     Reservation,
 )
 
-admin.site.register(ReservableType)
-admin.site.register(ReservableBoat)
-admin.site.register(ReservableMaterial)
-admin.site.register(ReservableRoom)
-admin.site.register(BoatDamageRecord)
-admin.site.register(BoatLogbook)
+admin.site.register(ReservableType, ExportableModelAdmin)
+admin.site.register(ReservableBoat, ExportableModelAdmin)
+admin.site.register(ReservableMaterial, ExportableModelAdmin)
+admin.site.register(ReservableRoom, ExportableModelAdmin)
+admin.site.register(BoatDamageRecord, ExportableModelAdmin)
+admin.site.register(BoatLogbook, ExportableModelAdmin)
 
 
 @admin.register(Reservation)
-class ReservationAdmin(admin.ModelAdmin):
+class ReservationAdmin(ExportableModelAdmin):
     """Admin interface for reservations."""
 
     list_display = (

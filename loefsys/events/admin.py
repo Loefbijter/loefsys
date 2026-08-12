@@ -8,6 +8,8 @@ from typing import ClassVar
 
 from django.contrib import admin
 
+from loefsys.admin_helpers import ExportableModelAdmin
+
 from .models import Event, EventOrganizer, EventRegistration
 from .models.registration_form_field import (
     BooleanRegistrationInformation,
@@ -71,7 +73,7 @@ class IntegerRegistrationInformationInline(AbstractRegistrationInformationInline
 
 
 @admin.register(Event)
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(ExportableModelAdmin):
     """Admin interface for the fields of the event class."""
 
     fields = (
@@ -94,7 +96,7 @@ class EventAdmin(admin.ModelAdmin):
 
 
 @admin.register(EventRegistration)
-class EventRegistrationAdmin(admin.ModelAdmin):
+class EventRegistrationAdmin(ExportableModelAdmin):
     """Admin interface for managing event registrations."""
 
     list_display = ("__str__", "status")
@@ -108,5 +110,5 @@ class EventRegistrationAdmin(admin.ModelAdmin):
 
 
 @admin.register(RegistrationFormField)
-class RegistrationFormAdmin(admin.ModelAdmin):
+class RegistrationFormAdmin(ExportableModelAdmin):
     """Admin interface for managing registration form fields."""
