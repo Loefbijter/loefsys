@@ -406,6 +406,49 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, reservation.reservable.name)
 
+    def test_list_view_splits_recent_and_archived_reservations(self):
+        """Older reservations appear under the archive toggle, not the active list."""
+        self.client.force_login(self.reservee_user)
+
+        recent_item = Reservable.objects.create(
+            name="Recent room",
+            description="A room",
+            type=self.reservable_type,
+            location=Locations.KRAAIJ,
+            is_reservable=True,
+        )
+        archive_item = Reservable.objects.create(
+            name="Archive room",
+            description="A room",
+            type=self.reservable_type,
+            location=Locations.KRAAIJ,
+            is_reservable=True,
+        )
+
+        recent_reservation = Reservation.objects.create(
+            reservable=recent_item,
+            user=self.reservee_user,
+            start=timezone.now() - datetime.timedelta(days=1),
+            end=timezone.now() + datetime.timedelta(hours=1),
+        )
+        archive_reservation = Reservation.objects.create(
+            reservable=archive_item,
+            user=self.reservee_user,
+            start=timezone.now() - datetime.timedelta(days=20),
+            end=timezone.now() - datetime.timedelta(days=10),
+        )
+
+        response = self.client.get(reverse("reservations:reservations"))
+        self.assertContains(response, recent_reservation.reservable.name)
+        self.assertNotContains(response, archive_reservation.reservable.name)
+
+        archive_response = self.client.get(
+            reverse("reservations:reservations"), {"view": "archive"}
+        )
+        self.assertContains(archive_response, "Archief")
+        self.assertContains(archive_response, archive_reservation.reservable.name)
+        self.assertNotContains(archive_response, recent_reservation.reservable.name)
+
     def test_is_not_reservable(self):
         """Tests that an item that has the is_reservable field as true can be reserved."""  # noqa: E501
         with self.assertRaises(ValidationError):

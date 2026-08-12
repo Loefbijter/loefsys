@@ -1,5 +1,7 @@
 """Module defining the class-based views for the reservations."""
 
+from datetime import timedelta
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.db.models.functions import Lower
@@ -17,6 +19,7 @@ from loefsys.reservations.forms import (
     SortByReservationForm,
 )
 from loefsys.reservations.models.boat import ReservableBoat
+from loefsys.reservations.models.choices import ReservableCategories
 from loefsys.reservations.models.logbook import BoatDamageRecord, BoatLogbook
 from loefsys.reservations.models.reservable import Reservable, ReservableType
 from loefsys.reservations.models.reservation import Reservation
@@ -27,6 +30,12 @@ class ReservationListView(LoginRequiredMixin, ListView):
 
     model = Reservation
     context_object_name = "reservations"
+
+    @staticmethod
+    def _is_recent_reservation(reservation, now=None):
+        """Return whether a reservation should remain in the active list."""
+        now = now or timezone.now()
+        return reservation.end >= now - timedelta(days=7)
 
     def get_queryset(self):
         """Only show instances of Reservation made by the user, with the option to sort them."""  # noqa: E501
@@ -44,14 +53,14 @@ class ReservationListView(LoginRequiredMixin, ListView):
                 case _:
                     sort_by = form.cleaned_data["sort_by"]
 
-        now = timezone.now()
         queryset = (
             Reservation.objects.filter(user=self.request.user)
             .exclude(request_status=Reservation.RequestStatus.DENIED)
             .order_by(sort_by)
         )
 
-        queryset = queryset.filter(
+        now = timezone.now()
+        recent_queryset = queryset.filter(
             Q(end__gt=now)
             | (
                 Q(reservable__type__category=ReservableType.Category.BOAT)
@@ -59,14 +68,55 @@ class ReservationListView(LoginRequiredMixin, ListView):
                 & Q(boat_logbook__isnull=True)
             )
         )
+        archive_queryset = queryset.exclude(pk__in=recent_queryset.values("pk"))
 
-        return queryset
+        is_archive_view = self.request.GET.get("view") == "archive"
+        if is_archive_view:
+            return archive_queryset.filter(end__lt=now - timedelta(days=7))
+
+        return recent_queryset.filter(end__gte=now - timedelta(days=7))
 
     def get_context_data(self, **kwargs):
         """Include the sort form in the context data."""
         context = super().get_context_data(**kwargs)
-        context["form"] = SortByReservationForm(self.request.GET)
+        form = SortByReservationForm(self.request.GET)
+        sort_by = "start"
+
+        if form.is_valid() and form.cleaned_data["sort_by"]:
+            match form.cleaned_data["sort_by"]:
+                case "location":
+                    sort_by = "reservable__location"
+                case "A-Z":
+                    sort_by = Lower("reservable__name")
+                case "type":
+                    sort_by = "reservable__type__name"
+                case _:
+                    sort_by = form.cleaned_data["sort_by"]
+
+        queryset = (
+            Reservation.objects.filter(user=self.request.user)
+            .exclude(request_status=Reservation.RequestStatus.DENIED)
+            .order_by(sort_by)
+        )
+        now = timezone.now()
+        recent_reservations = []
+        archive_reservations = []
+        for reservation in queryset:
+            if self._is_recent_reservation(reservation, now):
+                recent_reservations.append(reservation)
+            else:
+                archive_reservations.append(reservation)
+
+        is_archive_view = self.request.GET.get("view") == "archive"
+        context["form"] = form
         context["RequestStatus"] = Reservation.RequestStatus
+        context["recent_reservations"] = recent_reservations
+        context["archive_reservations"] = archive_reservations
+        context["is_archive_view"] = is_archive_view
+        context["archive_days"] = 7
+        context["reservations"] = (
+            archive_reservations if is_archive_view else recent_reservations
+        )
         return context
 
 
@@ -98,6 +148,9 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         """Add the user who made the reservation to the Reservation instance."""
         form.instance.user = self.request.user
+        reservable = form.cleaned_data.get("reservable")
+        if reservable and reservable.type.category != ReservableCategories.BOAT:
+            form.instance.authorized_userskippership = self.request.user
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -161,6 +214,9 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         """Add the user who made the reservation to the Reservation instance."""
         form.instance.user = self.request.user
+        reservable = form.cleaned_data.get("reservable")
+        if reservable and reservable.type.category != ReservableCategories.BOAT:
+            form.instance.authorized_userskippership = self.request.user
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):

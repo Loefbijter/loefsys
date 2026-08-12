@@ -10,16 +10,27 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-6 sm:space-y-8">
 
         <!-- Page header -->
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                <h1 class="text-3xl sm:text-4xl font-bold text-foreground">{% trans "Mijn reserveringen" %}</h1>
-                <p class="text-sm text-foreground/60 mt-1">{% trans "Hier vind je al je openstaande reserveringen." %}</p>
+        <div class="mb-5 flex flex-col gap-4 rounded-3xl border border-black/5 bg-white p-4 shadow-sm sm:p-5">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+               <div>
+                   <h1 class="text-3xl sm:text-4xl font-bold text-foreground">{% trans "Mijn reserveringen" %}</h1>
+                   <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% trans "Archief van oudere reserveringen" %}{% else %}{% trans "Actieve en recente reserveringen" %}{% endif %}</p>
+               </div>
+               <a href="{% url 'reservations:reservation-add' '1' %}"
+                   class="inline-flex items-center justify-end gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors whitespace-nowrap cursor-pointer">
+                   <i class="bi bi-plus-lg"></i>
+                   {% trans "Nieuwe reservering" %}
+               </a>
             </div>
-            <a href="{% url 'reservations:reservation-add' '1' %}"
-               class="inline-flex items-center justify-end gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors whitespace-nowrap cursor-pointer">
-                <i class="bi bi-plus-lg"></i>
-                {% trans "Nieuwe reservering" %}
-            </a>
+
+            <div class="flex rounded-full bg-black/5 p-1">
+               <a href="{% url 'reservations:reservations' %}" class="flex-1 rounded-full px-3 py-2 text-center text-sm font-semibold transition {% if not is_archive_view %}bg-white text-foreground shadow-sm{% else %}text-foreground/60{% endif %}">
+                   {% trans "Actief" %}
+               </a>
+               <a href="{% url 'reservations:reservations' %}?view=archive" class="flex-1 rounded-full px-3 py-2 text-center text-sm font-semibold transition {% if is_archive_view %}bg-white text-foreground shadow-sm{% else %}text-foreground/60{% endif %}">
+                   {% trans "Archief" %}
+               </a>
+            </div>
         </div>
 
         <!-- Filter -->
@@ -122,13 +133,15 @@
             <div class="mx-auto w-14 h-14 rounded-full bg-accent flex items-center justify-center mb-4">
                 <i class="bi bi-calendar-x text-2xl text-primary"></i>
             </div>
-            <p class="text-lg font-semibold text-foreground">{% trans "Je hebt nog geen reserveringen" %}</p>
-            <p class="text-sm text-foreground/60 mt-1">{% trans "Maak je eerste reservering om te beginnen." %}</p>
+            <p class="text-lg font-semibold text-foreground">{% if is_archive_view %}{% trans "Er staat nog geen oude reservering in het archief" %}{% else %}{% trans "Je hebt nog geen reserveringen" %}{% endif %}</p>
+            <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% trans "Je oudere reserveringen worden hier automatisch geplaatst." %}{% else %}{% trans "Maak je eerste reservering om te beginnen." %}{% endif %}</p>
+            {% if not is_archive_view %}
             <a href="{% url 'reservations:reservation-add' '1' %}"
                class="inline-flex items-center gap-2 mt-5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors cursor-pointer">
-                <i class="bi bi-plus-lg"></i>
-                {% trans "Maak reservering" %}
+               <i class="bi bi-plus-lg"></i>
+               {% trans "Maak reservering" %}
             </a>
+            {% endif %}
         </div>
         {% endif %}
 

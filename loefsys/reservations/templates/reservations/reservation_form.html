@@ -196,6 +196,7 @@
                                name="{{ form.reservable.name }}"
                                id="reservable_{{ forloop.counter }}"
                                data-item-name="{{ item.name }}"
+                               data-is-boat="{% if item.type.category == 1 %}true{% else %}false{% endif %}"
                                class="peer hidden item-radio"
                                required>
 
@@ -336,7 +337,7 @@
             </div>
 
             <!-- ============ STEP 4: SCHIPPER ============ -->
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm">
+            <div id="skipper-section" class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm hidden">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">4</span>
                     <h2 class="text-lg sm:text-xl font-bold text-foreground">{% trans "Schipper" %}</h2>
@@ -504,6 +505,24 @@
         const existingWrap = document.getElementById("skipper-existing-wrap");
         const newWrap = document.getElementById("skipper-new-wrap");
         const newSkipperInput = document.getElementById("id_new_skipper_name");
+        const skipperSection = document.getElementById("skipper-section");
+
+        function updateSkipperSection() {
+            const selectedReservable = document.querySelector("input[name='reservable']:checked");
+            const isBoatReservation = selectedReservable && selectedReservable.dataset.isBoat === "true";
+
+            if (skipperSection) {
+                skipperSection.classList.toggle("hidden", !isBoatReservation);
+            }
+
+            if (!isBoatReservation && skipperSection) {
+                const skipperSelect = document.getElementById('id_authorized_userskippership');
+                if (skipperSelect) skipperSelect.selectedIndex = -1;
+                if (newSkipperInput) newSkipperInput.value = "";
+                if (existingWrap) existingWrap.classList.remove("hidden");
+                if (newWrap) newWrap.classList.add("hidden");
+            }
+        }
 
         document.querySelectorAll("input[name='skipper_mode']").forEach((radio) => {
             radio.addEventListener("change", function () {
@@ -525,8 +544,11 @@
                 if (this.checked && selectedLabel) {
                     selectedLabel.textContent = this.dataset.itemName;
                 }
+                updateSkipperSection();
             });
         });
+
+        updateSkipperSection();
 
         // --- Type filter collapse ---
         const toggleTypeButton = document.getElementById("toggle-reservable-types");
@@ -718,6 +740,7 @@
 
         // restore saved state now
         restoreReservationFormState();
+        updateSkipperSection();
 
         // --- Skipper search: filter the select options in-place ---
         const skipperSearch = document.getElementById('skipper-search');
