@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% load i18n %}
 
@@ -7,71 +6,81 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col">
-    <section id="reservation detail" class="bg-secondary p-8 flex flex-col">
-        <h1 class="text-6xl font-bold text-white pb-8 mt-4">{% trans "VERWIJDER RESERVERING" %}</h1>
+<div class="min-h-screen bg-gray-50">
 
-        <div
-            class="
-                p-4
-                border-2
-                rounded-3xl
-                shadow-lg
-                mx-auto
-                my-3
-                w-4/5
-                text-left
-
-                {% if reservation.request_status == RequestStatus.PENDING %}
-                    bg-alert
-                    border-alert
-                {% elif reservation.request_status == RequestStatus.APPROVED %}
-                    bg-success
-                    border-success
-                {% elif reservation.request_status == RequestStatus.DENIED %}
-                    bg-destructive
-                    border-destructive
-                {% endif %}
-            "
-        >
-            <h2 class="font-bold text-5xl mb-4">{{ reservation.reservable.name }}</h2>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-2xl">
-                <div class="border p-4 rounded-xl bg-white/70 col-span-2 flex gap-2">
-                    <span class="font-bold whitespace-nowrap">{% trans "Beschrijving" %}: </span> {{ reservation.reserved_item.description }}
-                </div>
-                <div class="border p-4 rounded-xl bg-white/70">
-                    <span class="font-bold">{% trans "Starttijd" %}:</span> {{ reservation.start|date:"d-m-Y H:i" }}
-                </div>
-                <div class="border p-4 rounded-xl bg-white/70">
-                    <span class="font-bold">{% trans "Eindtijd" %}:</span> {{ reservation.end|date:"d-m-Y H:i" }}
-                </div>
-                <div class="border p-4 rounded-xl bg-white/70">
-                    <span class="font-bold">{% trans "Locatie" %}:</span> {{ reservation.reserved_item.get_location_display }}
-                </div>
-                <div class="border p-4 rounded-xl bg-white/70">
-                    <span class="font-bold">{% trans "Type" %}:</span> {{ reservation.reserved_item.type.name }}
-                </div>
+    <!-- ============ HEADER ============ -->
+    <section class="bg-white border-b border-gray-200">
+        <div class="max-w-lg mx-auto px-4 sm:px-6 py-8 text-center">
+            <div class="mx-auto w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+                <i class="bi bi-trash3 text-xl text-destructive"></i>
             </div>
-
+            <h1 class="text-xl sm:text-2xl font-bold text-gray-900">{% trans "Verwijder reservering" %}</h1>
+            <p class="text-sm text-gray-500 mt-1.5">
+                {% trans "Weet je zeker dat je deze reservering wilt verwijderen? Dit kan niet ongedaan worden gemaakt." %}
+            </p>
         </div>
     </section>
 
-    <!-- Delete Reservation -->
-    <section id="delete reservation" class="bg-primary flex-auto p-8">
-        <h1 class="text-5xl font-bold">{% trans "VERWIJDER RESERVERING" %}</h1>
-        <p class="text-2xl mb-4"><br> Weet je zeker dat je deze reservering wil verwijderen?</p>
+    <div class="max-w-lg mx-auto w-full px-4 sm:px-6 py-6 space-y-5">
 
-        <form method="post" class="w-4/5 mx-auto">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary p-2 border-2 rounded-3xl shadow-lg w-full bg-white/90 hover:bg-gray-400 block text-center">
-                <span class="font-bold text-3xl">{% trans "Verwijder reservering" %}</span>
-            </button>
-        </form>
+        <!-- ============ RESERVATION SUMMARY ============ -->
+        <div class="relative bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <span class="absolute inset-y-0 left-0 w-1.5
+                {% if reservation.request_status == RequestStatus.PENDING %}bg-alert
+                {% elif reservation.request_status == RequestStatus.APPROVED %}bg-success
+                {% elif reservation.request_status == RequestStatus.DENIED %}bg-destructive
+                {% endif %}"></span>
 
-        <a href="{% url 'reservations:reservation-detail' pk=object.pk %}" class="btn btn-primary p-2 font-bold border-2 rounded-3xl shadow-lg mx-auto my-3 w-4/5 bg-white/90 hover:bg-gray-400 block text-center cursor-pointer">
-            <span class="font-bold text-3xl">{% trans "Annuleer" %}</span>
-        </a>
-    </section>
+            <div class="p-5 sm:p-6 pl-6 sm:pl-7">
+                <h2 class="font-bold text-lg sm:text-xl text-gray-900 mb-4">
+                    {{ reservation.reservable.name }}
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <div class="p-3.5 rounded-xl bg-gray-50 sm:col-span-2">
+                        <p class="font-semibold text-gray-400 text-xs uppercase tracking-wide mb-1">{% trans "Beschrijving" %}</p>
+                        <p class="text-gray-800">{{ reservation.reserved_item.description }}</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-gray-50">
+                        <p class="font-semibold text-gray-400 text-xs uppercase tracking-wide mb-1">{% trans "Starttijd" %}</p>
+                        <p class="text-gray-800 font-medium">{{ reservation.start|date:"d-m-Y H:i" }}</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-gray-50">
+                        <p class="font-semibold text-gray-400 text-xs uppercase tracking-wide mb-1">{% trans "Eindtijd" %}</p>
+                        <p class="text-gray-800 font-medium">{{ reservation.end|date:"d-m-Y H:i" }}</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-gray-50">
+                        <p class="font-semibold text-gray-400 text-xs uppercase tracking-wide mb-1">{% trans "Locatie" %}</p>
+                        <p class="text-gray-800 font-medium">{{ reservation.reserved_item.get_location_display }}</p>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl bg-gray-50">
+                        <p class="font-semibold text-gray-400 text-xs uppercase tracking-wide mb-1">{% trans "Type" %}</p>
+                        <p class="text-gray-800 font-medium">{{ reservation.reserved_item.type.name }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ CONFIRM / CANCEL ============ -->
+        <div class="space-y-3">
+            <a href="{% url 'reservations:reservation-detail' pk=object.pk %}"
+               class="flex items-center justify-center rounded-xl border border-gray-200 bg-white px-6 py-3.5 text-base font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                {% trans "Annuleer" %}
+            </a>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit"
+                        class="w-full flex items-center justify-center gap-2 rounded-xl bg-destructive px-6 py-3.5 text-base font-semibold text-destructive-foreground shadow-sm hover:bg-destructive-accent transition-colors cursor-pointer">
+                    <i class="bi bi-trash3"></i>
+                    {% trans "Verwijder reservering" %}
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

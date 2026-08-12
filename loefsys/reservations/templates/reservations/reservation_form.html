@@ -155,7 +155,7 @@
                     <label class="filter-chip">
                         <input type="radio" name="reservable_type_display" value="" class="hidden peer"
                                {% if not selected_reservable_type %}checked{% endif %}
-                               onchange="document.getElementById('reservable_type_hidden').value=''; document.getElementById('filterform').submit();">
+                                                   onchange="filterByType('')">
                         <span class="inline-block px-4 py-1.5 rounded-full border border-black/10 cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-black/5">
                             {% trans "Alles" %}
                         </span>
@@ -164,7 +164,7 @@
                     <label class="filter-chip {% if forloop.counter > 4 and reservable_type.name != selected_reservable_type %}hidden extra-reservable-type{% endif %}">
                         <input type="radio" name="reservable_type_display" value="{{ reservable_type.name }}" class="hidden peer"
                                {% if reservable_type.name == selected_reservable_type %}checked{% endif %}
-                               onchange="document.getElementById('reservable_type_hidden').value='{{ reservable_type.name|escapejs }}'; document.getElementById('filterform').submit();">
+                                                   onchange="filterByType('{{ reservable_type.name|escapejs }}')">
                         <span class="inline-block px-4 py-1.5 rounded-full border border-black/10 cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-black/5">
                             {{ reservable_type.name }}
                         </span>
@@ -343,7 +343,13 @@
                 </div>
 
                 <div id="skipper-existing-wrap">
-                    <label for="{{ form.authorized_userskippership.id_for_label }}" class="text-sm font-semibold text-foreground/70 block mb-2">
+                    <label for="skipper-search" class="text-sm font-semibold text-foreground/70 block mb-2">
+                        {% trans "Zoek en kies een schipper" %}
+                    </label>
+                    <input type="search" id="skipper-search" placeholder="{% trans 'Zoek schipper...' %}"
+                           class="w-full text-base rounded-xl px-3 py-2 border border-black/10 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 mb-2">
+
+                    <label for="{{ form.authorized_userskippership.id_for_label }}" class="sr-only">
                         {% trans "Kies een schipper" %}
                     </label>
                     {{ form.authorized_userskippership }}
@@ -616,6 +622,123 @@
 
         startInput?.addEventListener("change", validateAvailability);
         endInput?.addEventListener("change", validateAvailability);
+
+        // --- Save / restore form state around filter navigation ---
+        const reservationFormId = 'reservationform';
+        const storageKey = 'reservation_form_state';
+
+        function saveReservationFormState() {
+            try {
+                const form = document.getElementById(reservationFormId);
+                if (!form) return;
+                const data = {};
+                const elements = form.querySelectorAll('input, select, textarea');
+                elements.forEach((el) => {
+                    if (!el.name) return;
+                    if (el.type === 'radio') {
+                        if (el.checked) data[el.name] = el.value;
+                    } else if (el.type === 'checkbox') {
+                        data[el.name] = el.checked;
+                    } else {
+                        data[el.name] = el.value;
+                    }
+                });
+                // also save which reservable_type_display is selected (from the filter chips)
+                const rt = document.querySelector('input[name="reservable_type_display"]:checked');
+                if (rt) data['reservable_type_display'] = rt.value;
+                sessionStorage.setItem(storageKey, JSON.stringify(data));
+            } catch (e) {
+                console.error('Could not save reservation form state', e);
+            }
+        }
+
+        function restoreReservationFormState() {
+            try {
+                const raw = sessionStorage.getItem(storageKey);
+                if (!raw) return;
+                const data = JSON.parse(raw);
+                const form = document.getElementById(reservationFormId);
+                if (!form) return;
+                const elements = form.querySelectorAll('input, select, textarea');
+                elements.forEach((el) => {
+                    if (!el.name || !(el.name in data)) return;
+                    const val = data[el.name];
+                    if (el.type === 'radio') {
+                        el.checked = (el.value == val);
+                    } else if (el.type === 'checkbox') {
+                        el.checked = !!val;
+                    } else {
+                        el.value = val;
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+
+                // restore selected label text
+                const selectedLabel = document.getElementById('selected-item-label');
+                const selectedReservable = data['reservable'];
+                if (selectedReservable && selectedLabel) {
+                    // try to find the item with matching value
+                    const radio = document.querySelector("input[name='reservable'][value='" + selectedReservable + "']");
+                    if (radio && radio.dataset && radio.dataset.itemName) {
+                        selectedLabel.textContent = radio.dataset.itemName;
+                        radio.checked = true;
+                    }
+                }
+
+                // restore filter chip selected
+                if (data['reservable_type_display'] !== undefined) {
+                    const chip = document.querySelector("input[name='reservable_type_display'][value='" + data['reservable_type_display'] + "']");
+                    if (chip) chip.checked = true;
+                }
+
+                // clear saved state after restoring so it doesn't persist accidentally
+                sessionStorage.removeItem(storageKey);
+            } catch (e) {
+                console.error('Could not restore reservation form state', e);
+            }
+        }
+
+        // attach save before navigating away via filter submit
+        const filterForm = document.getElementById('filterform');
+        if (filterForm) {
+            filterForm.addEventListener('submit', saveReservationFormState);
+        }
+
+        // when clicking any filter chip, use JS handler to persist and submit
+        window.filterByType = function (typeValue) {
+            const hidden = document.getElementById('reservable_type_hidden');
+            if (hidden) hidden.value = typeValue;
+            saveReservationFormState();
+            // submit the hidden GET form to let server re-filter
+            filterForm.submit();
+        };
+
+        // save on beforeunload as extra safety
+        window.addEventListener('beforeunload', saveReservationFormState);
+
+        // restore saved state now
+        restoreReservationFormState();
+
+        // --- Skipper search: filter the select options in-place ---
+        const skipperSearch = document.getElementById('skipper-search');
+        const skipperSelect = document.getElementById('{{ form.authorized_userskippership.id_for_label|escapejs }}'.replace('id_', '')) || document.getElementById('{{ form.authorized_userskippership.id_for_label|escapejs }}');
+        // Note: Django usually renders the select with id "id_authorized_userskippership". Prefer explicit lookup:
+        const skipperSelectEl = document.getElementById('id_authorized_userskippership');
+
+        if (skipperSearch && skipperSelectEl) {
+            skipperSearch.addEventListener('input', function () {
+                const q = this.value.trim().toLowerCase();
+                for (let i = 0; i < skipperSelectEl.options.length; i++) {
+                    const opt = skipperSelectEl.options[i];
+                    const text = (opt.text || '').toLowerCase();
+                    opt.hidden = q.length > 0 && !text.includes(q);
+                }
+                // if the currently selected option became hidden, clear selection
+                if (skipperSelectEl.selectedIndex >= 0 && skipperSelectEl.options[skipperSelectEl.selectedIndex].hidden) {
+                    skipperSelectEl.selectedIndex = -1;
+                }
+            });
+        }
     });
 </script>
 {% endblock %}

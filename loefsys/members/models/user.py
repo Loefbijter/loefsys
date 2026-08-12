@@ -4,15 +4,16 @@ from typing import TYPE_CHECKING, Optional, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, Permission, PermissionsMixin
 from django.core.files.storage import FileSystemStorage
-from django.db import models
+from django.db import ProgrammingError, models
 from django.db.models import OneToOneField, QuerySet
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import RandomCharField
 from django_extensions.db.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
+from loefsys.groups.models.group import LoefbijterGroup
 from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
@@ -45,13 +46,13 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         """Create and save a regular user with the given email and password."""
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
         """Create and save a superuser with the given email and password."""
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
@@ -229,22 +230,20 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
     address = OneToOneField(to=Address, on_delete=models.SET_NULL, null=True)
 
+    loefbijter_groups = models.ManyToManyField(
+        "groups.LoefbijterGroup",
+        verbose_name=_("Loefbijter groups"),
+        blank=True,
+        help_text=_(
+            "The groups this user belongs to. A user will get all permissions "
+            "granted to each of their groups."
+        ),
+        related_name="user_set",
+        related_query_name="user",
+    )
+
     study_registration: Optional["StudyRegistration"]
     membership_set: QuerySet["Membership"]
-
-    # Copied from PermissionsMixin to override Group type to LoefbijterGroup.
-    # This many to many field should have been created on the Groups model.
-    # groups = models.ManyToManyField(
-    #     LoefbijterGroup,
-    #     verbose_name=_("Groups"),
-    #     blank=True,
-    #     help_text=_(
-    #         "The groups this user belongs to. A user will get all permissions "
-    #         "granted to each of their groups."
-    #     ),
-    #     related_name="user_set",
-    #     related_query_name="user",
-    # )
 
     phone_number = PhoneNumberField(blank=True)
     pod_kb_link = models.URLField(
@@ -273,6 +272,43 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     DISPLAY_NAME_MAX_LENGTH = 64
 
     objects = UserManager()
+
+    def get_group_permissions(self, obj=None):
+        """Return permissions for Django auth groups and Loefbijter groups.
+
+        This extends the default PermissionsMixin behavior so that permissions
+        assigned to LoefbijterGroup instances are considered when evaluating a
+        user's permissions.
+        """
+        # Start with the default group permissions (from auth.Group via
+        # PermissionsMixin).
+        perms = set(super().get_group_permissions(obj))
+
+        # Collect Loefbijter groups the user belongs to from both the
+        # loefbijter_groups M2M (if present) and the GroupMembership model. Some
+        # environments use explicit GroupMembership rows instead of the M2M, so
+        # this keeps permission resolution robust when the M2M table is missing
+        # or out-of-sync.
+        try:
+            m2m_groups = self.loefbijter_groups.all()
+        except (AttributeError, ProgrammingError):
+            # AttributeError if the field isn't present on the model,
+            # ProgrammingError if the DB table for the M2M is missing; fall back to
+            # empty queryset.
+            m2m_groups = LoefbijterGroup.objects.none()
+
+        # Groups added via the explicit GroupMembership model
+        membership_groups = LoefbijterGroup.objects.filter(groupmembership__user=self)
+
+        groups_qs = m2m_groups | membership_groups
+
+        # Use distinct() to avoid duplicates and collect permission strings
+        perms.update(
+            f"{p.content_type.app_label}.{p.codename}"
+            for p in Permission.objects.filter(loefbijtergroup__in=groups_qs).distinct()
+        )
+
+        return perms
 
     @staticmethod
     def _truncate_name(value: str, max_length: int) -> str:

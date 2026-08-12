@@ -5,230 +5,101 @@
 {% endblock %}
 
 {% block content %}
-<style>
-  .agenda-page {
-    --primary: #2972b3;
-    --accent: #1bb1e6;
-    --bg: #eaf6fb;
-    --ink: #10324d;
-    --ink-soft: #4d7590;
-    --card: #ffffff;
-    --border: #d6ecf6;
-  }
+<div class="min-h-screen w-full max-w-full overflow-x-hidden bg-gray-50">
 
-  .agenda-page {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
-    color: var(--ink);
-  }
-
-  .agenda-hero {
-    background: var(--primary);
-    padding: 3rem 1.5rem 4.5rem;
-    text-align: center;
-  }
-
-  .agenda-hero h1 {
-    color: #fff;
-    font-size: clamp(2rem, 4vw, 2.75rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin: 0;
-  }
-
-  .agenda-hero p {
-    color: #dcf0fb;
-    font-size: 1.05rem;
-    margin-top: 0.5rem;
-  }
-
-  .agenda-wrap {
-    max-width: 720px;
-    margin: -2.75rem auto 0;
-    padding: 0 1.5rem 4rem;
-  }
-
-  .agenda-card {
-    background: var(--card);
-    border-radius: 1.25rem;
-    box-shadow: 0 20px 40px -24px rgba(16, 50, 77, 0.35);
-    padding: 2.5rem;
-  }
-
-  @media (max-width: 640px) {
-    .agenda-card { padding: 1.75rem; }
-  }
-
-  .agenda-card h2 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin: 0 0 1.75rem;
-    color: var(--ink);
-  }
-
-  .steps {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .steps li {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    font-size: 1.02rem;
-    line-height: 1.5;
-  }
-
-  .step-num {
-    flex: none;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 999px;
-    background: var(--accent);
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .step-text { padding-top: 0.15rem; }
-  .step-text strong { color: var(--ink); }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 2.25rem 0;
-  }
-
-  .feed {
-    margin-bottom: 1.25rem;
-  }
-
-  .feed:last-child { margin-bottom: 0; }
-
-  .feed-label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--ink-soft);
-    margin-bottom: 0.5rem;
-  }
-
-  .feed-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    background: #f4f7f9;
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 0.6rem 0.6rem 0.6rem 1rem;
-  }
-
-  .feed-url {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 0.9rem;
-    color: var(--ink);
-  }
-
-  .copy-btn {
-    flex: none;
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.5rem 0.9rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s ease;
-  }
-
-  .copy-btn:hover { background: var(--accent); }
-  .copy-btn:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-  }
-
-  .copy-btn.copied { background: #1f9d55; }
-</style>
-
-<div class="agenda-page">
-
-  <section class="agenda-hero">
-    <h1>Agenda koppelen</h1>
-    <p>Volg je Loefbijter-agenda voortaan in je eigen agenda-app.</p>
-  </section>
-
-  <div class="agenda-wrap">
-    <div class="agenda-card">
-
-      <h2>Hoe koppel je je agenda?</h2>
-
-      <ol class="steps">
-        <li>
-          <span class="step-num">1</span>
-          <span class="step-text">Open je agenda-app, bijvoorbeeld Google Calendar of Outlook</span>
-        </li>
-        <li>
-          <span class="step-num">2</span>
-          <span class="step-text">Zoek de optie om een agenda via URL toe te voegen.</span>
-        </li>
-        <li>
-          <span class="step-num">3</span>
-          <span class="step-text">Kopieer een link hieronder en plak deze in het URL-veld.</span>
-        </li>
-        <li>
-          <span class="step-num">4</span>
-          <span class="step-text">Sla de wijzigingen op. Je agenda is nu gekoppeld.</span>
-        </li>
-      </ol>
-
-      <hr class="divider">
-
-      <div class="feed">
-        <div class="feed-label">Events waar je voor bent ingeschreven</div>
-        <div class="feed-row">
-          <span class="feed-url" id="feed-registered">https://app.loefbijter.nl{{ registered_event_feed }}</span>
-          <button class="copy-btn" type="button" data-target="feed-registered">Kopieer</button>
+    <!-- ============ HEADER ============ -->
+    <section class="bg-white border-b border-gray-200">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-10 text-center">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Agenda koppelen</h1>
+            <p class="text-sm sm:text-base text-gray-500 mt-1.5">
+                Volg de Loefbijter-agenda op je eigen agenda!
+            </p>
         </div>
-      </div>
+    </section>
 
-      <div class="feed">
-        <div class="feed-label">Events waar je niet voor bent ingeschreven</div>
-        <div class="feed-row">
-          <span class="feed-url" id="feed-other">https://app.loefbijter.nl{{ other_event_feed }}</span>
-          <button class="copy-btn" type="button" data-target="feed-other">Kopieer</button>
+    <div class="max-w-xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8">
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 sm:p-8">
+
+            <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-5 sm:mb-6">Hoe koppel je je agenda?</h2>
+
+            <ol class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">1</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Open je agenda-app, bijvoorbeeld Google Calendar of Outlook.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">2</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Zoek de optie om een agenda via URL toe te voegen.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">3</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Kopieer een link hieronder en plak deze in het URL-veld.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">4</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Sla de wijzigingen op. Je agenda is nu gekoppeld.</span>
+                </li>
+            </ol>
+
+            <hr class="border-t border-gray-100 my-6 sm:my-8">
+
+            <!-- ============ FEED LINKS ============ -->
+            <div class="space-y-5">
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 mb-2">Events waar je voor bent ingeschreven</p>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <span id="feed-registered"
+                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-gray-700">https://app.loefbijter.nl{{ registered_event_feed }}</span>
+                        <button type="button" data-target="feed-registered"
+                                class="copy-btn shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs sm:text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors">
+                            <i class="bi bi-clipboard copy-icon"></i>
+                            <span class="copy-label">Kopieer</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 mb-2">Events waar je niet voor bent ingeschreven</p>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <span id="feed-other"
+                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-gray-700">https://app.loefbijter.nl{{ other_event_feed }}</span>
+                        <button type="button" data-target="feed-other"
+                                class="copy-btn shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs sm:text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors">
+                            <i class="bi bi-clipboard copy-icon"></i>
+                            <span class="copy-label">Kopieer</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
-
     </div>
-  </div>
 </div>
 
 <script>
-  document.querySelectorAll(".copy-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var target = document.getElementById(btn.dataset.target);
-      var text = target.textContent.trim();
-      navigator.clipboard.writeText(text).then(function () {
-        var original = btn.textContent;
-        btn.textContent = "Gekopieerd!";
-        btn.classList.add("copied");
-        setTimeout(function () {
-          btn.textContent = original;
-          btn.classList.remove("copied");
-        }, 1800);
-      });
+    document.querySelectorAll(".copy-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            var target = document.getElementById(btn.dataset.target);
+            var text = target.textContent.trim();
+            var icon = btn.querySelector(".copy-icon");
+            var label = btn.querySelector(".copy-label");
+
+            navigator.clipboard.writeText(text).then(function () {
+                btn.classList.remove("bg-primary", "hover:bg-primary-accent");
+                btn.classList.add("bg-success", "hover:bg-success-accent");
+                icon.classList.remove("bi-clipboard");
+                icon.classList.add("bi-check2");
+                label.textContent = "Gekopieerd!";
+
+                setTimeout(function () {
+                    btn.classList.remove("bg-success", "hover:bg-success-accent");
+                    btn.classList.add("bg-primary", "hover:bg-primary-accent");
+                    icon.classList.remove("bi-check2");
+                    icon.classList.add("bi-clipboard");
+                    label.textContent = "Kopieer";
+                }, 1800);
+            });
+        });
     });
-  });
 </script>
 {% endblock %}

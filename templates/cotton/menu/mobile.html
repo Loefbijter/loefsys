@@ -30,10 +30,10 @@
 <label for="mobile-menu-toggle-checkbox" id="mobile-slide-overlay" class="fixed inset-0 bg-black/30 opacity-0 cursor-pointer" style="z-index:950;"></label>
 <div id="mobile-slide-menu" class="fixed inset-y-0 left-0 flex w-72 max-w-full flex-col overflow-y-auto border-r border-gray-200 bg-white text-foreground shadow-xl" style="z-index:1100;">
     <div class="flex items-center justify-between gap-3 border-b border-gray-200 p-4">
-        <div class="flex items-center gap-3">
+        <a href="{% url 'home:home' %}" class="flex items-center gap-3">
             <img src="{% static 'loefbijter-logo.svg' %}" alt="Loefbijter logo" class="w-10 h-auto">
             <span class="font-semibold">Loefbijter</span>
-        </div>
+        </a>
         <label for="mobile-menu-toggle-checkbox" aria-label="Close navigation" class="rounded-full p-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
