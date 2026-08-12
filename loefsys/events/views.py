@@ -1,6 +1,7 @@
 """Module defining the views for events."""
 
 from datetime import timedelta
+from typing import ClassVar
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -338,6 +339,20 @@ class CalendarView(LoginRequiredMixin, TemplateView):
 class EventFillerView(View):
     """View for the event filler."""
 
+    CATEGORY_COLORS: ClassVar[dict[int, str]] = {
+        EventCategories.OTHER: "#a855f7",
+        EventCategories.ALUMNI: "#f59e0b",
+        EventCategories.ASSOCIATION: "#0ea5e9",
+        EventCategories.COMPETITION: "#14b8a6",
+        EventCategories.LEISURE: "#ec4899",
+        EventCategories.SAILING: "#2563eb",
+        EventCategories.TRAINING: "#22c55e",
+    }
+
+    def get_event_color(self, event):
+        """Return the color for an event category."""
+        return self.CATEGORY_COLORS.get(event.category, "#6366f1")
+
     def get(self, request):
         """Get the events for the calendar."""
         show_birthdays = request.GET.get("show_birthdays", "0") in {"1", "true", "True"}
@@ -356,6 +371,9 @@ class EventFillerView(View):
                         and getattr(event.picture, "url", None)
                         else None
                     ),
+                    "color": self.get_event_color(event),
+                    "backgroundColor": self.get_event_color(event),
+                    "borderColor": self.get_event_color(event),
                 }
             )
 

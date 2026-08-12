@@ -18,6 +18,8 @@
         background: white;
         color: #0f172a;
         touch-action: manipulation;
+        box-sizing: border-box;
+        max-width: 100%;
     }
 
     .reservation-datetime-input::-webkit-calendar-picker-indicator {
@@ -31,7 +33,7 @@
         }
     }
 </style>
-<div class="bg-background relative flex flex-col min-h-screen pb-32">
+<div class="bg-background relative flex flex-col min-h-screen pb-32 overflow-x-hidden">
 
     <!-- ============ HEADER ============ -->
     <section class="bg-white border-b border-black/5">
@@ -43,31 +45,31 @@
 
             <!-- Location tabs -->
             <nav class="mt-6">
-                <ul class="inline-flex flex-wrap gap-1 bg-black/5 p-1.5 rounded-full text-sm font-semibold">
-                    <li>
+                <ul class="grid grid-cols-4 gap-1 bg-black/5 p-1.5 rounded-full text-sm font-semibold overflow-hidden">
+                    <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
-                           class="inline-block px-4 py-2 rounded-full transition-colors duration-200 {% if location == 1 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 1 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 1 %}page{% else %}false{% endif %}">
                             {% trans "Bestuurskamer" %}
                         </a>
                     </li>
-                    <li>
+                    <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '2' %}{% else %}{% url 'reservations:reservation-add' '2' %}{% endif %}"
-                           class="inline-block px-4 py-2 rounded-full transition-colors duration-200 {% if location == 2 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 2 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 2 %}page{% else %}false{% endif %}">
                             {% trans "Bastion" %}
                         </a>
                     </li>
-                    <li>
+                    <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '3' %}{% else %}{% url 'reservations:reservation-add' '3' %}{% endif %}"
-                           class="inline-block px-4 py-2 rounded-full transition-colors duration-200 {% if location == 3 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 3 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 3 %}page{% else %}false{% endif %}">
                             {% trans "Kraaij" %}
                         </a>
                     </li>
-                    <li>
+                    <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '0' %}{% else %}{% url 'reservations:reservation-add' '0' %}{% endif %}"
-                           class="inline-block px-4 py-2 rounded-full transition-colors duration-200 {% if location == 0 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 0 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 0 %}page{% else %}false{% endif %}">
                             {% trans "Overige" %}
                         </a>

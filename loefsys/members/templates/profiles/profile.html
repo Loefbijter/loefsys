@@ -7,26 +7,41 @@
 {% endblock %}
 
 {% block content %}
-    <div class="grid gap-4 max-w-180 content-start justify-self-center">
+<style>
+    .profile-page {
+        overflow-x: hidden;
+    }
+
+    .profile-page img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .profile-actions > * {
+        min-width: 0;
+    }
+</style>
+<div class="profile-page min-h-screen bg-background">
+    <div class="mx-auto w-full max-w-4xl px-4 sm:px-6 py-8 space-y-5 min-w-0">
         {% if is_user_profile %}
             <c-card>
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <c-header.h4>
                         <i class="bi bi-person-circle mr-1"></i>
                         Jouw publiek profiel
                     </c-header.h4>
-                    <div class="flex items-center gap-2">
+                    <div class="profile-actions flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                         <a
                             href="{% url 'members:user-profile-edit' %}"
-                            class="inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary hover:text-tertiary-foreground"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary hover:text-tertiary-foreground"
                         >
                             <i class="bi bi-pencil-fill"></i>
                             Profiel Bewerken
                         </a>
 
-                        <form method="post" action="{% url 'members:logout' %}">
+                        <form method="post" action="{% url 'members:logout' %}" class="w-full sm:w-auto">
                             {% csrf_token %}
-                            <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-danger-foreground transition hover:bg-danger/80">
+                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-danger-foreground transition hover:bg-danger/80">
                                 <i class="bi bi-box-arrow-right"></i>
                                 Uitloggen
                             </button>
@@ -36,49 +51,57 @@
             </c-card>
         {% endif %}
 
-        <div class="flex flex-col sm:flex-row justify-between items-center sm:space-x-4 space-y-4 sm:space-y-0">
-            <div class="shrink-0">
+        <div class="flex flex-col sm:flex-row sm:items-start gap-5 min-w-0">
+            <div class="shrink-0 flex justify-center sm:justify-start min-w-0">
                 {% if member.picture %}
-                    <img class="rounded-full shadow-2xl border-4 border-secondary size-64 object-cover"
+                    <img class="w-36 h-36 sm:w-48 sm:h-48 rounded-full shadow-2xl border-4 border-secondary object-cover"
                          src="{{ member.picture.url }}" alt="Profielfoto van {{ member.display_name }}"/>
                 {% else %}
-                    <img class="rounded-full shadow-2xl border-4 border-secondary size-64 object-cover"
+                    <img class="w-36 h-36 sm:w-48 sm:h-48 rounded-full shadow-2xl border-4 border-secondary object-cover"
                          src="{% static 'default-profile-picture.svg' %}" alt="Profielfoto van {{ member.display_name }}"/>
                 {% endif %}
             </div>
-            <c-card class="grow self-stretch">
-                <div class="flex items-center justify-between gap-2">
-                    <c-header.h4>{{ member.display_name }}</c-header.h4>
+            <c-card class="grow min-w-0">
+                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div>
+                        <c-header.h4>{{ member.display_name }}</c-header.h4>
+                    </div>
                     <span class="inline-flex items-center gap-1 rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
                         <i class="bi bi-check-circle-fill"></i>
                         Actief Lid
                     </span>
                 </div>
 
-                <ul class="space-y-2 mt-3 text-sm sm:text-white text-slate-700">
+                <ul class="space-y-2 mt-3 text-sm text-slate-700 min-w-0">
                     {% if is_user_profile %}
-                        <li class="flex items-center gap-2">
-                            <i class="bi bi-envelope text-white w-4 shrink-0"></i>
-                            {{ member.email }}
+                        <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <span class="inline-flex items-center gap-2 text-slate-700">
+                                <i class="bi bi-envelope w-4 shrink-0"></i>
+                                {{ member.email }}
+                            </span>
                         </li>
-                        <li class="flex items-center gap-2">
-                            <i class="bi bi-telephone text-white w-4 shrink-0"></i>
-                            {{ member.phone_number }}
+                        <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <span class="inline-flex items-center gap-2 text-slate-700">
+                                <i class="bi bi-telephone w-4 shrink-0"></i>
+                                {{ member.phone_number }}
+                            </span>
                         </li>
                     {% endif %}
                     {% if member.show_birthday %}
-                        <li class="flex items-center gap-2">
-                            <i class="bi bi-cake2 text-white w-4 shrink-0"></i>
-                            {{ member.birthday|date:"j M Y" }}
+                        <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <span class="inline-flex items-center gap-2 text-slate-700">
+                                <i class="bi bi-cake2 w-4 shrink-0"></i>
+                                {{ member.birthday|date:"j M Y" }}
+                            </span>
                         </li>
                     {% endif %}
                     {% if member.lichting %}
-                        <li class="flex items-center gap-2">
+                        <li class="flex flex-col sm:flex-row sm:items-center gap-2 text-slate-700">
                             {{ member.lichting }}
                         </li>
                     {% endif %}
                     {% if member.title %}
-                        <li class="flex items-center gap-2">
+                        <li class="flex flex-col sm:flex-row sm:items-center gap-2 text-slate-700">
                             {{ member.title }}
                         </li>
                     {% endif %}
@@ -86,12 +109,12 @@
 
                 {% if display_skipperships %}
                    <c-separator/>
-                   <div>
-                       <p class="font-semibold mb-2 flex items-center gap-2">
-                           <i class="bi bi-award-fill text-white"></i>
+                   <div class="min-w-0">
+                       <p class="font-semibold mb-2 flex items-center gap-2 text-slate-800">
+                           <i class="bi bi-award-fill"></i>
                            Schipperschappen
                        </p>
-                       <ul class="list-disc list-inside space-y-1 text-sm sm:text-white text-slate-700">
+                       <ul class="list-disc list-inside space-y-1 text-sm text-slate-700">
                            {% for skippership in display_skipperships %}
                                <li>{{ skippership.name }}</li>
                            {% endfor %}

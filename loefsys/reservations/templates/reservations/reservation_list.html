@@ -17,7 +17,7 @@
                    <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% trans "Archief van oudere reserveringen" %}{% else %}{% trans "Actieve en recente reserveringen" %}{% endif %}</p>
                </div>
                <a href="{% url 'reservations:reservation-add' '1' %}"
-                   class="inline-flex items-center justify-end gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors whitespace-nowrap cursor-pointer">
+                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors whitespace-nowrap cursor-pointer">
                    <i class="bi bi-plus-lg"></i>
                    {% trans "Nieuwe reservering" %}
                </a>
