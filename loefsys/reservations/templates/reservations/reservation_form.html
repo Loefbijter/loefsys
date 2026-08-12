@@ -50,7 +50,7 @@
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
                            class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 1 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 1 %}page{% else %}false{% endif %}">
-                            {% trans "Bestuurskamer" %}
+                            {% trans "BK" %}
                         </a>
                     </li>
                     <li class="min-w-0">
@@ -199,6 +199,7 @@
                                id="reservable_{{ forloop.counter }}"
                                data-item-name="{{ item.name }}"
                                data-is-boat="{% if item.type.category == 1 %}true{% else %}false{% endif %}"
+                               data-required-skippership="{% if item.type.category == 1 and item.boat.requires_skippership %}{{ item.boat.requires_skippership.pk }}{% endif %}"
                                class="peer hidden item-radio"
                                required>
 
@@ -352,10 +353,17 @@
                     <input type="search" id="skipper-search" placeholder="{% trans 'Zoek schipper...' %}"
                            class="w-full text-base rounded-xl px-3 py-2 border border-black/10 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 mb-2">
 
-                    <label for="{{ form.authorized_userskippership.id_for_label }}" class="sr-only">
+                    <label for="id_authorized_userskippership" class="sr-only">
                         {% trans "Kies een schipper" %}
                     </label>
-                    {{ form.authorized_userskippership }}
+                    <select id="id_authorized_userskippership" name="{{ form.authorized_userskippership.name }}" class="w-full text-base rounded-xl px-3 py-2 border border-black/10 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40">
+                        {% if form.authorized_userskippership.field.empty_label %}
+                        <option value="">{{ form.authorized_userskippership.field.empty_label }}</option>
+                        {% endif %}
+                        {% for user in form.authorized_userskippership.field.queryset %}
+                        <option value="{{ user.pk }}" data-skipperships="{% for us in user.user_skipperships.all %}{% if not forloop.first %},{% endif %}{{ us.skippership_id }}{% endfor %}" {% if form.authorized_userskippership.value|stringformat:'s' == user.pk|stringformat:'s' %}selected{% endif %}>{{ user.display_name }}</option>
+                        {% endfor %}
+                    </select>
                     {% for error in form.authorized_userskippership.errors %}
                     <p class="text-destructive text-xs font-medium mt-1">{{ error }}</p>
                     {% endfor %}
@@ -512,18 +520,52 @@
         function updateSkipperSection() {
             const selectedReservable = document.querySelector("input[name='reservable']:checked");
             const isBoatReservation = selectedReservable && selectedReservable.dataset.isBoat === "true";
+            const requiredSkippership = selectedReservable && selectedReservable.dataset.requiredSkippership ? selectedReservable.dataset.requiredSkippership : null;
 
             if (skipperSection) {
                 skipperSection.classList.toggle("hidden", !isBoatReservation);
             }
 
+            const skipperSelect = document.getElementById('id_authorized_userskippership');
+
             if (!isBoatReservation && skipperSection) {
-                const skipperSelect = document.getElementById('id_authorized_userskippership');
                 if (skipperSelect) skipperSelect.selectedIndex = -1;
                 if (newSkipperInput) newSkipperInput.value = "";
                 if (existingWrap) existingWrap.classList.remove("hidden");
                 if (newWrap) newWrap.classList.add("hidden");
+                return;
             }
+
+            // If it's a boat reservation and a specific skippership is required,
+            // filter the skipper select options to only those users that have the
+            // matching skippership. The <option> elements have a data-skipperships
+            // attribute listing comma-separated skippership ids for that user.
+            if (skipperSelect) {
+                const opts = Array.from(skipperSelect.options);
+                opts.forEach((opt) => {
+                    // keep the empty option visible
+                    if (!opt.value) {
+                        opt.hidden = false;
+                        return;
+                    }
+
+                    if (!requiredSkippership) {
+                        opt.hidden = false;
+                    } else {
+                        const has = (opt.dataset.skipperships || '').split(',').filter(Boolean).includes(requiredSkippership);
+                        opt.hidden = !has;
+                    }
+                });
+
+                // if the currently selected option became hidden, clear selection
+                if (skipperSelect.selectedIndex >= 0 && skipperSelect.options[skipperSelect.selectedIndex].hidden) {
+                    skipperSelect.selectedIndex = -1;
+                }
+            }
+
+            if (newSkipperInput) newSkipperInput.value = "";
+            if (existingWrap) existingWrap.classList.remove("hidden");
+            if (newWrap) newWrap.classList.add("hidden");
         }
 
         document.querySelectorAll("input[name='skipper_mode']").forEach((radio) => {

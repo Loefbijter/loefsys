@@ -33,7 +33,7 @@ class CreateReservationForm(forms.ModelForm):
             attrs={
                 "type": "datetime-local",
                 "class": "reservation-datetime-input",
-                "step": "1800",
+                "step": "60",
                 "inputmode": "numeric",
             },
             format="%Y-%m-%dT%H:%M",
@@ -46,7 +46,7 @@ class CreateReservationForm(forms.ModelForm):
             attrs={
                 "type": "datetime-local",
                 "class": "reservation-datetime-input",
-                "step": "1800",
+                "step": "60",
                 "inputmode": "numeric",
             },
             format="%Y-%m-%dT%H:%M",
