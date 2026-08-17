@@ -29,26 +29,33 @@
                 </svg>
             </button>
             <div id="about-dropdown" role="menu"
-                class="about-dropdown hidden absolute top-full left-0 mt-1 w-48 bg-white rounded shadow-xl border border-gray-200 z-50">
+                class="about-dropdown hidden absolute top-full left-0 mt-1 w-64 max-w-[calc(100vw-2rem)] bg-white rounded shadow-xl border border-gray-200 z-50 p-1">
                 <a href="{% url 'home:association-information' %}" role="menuitem"
-                    class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    class="block px-4 py-2.5 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b break-words">
                     Over de Vereniging
                 </a>
                 <a href="{% url 'home:schippers' %}" role="menuitem"
-                    class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    class="block px-4 py-2.5 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b break-words">
                     Schippers
                 </a>
                 <a href="{% url 'home:schipperschap' %}" role="menuitem"
-                    class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    class="block px-4 py-2.5 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b break-words">
                     Schipperschap
                 </a>
                 <a href="{% url 'home:styleguide' %}" role="menuitem"
-                    class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    class="block px-4 py-2.5 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b break-words">
                     Styleguide
                 </a>
                 <a href="{% url 'home:verenigingslied' %}" role="menuitem"
-                    class="block px-4 py-2 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b">
+                    class="block px-4 py-2.5 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b break-words">
                     Verenigingslied
+                </a>
+                <a href="https://drive.google.com/drive/folders/1z6ZQ5UGqoeWruBcpEumM75iBnBiPNXwK" target="_blank" rel="noopener noreferrer" role="menuitem"
+                    class="flex items-center justify-between gap-2 px-4 py-2.5 text-secondary hover:bg-gray-100 first:rounded-t last:rounded-b break-words">
+                    <span class="flex-1">Verenigingsdocumenten</span>
+                    <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 3h7v7M10 14L21 3M21 14v7H3V3h7" />
+                    </svg>
                 </a>
             </div>
         </div>
