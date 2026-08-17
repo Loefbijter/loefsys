@@ -39,6 +39,14 @@
                             Profiel Bewerken
                         </a>
 
+                        <a
+                            href="{% url 'members:user-set-password' %}"
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/80"
+                        >
+                            <i class="bi bi-key-fill"></i>
+                            Wachtwoord Instellen
+                        </a>
+
                         <form method="post" action="{% url 'members:logout' %}" class="w-full sm:w-auto">
                             {% csrf_token %}
                             <button type="submit" class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-danger-foreground transition hover:bg-danger/80">
