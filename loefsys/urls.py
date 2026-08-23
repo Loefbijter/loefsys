@@ -1,6 +1,5 @@
 """Module containing the url definition of the loefsys web app."""
 
-from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -54,7 +53,10 @@ urlpatterns = [
 if settings.DEBUG and settings.BROWSER_RELOAD_ENABLED:
     urlpatterns.append(path("__reload__/", include("django_browser_reload.urls")))
 
-urlpatterns += debug_toolbar_urls()
+if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+
+    urlpatterns += debug_toolbar_urls()
 
 handler404 = "django.views.defaults.page_not_found"
 handler500 = "django.views.defaults.server_error"
