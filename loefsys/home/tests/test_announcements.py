@@ -2,7 +2,6 @@
 """Module defining the tests for indexpage."""
 
 from datetime import UTC, datetime
-from unittest import skip
 
 from django.test import TestCase
 from django_dynamic_fixture import G
@@ -11,7 +10,6 @@ from loefsys.home.models import Announcement
 from loefsys.members.models import User
 
 
-@skip("Announcements are not yet rendered on the index page")
 class AnnouncementTestCase(TestCase):
     """Tests for announcement display on the index page."""
 

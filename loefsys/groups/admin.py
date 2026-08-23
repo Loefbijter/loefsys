@@ -4,7 +4,10 @@ from django.contrib import admin
 from django.db.models.functions import Now
 from django.utils.translation import gettext_lazy as _
 
+from loefsys.admin_helpers import ExportableModelAdmin
+
 from .models import Board, Committee, Fraternity, Taskforce, YearClub
+from .models.membership import GroupMembership
 
 
 class GroupActivityFilter(admin.SimpleListFilter):
@@ -28,10 +31,20 @@ class GroupActivityFilter(admin.SimpleListFilter):
                 return queryset.filter(date_discontinuation__lt=Now())
 
 
+class GroupUserInline(admin.TabularInline):
+    """Inline to add/remove users for a group via the GroupMembership model."""
+
+    model = GroupMembership
+    fk_name = "group"
+    extra = 1
+    autocomplete_fields = ("user",)
+
+
 @admin.register(Board)
-class BoardAdmin(admin.ModelAdmin):
+class BoardAdmin(ExportableModelAdmin):
     """Admin interface for the board model."""
 
+    inlines = (GroupUserInline,)
     list_display = ("name", "year")
     list_filter = (GroupActivityFilter,)
     search_fields = ("name", "description", "year")
@@ -39,9 +52,10 @@ class BoardAdmin(admin.ModelAdmin):
 
 
 @admin.register(Committee)
-class CommitteeAdmin(admin.ModelAdmin):
+class CommitteeAdmin(ExportableModelAdmin):
     """Admin interface for the committee model."""
 
+    inlines = (GroupUserInline,)
     list_display = ("name", "description")
     list_filter = ("mandatory", GroupActivityFilter)
     search_fields = ("name", "description")
@@ -49,9 +63,10 @@ class CommitteeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Fraternity)
-class FraternityAdmin(admin.ModelAdmin):
+class FraternityAdmin(ExportableModelAdmin):
     """Admin interface for the fraternity model."""
 
+    inlines = (GroupUserInline,)
     list_display = ("name", "gender_base")
     list_filter = (GroupActivityFilter,)
     search_fields = ("name", "description")
@@ -59,9 +74,10 @@ class FraternityAdmin(admin.ModelAdmin):
 
 
 @admin.register(Taskforce)
-class TaskforceAdmin(admin.ModelAdmin):
+class TaskforceAdmin(ExportableModelAdmin):
     """Admin interface for the taskforce model."""
 
+    inlines = (GroupUserInline,)
     list_display = ("name", "description", "requires_nda")
     list_filter = (GroupActivityFilter, "requires_nda")
     search_fields = ("name", "description")
@@ -69,9 +85,10 @@ class TaskforceAdmin(admin.ModelAdmin):
 
 
 @admin.register(YearClub)
-class YearClubAdmin(admin.ModelAdmin):
+class YearClubAdmin(ExportableModelAdmin):
     """Admin interface for the year club model."""
 
+    inlines = (GroupUserInline,)
     list_display = ("name", "year")
     list_filter = (GroupActivityFilter,)
     search_fields = ("name", "description")

@@ -2,4 +2,4 @@
 
 app_name = "groups"
 
-urlpatterns = []
+urlpatterns: list = []

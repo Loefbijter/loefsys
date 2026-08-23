@@ -3,6 +3,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from loefsys.members.models import Skippership
+
 from .reservable import Reservable
 
 
@@ -19,8 +21,10 @@ class ReservableBoat(Reservable):
         The capacity of the boat.
     has_engine : bool
         Flag that determines whether the boat has an engine.
-    fleet : ~loefsys.reservations.models.choices.FleetChoices
+    provider : ~loefsys.reservations.models.boat.ReservableBoat.Provider
         The provider of the boat.
+    requires_skippership : ~loefsys.members.models.skippership.Skippership | None
+        The skippership required to reserve this boat.
     """
 
     class Provider(models.IntegerChoices):
@@ -40,7 +44,14 @@ class ReservableBoat(Reservable):
         default=False, verbose_name=_("Boat has an engine")
     )
     provider = models.PositiveSmallIntegerField(
-        choices=Provider,
-        default=Provider.OTHER,
-        verbose_name=_("Boat provider"),
+        choices=Provider, default=Provider.OTHER, verbose_name=_("Boat provider")
+    )
+    requires_skippership = models.ForeignKey(
+        Skippership,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="required_boats",
+        verbose_name=_("Required skippership"),
+        help_text=_("The skippership required to use this boat."),
     )
