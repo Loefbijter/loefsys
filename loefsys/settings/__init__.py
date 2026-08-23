@@ -16,7 +16,7 @@ from .templates import TemplateSettings
 from .email import EmailSettings
 from .base import BaseSettings
 from .auth import AuthSettings
-# from .security import SecuritySettings
+from .security import SecuritySettings
 from .admin import AdminSettings
 from .database import DatabaseSettings
 from .locale import LocaleSettings
@@ -38,7 +38,7 @@ class Settings(
     StorageSettings,
     LocaleSettings,
     AdminSettings,
-    # SecuritySettings,
+    SecuritySettings,
     AuthSettings,
     EmailSettings,
     LoggingSettings,
