@@ -1,7 +1,7 @@
 """Urls of the members app."""
 
 from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import include, path
+from django.urls import include, path, reverse_lazy
 from django.views.generic import TemplateView
 
 from .views import (
@@ -30,7 +30,7 @@ urlpatterns = [
         LoginView.as_view(template_name="login.html", next_page="/"),
         name="login",
     ),
-    path("logout/", LogoutView.as_view(next_page="/"), name="logout"),
+    path("logout/", LogoutView.as_view(next_page=reverse_lazy("login")), name="logout"),
     # Password reset disabled — point users to contact the web committee
     path(
         "reset-password/",

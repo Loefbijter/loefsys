@@ -86,10 +86,11 @@ class RequireLoginMiddleware:
         # Common public endpoints that should not require authentication
         allowed_prefixes = [
             reverse("login"),
-            "/",
             "/logout/",
             "/members/logout/",
-            "/schippers/",
+            "/members/reset-password/",  # Allow password reset request page
+            "/reset/",  # Allow password reset pages (reset confirm and reset done)
+            "/reset-disabled/",  # Allow reset disabled message page
             "/admin/",
             "/__reload__/",
             "/__debug__/",

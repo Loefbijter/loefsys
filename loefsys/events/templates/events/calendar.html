@@ -100,11 +100,34 @@
       border: none;
       box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
     }
-    .fc .fc-daygrid-event .fc-event-title,
-    .fc .fc-daygrid-event .fc-event-time,
-    .fc .fc-timegrid-event .fc-event-title,
-    .fc .fc-timegrid-event .fc-event-time {
-      display: none !important;
+    /* Show event title/time in month/week (daygrid/timegrid) on desktop; hide on mobile */
+    @media (min-width: 640px) {
+      .fc .fc-daygrid-event .fc-event-title,
+      .fc .fc-daygrid-event .fc-event-time,
+      .fc .fc-timegrid-event .fc-event-title,
+      .fc .fc-timegrid-event .fc-event-time {
+        display: inline-block !important;
+      }
+      .fc .fc-daygrid-event .fc-event-title,
+      .fc .fc-timegrid-event .fc-event-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.1;
+      }
+      .fc .fc-daygrid-event .fc-event-time,
+      .fc .fc-timegrid-event .fc-event-time {
+        font-size: 0.75rem;
+        margin-left: 0.35rem;
+        opacity: 0.95;
+      }
+    }
+    @media (max-width: 640px) {
+      .fc .fc-daygrid-event .fc-event-title,
+      .fc .fc-daygrid-event .fc-event-time,
+      .fc .fc-timegrid-event .fc-event-title,
+      .fc .fc-timegrid-event .fc-event-time {
+        display: none !important;
+      }
     }
     .fc .fc-event-title,
     .fc .fc-event-time,
@@ -360,9 +383,80 @@
           }
 
           var eventContainer = document.createElement('div');
-          eventContainer.className = 'fc-event-custom-content w-full h-full';
+          // Align contents to the top-left of the event box instead of vertically centering
+          eventContainer.className = 'fc-event-custom-content w-full h-full flex items-start';
           eventContainer.style.width = '100%';
           eventContainer.style.height = '100%';
+          // Small top padding so text sits visually near the top edge
+          eventContainer.style.paddingTop = '0.2rem';
+          eventContainer.style.paddingLeft = '0.35rem';
+
+          // Compact title/time for day/week/month views (desktop only; hidden on mobile via CSS)
+          var textWrap = document.createElement('div');
+          textWrap.style.display = 'flex';
+          // Keep horizontal layout but align items to the start (top)
+          textWrap.style.alignItems = 'flex-start';
+          textWrap.style.minWidth = '0';
+          textWrap.style.overflow = 'hidden';
+
+          var titleElSmall = document.createElement('div');
+          titleElSmall.className = 'fc-event-title';
+          titleElSmall.style.overflow = 'hidden';
+          titleElSmall.style.textOverflow = 'ellipsis';
+          titleElSmall.style.whiteSpace = 'nowrap';
+          titleElSmall.textContent = arg.event.title || '';
+
+          // Determine time text
+          var timeText = arg.timeText;
+          if (!timeText && arg.event.start) {
+            var startDate = arg.event.start;
+            var hours = startDate.getHours().toString().padStart(2, '0');
+            var minutes = startDate.getMinutes().toString().padStart(2, '0');
+            timeText = hours + ':' + minutes;
+          }
+
+          var timeElSmall = document.createElement('div');
+          timeElSmall.className = 'fc-event-time text-sm';
+          timeElSmall.style.marginLeft = '0.35rem';
+          timeElSmall.style.opacity = '0.95';
+          timeElSmall.textContent = timeText || '';
+
+          textWrap.appendChild(titleElSmall);
+          if (timeText) textWrap.appendChild(timeElSmall);
+          eventContainer.appendChild(textWrap);
+
+          // Pick readable text color (black or white) based on event background color
+          function hexToRgb(hex) {
+            if (!hex) return null;
+            var h = hex.replace('#','');
+            if (h.length === 3) h = h.split('').map(function(c){return c+c;}).join('');
+            var bigint = parseInt(h,16);
+            if (isNaN(bigint)) return null;
+            return { r: (bigint>>16)&255, g: (bigint>>8)&255, b: bigint&255 };
+          }
+          function luminance(r,g,b) {
+            var a = [r,g,b].map(function(v){ v = v/255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
+            return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+          }
+
+          var bg = arg.event.backgroundColor || arg.event.extendedProps?.color || arg.event.color || arg.event.background;
+          var rgb = hexToRgb(bg);
+          var textColor = '#ffffff';
+          if (rgb) {
+            var lum = luminance(rgb.r, rgb.g, rgb.b);
+            // Choose black for light backgrounds, white for dark backgrounds
+            textColor = lum > 0.5 ? '#000000' : '#ffffff';
+          }
+
+          // Outline color: inverse of chosen text color (black outline for white text, white outline for black text)
+          var outlineColor = textColor === '#ffffff' ? '#000000' : '#ffffff';
+          // Use multiple text-shadow offsets to emulate a sharp outline around the small title/time
+          var outlineShadows = ['-1px -1px 0 ' + outlineColor, '1px -1px 0 ' + outlineColor, '-1px 1px 0 ' + outlineColor, '1px 1px 0 ' + outlineColor].join(', ');
+          titleElSmall.style.textShadow = outlineShadows;
+          if (timeElSmall) timeElSmall.style.textShadow = outlineShadows;
+
+          eventContainer.style.color = textColor;
+
           return { domNodes: [eventContainer] };
         },
       });
