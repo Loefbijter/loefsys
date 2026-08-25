@@ -45,19 +45,19 @@ def _update_user_staff(user):
 
 
 @receiver(post_save, sender=GroupMembership)
-def _on_membership_saved(_sender, instance, **_kwargs):
+def _on_membership_saved(sender, instance, **_kwargs):  # noqa: ARG001
     """When a membership is created or updated, ensure user's staff status matches."""
     _update_user_staff(instance.user)
 
 
 @receiver(post_delete, sender=GroupMembership)
-def _on_membership_deleted(_sender, instance, **_kwargs):
+def _on_membership_deleted(sender, instance, **_kwargs):  # noqa: ARG001
     """When a membership is removed, ensure user's staff status updates."""
     _update_user_staff(instance.user)
 
 
 @receiver(post_save, sender=Board)
-def _on_board_saved(_sender, instance, **_kwargs):
+def _on_board_saved(sender, instance, **_kwargs):  # noqa: ARG001
     """When a board is saved, update staff status of its members.
 
     For example, when date_discontinuation changes, this keeps staff flags in sync
