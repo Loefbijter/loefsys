@@ -7,6 +7,7 @@
 
 {% block head %}
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.17/locales-all.global.min.js'></script>
   <link rel="stylesheet" href="{% static 'events/calendar.css' %}">
   <style>
     :root {
@@ -15,12 +16,13 @@
       --fc-button-bg-color: var(--color-secondary);
       --fc-button-hover-bg-color: var(--color-loef-2-offset);
       --fc-button-active-bg-color: var(--color-loef-3-offset);
-
     }
 
+    /* Subtle brand-colored focus ring instead of a red flash, which reads
+       as an error state to most users. */
     @keyframes fadeOutline {
       0%, 66.66% {
-        outline: 2px solid color-mix(in srgb, red 50%, transparent) !important;
+        outline: 2px solid color-mix(in srgb, var(--color-secondary) 60%, transparent) !important;
       }
       99% {
         outline: 2px solid transparent !important;
@@ -34,61 +36,524 @@
     .fc .fc-button:active {
       animation: fadeOutline 1s forwards !important;
     }
+
+    /* ---------- Custom app-style header ---------- */
+    .cal-icon-btn {
+      min-width: 2.5rem;
+      min-height: 2.5rem;
+    }
+    .cal-icon-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* ---------- Feed-style list items ---------- */
+    .fc-event-list-item img {
+      width: 3.25rem;
+      height: 3.25rem;
+      object-fit: cover;
+      border-radius: 0.75rem;
+    }
+    @media (min-width: 640px) {
+      .fc-event-list-item img {
+        width: 4rem;
+        height: 4rem;
+      }
+    }
+    .fc-event-list-item {
+      width: 100%;
+    }
+    .fc-event-list-item .fc-event-title {
+      color: #111827;
+    }
+    .fc-event-list-item .fc-event-time {
+      color: #4b5563;
+    }
+    .fc .fc-list-event {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .fc .fc-list-event:active {
+      background-color: color-mix(in srgb, var(--color-secondary) 8%, transparent);
+    }
+    .fc .fc-event,
+    .fc .fc-event *,
+    .fc .fc-event .fc-event-title,
+    .fc .fc-event .fc-event-time,
+    .fc .fc-event .fc-event-main,
+    .fc .fc-event-custom-content {
+      color: #ffffff !important;
+    }
+    .fc .fc-daygrid-event,
+    .fc .fc-daygrid-event .fc-event-main,
+    .fc .fc-daygrid-event .fc-event-custom-content,
+    .fc .fc-timegrid-event .fc-event-main,
+    .fc .fc-timegrid-event .fc-event-custom-content {
+      min-height: 2.1rem;
+      padding: 0.25rem 0.5rem;
+      display: flex;
+      align-items: center;
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+    .fc .fc-daygrid-event {
+      min-height: 2.1rem;
+      border: none;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+    }
+    /* Show event title/time in month/week (daygrid/timegrid) on desktop; hide on mobile */
+    @media (min-width: 640px) {
+      .fc .fc-daygrid-event .fc-event-title,
+      .fc .fc-daygrid-event .fc-event-time,
+      .fc .fc-timegrid-event .fc-event-title,
+      .fc .fc-timegrid-event .fc-event-time {
+        display: inline-block !important;
+      }
+      .fc .fc-daygrid-event .fc-event-title,
+      .fc .fc-timegrid-event .fc-event-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.1;
+      }
+      .fc .fc-daygrid-event .fc-event-time,
+      .fc .fc-timegrid-event .fc-event-time {
+        font-size: 0.75rem;
+        margin-left: 0.35rem;
+        opacity: 0.95;
+      }
+    }
+    @media (max-width: 640px) {
+      .fc .fc-daygrid-event .fc-event-title,
+      .fc .fc-daygrid-event .fc-event-time,
+      .fc .fc-timegrid-event .fc-event-title,
+      .fc .fc-timegrid-event .fc-event-time {
+        display: none !important;
+      }
+    }
+    .fc .fc-event-title,
+    .fc .fc-event-time,
+    .fc .fc-event-custom-content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .fc .fc-event-main,
+    .fc .fc-event-custom-content {
+      min-width: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .fc .fc-daygrid-event .fc-event-main,
+    .fc .fc-timegrid-event .fc-event-main {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    .fc .fc-event-title {
+      line-height: 1.2;
+      max-width: 100%;
+    }
+    .fc .fc-event-time {
+      flex-shrink: 0;
+      margin-left: 0.35rem;
+      opacity: 0.9;
+    }
+    @media (max-width: 640px) {
+      .fc .fc-event-title,
+      .fc .fc-list-event .fc-event-list-item .fc-event-title {
+        font-size: 0.9rem;
+      }
+      .fc .fc-event-time,
+      .fc .fc-list-event .fc-event-list-item .fc-event-time {
+        font-size: 0.75rem;
+      }
+    }
+
+    /* List view override: use dark text for the "Lijst" feed-style items */
+    .fc .fc-list-event .fc-event-list-item,
+    .fc .fc-list-event .fc-event-list-item *,
+    .fc .fc-list-event .fc-event-list-item .fc-event-title,
+    .fc .fc-list-event .fc-event-list-item .fc-event-time {
+      color: #111827 !important;
+    }
+    .fc .fc-list-event .fc-event-list-item .fc-event-title,
+    .fc .fc-list-event .fc-event-list-item .fc-event-time {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      line-height: 1.2;
+    }
+    .fc .fc-list-event .fc-event-list-item,
+    .fc .fc-list-event .fc-event-list-item td,
+    .fc .fc-list-event .fc-event-list-item th {
+      min-width: 0;
+    }
+    .fc .fc-list-event .fc-event-list-item .fc-event-title,
+    .fc .fc-list-event .fc-event-list-item .fc-event-time {
+      display: inline-block;
+      vertical-align: top;
+      max-width: 100%;
+    }
+    .fc .fc-list-event .fc-event-list-item .fc-event-title {
+      min-width: 0;
+      max-width: 100%;
+      margin-right: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .fc .fc-list-event .fc-event-list-item .fc-event-time {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+    .fc .fc-list-day-cushion {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #4b5563;
+    }
+    /* Also color the separate time column cell used by FullCalendar's list table */
+    .fc .fc-list-table .fc-list-event-time,
+    .fc .fc-list-table .fc-list-event-time * {
+      color: #111827 !important;
+    }
+    .fc .fc-list-day-cushion {
+      background: color-mix(in srgb, var(--color-secondary) 6%, transparent) !important;
+      font-weight: 700;
+    }
+    .fc .fc-list-empty {
+      padding: 3rem 1rem;
+      font-size: 1rem;
+      color: #6b7280;
+    }
+
+    /* Let the page itself scroll naturally instead of boxing the calendar
+       into a fixed-height inner scroll area — feels far more native on
+       mobile, especially for the list/feed view. This is what fixed the
+       previous side-clipping issue, so it stays as-is. */
+    .fc .fc-view-harness,
+    .fc .fc-scroller {
+      height: auto !important;
+      overflow: visible !important;
+    }
+
+    /* Safety net: never let the calendar (or its header) push the page
+       wider than the viewport, regardless of which view is active. */
+    #calendar-wrapper {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+    #calendar {
+      min-width: 0;
+      width: 100%;
+    }
   </style>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var calendarEl = document.getElementById('calendar');
+      var titleEl = document.getElementById('cal-title');
+      var viewSelect = document.getElementById('cal-view-select');
+      var birthdayToggle = document.getElementById('cal-birthdays-toggle');
+      var showBirthdays = false;
+
+      function updateBirthdayToggle() {
+        if (!birthdayToggle) return;
+        var toggleTrack = birthdayToggle.querySelector('.toggle-track');
+        var toggleThumb = birthdayToggle.querySelector('.toggle-thumb');
+
+        birthdayToggle.setAttribute('aria-pressed', String(showBirthdays));
+        birthdayToggle.classList.toggle('border-secondary', showBirthdays);
+        birthdayToggle.classList.toggle('bg-secondary/10', showBirthdays);
+        birthdayToggle.classList.toggle('text-secondary', showBirthdays);
+
+        if (toggleTrack) {
+          toggleTrack.classList.toggle('bg-secondary', showBirthdays);
+          toggleTrack.classList.toggle('bg-gray-300', !showBirthdays);
+        }
+        if (toggleThumb) {
+          toggleThumb.classList.toggle('translate-x-6', showBirthdays);
+          toggleThumb.classList.toggle('translate-x-1', !showBirthdays);
+        }
+      }
+
       var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'list',
-        height: '85vh',
+        initialView: 'listWeek',
+        height: 'auto',
         eventDisplay: 'block',
+        locale: 'nl',
         eventColor: 'var(--color-secondary)',
-        customButtons: {
-          synchronize: {
-            text: 'Synchronize calendar',
-              click: function() {
-              window.location.href = "/events/feed";
-              }
-          }
-        },
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,listWeek synchronize'
-        },
+        headerToolbar: false,
+        allDayText: 'Hele dag',
+        noEventsText: 'Geen evenementen om te tonen',
         views: {
           timeGridWeek: {
             type: 'timeGrid',
-            duration: { weeks: 1 }
+            duration: { weeks: 1 },
           },
           listWeek: {
             type: 'list',
-            duration: { weeks: 1 }
-          }
+            duration: { weeks: 1 },
+          },
         },
         events: {
           url: "/events/event_filler",
-          method: 'GET'
+          method: 'GET',
+          extraParams: {
+            show_birthdays: '0',
+          },
         },
         eventTimeFormat: {
           hour: '2-digit',
           minute: '2-digit',
           meridiem: false,
-          hour12: false
+          hour12: false,
+        },
+        datesSet: function (info) {
+          // Keep the custom header title and view picker in sync with the calendar.
+          if (titleEl) titleEl.textContent = info.view.title;
+          if (viewSelect) viewSelect.value = info.view.type;
+        },
+        eventContent: function (arg) {
+          if (arg.view.type.startsWith('list')) {
+          var link = document.createElement('button');
+          link.type = 'button';
+            link.className = 'fc-event-list-item flex items-center gap-3 w-full no-underline';
+            link.style.color = 'inherit';
+            link.style.textDecoration = 'none';
+            link.style.display = 'flex';
+            link.style.alignItems = 'center';
+          link.style.cursor = 'pointer';
+
+          if (arg.event.extendedProps.picture_url) {
+            var img = document.createElement('img');
+            img.src = arg.event.extendedProps.picture_url;
+            img.alt = arg.event.title || '';
+            img.className = 'w-16 h-16 rounded-xl object-cover flex-shrink-0';
+            link.appendChild(img);
+          } else {
+            var placeholder = document.createElement('div');
+            placeholder.className = 'w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 text-slate-400';
+            placeholder.innerHTML = '<i class="bi bi-calendar-event"></i>';
+            link.appendChild(placeholder);
+          }
+
+          var textContainer = document.createElement('div');
+          textContainer.className = 'flex-1 min-w-0';
+
+          var titleElInner = document.createElement('div');
+          titleElInner.className = 'fc-event-title font-semibold';
+          titleElInner.style.display = 'block';
+          titleElInner.style.overflow = 'hidden';
+          titleElInner.style.textOverflow = 'ellipsis';
+          titleElInner.style.whiteSpace = 'nowrap';
+          titleElInner.textContent = arg.event.title;
+          textContainer.appendChild(titleElInner);
+
+          var timeText = arg.timeText;
+          if (!timeText && arg.event.start) {
+            var startDate = arg.event.start;
+            var hours = startDate.getHours().toString().padStart(2, '0');
+            var minutes = startDate.getMinutes().toString().padStart(2, '0');
+            timeText = hours + ':' + minutes;
+          }
+          if (timeText) {
+            var timeEl = document.createElement('div');
+            timeEl.className = 'fc-event-time text-sm';
+            timeEl.textContent = timeText;
+            textContainer.appendChild(timeEl);
+          }
+
+          link.appendChild(textContainer);
+
+          var chevron = document.createElement('i');
+          chevron.className = 'bi bi-chevron-right text-slate-300 flex-shrink-0';
+          link.appendChild(chevron);
+
+          // If the event has a URL, navigate to it on click. Keep visual styling identical to the original anchor.
+          if (arg.event.url) {
+            link.addEventListener('click', function () { window.location.href = arg.event.url; });
+          }
+
+          return { domNodes: [link] };
+          }
+
+          var eventContainer = document.createElement('div');
+          // Align contents to the top-left of the event box instead of vertically centering
+          eventContainer.className = 'fc-event-custom-content w-full h-full flex items-start';
+          eventContainer.style.width = '100%';
+          eventContainer.style.height = '100%';
+          // Small top padding so text sits visually near the top edge
+          eventContainer.style.paddingTop = '0.2rem';
+          eventContainer.style.paddingLeft = '0.35rem';
+
+          // Compact title/time for day/week/month views (desktop only; hidden on mobile via CSS)
+          var textWrap = document.createElement('div');
+          textWrap.style.display = 'flex';
+          // Keep horizontal layout but align items to the start (top)
+          textWrap.style.alignItems = 'flex-start';
+          textWrap.style.minWidth = '0';
+          textWrap.style.overflow = 'hidden';
+
+          var titleElSmall = document.createElement('div');
+          titleElSmall.className = 'fc-event-title';
+          titleElSmall.style.overflow = 'hidden';
+          titleElSmall.style.textOverflow = 'ellipsis';
+          titleElSmall.style.whiteSpace = 'nowrap';
+          titleElSmall.textContent = arg.event.title || '';
+
+          // Determine time text
+          var timeText = arg.timeText;
+          if (!timeText && arg.event.start) {
+            var startDate = arg.event.start;
+            var hours = startDate.getHours().toString().padStart(2, '0');
+            var minutes = startDate.getMinutes().toString().padStart(2, '0');
+            timeText = hours + ':' + minutes;
+          }
+
+          var timeElSmall = document.createElement('div');
+          timeElSmall.className = 'fc-event-time text-sm';
+          timeElSmall.style.marginLeft = '0.35rem';
+          timeElSmall.style.opacity = '0.95';
+          timeElSmall.textContent = timeText || '';
+
+          textWrap.appendChild(titleElSmall);
+          if (timeText) textWrap.appendChild(timeElSmall);
+          eventContainer.appendChild(textWrap);
+
+          // Pick readable text color (black or white) based on event background color
+          function hexToRgb(hex) {
+            if (!hex) return null;
+            var h = hex.replace('#','');
+            if (h.length === 3) h = h.split('').map(function(c){return c+c;}).join('');
+            var bigint = parseInt(h,16);
+            if (isNaN(bigint)) return null;
+            return { r: (bigint>>16)&255, g: (bigint>>8)&255, b: bigint&255 };
+          }
+          function luminance(r,g,b) {
+            var a = [r,g,b].map(function(v){ v = v/255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
+            return 0.2126*a[0] + 0.7152*a[1] + 0.0722*a[2];
+          }
+
+          var bg = arg.event.backgroundColor || arg.event.extendedProps?.color || arg.event.color || arg.event.background;
+          var rgb = hexToRgb(bg);
+          var textColor = '#ffffff';
+          if (rgb) {
+            var lum = luminance(rgb.r, rgb.g, rgb.b);
+            // Choose black for light backgrounds, white for dark backgrounds
+            textColor = lum > 0.5 ? '#000000' : '#ffffff';
+          }
+
+          // Outline color: inverse of chosen text color (black outline for white text, white outline for black text)
+          var outlineColor = textColor === '#ffffff' ? '#000000' : '#ffffff';
+          // Use multiple text-shadow offsets to emulate a sharp outline around the small title/time
+          var outlineShadows = ['-1px -1px 0 ' + outlineColor, '1px -1px 0 ' + outlineColor, '-1px 1px 0 ' + outlineColor, '1px 1px 0 ' + outlineColor].join(', ');
+          titleElSmall.style.textShadow = outlineShadows;
+          if (timeElSmall) timeElSmall.style.textShadow = outlineShadows;
+
+          eventContainer.style.color = textColor;
+
+          return { domNodes: [eventContainer] };
         },
       });
+
       calendar.render();
+      updateBirthdayToggle();
+
+      // ---------- Custom app-style header controls ----------
+      document.getElementById('cal-prev')?.addEventListener('click', function () {
+        calendar.prev();
+      });
+      document.getElementById('cal-next')?.addEventListener('click', function () {
+        calendar.next();
+      });
+      document.getElementById('cal-today')?.addEventListener('click', function () {
+        calendar.today();
+      });
+      viewSelect?.addEventListener('change', function () {
+        calendar.changeView(this.value);
+      });
+      birthdayToggle?.addEventListener('click', function () {
+        showBirthdays = !showBirthdays;
+        updateBirthdayToggle();
+        calendar.setOption('events', {
+          url: '/events/event_filler',
+          method: 'GET',
+          extraParams: {
+            show_birthdays: showBirthdays ? '1' : '0',
+          },
+        });
+        calendar.refetchEvents();
+      });
+      document.getElementById('cal-sync')?.addEventListener('click', function () {
+        window.location.href = '/events/feed';
+      });
     });
   </script>
 {% endblock head %}
 
 {% block content %}
 <!-- Calendar Section -->
-<section id="calendar-wrapper" class="flex-auto p-2">
+<section id="calendar-wrapper" class="flex flex-col">
 
+  <div class="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur-sm px-3 py-3 sm:px-4">
+  <div class="flex flex-wrap items-center gap-y-2 sm:flex-nowrap min-w-0">
 
-  <!-- FullCalendar Container -->
-  <div id='calendar' class="mx-auto"></div>
+      <div class="order-1 flex items-center gap-1">
+        <button id="cal-prev" type="button" aria-label="Vorige periode"
+                class="cal-icon-btn flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <button id="cal-today" type="button"
+                class="px-3 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
+          Vandaag
+        </button>
+        <button id="cal-next" type="button" aria-label="Volgende periode"
+                class="cal-icon-btn flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="order-2 ml-auto flex items-center gap-1.5 sm:order-3 sm:ml-0 sm:gap-2">
+        <select id="cal-view-select"
+                class="text-sm rounded-full border-2 border-gray-200 pl-3 pr-2 py-2 font-semibold text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)] cursor-pointer">
+          <option value="listWeek">Lijst</option>
+          <option value="timeGridWeek">Week</option>
+          <option value="dayGridMonth">Maand</option>
+        </select>
+
+        <button id="cal-birthdays-toggle" type="button" aria-pressed="false" aria-label="Toon verjaardagen"
+                class="inline-flex items-center gap-1.5 rounded-full border-2 border-gray-200 bg-white px-2 py-1.5 text-xs font-semibold text-gray-700 transition-colors hover:bg-gray-100 cursor-pointer sm:gap-2 sm:px-3 sm:py-2 sm:text-sm">
+          <i class="bi bi-cake2 text-sm leading-none sm:hidden" aria-hidden="true"></i>
+          <span class="toggle-track relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 transition-colors" aria-hidden="true">
+            <span class="toggle-thumb inline-block h-4 w-4 translate-x-1 rounded-full bg-white shadow transition-transform"></span>
+          </span>
+          <span class="hidden sm:inline">Toon verjaardagen</span>
+        </button>
+
+        <button id="cal-sync" type="button"
+                class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full border-2 border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
+          <i class="bi bi-arrow-repeat"></i>
+          Link met agenda
+        </button>
+        <button id="cal-sync-mobile" type="button" aria-label="Synchroniseer agenda"
+                onclick="window.location.href='/events/feed'"
+                class="cal-icon-btn sm:hidden flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-700 hover:bg-gray-100 transition-colors">
+          <i class="bi bi-arrow-repeat"></i>
+        </button>
+      </div>
+
+      <h2 id="cal-title"
+          class="order-3 w-full text-center text-sm sm:text-lg font-bold text-gray-900 truncate overflow-hidden whitespace-nowrap sm:order-2 sm:flex-1 min-w-0 px-2"></h2>
+
+    </div>
+  </div>
+
+  <div id='calendar' class="mx-auto w-full px-2 py-3 sm:px-4"></div>
 </section>
 
 {% endblock %}

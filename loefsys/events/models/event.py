@@ -236,6 +236,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         """
         if not self.published or not self.registration_deadline:
             return False
+        if self.registration_start is None:
+            return timezone.now() < self.registration_deadline
         return self.registration_start < timezone.now() < self.registration_deadline
 
     def max_capacity_reached(self) -> bool:
@@ -274,6 +276,10 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         """
         if not self.mandatory_registration():
             return
+
+        # mandatory_registration() ensures capacity is non-null and > 0,
+        # make that explicit for static type checkers.
+        assert self.capacity is not None
 
         num_active = self.eventregistration_set.active().count()
         num_queued = self.eventregistration_set.queued().count()
@@ -321,7 +327,36 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         deadline = self.cancelation_deadline or self.start
         return timezone.now() < deadline
 
-    def cancelation_consequences(self) -> str:
+    def can_cancel_registration(self) -> bool:
+        """Determine whether cancellation is allowed at all.
+
+        Cancellations are permitted until the event starts, but may incur a fine if the
+        cancellation deadline has passed.
+
+        Returns
+        -------
+        bool
+            ``True`` if cancellation is allowed, otherwise ``False``.
+        """
+        if not self.published:
+            return False
+        return timezone.now() < self.start
+
+    def cancellation_fine_required(self) -> bool:
+        """Determine whether canceling now should require explicit consent.
+
+        Returns
+        -------
+        bool
+            ``True`` when cancellation happens after the cancellation deadline.
+        """
+        if not self.can_cancel_registration():
+            return False
+        if self.cancelation_window_open():
+            return False
+        return True
+
+    def cancelation_consequences(self) -> bool:
         """Determine whether canceling a registration has consequences.
 
         Returns
@@ -365,6 +400,6 @@ class EventOrganizer(TimeStampedModel):
         to=LoefbijterGroup, related_name="organizing_group", blank=True
     )
 
-    user = models.ManyToManyField(
+    user: models.ManyToManyField = models.ManyToManyField(
         to=get_user_model(), related_name="organizer", blank=True
     )

@@ -1,4 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
+function initNavbar() {
+    if (window.__navbarInitialized) {
+        return;
+    }
+    window.__navbarInitialized = true;
+
     // handle any About toggles (desktop + mobile). Uses data-target attribute on the toggle button
     const toggles = document.querySelectorAll('.about-toggle');
 
@@ -49,4 +54,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const mobileToggleCheckbox = document.getElementById('mobile-menu-toggle-checkbox');
+            if (mobileToggleCheckbox && mobileToggleCheckbox.checked) {
+                mobileToggleCheckbox.checked = false;
+            }
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavbar);
+} else {
+    initNavbar();
+}

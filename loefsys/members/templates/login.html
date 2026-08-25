@@ -14,10 +14,10 @@
             <form method="post" class="grid gap-4">
                 {% csrf_token %}
                 {{ form }}
-                <c-link href="{% url 'members:reset-password' %}">Wachtwoord vergeten?</c-link>
+                <c-link href="{% url 'reset-disabled' %}">Wachtwoord vergeten?</c-link>
                 <c-button type="submit">Log in</c-button>
-                <p class="text-center">Geen account?
-                    <c-link href="">Account aanmaken</c-link>
+                <!-- <p class="text-center">Geen account? -->
+                    <!-- <c-link href="">Account aanmaken</c-link> -->
                 </p>
             </form>
         </c-card>
