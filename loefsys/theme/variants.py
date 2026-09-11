@@ -15,12 +15,16 @@ class VariantType:
         self.variants = variants
         self.defaults = defaults or {}
 
-    def __call__(self, **variants: dict[str, str]):
+    def __call__(self, **variants: str):
         """Render the configured variant styles for the given variant keys."""
-        values = [
-            self.variants[k].get(v) or self.variants[k].get(self.defaults.get(k))
-            for k, v in variants.items()
-        ]
+        values: list[str] = []
+        for k, v in variants.items():
+            val = self.variants[k].get(v)
+            if val is None:
+                default_key = self.defaults.get(k)
+                # default_key may be None; provide empty fallback when lookup fails
+                val = self.variants[k].get(default_key or "", "")
+            values.append(val)
         return f"{self.base} {' '.join(values)}"
 
 

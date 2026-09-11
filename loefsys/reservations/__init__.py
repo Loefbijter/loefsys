@@ -16,4 +16,6 @@ def load_tests(loader, _tests, pattern):
     from django.apps import apps
 
     if apps.is_installed("loefsys.reservations"):
+        if pattern is None:
+            pattern = "test*.py"
         return loader.discover(start_dir=dirname(abspath(__file__)), pattern=pattern)

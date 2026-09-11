@@ -15,6 +15,12 @@ Django
     * Set ``DJANGO_DEBUG=1`` to set this variable to ``True``.
     * Used to set the variable `DEBUG <https://docs.djangoproject.com/en/5.2/ref/settings/#debug>`_. Sets `INTERNAL_IPS <https://docs.djangoproject.com/en/5.0/ref/settings/#internal-ips>`_ to ``["127.0.0.1", "localhost"]`` when debugging is enabled and to ``[]`` when disabled. Also enables or disables `Django debug toolbar <https://django-debug-toolbar.readthedocs.io/en/latest/>`_.
 
+* ``DJANGO_BROWSER_RELOAD_ENABLED``
+
+    * Default: ``False``
+    * Set ``DJANGO_BROWSER_RELOAD_ENABLED=1`` to turn on the dev browser auto-reload helper while debugging.
+    * Keeps ``django-browser-reload`` installed in the project without forcing it to run when not wanted.
+
 * ``DJANGO_SECRET_KEY``
 
     .. IMPORTANT:: Must be defined as environment variable. No default is provided.

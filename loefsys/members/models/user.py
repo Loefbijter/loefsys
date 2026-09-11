@@ -1,18 +1,19 @@
 """Module defining the user account model for the website."""
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, Permission, PermissionsMixin
 from django.core.files.storage import FileSystemStorage
-from django.db import models
+from django.db import ProgrammingError, models
 from django.db.models import OneToOneField, QuerySet
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import RandomCharField
 from django_extensions.db.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
+from loefsys.groups.models.group import LoefbijterGroup
 from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
@@ -22,8 +23,11 @@ if TYPE_CHECKING:
     from .membership import Membership
     from .study_registration import StudyRegistration
 
-def twanstest(modeladmin, request, queryset):
-    pass
+
+def twanstest(_modeladmin, _request, _queryset):
+    """Perform no action for the member admin configuration."""
+    return None
+
 
 class UserManager(BaseUserManager):
     """Manager for the User model.
@@ -36,18 +40,19 @@ class UserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         """Create and save a user with the given email and password."""
         email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        # Cast to the concrete User type for the benefit of static type checkers.
+        user = cast("User", self.model(email=email, **extra_fields))
         user.password = make_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         """Create and save a regular user with the given email and password."""
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
         """Create and save a superuser with the given email and password."""
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
@@ -77,6 +82,9 @@ class OverwriteStorage(FileSystemStorage):
 
 class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     """The user model for authentication on the Loefbijter website.
+
+    The display names shown across the site are kept within a safe length to avoid
+    layout overflow in compact lists and cards.
 
     A user account can be made for two use cases. First, when a member registers at
     Loefbijter, an account is made for them as it is necessary for them to interact with
@@ -187,6 +195,18 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
     initials = models.CharField(max_length=20, verbose_name=_("Initials"), blank=True)
     nickname = models.CharField(max_length=30, verbose_name=_("Nickname"), blank=True)
+    lichting = models.CharField(
+        max_length=100,
+        verbose_name=_("Lichting"),
+        blank=True,
+        help_text=_("The member's lichting, for example '57e lichting'."),
+    )
+    title = models.CharField(
+        max_length=100,
+        verbose_name=_("Title"),
+        blank=True,
+        help_text=_("Additional title for the user, editable by the board."),
+    )
 
     display_name_preference = models.PositiveSmallIntegerField(
         choices=DisplayNamePreferences, default=DisplayNamePreferences.FULL
@@ -210,52 +230,121 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
     address = OneToOneField(to=Address, on_delete=models.SET_NULL, null=True)
 
+    loefbijter_groups = models.ManyToManyField(
+        "groups.LoefbijterGroup",
+        verbose_name=_("Loefbijter groups"),
+        blank=True,
+        help_text=_(
+            "The groups this user belongs to. A user will get all permissions "
+            "granted to each of their groups."
+        ),
+        related_name="user_set",
+        related_query_name="user",
+    )
+
     study_registration: Optional["StudyRegistration"]
     membership_set: QuerySet["Membership"]
 
-    # Copied from PermissionsMixin to override Group type to LoefbijterGroup.
-    # This many to many field should have been created on the Groups model.
-    # groups = models.ManyToManyField(
-    #     LoefbijterGroup,
-    #     verbose_name=_("Groups"),
-    #     blank=True,
-    #     help_text=_(
-    #         "The groups this user belongs to. A user will get all permissions "
-    #         "granted to each of their groups."
-    #     ),
-    #     related_name="user_set",
-    #     related_query_name="user",
-    # )
-
     phone_number = PhoneNumberField(blank=True)
+    pod_kb_link = models.URLField(
+        max_length=512,
+        blank=True,
+        verbose_name=_("KB POD link"),
+        help_text=_(
+            "Paste the link to your KB POD (Google Sheets) so it can be edited."
+        ),
+    )
+
+    pod_zb_link = models.URLField(
+        max_length=512,
+        blank=True,
+        verbose_name=_("ZB POD link"),
+        help_text=_(
+            "Paste the link to your ZB POD (Google Sheets) so it can be edited."
+        ),
+    )
 
     # TODO: Refactor
     note = models.TextField(blank=True)
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
+    DISPLAY_NAME_MAX_LENGTH = 64
 
     objects = UserManager()
+
+    def get_group_permissions(self, obj=None):
+        """Return permissions for Django auth groups and Loefbijter groups.
+
+        This extends the default PermissionsMixin behavior so that permissions
+        assigned to LoefbijterGroup instances are considered when evaluating a
+        user's permissions.
+        """
+        # Start with the default group permissions (from auth.Group via
+        # PermissionsMixin).
+        perms = set(super().get_group_permissions(obj))
+
+        # Collect Loefbijter groups the user belongs to from both the
+        # loefbijter_groups M2M (if present) and the GroupMembership model. Some
+        # environments use explicit GroupMembership rows instead of the M2M, so
+        # this keeps permission resolution robust when the M2M table is missing
+        # or out-of-sync.
+        try:
+            m2m_groups = self.loefbijter_groups.all()
+        except (AttributeError, ProgrammingError):
+            # AttributeError if the field isn't present on the model,
+            # ProgrammingError if the DB table for the M2M is missing; fall back to
+            # empty queryset.
+            m2m_groups = LoefbijterGroup.objects.none()
+
+        # Groups added via the explicit GroupMembership model
+        membership_groups = LoefbijterGroup.objects.filter(groupmembership__user=self)
+
+        groups_qs = m2m_groups | membership_groups
+
+        # Use distinct() to avoid duplicates and collect permission strings
+        perms.update(
+            f"{p.content_type.app_label}.{p.codename}"
+            for p in Permission.objects.filter(loefbijtergroup__in=groups_qs).distinct()
+        )
+
+        return perms
+
+    @staticmethod
+    def _truncate_name(value: str, max_length: int) -> str:
+        """Return a safe display name that fits in the available layout width."""
+        if not value:
+            return ""
+        return value.strip()[:max_length].rstrip()
 
     @property
     def full_name(self) -> str:
         """Return the full name of the person."""
-        return f"{self.first_name} {self.last_name}".strip()
+        return self._truncate_name(
+            f"{self.first_name} {self.last_name}".strip(), self.DISPLAY_NAME_MAX_LENGTH
+        )
+
+    @property
+    def member_since(self):
+        """Return the earliest known membership start date for the user."""
+        membership = self.membership_set.order_by("start").first()
+        return membership.start if membership else None
 
     @property
     def display_name(self) -> str:
         """Return the display name of the user based on their preference."""
         match self.display_name_preference:
             case DisplayNamePreferences.FULL_WITH_NICKNAME:
-                return f"{self.first_name} '{self.nickname}' {self.last_name}".strip()
+                value = f"{self.first_name} '{self.nickname}' {self.last_name}".strip()
             case DisplayNamePreferences.NICKNAME_LASTNAME:
-                return f"'{self.nickname}' {self.last_name}".strip()
+                value = f"'{self.nickname}' {self.last_name}".strip()
             case DisplayNamePreferences.INITIALS_LASTNAME:
-                return f"{self.initials} {self.last_name}".strip()
+                value = f"{self.initials} {self.last_name}".strip()
             case DisplayNamePreferences.FIRSTNAME_ONLY:
-                return self.first_name.strip()
+                value = self.first_name.strip()
             case _:
-                return f"{self.first_name} {self.last_name}".strip()
+                value = f"{self.first_name} {self.last_name}".strip()
+        return self._truncate_name(value, self.DISPLAY_NAME_MAX_LENGTH)
 
     class Meta:
         """Meta options for the User model."""

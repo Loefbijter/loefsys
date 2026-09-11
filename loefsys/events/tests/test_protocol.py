@@ -251,12 +251,16 @@ class EventRegistrationTestCase(TestCase):
             data={"action": "register"},
         )
 
-        self.assertEqual(
-            response["Location"],
+        expected = (
             reverse(
                 "events:event",
                 kwargs={"slug": self.upcoming_event_with_form_fields.slug},
-            ),
+            )
+            + "?show_registration_modal=1"
+        )
+        self.assertEqual(response["Location"], expected)
+        self.assertTrue(
+            self.upcoming_event_with_form_fields.eventregistration_set.count() == 0
         )
 
         # Submit the event registration form
@@ -367,12 +371,25 @@ class EventRegistrationTestCase(TestCase):
         # self.assertNotContains(response=response, text="Je bent ingeschreven")
 
         # Register for event
-        self.client.post(
+        response = self.client.post(
             reverse(
                 "events:event",
                 kwargs={"slug": self.upcoming_event_with_required_form_fields.slug},
             ),
             data={"action": "register"},
+        )
+
+        expected = (
+            reverse(
+                "events:event",
+                kwargs={"slug": self.upcoming_event_with_required_form_fields.slug},
+            )
+            + "?show_registration_modal=1"
+        )
+        self.assertEqual(response["Location"], expected)
+        self.assertTrue(
+            self.upcoming_event_with_required_form_fields.eventregistration_set.count()
+            == 0
         )
 
         # Submit the event registration form

@@ -1,0 +1,30 @@
+.fc .fc-event,
+.fc .fc-event *,
+.fc .fc-event .fc-event-title,
+.fc .fc-event .fc-event-time,
+.fc .fc-event .fc-event-main,
+.fc .fc-event-custom-content {
+  color: #ffffff !important;
+}
+
+.fc .fc-daygrid-event,
+.fc .fc-daygrid-event .fc-event-main,
+.fc .fc-daygrid-event .fc-event-custom-content,
+.fc .fc-timegrid-event .fc-event-main,
+.fc .fc-timegrid-event .fc-event-custom-content {
+  min-height: 3rem;
+  padding: 0.45rem 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.fc .fc-daygrid-event .fc-event-main {
+  padding: 0.35rem 0.5rem;
+}
+
+.fc .fc-daygrid-event .fc-event-title,
+.fc .fc-timegrid-event .fc-event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

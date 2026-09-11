@@ -1,12 +1,20 @@
 """Module containing the configuration for templates."""
 
 from collections.abc import Sequence
+from pathlib import Path
 
 from cbs import env
 
 
 class TemplateSettings:
-    """Class containing the configuration for templates."""
+    """Class containing the configuration for templates.
+
+    Note: BASE_DIR is provided by other settings mixins at runtime. It is declared
+    here for static type checkers to avoid attribute errors when this mixin is used
+    by a composed Settings class.
+    """
+
+    BASE_DIR: Path
 
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 

@@ -1,6 +1,6 @@
 """Module containing all model managers for the events app."""
 
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING
 
 from django.db import models
 from django.db.models import Q
@@ -12,12 +12,13 @@ from .choices import RegistrationStatus
 
 if TYPE_CHECKING:
     from .event import Event
+    from .registration import EventRegistration
 
 
 class EventManager[TEvent: "Event"](models.Manager[TEvent]):
     """Model manager for events."""
 
-    def active(self) -> Self:
+    def active(self) -> models.QuerySet["Event"]:
         """Filter for events that are going to happen or are currently ongoing.
 
         Returns
@@ -29,10 +30,10 @@ class EventManager[TEvent: "Event"](models.Manager[TEvent]):
 
 
 # TODO fix typing
-class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ignore
+class EventRegistrationManager(models.Manager["EventRegistration"]):
     """Custom manager for :class:`~loefsys.events.models.EventRegistration` models."""
 
-    def order_by_creation(self) -> Self:
+    def order_by_creation(self) -> models.QuerySet["EventRegistration"]:
         """Allow a query to be sorted by creation.
 
         Returns
@@ -42,7 +43,7 @@ class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ig
         """
         return self.order_by("created")
 
-    def active(self) -> Self:
+    def active(self) -> models.QuerySet["EventRegistration"]:
         """Filter and only return active registrations.
 
         Returns
@@ -52,7 +53,7 @@ class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ig
         """
         return self.filter(status=RegistrationStatus.ACTIVE)
 
-    def queued(self) -> Self:
+    def queued(self) -> models.QuerySet["EventRegistration"]:
         """Filter and only return queued registrations.
 
         Returns
@@ -62,7 +63,7 @@ class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ig
         """
         return self.filter(status=RegistrationStatus.QUEUED)
 
-    def cancelled(self) -> Self:
+    def cancelled(self) -> models.QuerySet["EventRegistration"]:
         """Filter and only return cancelled registrations.
 
         Returns
@@ -75,7 +76,7 @@ class EventRegistrationManager(models.Manager["EventRegistration"]):  # type: ig
             | Q(status=RegistrationStatus.CANCELLED_NOFINE)
         )
 
-    def for_user(self, user: User) -> Self:
+    def for_user(self, user: User) -> models.QuerySet["EventRegistration"]:
         """Filter registrations for a specific user.
 
         Returns

@@ -5,32 +5,101 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex flex-col h-screen">
-  <!-- Top Bar -->
-  <section id="calendar-topbar" class="bg-[#2972b3] p-8 flex flex-col">
-    <h1 class="text-6xl font-bold text-white pb-8 mt-4"> Calendar </h1>
-  </section>
+<div class="min-h-screen w-full max-w-full overflow-x-hidden bg-gray-50">
 
-  <div class="flex flex-col h-screen bg-[#1BB1E6]">
-
-    <section id="information" class="bg-[#2972b3] p-10 m-5 flex flex-col rounded-3xl border-black border-2">
-      <h1 class="text-6xl font-bold text-white pb-7">Hoe link je je agenda?</h1>
-      <p class="text-4xl text-white">
-          Om je agenda te koppelen, volg deze stappen:
-      </p>
-      <ol class="text-3xl text-white list-decimal p-10">
-          <li> Open je agenda-app (bijvoorbeeld Google Calendar of Outlook).</li>
-          <li> Zoek naar de optie om een nieuwe agenda toe te voegen.</li>
-          <li> Kopieer de link hieronder en plak deze in het veld voor de URL van de agenda.</li>
-          <li> Sla de wijzigingen op en je agenda is nu gekoppeld!</li>
-      </ol>
-      <h2 class="text-5xl font-bold text-white p-10 mt-8">Links:</h2>
-      <p class="text-2xl text-white">
-          Voor events waar je voor bent ingeschreven: <a href="{{ registered_event_feed }}" class="text-white underline"> https://app.loefbijter.nl{{ registered_event_feed }}</a><br>
-          Voor events waar je niet voor bent ingeschreven: <a href="{{ other_event_feed }}" class="text-white underline"> https://app.loefbijter.nl{{ other_event_feed }}</a>
+    <!-- ============ HEADER ============ -->
+    <section class="bg-white border-b border-gray-200">
+        <div class="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-10 text-center">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Agenda koppelen</h1>
+            <p class="text-sm sm:text-base text-gray-500 mt-1.5">
+                Volg de Loefbijter-agenda op je eigen agenda!
+            </p>
+        </div>
     </section>
-  </div>
 
-  {% include "menu.html" %}
+    <div class="max-w-xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8">
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 sm:p-8">
+
+            <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-5 sm:mb-6">Hoe koppel je je agenda?</h2>
+
+            <ol class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">1</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Open je agenda-app, bijvoorbeeld Google Calendar of Outlook.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">2</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Zoek de optie om een agenda via URL toe te voegen.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">3</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Kopieer een link hieronder en plak deze in het URL-veld.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">4</span>
+                    <span class="text-sm sm:text-base text-gray-700 pt-1">Sla de wijzigingen op. Je agenda is nu gekoppeld.</span>
+                </li>
+            </ol>
+
+            <hr class="border-t border-gray-100 my-6 sm:my-8">
+
+            <!-- ============ FEED LINKS ============ -->
+            <div class="space-y-5">
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 mb-2">Events waar je voor bent ingeschreven</p>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <span id="feed-registered"
+                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-gray-700">https://app.loefbijter.nl{{ registered_event_feed }}</span>
+                        <button type="button" data-target="feed-registered"
+                                class="copy-btn shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs sm:text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors">
+                            <i class="bi bi-clipboard copy-icon"></i>
+                            <span class="copy-label">Kopieer</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="text-sm font-semibold text-gray-600 mb-2">Events waar je niet voor bent ingeschreven</p>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <span id="feed-other"
+                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-gray-700">https://app.loefbijter.nl{{ other_event_feed }}</span>
+                        <button type="button" data-target="feed-other"
+                                class="copy-btn shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs sm:text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors">
+                            <i class="bi bi-clipboard copy-icon"></i>
+                            <span class="copy-label">Kopieer</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
+
+<script>
+    document.querySelectorAll(".copy-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            var target = document.getElementById(btn.dataset.target);
+            var text = target.textContent.trim();
+            var icon = btn.querySelector(".copy-icon");
+            var label = btn.querySelector(".copy-label");
+
+            navigator.clipboard.writeText(text).then(function () {
+                btn.classList.remove("bg-primary", "hover:bg-primary-accent");
+                btn.classList.add("bg-success", "hover:bg-success-accent");
+                icon.classList.remove("bi-clipboard");
+                icon.classList.add("bi-check2");
+                label.textContent = "Gekopieerd!";
+
+                setTimeout(function () {
+                    btn.classList.remove("bg-success", "hover:bg-success-accent");
+                    btn.classList.add("bg-primary", "hover:bg-primary-accent");
+                    icon.classList.remove("bi-check2");
+                    icon.classList.add("bi-clipboard");
+                    label.textContent = "Kopieer";
+                }, 1800);
+            });
+        });
+    });
+</script>
 {% endblock %}
