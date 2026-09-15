@@ -199,7 +199,7 @@
                                id="reservable_{{ forloop.counter }}"
                                data-item-name="{{ item.name }}"
                                data-is-boat="{% if item.type.category == 1 %}true{% else %}false{% endif %}"
-                               data-required-skippership="{% if item.type.category == 1 and item.boat.requires_skippership %}{{ item.boat.requires_skippership.pk }}{% endif %}"
+                               data-required-skippership="{% if item.type.category == 1 and item.reservableboat.requires_skippership %}{{ item.reservableboat.requires_skippership.pk }}{% endif %}"
                                class="peer hidden item-radio"
                                required>
 
@@ -216,7 +216,7 @@
                                     {% if item.type.category == 3 %}
                                     <span class="inline-flex items-center gap-1 rounded-full bg-black/5 px-2 py-0.5 text-[11px] font-semibold text-foreground/60">
                                         <i class="bi bi-rulers"></i>
-                                        {{ item.material.size }}
+                                        {{ item.reservablematerial.size }}
                                     </span>
                                     {% endif %}
                                 </div>
@@ -255,7 +255,9 @@
                                 </button>
                                 <p class="text-white/60 text-xs uppercase font-semibold tracking-wide">{{ item.type.name }}</p>
                                 <h2 class="text-xl text-white font-bold pr-8">{{ item.name }}</h2>
-                                <span class="inline-block mt-2 {% if item.is_reservable %}bg-success/20 text-success{% else %}bg-destructive/20 text-destructive{% endif %} rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide">
+                                <span id="availability_info_{{ forloop.counter }}"
+                                      data-item-pk="{{ item.pk }}"
+                                      class="item-availability-info inline-block mt-2 {% if item.is_reservable %}bg-success/20 text-success{% else %}bg-destructive/20 text-destructive{% endif %} rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide">
                                     {% if item.is_reservable %}{% trans "Beschikbaar" %}{% else %}{% trans "Niet beschikbaar" %}{% endif %}
                                 </span>
                             </div>
@@ -275,29 +277,29 @@
                                         <i class="bi bi-people-fill text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% trans "Capaciteit" %}</p>
-                                            <p class="font-semibold text-foreground">{{ item.boat.capacity }}</p>
+                                            <p class="font-semibold text-foreground">{{ item.reservableboat.capacity }}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
                                         <i class="bi bi-fuel-pump text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% trans "Motor" %}</p>
-                                            <p class="font-semibold text-foreground">{% if item.boat.has_engine %}{% trans "Ja" %}{% else %}{% trans "Nee" %}{% endif %}</p>
+                                            <p class="font-semibold text-foreground">{% if item.reservableboat.has_engine %}{% trans "Ja" %}{% else %}{% trans "Nee" %}{% endif %}</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
                                         <i class="bi bi-anchor text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% trans "Aanbieder" %}</p>
-                                            <p class="font-semibold text-foreground">{{ item.boat.get_fleet_display }}</p>
+                                            <p class="font-semibold text-foreground">{{ item.reservableboat.get_provider_display }}</p>
                                         </div>
                                     </div>
-                                    {% if item.boat.requires_skippership %}
+                                    {% if item.reservableboat.requires_skippership %}
                                     <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
                                         <i class="bi bi-mortarboard-fill text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% trans "Schipperschap" %}</p>
-                                            <p class="font-semibold text-foreground">{{ item.boat.requires_skippership.name }}</p>
+                                            <p class="font-semibold text-foreground">{{ item.reservableboat.requires_skippership.name }}</p>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -308,7 +310,7 @@
                                         <i class="bi bi-people-fill text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% trans "Capaciteit" %}</p>
-                                            <p class="font-semibold text-foreground">{{ item.room.capacity }}</p>
+                                            <p class="font-semibold text-foreground">{{ item.reservableroom.capacity }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -318,7 +320,7 @@
                                         <i class="bi bi-rulers text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% trans "Maat" %}</p>
-                                            <p class="font-semibold text-foreground">{{ item.material.size }}</p>
+                                            <p class="font-semibold text-foreground">{{ item.reservablematerial.size }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -665,6 +667,12 @@
 
             await Promise.all(availabilityEls.map(async (el) => {
                 const itemPk = el.dataset.itemPk;
+                // The "more info" popup shows its own availability badge, sharing
+                // the same item pk -- keep it in sync from the same response
+                // instead of firing a second request for it.
+                const infoEl = document.querySelector(
+                    `.item-availability-info[data-item-pk="${itemPk}"]`
+                );
                 try {
                     const response = await fetch(`../check-availability?start=${start}&end=${end}&reservable=${itemPk}&object_pk=${objectPk}`);
                     const data = await response.json();
@@ -674,11 +682,21 @@
                                             el.title = "{{ available_text_t|escapejs }}";
                         el.classList.remove("not-available", "bg-destructive/15", "text-destructive");
                         el.classList.add("available", "bg-success/15", "text-success");
+                        if (infoEl) {
+                            infoEl.textContent = "{{ available_text_t|escapejs }}";
+                            infoEl.classList.remove("bg-destructive/20", "text-destructive");
+                            infoEl.classList.add("bg-success/20", "text-success");
+                        }
                     } else {
                                             el.textContent = "{{ unavailable_text_short_t|escapejs }}";
                                             el.title = "{{ unavailable_text_t|escapejs }}";
                         el.classList.remove("available", "bg-success/15", "text-success");
                         el.classList.add("not-available", "bg-destructive/15", "text-destructive");
+                        if (infoEl) {
+                            infoEl.textContent = "{{ unavailable_text_t|escapejs }}";
+                            infoEl.classList.remove("bg-success/20", "text-success");
+                            infoEl.classList.add("bg-destructive/20", "text-destructive");
+                        }
                     }
                 } catch (err) {
                     console.error("Error checking availability:", err);
