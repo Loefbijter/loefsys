@@ -9,7 +9,7 @@ from django_extensions.db.models import TimeStampedModel
 
 from loefsys.members.models import User, UserSkippership
 from loefsys.reservations.models.boat import ReservableBoat
-from loefsys.reservations.models.choices import ReservableCategories, ReservationStatus
+from loefsys.reservations.models.choices import ReservableCategories
 from loefsys.reservations.models.logbook import BoatLogbook
 from loefsys.reservations.models.reservable import Reservable
 
@@ -40,10 +40,10 @@ class Reservation(TimeStampedModel):
         The start timestamp of the reservation.
     end : ~datetime.datetime
         The end timestamp of the reservation.
-    request_status : ~loefsys.reservations.models.reservation.ReservationStatus
+    request_status : ~loefsys.reservations.models.reservation.Reservation.RequestStatus
         The status of the reservation.
-    request_response : str
-        A string containing clarification of the acceptance/decline of the request.
+    denial_reason : str
+        A string containing clarification of the denial of the request.
     """
 
     class RequestStatus(models.IntegerChoices):
@@ -72,12 +72,6 @@ class Reservation(TimeStampedModel):
     start = models.DateTimeField(verbose_name=_("Start time"))
     end = models.DateTimeField(verbose_name=_("End time"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(
-        max_length=20,
-        choices=ReservationStatus.choices,
-        default=ReservationStatus.PENDING,
-        verbose_name=_("Status"),
-    )
     denial_reason = models.TextField(blank=True, verbose_name=_("Denial reason"))
 
     class Meta:
@@ -116,11 +110,14 @@ class Reservation(TimeStampedModel):
         return BoatLogbook.objects.filter(reservation=self).exists()
 
     def clean_timeslot(self):
-        """Validate the timeslot of the reservation."""
+        """Validate that the timeslot does not overlap with a pending or approved reservation.
+
+        A denied reservation no longer holds its timeslot, so it is ignored here.
+        """  # noqa: E501
         if (
             Reservation.objects.exclude(pk=self.pk)
             .filter(reservable=self.reservable)
-            .filter(request_status=self.RequestStatus.APPROVED)
+            .exclude(request_status=self.RequestStatus.DENIED)
             # If other.start < self.end and other.end > self.start, then it overlaps
             .filter(start__lt=self.end, end__gt=self.start)
             .exists()
@@ -136,23 +133,12 @@ class Reservation(TimeStampedModel):
             ValidationError: This item is not reservable at the moment.
             ValidationError: The boat selected requires an authorized skipper to be set.
             ValidationError: The skipper set is not authorized for this boat.
+            ValidationError: A denial reason is required when denying a reservation.
         """
         if not self.reservable_id or self.start is None or self.end is None:
             return
 
-        has_overlapping_reservation = Reservation.objects.filter(
-            ~Q(pk=self.pk)
-            & Q(reservable=self.reservable)
-            & (
-                Q(start__range=(self.start, self.end))
-                | Q(end__range=(self.start, self.end))
-                | Q(start__lt=self.start, end__gt=self.end)
-            )
-        ).exists()
-        if has_overlapping_reservation:
-            raise ValidationError(
-                "This item has already been reserved during this timeslot."
-            )
+        self.clean_timeslot()
 
         if not self.reservable.is_reservable:
             raise ValidationError("This item is not reservable at the moment.")
@@ -192,10 +178,13 @@ class Reservation(TimeStampedModel):
                     }
                 )
 
-        if self.status == ReservationStatus.DENIED and not self.denial_reason.strip():
+        if (
+            self.request_status == self.RequestStatus.DENIED
+            and not self.denial_reason.strip()
+        ):
             raise ValidationError(
                 {
-                    "denial_reason": (
+                    "denial_reason": _(
                         "A denial reason is required when denying a reservation."
                     )
                 }

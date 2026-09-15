@@ -81,7 +81,7 @@
                         <p class="text-foreground font-medium">{{ object.reserved_item.type.name }}</p>
                     </div>
 
-                    {% if object.status == "denied" and object.denial_reason %}
+                    {% if object.request_status == RequestStatus.DENIED and object.denial_reason %}
                     <div class="p-4 rounded-xl bg-destructive/10 border border-destructive/20 sm:col-span-2">
                         <p class="font-semibold text-destructive text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                             <i class="bi bi-exclamation-triangle-fill"></i> {% trans "Afwijsreden" %}

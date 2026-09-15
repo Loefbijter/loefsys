@@ -15,11 +15,7 @@ from loefsys.reservations.models import (
     ReservableType,
     Reservation,
 )
-from loefsys.reservations.models.choices import (
-    Locations,
-    ReservableCategories,
-    ReservationStatus,
-)
+from loefsys.reservations.models.choices import Locations, ReservableCategories
 
 
 class ReservationTimeslotValidationTestCase(TestCase):
@@ -104,7 +100,7 @@ class ReservationTimeslotValidationTestCase(TestCase):
         )
         new.clean_timeslot()
 
-    def test_pending_does_not_block_timeslot(self):
+    def test_pending_blocks_timeslot(self):
         pending_reservable = G(Reservable)
 
         G(
@@ -123,7 +119,7 @@ class ReservationTimeslotValidationTestCase(TestCase):
             end=make_aware(datetime.datetime(2000, 1, 1, 13, 30)),
         )
 
-        new.clean_timeslot()
+        self.assertRaises(ValidationError, new.clean_timeslot)
 
     def test_denied_does_not_block_timeslot(self):
         denied_reservable = G(Reservable)
@@ -299,6 +295,32 @@ class ReservationTestCase(TestCase):
             reservation2.clean()
             reservation2.save()
 
+    def test_denied_reservation_frees_timeslot(self):
+        """Tests that a denied reservation no longer blocks its timeslot."""
+        reservation1 = Reservation(
+            reservable=self.reservable_item,
+            user=self.reservee_user,
+            start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
+            request_status=Reservation.RequestStatus.DENIED,
+            denial_reason="No.",
+        )
+        reservation1.full_clean()
+        reservation1.save()
+
+        reservation2 = Reservation(
+            reservable=self.reservable_item,
+            user=self.reservee_user,
+            start=datetime.datetime(
+                2025, 1, 1, hour=11, minute=30, tzinfo=datetime.UTC
+            ),
+            end=datetime.datetime(2025, 1, 1, hour=12, minute=30, tzinfo=datetime.UTC),
+        )
+        reservation2.full_clean()
+        reservation2.save()
+
+        self.assertIsNotNone(reservation2.pk)
+
     def test_reserved_two_overlap(self):
         """Tests that two Reservation instances can be created for two items on overlapping timeslots."""  # noqa: E501
         reservable_item2 = Reservable(
@@ -472,7 +494,7 @@ class ReservationTestCase(TestCase):
             user=self.reservee_user,
             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
             end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
-            status=ReservationStatus.DENIED,
+            request_status=Reservation.RequestStatus.DENIED,
         )
 
         with self.assertRaises(ValidationError):
@@ -485,10 +507,10 @@ class ReservationTestCase(TestCase):
             user=self.reservee_user,
             start=datetime.datetime(2025, 1, 1, hour=11, minute=0, tzinfo=datetime.UTC),
             end=datetime.datetime(2025, 1, 1, hour=12, minute=0, tzinfo=datetime.UTC),
-            status=ReservationStatus.DENIED,
+            request_status=Reservation.RequestStatus.DENIED,
             denial_reason="Boat already reserved for a club activity.",
         )
 
         reservation.full_clean()
         reservation.save()
-        self.assertEqual(reservation.status, ReservationStatus.DENIED)
+        self.assertEqual(reservation.request_status, Reservation.RequestStatus.DENIED)
