@@ -30,6 +30,7 @@ dependencies = [
    "python-dateutil>=2.8.2",
    "starmerge>=0.2.0",
    "user-agent-parser>=0.1.6",
+   "whitenoise>=6.8.2",
 ]
 
 [dependency-groups]
