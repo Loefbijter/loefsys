@@ -15,7 +15,6 @@ class SchippersViewTestCase(TestCase):
         skippership = G(Skippership, name="Kielboot")
         G(UserSkippership, user=user, skippership=skippership)
 
-        self.client.force_login(user)
         response = self.client.get(reverse("home:schippers"))
 
         self.assertEqual(response.status_code, 200)
@@ -31,7 +30,6 @@ class SchippersViewTestCase(TestCase):
         G(UserSkippership, user=user, skippership=second)
         G(UserSkippership, user=user, skippership=third)
 
-        self.client.force_login(user)
         response = self.client.get(reverse("home:schippers"))
 
         self.assertEqual(response.status_code, 200)
@@ -52,7 +50,6 @@ class SchippersViewTestCase(TestCase):
         skippership = G(Skippership, name="KB1")
         G(UserSkippership, user=user, skippership=skippership)
 
-        self.client.force_login(user)
         response = self.client.get(reverse("home:schippers"))
 
         self.assertEqual(response.status_code, 200)
