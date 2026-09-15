@@ -64,6 +64,8 @@ class StorageSettings(TemplateSettings, BaseSettings):
             "staticfiles": {
                 "BACKEND": "storages.backends.s3boto3.S3StaticStorage"
                 if self.AWS_STORAGE_BUCKET_NAME
+                else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+                if self.uses_local_storage() and not self.DEBUG
                 else "django.contrib.staticfiles.storage.StaticFilesStorage"
             },
         }

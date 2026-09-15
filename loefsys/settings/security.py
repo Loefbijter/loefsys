@@ -32,6 +32,8 @@ class SecuritySettings(AuthSettings, BaseSettings):
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802
         return (
             "django.middleware.security.SecurityMiddleware",
+            # Must sit directly after SecurityMiddleware, per WhiteNoise's own docs.
+            "whitenoise.middleware.WhiteNoiseMiddleware",
             "django.middleware.clickjacking.XFrameOptionsMiddleware",
             *super().MIDDLEWARE(),
         )
