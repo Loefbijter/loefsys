@@ -76,7 +76,6 @@ class ExportableAdminMixin:
             """Return KPI data used by the admin dashboard as JSON.
 
             Ensure only active staff users may access this endpoint.
-            Only include statistics the user has permission to view.
             """
             from dateutil.relativedelta import relativedelta
             from django.core.exceptions import PermissionDenied
@@ -94,17 +93,6 @@ class ExportableAdminMixin:
                 or not getattr(user, "is_staff", False)
             ):
                 raise PermissionDenied
-
-            # Helper to check if user has permission to view a model's statistics
-            def has_view_perm(app_label, model_name):
-                """Check if user has permission to view a model."""
-                if getattr(user, "is_superuser", False):
-                    return True
-                perm = f"{app_label}.view_{model_name}"
-                try:
-                    return user.has_perm(perm)
-                except Exception:
-                    return False
 
             # Lazy imports of models to avoid circular imports at import-time
             try:
@@ -156,9 +144,7 @@ class ExportableAdminMixin:
                 skippers_by_type = {}
                 skippers_series_by_type = {}
                 skippership_label_map = {}
-                if user_skippership_model is not None and has_view_perm(
-                    "members", "userskippership"
-                ):
+                if user_skippership_model is not None:
                     # gather available skipperships and labels
                     try:
                         Skippership = user_skippership_model._meta.get_field(
@@ -213,9 +199,7 @@ class ExportableAdminMixin:
                 reservations_series = []
                 reservations_total = 0
                 pending_requests = 0
-                if reservation_model is not None and has_view_perm(
-                    "reservations", "reservation"
-                ):
+                if reservation_model is not None:
                     for dt in months:
                         start, end = month_range(dt)
                         cnt = reservation_model.objects.filter(
@@ -238,9 +222,7 @@ class ExportableAdminMixin:
                 damage_series = []
                 damage_total = 0
                 damage_by_type = {}
-                if boat_damage_model is not None and has_view_perm(
-                    "reservations", "boatdamagerecord"
-                ):
+                if boat_damage_model is not None:
                     for idx, dt in enumerate(months):
                         start, end = month_range(dt)
                         qs_month = boat_damage_model.objects.filter(
@@ -267,11 +249,7 @@ class ExportableAdminMixin:
                 event_total = 0
                 # default empty mapping for labels if events model not available
                 category_label_map = {}
-                if (
-                    event_model is not None
-                    and event_categories_model is not None
-                    and has_view_perm("events", "event")
-                ):
+                if event_model is not None and event_categories_model is not None:
                     # categories mapping
                     categories = []
                     for choice in event_categories_model:

@@ -18,6 +18,8 @@ class StorageSettings(TemplateSettings, BaseSettings):
         # Default finders
         "django.contrib.staticfiles.finders.FileSystemFinder",
         "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+        # Required by django-compressor's {% compress %} template tag.
+        "compressor.finders.CompressorFinder",
     )
 
     def STATICFILES_DIRS(self) -> Sequence[Path]:  # noqa: N802, D102

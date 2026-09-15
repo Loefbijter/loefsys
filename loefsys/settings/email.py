@@ -2,20 +2,22 @@
 
 from pathlib import Path
 
+from cbs import env
+
+denv = env["DJANGO_"]
+
 
 class EmailSettings:
     """Class containing the configuration for the email service."""
 
-    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    EMAIL_BACKEND = denv("django.core.mail.backends.filebased.EmailBackend")
     EMAIL_FILE_PATH = Path(__file__).resolve().parent.parent.parent / "sent_emails"
-    # For console output csn be replaced with:
-    # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    # Or for email output with:
-    # EMAIL_HOST = "smtp.loefbijter.nl"         # Replace with your actual SMTP host
-    # EMAIL_PORT = 587                          # or 465 for SSL
-    # EMAIL_HOST_USER = "noreply@loefbijter.nl" # Your SMTP user (same as FROM email)
-    # EMAIL_HOST_PASSWORD = "your-app-password" # Needs to be a real, secure password
-    # EMAIL_USE_TLS = True                      # Or EMAIL_USE_SSL = True
+
+    EMAIL_HOST = denv("")
+    EMAIL_PORT = denv.int(587)
+    EMAIL_HOST_USER = denv("")
+    EMAIL_HOST_PASSWORD = denv("")
+    EMAIL_USE_TLS = denv.bool(True)
 
     EMAIL_TIMEOUT = 5
 
