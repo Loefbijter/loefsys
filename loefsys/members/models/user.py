@@ -354,4 +354,4 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         ordering = ("modified",)
 
     def __str__(self):
-        return f"User {self.email}"
+        return self.full_name or self.email
