@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
 
-from loefsys.core.http import AuthenticatedHttpRequest
+from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 from loefsys.events.exceptions import NoUserObjectError
 from loefsys.events.models.feed_token import FeedToken
 

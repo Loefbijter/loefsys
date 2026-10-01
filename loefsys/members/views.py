@@ -17,7 +17,7 @@ from django.utils.crypto import get_random_string
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
-from loefsys.core.http import AuthenticatedHttpRequest
+from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
 

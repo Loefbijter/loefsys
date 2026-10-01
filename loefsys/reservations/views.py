@@ -13,7 +13,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
 
-from loefsys.core.http import AuthenticatedHttpRequest
+from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 from loefsys.reservations.forms import (
     BoatLogbookForm,
     CreateReservationForm,
