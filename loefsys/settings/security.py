@@ -9,6 +9,7 @@ from .base import BaseSettings
 
 denv = env["DJANGO_"]
 
+
 class SecuritySettings(AuthSettings, BaseSettings):
     """Class defining the configuration for various security parameters."""
 

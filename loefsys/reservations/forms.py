@@ -110,7 +110,7 @@ class BoatLogbookForm(forms.ModelForm):
 
     def clean(self):
         """Require a damage description when the user reports new damage."""
-        cleaned_data = super().clean()
+        cleaned_data = super().clean() or {}
         # Be defensive: the description can be None, so coerce to empty string
         # before calling string operations.
         if cleaned_data.get("has_new_damage"):
