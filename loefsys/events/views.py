@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import date_format
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
 
@@ -169,29 +169,29 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     ) -> str:
         """Determine the text for the registration button for user and event status."""
         obj = self.object
-        text = _("Inschrijven")  # Default text for users without registration
+        text = _("Register")  # Default text for users without registration
         if registration:
             if registration.get_queue_position is not None:
-                text = _("Verlaat wachtrij")
+                text = _("Leave queue")
             elif not obj.can_cancel_registration():
-                text = _("Kan niet afmelden")
+                text = _("Cannot cancel")
             elif obj.cancellation_fine_required():
-                text = _("Afmelden (met boete)")
+                text = _("Cancel (with fine)")
             elif obj.cancelation_window_open():
-                text = _("Afmelden")
+                text = _("Cancel registration")
             else:
-                text = _("Kan niet afmelden")
+                text = _("Cannot cancel")
         elif not obj.registrations_open():
             if obj.registration_start and timezone.now() < obj.registration_start:
-                text = _("Inschrijven vanaf %(date)s") % {
+                text = _("Register from %(date)s") % {
                     "date": date_format(obj.registration_start, "DATETIME_FORMAT")
                 }
             else:
-                text = _("Inschrijvingen gesloten")
+                text = _("Registrations closed")
         elif obj.max_capacity_reached():
-            text = _("In wachtrij")
+            text = _("Join queue")
         else:
-            text = _("Inschrijven")
+            text = _("Register")
 
         return text
 
@@ -211,15 +211,14 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
         if registration is not None:
             if not obj.can_cancel_registration():
-                reason = _("Afmelden is niet meer mogelijk.")
+                reason = _("Cancelling is no longer possible.")
             elif obj.cancellation_fine_required():
-                reason = _("Afmelden kan leiden tot een boete.")
+                reason = _("Cancelling may result in a fine.")
             else:
                 reason = ""
         elif not obj.published:
             reason = _(
-                "Inschrijvingen zijn niet geopend omdat dit evenement "
-                "niet gepubliceerd is."
+                "Registrations are not open because this event has not been published."
             )
         elif obj.registrations_open():
             reason = ""
@@ -227,17 +226,17 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             obj.registration_start is not None
             and timezone.now() < obj.registration_start
         ):
-            reason = _("Inschrijven vanaf %(date)s.") % {
+            reason = _("Registration opens on %(date)s.") % {
                 "date": date_format(obj.registration_start, "DATETIME_FORMAT")
             }
         elif obj.registration_deadline is None:
-            reason = _("Inschrijvingen zijn gesloten.")
+            reason = _("Registrations are closed.")
         elif timezone.now() > obj.registration_deadline:
-            reason = _("Inschrijvingen zijn gesloten op %(date)s.") % {
+            reason = _("Registrations closed on %(date)s.") % {
                 "date": date_format(obj.registration_deadline, "DATETIME_FORMAT")
             }
         else:
-            reason = _("Inschrijvingen zijn momenteel gesloten.")
+            reason = _("Registrations are currently closed.")
 
         return reason
 
@@ -389,7 +388,7 @@ class EventFillerView(View):
 
                 data.append(
                     {
-                        "title": f"{user.display_name} - Verjaardag",
+                        "title": _("%(name)s - Birthday") % {"name": user.display_name},
                         "start": birthday_this_year.isoformat(),
                         "end": (birthday_this_year + timedelta(days=1)).isoformat(),
                         "allDay": True,

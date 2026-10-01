@@ -13,6 +13,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("i18n/", include("django.conf.urls.i18n")),
     # Provide a top-level named login URL to support templates using {% url 'login' %}.
     path(
         "login/",

@@ -182,7 +182,7 @@ class ReservationAdmin(ExportableModelAdmin):
                 reservation.request_status = Reservation.RequestStatus.DENIED
                 reservation.denial_reason = denial_reason
             else:
-                error = _("Kies een status.")
+                error = _("Choose a status.")
 
             if error is None:
                 try:
