@@ -4,16 +4,15 @@ from typing import TYPE_CHECKING, Optional, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractBaseUser, Permission, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.files.storage import FileSystemStorage
-from django.db import ProgrammingError, models
+from django.db import models
 from django.db.models import OneToOneField, QuerySet
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import RandomCharField
 from django_extensions.db.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
-from loefsys.groups.models.group import LoefbijterGroup
 from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
@@ -272,43 +271,6 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     DISPLAY_NAME_MAX_LENGTH = 64
 
     objects = UserManager()
-
-    def get_group_permissions(self, obj=None):
-        """Return permissions for Django auth groups and Loefbijter groups.
-
-        This extends the default PermissionsMixin behavior so that permissions
-        assigned to LoefbijterGroup instances are considered when evaluating a
-        user's permissions.
-        """
-        # Start with the default group permissions (from auth.Group via
-        # PermissionsMixin).
-        perms = set(super().get_group_permissions(obj))
-
-        # Collect Loefbijter groups the user belongs to from both the
-        # loefbijter_groups M2M (if present) and the GroupMembership model. Some
-        # environments use explicit GroupMembership rows instead of the M2M, so
-        # this keeps permission resolution robust when the M2M table is missing
-        # or out-of-sync.
-        try:
-            m2m_groups = self.loefbijter_groups.all()
-        except (AttributeError, ProgrammingError):
-            # AttributeError if the field isn't present on the model,
-            # ProgrammingError if the DB table for the M2M is missing; fall back to
-            # empty queryset.
-            m2m_groups = LoefbijterGroup.objects.none()
-
-        # Groups added via the explicit GroupMembership model
-        membership_groups = LoefbijterGroup.objects.filter(groupmembership__user=self)
-
-        groups_qs = m2m_groups | membership_groups
-
-        # Use distinct() to avoid duplicates and collect permission strings
-        perms.update(
-            f"{p.content_type.app_label}.{p.codename}"
-            for p in Permission.objects.filter(loefbijtergroup__in=groups_qs).distinct()
-        )
-
-        return perms
 
     @staticmethod
     def _truncate_name(value: str, max_length: int) -> str:
