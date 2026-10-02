@@ -83,15 +83,13 @@ class ExportableAdminMixin:
             from django.http import JsonResponse
             from django.utils import timezone
 
-            # Explicitly ensure the requesting user is an active staff member.
-            # admin.site.admin_view already applies staff checks, but do a double-check
+            from loefsys.core.admin_site import can_access_admin
+
+            # Explicitly ensure the requesting user may access the admin.
+            # admin.site.admin_view already applies this check, but do a double-check
             # so this endpoint cannot be accidentally exposed without the admin wrapper.
             user = getattr(request, "user", None)
-            if (
-                not user
-                or not getattr(user, "is_active", False)
-                or not getattr(user, "is_staff", False)
-            ):
+            if not user or not can_access_admin(user):
                 raise PermissionDenied
 
             # Lazy imports of models to avoid circular imports at import-time

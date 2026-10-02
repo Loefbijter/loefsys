@@ -31,7 +31,7 @@ class ActivityManagerAdminTestCase(TestCase):
     """Tests for activity managers restricted to some event categories."""
 
     def setUp(self):
-        self.manager = G(get_user_model(), is_staff=True, is_superuser=False)
+        self.manager = G(get_user_model(), is_staff=False, is_superuser=False)
         self.manager.groups.add(Group.objects.get(name=ACTIVITY_MANAGERS_GROUP))
         self.manager.user_permissions.add(
             Permission.objects.get(codename=EventCategories.LEISURE.permission_codename)

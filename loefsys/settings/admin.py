@@ -14,7 +14,7 @@ class AdminSettings(AuthSettings, TemplateSettings, BaseSettings):
         return (
             *super().DJANGO_APPS(),
             "django.contrib.messages",
-            "django.contrib.admin",
+            "loefsys.core.admin_apps.LoefsysAdminConfig",
         )
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
