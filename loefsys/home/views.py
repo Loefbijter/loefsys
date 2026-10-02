@@ -84,9 +84,9 @@ class HomeView(View):
                 .order_by("start")[:4]
             )
 
-        # Pending approvals for staff
+        # Pending approvals for those who can handle them
         pending_approvals = None
-        if request.user.is_staff:
+        if request.user.has_perm("reservations.change_reservation"):
             pending_approvals = Reservation.objects.filter(
                 request_status=Reservation.RequestStatus.PENDING
             ).order_by("start")[:4]

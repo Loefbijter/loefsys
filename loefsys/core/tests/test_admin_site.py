@@ -11,7 +11,7 @@ class AdminAccessTestCase(TestCase):
     """Admin access follows from permissions instead of the staff flag."""
 
     def setUp(self):
-        self.user = G(get_user_model(), is_staff=False, is_superuser=False)
+        self.user = G(get_user_model(), is_superuser=False)
         self.user.set_password(PASSWORD)
         self.user.save()
 
@@ -38,9 +38,12 @@ class AdminAccessTestCase(TestCase):
         response = self.client.get(reverse("admin:index"))
         self.assertEqual(response.status_code, 200)
 
-    def test_staff_without_permissions_keeps_access(self):
-        self.user.is_staff = True
-        self.user.save()
+    def test_admin_permission_gives_access(self):
+        self.user.user_permissions.add(
+            Permission.objects.get(
+                codename="access_admin", content_type__app_label="members"
+            )
+        )
         self.client.force_login(self.user)
         response = self.client.get(reverse("admin:index"))
         self.assertEqual(response.status_code, 200)
@@ -62,3 +65,35 @@ class AdminAccessTestCase(TestCase):
         self.client.force_login(self.user)
         response = self.client.get(reverse("admin:index"))
         self.assertEqual(response.status_code, 302)
+
+    def test_superuser_gets_access(self):
+        superuser = get_user_model().objects.create_superuser(
+            email="super@example.com", password=PASSWORD
+        )
+        self.client.force_login(superuser)
+        response = self.client.get(reverse("admin:index"))
+        self.assertEqual(response.status_code, 200)
+
+
+class AdminPermissionUserListTestCase(TestCase):
+    """The user list shows who holds the Admin permission directly."""
+
+    def setUp(self):
+        self.client.force_login(
+            get_user_model().objects.create_superuser(
+                email="super@example.com", password=PASSWORD
+            )
+        )
+        self.admin_user = G(get_user_model(), email="beheerder@example.com")
+        self.admin_user.user_permissions.add(
+            Permission.objects.get(
+                codename="access_admin", content_type__app_label="members"
+            )
+        )
+        G(get_user_model(), email="lid@example.com")
+
+    def test_filter_on_admin_permission(self):
+        url = reverse("admin:members_user_changelist") + "?admin_permission=yes"
+        response = self.client.get(url)
+        self.assertContains(response, "beheerder@example.com")
+        self.assertNotContains(response, "lid@example.com")

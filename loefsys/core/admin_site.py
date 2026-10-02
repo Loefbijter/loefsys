@@ -9,12 +9,10 @@ from django.core.exceptions import ValidationError
 def can_access_admin(user) -> bool:
     """Return whether ``user`` may log in to the admin site.
 
-    Staff members always can. Other users can as soon as they hold any permission,
-    for example through a group, so there's no need to also mark them as staff.
+    For members this follows from their permissions, see
+    :attr:`loefsys.members.models.User.is_staff`.
     """
-    if not user.is_active:
-        return False
-    return user.is_staff or bool(user.get_all_permissions())
+    return bool(user.is_active and user.is_staff)
 
 
 class PermissionAdminAuthenticationForm(AdminAuthenticationForm):

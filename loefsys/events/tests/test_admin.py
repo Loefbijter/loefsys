@@ -31,7 +31,7 @@ class ActivityManagerAdminTestCase(TestCase):
     """Tests for activity managers restricted to some event categories."""
 
     def setUp(self):
-        self.manager = G(get_user_model(), is_staff=False, is_superuser=False)
+        self.manager = G(get_user_model(), is_superuser=False)
         self.manager.groups.add(Group.objects.get(name=ACTIVITY_MANAGERS_GROUP))
         self.manager.user_permissions.add(
             Permission.objects.get(codename=EventCategories.LEISURE.permission_codename)
@@ -107,7 +107,7 @@ class SuperuserEventAdminTestCase(TestCase):
     """Superusers keep access to every category."""
 
     def setUp(self):
-        self.client.force_login(G(get_user_model(), is_staff=True, is_superuser=True))
+        self.client.force_login(G(get_user_model(), is_superuser=True))
 
     def test_changelist_shows_all_categories(self):
         make_event(EventCategories.LEISURE, "Borrel")

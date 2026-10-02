@@ -47,17 +47,13 @@ class UserManager(BaseUserManager):
 
     def create_user(self, email, password, **extra_fields):
         """Create and save a regular user with the given email and password."""
-        extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         """Create and save a superuser with the given email and password."""
-        extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
@@ -124,7 +120,11 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         Inherited from PermissionsMixin.d.    email : str
         The email of the user, used to log in. This value is unique.
     is_staff : bool
-        Flag that determines whether has access to the admin site.
+        Whether the user has access to the admin site.
+
+        This is not a stored flag: active users get access as soon as they hold any
+        permission, for example the ``members.access_admin`` permission or one
+        granted through a group.
     first_name : str
         The first name of the user.
 
@@ -178,11 +178,6 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
     slug = RandomCharField(length=8, unique=True)
 
-    is_staff = models.BooleanField(
-        _("Staff status"),
-        default=False,
-        help_text=_("Designates whether the user can log into this admin site."),
-    )
     is_active = models.BooleanField(
         _("Active"),
         default=True,
@@ -314,6 +309,16 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         verbose_name = _("user")
         verbose_name_plural = _("users")
         ordering = ("modified",)
+        permissions = (("access_admin", "Admin"),)
+
+    @property
+    def is_staff(self) -> bool:
+        """Return whether the user has access to the admin site.
+
+        Instead of a separate flag, access follows from permissions: an active user
+        with any permission, including the "Admin" permission, may use the admin.
+        """
+        return self.is_active and bool(self.get_all_permissions())
 
     def __str__(self):
         return self.full_name or self.email
