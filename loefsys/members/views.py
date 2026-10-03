@@ -10,12 +10,15 @@ from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
+
+from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +66,8 @@ class UserProfileMixin(SingleObjectMixin):
 
     Overrides the get_object method to return the current user.
     """
+
+    request: HttpRequest
 
     def get_object(self, _queryset=None):
         """Retrieve the user from the request."""
@@ -159,6 +164,8 @@ class UserSetPasswordView(LoginRequiredMixin, FormView):
     Uses Django's SetPasswordForm which validates the two password fields
     and applies the configured password validators.
     """
+
+    request: AuthenticatedHttpRequest
 
     template_name = "profiles/set_password.html"
     form_class = SetPasswordForm

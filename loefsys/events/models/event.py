@@ -176,6 +176,13 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     objects = EventManager()
 
     class Meta:
+        permissions = tuple(
+            (
+                category.permission_codename,
+                f"Can manage events in category {category.name.title()}",
+            )
+            for category in EventCategories
+        )
         constraints = (
             CheckConstraint(
                 condition=Q(end__gt=F("start")),

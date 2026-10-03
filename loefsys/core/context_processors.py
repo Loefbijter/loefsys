@@ -18,7 +18,7 @@ def is_mobile(request: HttpRequest) -> dict[Literal["is_mobile"], bool]:
     an unhandled 500.
     """
     user_agent = getattr(request, "user_agent", None)
-    return {"is_mobile": bool(user_agent) and user_agent.device_type == "Mobile"}
+    return {"is_mobile": bool(user_agent and user_agent.device_type == "Mobile")}
 
 
 def static_pages(_request: HttpRequest) -> dict:

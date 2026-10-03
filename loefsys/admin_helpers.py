@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from io import BytesIO
+from typing import TYPE_CHECKING, Any
 
 from django.contrib import admin
 from django.db import models
@@ -13,8 +14,21 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
 
+DASHBOARD_PERMISSIONS = {
+    "skippers": "members.view_userskippership",
+    "reservations": "reservations.view_reservation",
+    "damage": "reservations.view_boatdamagerecord",
+    "events": "events.view_event",
+}
+"""The permission needed to see each section of the admin dashboard."""
 
-class ExportableAdminMixin:
+if TYPE_CHECKING:
+    _MixinBase = admin.ModelAdmin
+else:
+    _MixinBase = object
+
+
+class ExportableAdminMixin(_MixinBase):
     """Mixin that exposes Excel export for filtered admin record sets."""
 
     change_list_template = "admin/change_list_export.html"
@@ -83,18 +97,21 @@ class ExportableAdminMixin:
             from django.http import JsonResponse
             from django.utils import timezone
 
-            # Explicitly ensure the requesting user is an active staff member.
-            # admin.site.admin_view already applies staff checks, but do a double-check
+            from loefsys.core.admin_site import can_access_admin
+
+            # Explicitly ensure the requesting user may access the admin.
+            # admin.site.admin_view already applies this check, but do a double-check
             # so this endpoint cannot be accidentally exposed without the admin wrapper.
             user = getattr(request, "user", None)
-            if (
-                not user
-                or not getattr(user, "is_active", False)
-                or not getattr(user, "is_staff", False)
-            ):
+            if not user or not can_access_admin(user):
                 raise PermissionDenied
 
             # Lazy imports of models to avoid circular imports at import-time
+            user_skippership_model: Any
+            reservation_model: Any
+            boat_damage_model: Any
+            event_model: Any
+            event_categories_model: Any
             try:
                 from loefsys.members.models import (
                     UserSkippership as user_skippership_model,
@@ -117,6 +134,17 @@ class ExportableAdminMixin:
             except Exception:
                 event_model = None
                 event_categories_model = None
+
+            # Only report on what the user is allowed to see; the dashboard
+            # template hides the matching cards.
+            if not user.has_perm(DASHBOARD_PERMISSIONS["skippers"]):
+                user_skippership_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["reservations"]):
+                reservation_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["damage"]):
+                boat_damage_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["events"]):
+                event_model = None
 
             try:
                 now = timezone.now()
@@ -150,7 +178,7 @@ class ExportableAdminMixin:
                         Skippership = user_skippership_model._meta.get_field(
                             "skippership"
                         ).remote_field.model
-                        skippership_qs = Skippership.objects.all()
+                        skippership_qs = Skippership._default_manager.all()
                         for s in skippership_qs:
                             key = str(s.pk)
                             skippership_label_map[key] = str(s.name)
@@ -171,7 +199,7 @@ class ExportableAdminMixin:
 
                         # per-type counts for this month
                         try:
-                            grouped = (
+                            grouped: Any = (
                                 user_skippership_model.objects.filter(
                                     since__gte=start.date(), since__lt=end.date()
                                 )
@@ -247,8 +275,10 @@ class ExportableAdminMixin:
                 events_by_category = {}
                 events_series_by_category = {}
                 event_total = 0
-                # default empty mapping for labels if events model not available
-                category_label_map = {}
+                # default empty mappings if events model not available
+                category_label_map: dict[str, Any] = {}
+                past_month_by_category: dict[str, Any] = {}
+                upcoming_month_by_category: dict[str, Any] = {}
                 if event_model is not None and event_categories_model is not None:
                     # categories mapping
                     categories = []
@@ -403,8 +433,8 @@ class ExportableAdminMixin:
             )
             return [dashboard_pattern, *orig_urls]
 
-        admin.site.get_urls = _get_urls
-        admin.site._dashboard_registered = True
+        admin.site.get_urls = _get_urls  # type: ignore[method-assign]
+        admin.site._dashboard_registered = True  # type: ignore[attr-defined]
 
         # call once so it's registered immediately
         # (force evaluation by accessing admin urls)
@@ -437,8 +467,7 @@ class ExportableAdminMixin:
             if len(filters) >= self._max_default_list_filters:
                 break
 
-        self.list_filter = tuple(filters)
-        return super().get_list_filter(request)
+        return tuple(filters)
 
     @admin.action(description=_("Export selected rows to Excel"))
     def export_as_excel(self, request, queryset):

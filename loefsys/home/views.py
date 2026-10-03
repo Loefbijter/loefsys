@@ -76,7 +76,7 @@ class HomeView(View):
                 .order_by("-start")
             )
             skipperships = highest_skipperships(user)
-            if user.is_staff:
+            if user.has_perm("reservations.change_reservation"):
                 pending_approvals = list(
                     Reservation.objects.filter(
                         request_status=Reservation.RequestStatus.PENDING

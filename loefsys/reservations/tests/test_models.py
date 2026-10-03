@@ -19,6 +19,9 @@ from loefsys.reservations.models.choices import Locations, ReservableCategories
 
 
 class ReservationTimeslotValidationTestCase(TestCase):
+    reservable: Reservable
+    approved_reservation: Reservation
+
     @classmethod
     def setUpTestData(cls):
         cls.reservable = G(Reservable)
