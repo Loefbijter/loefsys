@@ -42,8 +42,13 @@ expect.set_options(timeout=10_000)
 
 @pytest.fixture
 def browser_context_args(browser_context_args):
-    """Use a desktop viewport and Dutch as the browser language by default."""
-    return {**browser_context_args, **DESKTOP, "locale": "nl-NL"}
+    """Use a desktop browser in Dutch, in the Netherlands' time zone, by default."""
+    return {
+        **browser_context_args,
+        **DESKTOP,
+        "locale": "nl-NL",
+        "timezone_id": "Europe/Amsterdam",
+    }
 
 
 @pytest.fixture
@@ -73,7 +78,7 @@ def _serve_cdn_from_node_modules(page: Page) -> None:
         match = CDN_PATTERN.match(route.request.url)
         if match:
             package, path = match.groups()
-            local = NODE_MODULES / package / path
+            local = NODE_MODULES / package / path.split("?")[0]
             if local.is_file():
                 route.fulfill(path=local)
                 return
