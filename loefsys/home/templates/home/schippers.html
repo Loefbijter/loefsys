@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-Schippers
+{% translate "Skippers" %}
 {% endblock %}
 
 {% block content %}
@@ -15,9 +16,9 @@ Schippers
 
 <div class="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
     <div class="space-y-3">
-        <h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Schippers</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{% translate "Skippers" %}</h1>
         <p class="max-w-2xl text-base text-foreground/70 sm:text-lg">
-            Hier vind je alle schippers binnen Loefbijter. Wil je een keer zeilen? App een schipper of praat met ze op de borrel!
+            {% blocktranslate trimmed %}Here you can find all skippers within Loefbijter. Want to go sailing some time? Send a skipper a message or talk to them at the borrel!{% endblocktranslate %}
         </p>
     </div>
 
@@ -28,7 +29,7 @@ Schippers
                     <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
                         <div>
                             <h2 class="text-xl font-semibold text-foreground">{{ level_group.label }}</h2>
-                            <p class="text-sm text-foreground/60">{{ level_group.schippers|length }} schipper{% if level_group.schippers|length != 1 %}s{% endif %}</p>
+                            <p class="text-sm text-foreground/60">{% blocktranslate trimmed count counter=level_group.schippers|length %}{{ counter }} skipper{% plural %}{{ counter }} skippers{% endblocktranslate %}</p>
                         </div>
                     </div>
 
@@ -44,21 +45,21 @@ Schippers
                                             {% endif %}
                                         </div>
                                         <a href="{{ skipper.profile_url }}" class="shrink-0 text-sm font-medium text-primary hover:underline">
-                                            Bekijk profiel
+                                            {% translate "View profile" %}
                                         </a>
                                     </div>
                                 </li>
                             {% endfor %}
                         </ul>
                     {% else %}
-                        <p class="text-sm text-foreground/60">Er zijn momenteel geen schippers geregistreerd op dit niveau.</p>
+                        <p class="text-sm text-foreground/60">{% translate "There are currently no skippers registered at this level." %}</p>
                     {% endif %}
                 </section>
             {% endfor %}
         </div>
     {% else %}
         <div class="rounded-2xl border border-dashed border-foreground/20 bg-foreground/[0.03] p-8 text-center text-foreground/70">
-            Er zijn nog geen schippers geregistreerd.
+            {% translate "No skippers have been registered yet." %}
         </div>
     {% endif %}
 </div>

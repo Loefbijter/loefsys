@@ -4,28 +4,28 @@
 {% block title %}{% trans "Site administration" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Voorpagina" %}</h1>
+<h1>{% translate "Front page" %}</h1>
 <div id="admin-dashboard" style="display:block;">
   <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
     {% if perms.members.view_userskippership %}
     <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
-      <h3>{% trans "Nieuwe schippers deze maand" %}</h3>
+      <h3>{% translate "New skippers this month" %}</h3>
       <div id="kpi-skippers" style="font-size:1.6rem;">…</div>
     </div>
     {% endif %}
     {% if perms.reservations.view_reservation %}
     <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
-      <h3>{% trans "Reservaties deze maand" %}</h3>
+      <h3>{% translate "Reservations this month" %}</h3>
       <div id="kpi-reservations" style="font-size:1.6rem;">…</div>
     </div>
     <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
-      <h3>{% trans "Openstaande reserveringsaanvragen" %}</h3>
+      <h3>{% translate "Pending reservation requests" %}</h3>
       <div><a id="kpi-pending-link" href="{% url 'admin:reservations_reservation_changelist' %}?request_status=0" style="font-size:1.6rem;display:inline-block;text-decoration:none;color:inherit;"> <span id="kpi-pending">…</span></a></div>
     </div>
     {% endif %}
     {% if perms.reservations.view_boatdamagerecord %}
     <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
-      <h3>{% trans "Nieuwe schade meldingen" %}</h3>
+      <h3>{% translate "New damage reports" %}</h3>
       <div id="kpi-damage" style="font-size:1.6rem;">…</div>
     </div>
     {% endif %}
@@ -35,18 +35,18 @@
     {% if perms.members.view_userskippership %}
     <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;display:flex;gap:1rem;align-items:flex-start;">
       <div style="flex:1;">
-        <h4>{% trans "Nieuwe schippers (laatste maanden)" %}</h4>
+        <h4>{% translate "New skippers (recent months)" %}</h4>
         <canvas id="chart-skippers" width="320" height="160"></canvas>
       </div>
       <div style="width:220px;">
-        <h4 style="font-size:0.9rem;margin-top:0">{% trans "Per soort schipper (huidige maand)" %}</h4>
+        <h4 style="font-size:0.9rem;margin-top:0">{% translate "By skipper type (current month)" %}</h4>
         <canvas id="chart-skippers-types" width="220" height="160"></canvas>
       </div>
     </div>
     {% endif %}
     {% if perms.reservations.view_reservation %}
     <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
-      <h4>{% trans "Reservaties (laatste maanden)" %}</h4>
+      <h4>{% translate "Reservations (recent months)" %}</h4>
       <canvas id="chart-reservations" width="400" height="160"></canvas>
     </div>
     {% endif %}
@@ -55,14 +55,14 @@
   <div style="margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap;">
     {% if perms.events.view_event %}
     <div style="flex:1 1 600px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
-      <h4>{% trans "Evenementen per categorie" %}</h4>
+      <h4>{% translate "Events by category" %}</h4>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
         <div style="flex:1;min-width:260px;">
-          <h5 style="margin:0 0 6px 0;font-size:0.95rem">{% trans "Afgelopen maand (gehouden)" %}</h5>
+          <h5 style="margin:0 0 6px 0;font-size:0.95rem">{% translate "Past month (held)" %}</h5>
           <canvas id="chart-events-past" width="320" height="220"></canvas>
         </div>
         <div style="flex:1;min-width:260px;">
-          <h5 style="margin:0 0 6px 0;font-size:0.95rem">{% trans "Komende maand (gepland)" %}</h5>
+          <h5 style="margin:0 0 6px 0;font-size:0.95rem">{% translate "Next month (planned)" %}</h5>
           <canvas id="chart-events-upcoming" width="320" height="220"></canvas>
         </div>
       </div>
@@ -70,7 +70,7 @@
     {% endif %}
     {% if perms.reservations.view_boatdamagerecord %}
     <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
-      <h4>{% trans "Schade meldingen (laatste maanden)" %}</h4>
+      <h4>{% translate "Damage reports (recent months)" %}</h4>
       <canvas id="chart-damage" width="400" height="160"></canvas>
     </div>
     {% endif %}
@@ -82,6 +82,8 @@
 <!-- App links hidden here because they are available in the admin sidebar navigation -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% translate "New skippers" as new_skippers_t %}
+{% translate "Reservations" as reservations_t %}
 <script>
 (function () {
   const url = "{% url 'admin:admin-dashboard-data' %}";
@@ -122,7 +124,7 @@
             data: {
               labels: labels,
               datasets: [{
-                label: 'Nieuwe schippers',
+                label: '{{ new_skippers_t|escapejs }}',
                 data: data.skippers.series || [],
                 borderColor: colorForIndex(0),
                 backgroundColor: colorForIndex(0) + '33',
@@ -166,7 +168,7 @@
             data: {
               labels: labels,
               datasets: [{
-                label: 'Reservaties',
+                label: '{{ reservations_t|escapejs }}',
                 data: data.reservations.series || [],
                 borderColor: colorForIndex(1),
                 backgroundColor: colorForIndex(1) + '33',

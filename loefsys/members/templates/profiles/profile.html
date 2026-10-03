@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% load static %}
+{% load i18n static %}
 
 {% block title %}
-    Profiel
+    {% translate "Profile" %}
 {% endblock %}
 
 {% block content %}
@@ -28,7 +28,7 @@
                 <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <c-header.h4>
                         <i class="bi bi-person-circle mr-1"></i>
-                        Jouw publiek profiel
+                        {% translate "Your public profile" %}
                     </c-header.h4>
                     <div class="profile-actions flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                         <a
@@ -36,7 +36,7 @@
                             class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary hover:text-tertiary-foreground"
                         >
                             <i class="bi bi-pencil-fill"></i>
-                            Profiel Bewerken
+                            {% translate "Edit profile" %}
                         </a>
 
                         <a
@@ -44,14 +44,14 @@
                             class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/80"
                         >
                             <i class="bi bi-key-fill"></i>
-                            Wachtwoord Instellen
+                            {% translate "Set password" %}
                         </a>
 
                         <form method="post" action="{% url 'members:logout' %}" class="w-full sm:w-auto">
                             {% csrf_token %}
                             <button type="submit" class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-danger-foreground transition hover:bg-danger/80">
                                 <i class="bi bi-box-arrow-right"></i>
-                                Uitloggen
+                                {% translate "Log out" %}
                             </button>
                         </form>
                     </div>
@@ -63,10 +63,10 @@
             <div class="shrink-0 flex justify-center sm:justify-start min-w-0">
                 {% if member.picture %}
                     <img class="w-36 h-36 sm:w-48 sm:h-48 rounded-full shadow-2xl border-4 border-secondary object-cover"
-                         src="{{ member.picture.url }}" alt="Profielfoto van {{ member.display_name }}"/>
+                         src="{{ member.picture.url }}" alt="{% blocktranslate trimmed with name=member.display_name %}Profile picture of {{ name }}{% endblocktranslate %}"/>
                 {% else %}
                     <img class="w-36 h-36 sm:w-48 sm:h-48 rounded-full shadow-2xl border-4 border-secondary object-cover"
-                         src="{% static 'default-profile-picture.svg' %}" alt="Profielfoto van {{ member.display_name }}"/>
+                         src="{% static 'default-profile-picture.svg' %}" alt="{% blocktranslate trimmed with name=member.display_name %}Profile picture of {{ name }}{% endblocktranslate %}"/>
                 {% endif %}
             </div>
             <c-card class="grow min-w-0">
@@ -76,7 +76,7 @@
                     </div>
                     <span class="inline-flex items-center gap-1 rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
                         <i class="bi bi-check-circle-fill"></i>
-                        Actief Lid
+                        {% translate "Active member" %}
                     </span>
                 </div>
 
@@ -120,7 +120,7 @@
                    <div class="min-w-0">
                        <p class="font-semibold mb-2 flex items-center gap-2 text-slate-800">
                            <i class="bi bi-award-fill"></i>
-                           Schipperschappen
+                           {% translate "Skipperships" %}
                        </p>
                        <ul class="list-disc list-inside space-y-1 text-sm text-slate-700">
                            {% for skippership in display_skipperships %}

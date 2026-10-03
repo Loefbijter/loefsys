@@ -4,6 +4,7 @@ from django.contrib import admin, messages
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import path, reverse
+from django.utils.functional import Promise
 from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme, urlencode
 from django.utils.translation import gettext_lazy as _
@@ -101,7 +102,9 @@ class ReservationAdmin(ExportableModelAdmin):
             def evaluation_actions(obj):
                 return render_actions(request, obj)
 
-            evaluation_actions.short_description = render_actions.short_description
+            evaluation_actions.short_description = (  # type: ignore[attr-defined]
+                render_actions.short_description  # type: ignore[attr-defined]
+            )
             display[display.index("evaluation_actions")] = evaluation_actions
         return display
 
@@ -169,7 +172,7 @@ class ReservationAdmin(ExportableModelAdmin):
         next_url = self._safe_next_url(
             request, request.POST.get("next") or request.GET.get("next")
         )
-        error = None
+        error: str | Promise | None = None
 
         if request.method == "POST":
             status = request.POST.get("status")
@@ -182,7 +185,7 @@ class ReservationAdmin(ExportableModelAdmin):
                 reservation.request_status = Reservation.RequestStatus.DENIED
                 reservation.denial_reason = denial_reason
             else:
-                error = _("Kies een status.")
+                error = _("Choose a status.")
 
             if error is None:
                 try:
@@ -212,9 +215,7 @@ class ReservationAdmin(ExportableModelAdmin):
             "error": error,
             "next": next_url,
         }
-        return render(
-            request, "admin/reservations/reservation/evaluate.html", context
-        )
+        return render(request, "admin/reservations/reservation/evaluate.html", context)
 
     @admin.display(description=_("Evaluation"))
     def evaluation_actions(self, request, obj):
@@ -226,9 +227,7 @@ class ReservationAdmin(ExportableModelAdmin):
         page; Deny needs a reason, so it goes to the evaluate page instead. Already
         evaluated rows just get a Change link to that same evaluate page.
         """
-        evaluate_url = reverse(
-            "admin:reservations_reservation_evaluate", args=[obj.pk]
-        )
+        evaluate_url = reverse("admin:reservations_reservation_evaluate", args=[obj.pk])
         next_url = request.get_full_path()
 
         if obj.request_status == Reservation.RequestStatus.PENDING:

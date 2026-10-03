@@ -174,7 +174,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         if self.picture:
             self.picture.delete(save=False)
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, verbose_name=_("Email address"))
 
     slug = RandomCharField(length=8, unique=True)
 
@@ -203,7 +203,9 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     )
 
     display_name_preference = models.PositiveSmallIntegerField(
-        choices=DisplayNamePreferences, default=DisplayNamePreferences.FULL
+        choices=DisplayNamePreferences,
+        default=DisplayNamePreferences.FULL,
+        verbose_name=_("Display name preference"),
     )
 
     picture = models.ImageField(
@@ -211,6 +213,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         null=True,
         blank=True,
         storage=OverwriteStorage(),
+        verbose_name=_("Profile picture"),
     )
 
     gender = models.PositiveSmallIntegerField(
@@ -239,7 +242,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     study_registration: Optional["StudyRegistration"]
     membership_set: QuerySet["Membership"]
 
-    phone_number = PhoneNumberField(blank=True)
+    phone_number = PhoneNumberField(blank=True, verbose_name=_("Phone number"))
     pod_kb_link = models.URLField(
         max_length=512,
         blank=True,
@@ -259,7 +262,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     )
 
     # TODO: Refactor
-    note = models.TextField(blank=True)
+    note = models.TextField(blank=True, verbose_name=_("Note"))
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"

@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Reserveringen" %}
+    {% translate "Reservations" %}
 {% endblock %}
 
 {% block content %}
@@ -13,22 +13,22 @@
         <div class="mb-5 flex flex-col gap-4 rounded-3xl border border-black/5 bg-white p-4 shadow-sm sm:p-5">
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                <div>
-                   <h1 class="text-3xl sm:text-4xl font-bold text-foreground">{% trans "Mijn reserveringen" %}</h1>
-                   <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% trans "Archief van oudere reserveringen" %}{% else %}{% trans "Actieve en recente reserveringen" %}{% endif %}</p>
+                   <h1 class="text-3xl sm:text-4xl font-bold text-foreground">{% translate "My reservations" %}</h1>
+                   <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% translate "Archive of older reservations" %}{% else %}{% translate "Active and recent reservations" %}{% endif %}</p>
                </div>
                <a href="{% url 'reservations:reservation-add' '1' %}"
                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors whitespace-nowrap cursor-pointer">
                    <i class="bi bi-plus-lg"></i>
-                   {% trans "Nieuwe reservering" %}
+                   {% translate "New reservation" %}
                </a>
             </div>
 
             <div class="flex rounded-full bg-black/5 p-1">
                <a href="{% url 'reservations:reservations' %}" class="flex-1 rounded-full px-3 py-2 text-center text-sm font-semibold transition {% if not is_archive_view %}bg-white text-foreground shadow-sm{% else %}text-foreground/60{% endif %}">
-                   {% trans "Actief" %}
+                   {% translate "Active" %}
                </a>
                <a href="{% url 'reservations:reservations' %}?view=archive" class="flex-1 rounded-full px-3 py-2 text-center text-sm font-semibold transition {% if is_archive_view %}bg-white text-foreground shadow-sm{% else %}text-foreground/60{% endif %}">
-                   {% trans "Archief" %}
+                   {% translate "Archive" %}
                </a>
             </div>
         </div>
@@ -52,7 +52,7 @@
                 {% endfor %}
                 <button type="submit"
                                         class="rounded-xl bg-secondary px-5 py-2.5 text-sm font-semibold text-secondary-foreground hover:bg-secondary-accent transition-colors cursor-pointer">
-                    {% trans "Toepassen" %}
+                    {% translate "Apply" %}
                 </button>
             </form>
         </div>
@@ -113,13 +113,13 @@
                     <a href="{% url 'reservations:boat-logbook' pk=reservation.id %}"
                        class="inline-flex items-center gap-1.5 rounded-full bg-success px-4 py-2 text-sm font-semibold text-white hover:bg-success-accent transition-colors cursor-pointer">
                         <i class="bi bi-journal-plus"></i>
-                        {% trans "Vul logboek in" %}
+                        {% translate "Fill in logbook" %}
                     </a>
                     {% elif reservation.has_boat_logbook %}
                     <a href="{% url 'reservations:boat-logbook' pk=reservation.id %}"
                        class="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors cursor-pointer">
                         <i class="bi bi-journal-text"></i>
-                        {% trans "Bekijk logboek" %}
+                        {% translate "View logbook" %}
                     </a>
                     {% endif %}
                 </div>
@@ -133,13 +133,13 @@
             <div class="mx-auto w-14 h-14 rounded-full bg-accent flex items-center justify-center mb-4">
                 <i class="bi bi-calendar-x text-2xl text-primary"></i>
             </div>
-            <p class="text-lg font-semibold text-foreground">{% if is_archive_view %}{% trans "Er staat nog geen oude reservering in het archief" %}{% else %}{% trans "Je hebt nog geen reserveringen" %}{% endif %}</p>
-            <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% trans "Je oudere reserveringen worden hier automatisch geplaatst." %}{% else %}{% trans "Maak je eerste reservering om te beginnen." %}{% endif %}</p>
+            <p class="text-lg font-semibold text-foreground">{% if is_archive_view %}{% translate "There are no old reservations in the archive yet" %}{% else %}{% translate "You don't have any reservations yet" %}{% endif %}</p>
+            <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% translate "Your older reservations are placed here automatically." %}{% else %}{% translate "Make your first reservation to get started." %}{% endif %}</p>
             {% if not is_archive_view %}
             <a href="{% url 'reservations:reservation-add' '1' %}"
                class="inline-flex items-center gap-2 mt-5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors cursor-pointer">
                <i class="bi bi-plus-lg"></i>
-               {% trans "Maak reservering" %}
+               {% translate "Make a reservation" %}
             </a>
             {% endif %}
         </div>
