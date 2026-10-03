@@ -8,7 +8,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event, EventOrganizer, EventRegistration
+from loefsys.events.models import (
+    Event,
+    EventOrganizer,
+    EventRegistration,
+    RegistrationFormField,
+)
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
 
 
@@ -281,3 +286,39 @@ class MyEventsFeatureTestCase(TestCase):
             reverse("events:my_events_event", kwargs={"slug": self.event.slug})
         )
         self.assertEqual(response.status_code, 404)
+
+
+class RegistrationFormDraftEventTestCase(TestCase):
+    """The registration form must not be reachable for draft events."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.event = G(
+            Event,
+            start=now + timezone.timedelta(days=7),
+            end=now + timezone.timedelta(days=7, hours=2),
+            registration_start=now - timezone.timedelta(days=1),
+            registration_deadline=now + timezone.timedelta(days=6),
+            cancelation_deadline=now + timezone.timedelta(days=6),
+            published=False,
+        )
+        G(
+            RegistrationFormField,
+            event=self.event,
+            type=RegistrationFormField.TEXT_FIELD,
+            required=False,
+        )
+        self.member = G(get_user_model())
+        self.client.force_login(self.member)
+
+    def test_draft_event_registration_form_is_not_found(self):
+        """Opening the form for a draft returns 404 and creates no registration."""
+        response = self.client.get(
+            reverse("events:registration", kwargs={"slug": self.event.slug})
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(
+            EventRegistration.objects.filter(
+                event=self.event, contact=self.member
+            ).exists()
+        )

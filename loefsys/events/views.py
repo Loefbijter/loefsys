@@ -322,7 +322,7 @@ class RegistrationFormView(LoginRequiredMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         """Return the proper response to a request."""
-        self.event = get_object_or_404(Event, slug=self.kwargs["slug"])
+        self.event = get_object_or_404(Event, slug=self.kwargs["slug"], published=True)
         self.success_url = self.event.get_absolute_url()
         if self.event.has_form_fields:
             return super().dispatch(request, *args, **kwargs)
