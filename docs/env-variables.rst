@@ -47,6 +47,19 @@ Django
     * Default: ``[""]``
     * Used to set the variable `ALLOWED_HOSTS <https://docs.djangoproject.com/en/5.2/ref/settings/#allowed-hosts>`_.
 
+* ``DJANGO_SITE_URL``
+
+    * Default: ``"http://localhost:8000"``
+    * The address of the site, used for links in emails sent outside a request, such as the logbook reminders. Staging and production must set their ``https://`` address.
+
+Celery
+^^^^^^
+
+* ``CELERY_BROKER_URL``
+
+    * Default: ``"amqp://guest@localhost//"`` (Celery's own default)
+    * The broker for the Celery worker, e.g. ``redis://localhost:6379/0``. Only needed where the worker runs; it sends the scheduled tasks such as the logbook reminders.
+
 AWS
 ^^^
 

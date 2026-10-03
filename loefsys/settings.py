@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from celery.schedules import crontab
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
@@ -47,6 +48,9 @@ if not SECRET_KEY:
     raise ValueError("Environment variable DJANGO_SECRET_KEY must be set.")
 
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS")
+
+# The address of the site, used for links in emails sent outside a request.
+SITE_URL = os.environ.get("DJANGO_SITE_URL", "http://localhost:8000")
 
 ROOT_URLCONF = "loefsys.urls"
 WSGI_APPLICATION = "loefsys.wsgi.application"
@@ -269,6 +273,18 @@ EMAIL_TIMEOUT = 5
 DEFAULT_FROM_EMAIL = "Loefbijter <noreply@loefbijter.nl>"
 EMAIL_SUBJECT_PREFIX = "[Loefbijter]"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+# Celery
+# The broker is read by Celery from the CELERY_BROKER_URL environment variable.
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULE = {
+    "send-logbook-reminders": {
+        "task": "loefsys.reservations.tasks.send_logbook_reminders",
+        # Every hour during the day, so nobody gets an email at night.
+        "schedule": crontab(minute="0", hour="8-21"),
+    }
+}
 
 # Logging
 
