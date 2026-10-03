@@ -7,6 +7,7 @@ from django.utils import timezone
 from playwright.sync_api import expect
 
 from e2e import factories
+from e2e.conftest import PHONE, log_in, serve_cdn_from_node_modules
 from loefsys.events.models import EventRegistration, RegistrationFormField
 from loefsys.events.models.choices import RegistrationStatus
 
@@ -116,10 +117,6 @@ def test_registration_not_open_yet(member_page, live_server):
     )
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Known bug: the registration texts format dates in UTC, not local time.",
-)
 def test_registration_opening_time_is_local(member_page, live_server):
     """EVT-12: the time registration opens is shown in Dutch time."""
     event = factories.make_event("Winterborrel", days_ahead=20, registration_open=False)
@@ -128,6 +125,31 @@ def test_registration_opening_time_is_local(member_page, live_server):
     member_page.goto(live_server.url + event.get_absolute_url())
 
     expect(registration_button(member_page)).to_contain_text(opens)
+
+
+@pytest.mark.parametrize("layout", [{}, PHONE], ids=["desktop", "phone"])
+def test_times_are_dutch_from_abroad(
+    browser, browser_context_args, live_server, member, layout
+):
+    """EVT-13: times are shown in Dutch time even when the browser is abroad."""
+    factories.make_event("Zomerregatta Testmeer", start=today_at_noon())
+    event = factories.make_event("Winterborrel", days_ahead=20, registration_open=False)
+    opens = timezone.localtime(event.registration_start).strftime("%H:%M")
+    context = browser.new_context(
+        **{**browser_context_args, **layout, "timezone_id": "Europe/Athens"}
+    )
+    page = context.new_page()
+    serve_cdn_from_node_modules(page)
+    log_in(page, live_server.url, member)
+
+    page.goto(f"{live_server.url}/events/")
+    expect(
+        page.locator("#calendar").get_by_text("12:00").filter(visible=True).first
+    ).to_be_visible()
+
+    page.goto(live_server.url + event.get_absolute_url())
+    expect(registration_button(page)).to_contain_text(opens)
+    context.close()
 
 
 def test_unpublished_event_is_not_found(member_page, live_server):

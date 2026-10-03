@@ -66,7 +66,9 @@ def make_event(
         end=start + timedelta(hours=3),
         registration_start=registration_start,
         registration_deadline=registration_deadline,
-        cancelation_deadline=max(start - timedelta(days=1), registration_start),
+        cancelation_deadline=max(
+            start - timedelta(days=1), registration_start + timedelta(minutes=1)
+        ),
         category=category,
         capacity=capacity,
         price=Decimal("0.00"),
