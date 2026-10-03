@@ -335,6 +335,10 @@ class ReservationDeleteView(LoginRequiredMixin, DeleteView):
         context["RequestStatus"] = Reservation.RequestStatus
         return context
 
+    def get_queryset(self):
+        """Only allow deleting instances of Reservation made by the user."""
+        return Reservation.objects.filter(user=self.request.user)
+
 
 class ReservationDetailView(LoginRequiredMixin, DetailView):
     """Reservation detail view."""
