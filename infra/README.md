@@ -26,6 +26,10 @@ docker compose up -d
 
 The file assumes Postgres is containerized alongside the app (a `db` service in the same compose file). If your host runs Postgres natively instead, see the comment at the top of `docker-compose.yml` for the swap.
 
+## Copying an existing database in
+
+See "Moving an existing database into the Docker setup" in `docs/deployment.rst`. In short: `docker compose up -d db`, `pg_restore` the old dump into it, check `manage.py migrate --plan` lists only the expected migrations, back up, `migrate`, copy the media files in, `docker compose up -d`.
+
 ## Backups
 
 `scripts/backup-db.sh` takes a `pg_dump`, gzips it into `backups/`, and prunes anything beyond the last 14. Both deploy workflows run it automatically immediately before `migrate`. To run it by hand:
