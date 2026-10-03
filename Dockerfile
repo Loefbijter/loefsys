@@ -2,7 +2,7 @@
 
 FROM ghcr.io/astral-sh/uv:0.9 AS uv
 
-FROM python:3.12-slim AS builder
+FROM python:3.13-slim AS builder
 COPY --from=uv /uv /uvx /usr/local/bin/
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
@@ -21,15 +21,17 @@ RUN uv sync --locked --no-dev
 # without real secrets/a real database. Never present in the runtime stage.
 ENV DJANGO_SECRET_KEY=build-time-unused \
     DJANGO_DATABASE_URL=sqlite://:memory: \
-    DJANGO_DEBUG=false
+    DJANGO_DEBUG=false \
+    DJANGO_STATIC_MANIFEST=true
 
 RUN uv run manage.py tailwind --minify
 RUN uv run manage.py collectstatic --no-input
 
-FROM python:3.12-slim AS runtime
+FROM python:3.13-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PATH="/app/.venv/bin:$PATH"
+    PATH="/app/.venv/bin:$PATH" \
+    DJANGO_STATIC_MANIFEST=true
 RUN groupadd -r loefsys && useradd -r -g loefsys loefsys
 WORKDIR /app
 COPY --from=builder --chown=loefsys:loefsys /app /app
@@ -40,8 +42,11 @@ COPY --from=builder --chown=loefsys:loefsys /app /app
 RUN chown loefsys:loefsys /app
 USER loefsys
 EXPOSE 8000
+# The healthcheck talks to gunicorn directly, so it sends what Apache would: a
+# host from DJANGO_ALLOWED_HOSTS and X-Forwarded-Proto, so that neither the host
+# check nor the HTTPS redirect rejects it.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/')" || exit 1
+    CMD ["python", "/app/infra/scripts/healthcheck.py"]
 CMD ["gunicorn", "loefsys.wsgi:application", "--bind", "0.0.0.0:8000", \
      "--workers", "3", "--timeout", "60", \
      "--access-logfile", "-", "--error-logfile", "-"]
