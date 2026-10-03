@@ -29,8 +29,11 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     """View for viewing an event."""
 
     model = Event
-    queryset = Event.objects.filter(published=True)
     template_name = "events/event.html"
+
+    def get_queryset(self):
+        """Return the events the current user may see, drafts included if allowed."""
+        return Event.objects.visible_to(self.request.user)
 
     def get_context_data(self, **kwargs):
         """Add variables to the context.
@@ -358,10 +361,13 @@ class EventFillerView(View):
         show_birthdays = request.GET.get("show_birthdays", "0") in {"1", "true", "True"}
         data = []
 
-        for event in Event.objects.filter(published=True):
+        for event in Event.objects.visible_to(request.user):
+            title = event.title
+            if not event.published:
+                title = _("[Draft] %(title)s") % {"title": title}
             data.append(
                 {
-                    "title": event.title,
+                    "title": title,
                     "start": event.start,
                     "end": event.end,
                     "url": event.get_absolute_url(),

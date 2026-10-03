@@ -322,3 +322,45 @@ class RegistrationFormDraftEventTestCase(TestCase):
                 event=self.event, contact=self.member
             ).exists()
         )
+
+
+class DraftEventVisibilityTestCase(TestCase):
+    """Draft event pages and calendar entries are only shown to those allowed."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.event = G(
+            Event,
+            title="Geheime conceptactiviteit",
+            start=now + timezone.timedelta(days=7),
+            end=now + timezone.timedelta(days=7, hours=2),
+            published=False,
+        )
+        self.organizer = G(get_user_model())
+        G(EventOrganizer, event=self.event).user.add(self.organizer)
+
+    def test_member_gets_404_on_draft_event_page(self):
+        """A regular member cannot open a draft."""
+        self.client.force_login(G(get_user_model()))
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+    def test_organizer_sees_draft_event_page_marked_as_draft(self):
+        """An organizer can open their draft and sees that it is unpublished."""
+        self.client.force_login(self.organizer)
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Draft: not visible to members")
+
+    def test_calendar_hides_draft_from_member(self):
+        """The calendar data leaves drafts out for regular members."""
+        self.client.force_login(G(get_user_model()))
+        response = self.client.get(reverse("events:event_filler"))
+        self.assertNotIn("Geheime conceptactiviteit", response.content.decode())
+
+    def test_calendar_marks_draft_for_organizer(self):
+        """The calendar data shows drafts to organizers, marked as draft."""
+        self.client.force_login(self.organizer)
+        response = self.client.get(reverse("events:event_filler"))
+        titles = [entry["title"] for entry in response.json()]
+        self.assertIn("[Draft] Geheime conceptactiviteit", titles)

@@ -85,7 +85,7 @@
                             {% if not event.published or event.registrations_open_flag or event.max_capacity_reached_flag or event.is_open_event %}
                             <div class="flex flex-wrap gap-1.5 mt-2">
                                 {% if not event.published %}
-                                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{% trans "Concept" %}</span>
+                                <span class="inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-amber-100 text-amber-800"><i class="bi bi-eye-slash"></i>{% trans "Draft" %}</span>
                                 {% endif %}
                                 {% if event.max_capacity_reached_flag %}
                                 <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-destructive/10 text-destructive">{% trans "Vol" %}</span>
