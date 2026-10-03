@@ -27,6 +27,7 @@ class UserProfileEditForm(forms.ModelForm):
     """Profile form with a Dutch-friendly birthday format."""
 
     birthday = forms.DateField(
+        label=gettext_lazy("Birthday"),
         required=False,
         input_formats=["%d-%m-%Y", "%Y-%m-%d"],
         widget=forms.TextInput(
