@@ -83,6 +83,8 @@ INSTALLED_APPS += [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # Must sit directly after SecurityMiddleware, per WhiteNoise's own docs.
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "loefsys.core.middleware.UserAgentMiddleware",
 ]
@@ -190,6 +192,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Apache terminates TLS and sets X-Forwarded-Proto; without this Django
 # believes every request is plain HTTP.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# Plain HTTP is only for local development. Staging and production (the Docker
+# setup) turn this on, so any request that reaches Django over HTTP is redirected
+# to HTTPS.
+SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", False)
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 # Localization
@@ -230,6 +236,11 @@ MEDIA_URL = "media/" if USES_LOCAL_STORAGE else f"https://{AWS_S3_CUSTOM_DOMAIN}
 STATIC_ROOT = BASE_DIR / "collectedstatic"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Serve hashed, compressed static files through WhiteNoise. The Docker image turns
+# this on; it needs ``collectstatic`` to have run, so it stays off for local
+# development and tests.
+STATIC_MANIFEST = env_bool("DJANGO_STATIC_MANIFEST", False)
+
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage"
@@ -239,6 +250,8 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "storages.backends.s3boto3.S3StaticStorage"
         if AWS_STORAGE_BUCKET_NAME
+        else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        if STATIC_MANIFEST
         else "django.contrib.staticfiles.storage.StaticFilesStorage"
     },
 }
