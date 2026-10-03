@@ -3,7 +3,7 @@
 <c-vars event registration="" />
 {% now "Y-m-d H:i" as now_str %}
 {% with spots=event|spots_left %}
-<a class="row {% if event.end|date:'Y-m-d H:i' < now_str %}row-past{% endif %}" href="{{ event.get_absolute_url }}">
+<a class="row {% if event.end|date:'Y-m-d H:i' < now_str %}row-past{% endif %} {% if not event.published %}row-unpublished{% endif %}" href="{{ event.get_absolute_url }}">
     <c-date-tile :date="event.start" />
     <div class="row-body">
         <div class="row-title">{{ event.title }}</div>

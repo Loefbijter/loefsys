@@ -13,6 +13,12 @@
     <c-event-status :event="event" :registration="user_registration" />
   </c-page-header>
 
+  {% if not event.published %}
+    <c-panel tone="warn" class="notice-unpublished">
+      <p><i class="bi bi-eye-slash" aria-hidden="true"></i> {% translate "This activity is not published. Only the board and its organisers can see it." %}</p>
+    </c-panel>
+  {% endif %}
+
   <div class="dash">
     <div class="col">
       <c-panel>

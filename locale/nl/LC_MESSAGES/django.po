@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 14:06+0200\n"
+"POT-Creation-Date: 2026-10-03 14:51+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -296,6 +296,11 @@ msgid "No events to show"
 msgstr "Geen evenementen om te tonen"
 
 #: loefsys/events/templates/events/calendar.html
+#: templates/cotton/event_status.html
+msgid "Unpublished"
+msgstr "Niet gepubliceerd"
+
+#: loefsys/events/templates/events/calendar.html
 msgid "Categories"
 msgstr "Categorieën"
 
@@ -303,6 +308,13 @@ msgstr "Categorieën"
 #: loefsys/members/templates/profiles/profile.html
 msgid "Birthday"
 msgstr "Verjaardag"
+
+#: loefsys/events/templates/events/event.html
+msgid ""
+"This activity is not published. Only the board and its organisers can see it."
+msgstr ""
+"Deze activiteit is niet gepubliceerd. Alleen het bestuur en de organisatoren "
+"kunnen haar zien."
 
 #: loefsys/events/templates/events/event.html
 msgid "When"
@@ -2134,10 +2146,6 @@ msgstr "Vol"
 #: templates/cotton/event_status.html
 msgid "Registered"
 msgstr "Ingeschreven"
-
-#: templates/cotton/event_status.html
-msgid "Draft"
-msgstr "Concept"
 
 #: templates/cotton/event_status.html
 msgid "Registration open"

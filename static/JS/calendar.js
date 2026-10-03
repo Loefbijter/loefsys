@@ -63,6 +63,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const end = document.createElement("div");
     end.className = "row-end";
+    if (ev.extendedProps.published === false) {
+      row.classList.add("row-unpublished");
+      const chip = document.createElement("span");
+      chip.className = "chip chip-unpublished";
+      chip.textContent = el.dataset.unpublished;
+      end.append(chip);
+    }
     if (ev.extendedProps.category) {
       const cat = document.createElement("span");
       cat.className = `cat ${ev.classNames.join(" ")}`;

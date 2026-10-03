@@ -374,7 +374,9 @@ class EventFillerView(View):
                     ),
                     "location": event.location,
                     "category": event.get_category_display(),
-                    "classNames": [self.category_class(event)],
+                    "classNames": [self.category_class(event)]
+                    + ([] if event.published else ["is-unpublished"]),
+                    "published": event.published,
                 }
             )
 

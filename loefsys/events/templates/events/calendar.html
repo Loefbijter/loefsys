@@ -42,7 +42,8 @@
          data-events-url="{% url 'events:event_filler' %}"
          data-locale="{{ LANGUAGE_CODE }}"
          data-all-day="{% translate 'All day' %}"
-         data-no-events="{% translate 'No events to show' %}"></div>
+         data-no-events="{% translate 'No events to show' %}"
+         data-unpublished="{% translate 'Unpublished' %}"></div>
 
     <div class="legend" aria-label="{% translate 'Categories' %}">
         {% for key, label in categories %}

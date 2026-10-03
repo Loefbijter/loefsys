@@ -1,7 +1,7 @@
 {% comment %}The member's next activity, shown large at the top of the dashboard.{% endcomment %}
 {% load i18n %}
 <c-vars event registration="" eyebrow="" />
-<article class="hero">
+<article class="hero {% if not event.published %}hero-unpublished{% endif %}">
     <div class="hero-when">
         <small>{{ event.start|date:"l" }}</small><b>{{ event.start|date:"j" }}</b><small>{{ event.start|date:"F" }}</small>
     </div>
