@@ -6,164 +6,71 @@
     {% translate "Profile" %}
 {% endblock %}
 
+{% block main_class %}{% endblock %}
+
 {% block content %}
-<style>
-    .profile-page {
-        overflow-x: hidden;
-    }
-
-    .profile-page img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .profile-actions > * {
-        min-width: 0;
-    }
-</style>
-<div class="profile-page min-h-screen bg-background">
-    <div class="mx-auto w-full max-w-4xl px-4 sm:px-6 py-8 space-y-5 min-w-0">
+<div class="page">
+    <c-page-header eyebrow="{% if is_user_profile %}{% translate 'My profile' %}{% else %}{% translate 'Member' %}{% endif %}" title="{% translate 'Profile' %}">
         {% if is_user_profile %}
-            <c-card>
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <c-header.h4>
-                        <i class="bi bi-person-circle mr-1"></i>
-                        {% translate "Your public profile" %}
-                    </c-header.h4>
-                    <div class="profile-actions flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                        <a
-                            href="{% url 'members:user-profile-edit' %}"
-                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary hover:text-tertiary-foreground"
-                        >
-                            <i class="bi bi-pencil-fill"></i>
-                            {% translate "Edit profile" %}
-                        </a>
-
-                        <a
-                            href="{% url 'members:user-set-password' %}"
-                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/80"
-                        >
-                            <i class="bi bi-key-fill"></i>
-                            {% translate "Set password" %}
-                        </a>
-
-                        <form method="post" action="{% url 'members:logout' %}" class="w-full sm:w-auto">
-                            {% csrf_token %}
-                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-danger px-4 py-2 text-sm font-semibold text-danger-foreground transition hover:bg-danger/80">
-                                <i class="bi bi-box-arrow-right"></i>
-                                {% translate "Log out" %}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </c-card>
+            <a class="btn btn-primary" href="{% url 'members:user-profile-edit' %}"><i class="bi bi-pencil" aria-hidden="true"></i>{% translate "Edit profile" %}</a>
+            <a class="btn btn-secondary" href="{% url 'members:user-set-password' %}"><i class="bi bi-key" aria-hidden="true"></i>{% translate "Set password" %}</a>
+            <form method="post" action="{% url 'members:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-ghost"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>{% translate "Log out" %}</button>
+            </form>
         {% endif %}
+    </c-page-header>
 
-        <div class="flex flex-col sm:flex-row sm:items-start gap-5 min-w-0">
-            <div class="shrink-0 flex justify-center sm:justify-start min-w-0">
-                {% if member.picture %}
-                    <img class="w-36 h-36 sm:w-48 sm:h-48 rounded-full shadow-2xl border-4 border-secondary object-cover"
-                         src="{{ member.picture.url }}" alt="{% blocktranslate trimmed with name=member.display_name %}Profile picture of {{ name }}{% endblocktranslate %}"/>
-                {% else %}
-                    <img class="w-36 h-36 sm:w-48 sm:h-48 rounded-full shadow-2xl border-4 border-secondary object-cover"
-                         src="{% static 'default-profile-picture.svg' %}" alt="{% blocktranslate trimmed with name=member.display_name %}Profile picture of {{ name }}{% endblocktranslate %}"/>
+    <c-panel>
+        <div class="profile">
+            {% if member.picture %}
+                <img class="profile-picture" src="{{ member.picture.url }}" alt="{% blocktranslate trimmed with name=member.display_name %}Profile picture of {{ name }}{% endblocktranslate %}">
+            {% else %}
+                <img class="profile-picture" src="{% static 'default-profile-picture.svg' %}" alt="{% blocktranslate trimmed with name=member.display_name %}Profile picture of {{ name }}{% endblocktranslate %}">
+            {% endif %}
+            <div class="profile-name">
+                <h2>{{ member.display_name }}</h2>
+                {% if member.title or member.lichting %}
+                    <p>{% if member.title %}{{ member.title }}{% endif %}{% if member.title and member.lichting %} · {% endif %}{% if member.lichting %}{{ member.lichting }}{% endif %}</p>
                 {% endif %}
             </div>
-            <c-card class="grow min-w-0">
-                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                    <div>
-                        <c-header.h4>{{ member.display_name }}</c-header.h4>
-                    </div>
-                    <span class="inline-flex items-center gap-1 rounded-full bg-secondary/10 text-secondary px-3 py-1 text-xs font-semibold uppercase tracking-wide shrink-0">
-                        <i class="bi bi-check-circle-fill"></i>
-                        {% translate "Active member" %}
-                    </span>
-                </div>
-
-                <ul class="space-y-2 mt-3 text-sm text-slate-700 min-w-0">
-                    {% if is_user_profile %}
-                        <li class="flex flex-col sm:flex-row sm:items-center gap-2">
-                            <span class="inline-flex items-center gap-2 text-slate-700">
-                                <i class="bi bi-envelope w-4 shrink-0"></i>
-                                {{ member.email }}
-                            </span>
-                        </li>
-                        <li class="flex flex-col sm:flex-row sm:items-center gap-2">
-                            <span class="inline-flex items-center gap-2 text-slate-700">
-                                <i class="bi bi-telephone w-4 shrink-0"></i>
-                                {{ member.phone_number }}
-                            </span>
-                        </li>
-                    {% endif %}
-                    {% if member.show_birthday %}
-                        <li class="flex flex-col sm:flex-row sm:items-center gap-2">
-                            <span class="inline-flex items-center gap-2 text-slate-700">
-                                <i class="bi bi-cake2 w-4 shrink-0"></i>
-                                {{ member.birthday|date:"j M Y" }}
-                            </span>
-                        </li>
-                    {% endif %}
-                    {% if member.lichting %}
-                        <li class="flex flex-col sm:flex-row sm:items-center gap-2 text-slate-700">
-                            {{ member.lichting }}
-                        </li>
-                    {% endif %}
-                    {% if member.title %}
-                        <li class="flex flex-col sm:flex-row sm:items-center gap-2 text-slate-700">
-                            {{ member.title }}
-                        </li>
-                    {% endif %}
-                </ul>
-
-                {% if display_skipperships %}
-                   <c-separator/>
-                   <div class="min-w-0">
-                       <p class="font-semibold mb-2 flex items-center gap-2 text-slate-800">
-                           <i class="bi bi-award-fill"></i>
-                           {% translate "Skipperships" %}
-                       </p>
-                       <ul class="list-disc list-inside space-y-1 text-sm text-slate-700">
-                           {% for skippership in display_skipperships %}
-                               <li>{{ skippership.name }}</li>
-                           {% endfor %}
-                       </ul>
-                   </div>
-                {% endif %}
-            </c-card>
         </div>
-<!-- schipperschappen en groups cards! -->
-        {% comment unfinished %}
-    {% if member.groups.count > 0 %}
-        <c-card>
-            <h3>Mijn groepen</h3>
-            {% for group in member.groups %}
-                <h4>{{ group.name }}</h4>
-                <p>{{ group.description }}<p>
-            {% endfor %}
-        </c-card>
-    {% endif %}
+    </c-panel>
 
-    {% if False and member_info|length > 0 %}
-        <c-card>
-            <p class="text-4xl font-semibold mb-6">Lidmaatschapsgegevens</p>
-            <div class="w-4/5 space-y-4">
-                {% if member_info.show_birthday %}
-                    {% include 'account_info/panel.html' with key='Date of birth' value=member_info.birthday %}
+    <div class="dash equal">
+        <div class="col">
+            <c-panel title="{% translate 'Details' %}" icon="person">
+                {% if is_user_profile or member.show_birthday %}
+                    <dl class="kv">
+                        {% if is_user_profile %}
+                            <dt>{% translate "Email" %}</dt>
+                            <dd>{{ member.email }}</dd>
+                            <dt>{% translate "Phone number" %}</dt>
+                            <dd>{{ member.phone_number|default:"–" }}</dd>
+                        {% endif %}
+                        {% if member.show_birthday and member.birthday %}
+                            <dt>{% translate "Birthday" %}</dt>
+                            <dd>{{ member.birthday|date:"j F Y" }}</dd>
+                        {% endif %}
+                    </dl>
+                {% else %}
+                    <c-empty-state icon="eye-slash" title="{% translate 'This member keeps their details private.' %}" />
                 {% endif %}
-                {% include 'account_info/panel.html' with key='Member since' value=member_info.member_since %}
-            </div>
-
-            <div class="mt-6 w-4/5">
-                <p class="text-3xl font-semibold mb-2">Deelnames</p>
-                {% for activity in member_info.activities %}
-                    <div class="mb-2">
-                        <p class="text-xl font-bold">{{ activity.title }}</p>
-                        <p>{{ activity.description }}</p>
+            </c-panel>
+        </div>
+        <div class="col">
+            <c-panel title="{% translate 'Skipperships' %}" icon="award" count="{{ display_skipperships|length }}">
+                {% if display_skipperships %}
+                    <div class="badges">
+                        {% for skippership in display_skipperships %}
+                            <c-badge icon="award">{{ skippership.name }}</c-badge>
+                        {% endfor %}
                     </div>
-                {% endfor %}
-            </div>
-        </c-card>
-    {% endif %}
-    {% endcomment %}
+                {% else %}
+                    <c-empty-state icon="award" title="{% translate 'No skipperships yet.' %}" />
+                {% endif %}
+            </c-panel>
+        </div>
     </div>
+</div>
 {% endblock %}

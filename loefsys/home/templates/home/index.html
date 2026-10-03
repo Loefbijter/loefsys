@@ -5,8 +5,109 @@
 {% translate "Home" %}
 {% endblock %}
 
+{% block main_class %}{% endblock %}
+
 {% block content %}
-<div>
-    {% include "home/banner.html" %}
+<div class="page">
+    {% now "l j F" as today %}
+    {% if user.is_authenticated %}
+        <c-page-header :eyebrow="today" title="{{ greeting }}, {{ user.first_name|default:user.display_name }}" />
+    {% else %}
+        <c-page-header :eyebrow="today" title="{% translate 'Welcome to Loefbijter' %}">
+            <a class="btn btn-primary" href="{% url 'login' %}"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>{% translate "Log in" %}</a>
+        </c-page-header>
+    {% endif %}
+
+    <div class="dash">
+        <div class="col">
+            {% if next_event %}
+                <c-event-hero :event="next_event" :registration="next_registration" />
+            {% endif %}
+
+            <c-panel title="{% translate 'Upcoming events' %}" icon="calendar-event">
+                <c-slot name="action">
+                    <a class="btn btn-ghost btn-sm" href="{% url 'events:events' %}">{% translate "Agenda" %} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                </c-slot>
+                {% if upcoming_events %}
+                    <div class="rows">
+                        {% for event in upcoming_events %}
+                            <c-event-row :event="event" />
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <c-empty-state icon="calendar-x" title="{% translate 'No upcoming events.' %}" />
+                {% endif %}
+            </c-panel>
+
+            {% if announcements %}
+                <c-panel title="{% translate 'Announcements' %}" icon="megaphone">
+                    <div class="rows">
+                        {% for announcement in announcements %}
+                            <article class="row" style="grid-template-columns: minmax(0, 1fr)">
+                                <div class="row-body">
+                                    <div class="row-title" style="white-space: normal">{{ announcement.title }}</div>
+                                    <div class="row-meta" style="display: block">{{ announcement.content|linebreaksbr }}</div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </c-panel>
+            {% endif %}
+        </div>
+
+        <div class="col">
+            {% if logbook_todo or pending_approvals %}
+                <c-panel title="{% translate 'To do' %}" icon="check2-square" tone="warn" class="phone-first" count="{{ todo_count }}">
+                    <div class="rows">
+                        {% for reservation in logbook_todo %}
+                            {% blocktranslate trimmed asvar todo_title with boat=reservation.reservable.name %}Fill in the logbook for {{ boat }}{% endblocktranslate %}
+                            <c-todo href="{% url 'reservations:boat-logbook' pk=reservation.pk %}" :title="todo_title" sub="{{ reservation.start|date:'D j M' }}" />
+                        {% endfor %}
+                        {% for reservation in pending_approvals %}
+                            {% blocktranslate trimmed asvar todo_title with boat=reservation.reservable.name name=reservation.user.display_name %}Approve {{ boat }} for {{ name }}{% endblocktranslate %}
+                            <c-todo href="{% url 'reservations:reservation-detail' pk=reservation.pk %}" :title="todo_title" sub="{{ reservation.start|date:'D j M H:i' }}" />
+                        {% endfor %}
+                    </div>
+                </c-panel>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <c-panel title="{% translate 'Your reservations' %}" icon="water">
+                    <c-slot name="action">
+                        <a class="btn btn-ghost btn-sm" href="{% url 'reservations:reservations' %}">{% translate "All" %} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    </c-slot>
+                    {% if user_reservations %}
+                        <div class="rows">
+                            {% for reservation in user_reservations %}
+                                <c-reservation-row :reservation="reservation" />
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <c-empty-state icon="water" title="{% translate 'You have no upcoming reservations.' %}">
+                            <a class="btn btn-secondary btn-sm" href="{% url 'reservations:reservation-add' 1 %}">{% translate "New reservation" %}</a>
+                        </c-empty-state>
+                    {% endif %}
+                </c-panel>
+
+                <c-panel title="{% translate 'Skipperships' %}" icon="award">
+                    {% if skipperships %}
+                        <div class="badges">
+                            {% for skippership in skipperships %}
+                                <c-badge icon="award">{{ skippership.name }}</c-badge>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <c-empty-state icon="award" title="{% translate 'No skipperships yet.' %}" />
+                    {% endif %}
+                </c-panel>
+            {% else %}
+                <c-panel title="{% translate 'Your reservations' %}" icon="water">
+                    <c-empty-state icon="lock" text="{% translate 'Log in to view and manage your reservations.' %}">
+                        <a class="btn btn-primary btn-sm" href="{% url 'login' %}">{% translate "Log in" %}</a>
+                    </c-empty-state>
+                </c-panel>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

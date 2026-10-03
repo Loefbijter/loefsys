@@ -1,7 +1,5 @@
 {% load i18n static %}
-<a href="{% url 'members:user-profile' %}" class="{{ class }}">
-    <img
-            class="size-10 rounded-full border-2 border-tertiary shadow-sm hover:shadow-md border-t-tertiary-accent"
-            src="{% if user.picture %}{{ user.picture.url }}{% else %}{% static 'default-profile-picture.svg' %}{% endif %}"
-            alt="{% translate 'User profile' %}">
+<a href="{% url 'members:user-profile' %}" class="avatar-btn {{ class }}" title="{% translate 'My profile' %}">
+    <img src="{% if user.picture %}{{ user.picture.url }}{% else %}{% static 'default-profile-picture.svg' %}{% endif %}"
+         alt="{% translate 'User profile' %}">
 </a>
