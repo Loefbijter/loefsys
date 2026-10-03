@@ -293,3 +293,6 @@ tags
 dump.rdb
 
 .pytest_cache/
+
+# Playwright traces and screenshots of failed end-to-end tests
+test-results/
