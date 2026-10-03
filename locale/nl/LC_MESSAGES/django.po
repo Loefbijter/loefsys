@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 10:03+0200\n"
+"POT-Creation-Date: 2026-10-03 10:07+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -683,80 +683,81 @@ msgstr "Bijgewerkt op"
 msgid "About us"
 msgstr "Over ons"
 
-#: loefsys/home/templates/home/banner.html
-msgid "Announcements"
-msgstr "Berichten"
-
-#: loefsys/home/templates/home/banner.html
-msgid "News"
-msgstr "Nieuws"
-
-#: loefsys/home/templates/home/banner.html
-msgid "Upcoming events"
-msgstr "Aankomende evenementen"
-
-#: loefsys/home/templates/home/banner.html
-#, python-format
-msgid "%(counter)s spot left"
-msgid_plural "%(counter)s spots left"
-msgstr[0] "%(counter)s vrij"
-msgstr[1] "%(counter)s vrij"
-
-#: loefsys/home/templates/home/banner.html templates/cotton/event_status.html
-msgid "Draft"
-msgstr "Concept"
-
-#: loefsys/home/templates/home/banner.html templates/cotton/event_row.html
-#: templates/cotton/event_status.html
-msgid "Full"
-msgstr "Vol"
-
-#: loefsys/home/templates/home/banner.html templates/cotton/event_status.html
-msgid "Registration open"
-msgstr "Inschrijving open"
-
-#: loefsys/home/templates/home/banner.html
-msgid "Open event"
-msgstr "Open evenement"
-
-#: loefsys/home/templates/home/banner.html
-msgid "View all events"
-msgstr "Bekijk alle evenementen"
-
-#: loefsys/home/templates/home/banner.html
-msgid "No upcoming events."
-msgstr "Geen aankomende evenementen."
-
-#: loefsys/home/templates/home/banner.html
-msgid "Your reservations"
-msgstr "Jouw reserveringen"
-
-#: loefsys/home/templates/home/banner.html
-#: loefsys/reservations/models/reservation.py
-msgid "Pending"
-msgstr "In behandeling"
-
-#: loefsys/home/templates/home/banner.html
-msgid "Manage reservations"
-msgstr "Beheer reserveringen"
-
-#: loefsys/home/templates/home/banner.html
-msgid "You have no upcoming reservations."
-msgstr "Je hebt geen aankomende reserveringen."
-
-#: loefsys/home/templates/home/banner.html
-#, python-format
-msgid ""
-"<a href=\"%(login_url)s\" class=\"font-medium text-[#234193] hover:text-"
-"[#1BB1E6]\">Log in</a> to view and manage your reservations."
-msgstr ""
-"<a href=\"%(login_url)s\" class=\"font-medium text-[#234193] hover:text-"
-"[#1BB1E6]\">Log in</a> om je reserveringen te zien en te beheren."
-
 #: loefsys/home/templates/home/index.html templates/cotton/menu/desktop.html
 #: templates/cotton/menu/mobile.html
 msgid "Home"
 msgstr "Home"
+
+#: loefsys/home/templates/home/index.html
+msgid "Welcome to Loefbijter"
+msgstr "Welkom bij Loefbijter"
+
+#: loefsys/home/templates/home/index.html loefsys/members/templates/login.html
+#: loefsys/members/templates/registration/password_reset_complete.html
+#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
+msgid "Log in"
+msgstr "Log in"
+
+#: loefsys/home/templates/home/index.html
+msgid "Upcoming events"
+msgstr "Aankomende evenementen"
+
+#: loefsys/home/templates/home/index.html templates/cotton/menu/mobile.html
+msgid "Agenda"
+msgstr "Agenda"
+
+#: loefsys/home/templates/home/index.html
+msgid "No upcoming events."
+msgstr "Geen aankomende evenementen."
+
+#: loefsys/home/templates/home/index.html
+msgid "Announcements"
+msgstr "Berichten"
+
+#: loefsys/home/templates/home/index.html
+msgid "To do"
+msgstr "Te doen"
+
+#: loefsys/home/templates/home/index.html
+#, python-format
+msgid "Fill in the logbook for %(boat)s"
+msgstr "Vul het logboek in voor %(boat)s"
+
+#: loefsys/home/templates/home/index.html
+#, python-format
+msgid "Approve %(boat)s for %(name)s"
+msgstr "Keur %(boat)s goed voor %(name)s"
+
+#: loefsys/home/templates/home/index.html
+msgid "Your reservations"
+msgstr "Jouw reserveringen"
+
+#: loefsys/home/templates/home/index.html
+#: loefsys/reservations/templates/reservations/reservation_form.html
+msgid "All"
+msgstr "Alles"
+
+#: loefsys/home/templates/home/index.html
+msgid "You have no upcoming reservations."
+msgstr "Je hebt geen aankomende reserveringen."
+
+#: loefsys/home/templates/home/index.html
+#: loefsys/reservations/templates/reservations/reservation_list.html
+msgid "New reservation"
+msgstr "Nieuwe reservering"
+
+#: loefsys/home/templates/home/index.html loefsys/members/models/skippership.py
+#: loefsys/members/templates/profiles/profile.html
+msgid "Skipperships"
+msgstr "Schipperschappen"
+
+#: loefsys/home/templates/home/index.html
+msgid "No skipperships yet."
+msgstr "Nog geen schipperschappen."
+
+#: loefsys/home/templates/home/index.html
+msgid "Log in to view and manage your reservations."
+msgstr "Log in om je reserveringen te bekijken en te beheren."
 
 #: loefsys/home/templates/home/schippers.html
 #: loefsys/members/models/__disabled__.skippership.py
@@ -798,6 +799,22 @@ msgstr "Schipperschapniveaus"
 #: loefsys/home/templates/home/verenigingslied.html
 msgid "Loefbijter song"
 msgstr "Loefbijterlied"
+
+#: loefsys/home/views.py
+msgid "Good night"
+msgstr "Goedenacht"
+
+#: loefsys/home/views.py
+msgid "Good morning"
+msgstr "Goedemorgen"
+
+#: loefsys/home/views.py
+msgid "Good afternoon"
+msgstr "Goedemiddag"
+
+#: loefsys/home/views.py
+msgid "Good evening"
+msgstr "Goedenavond"
 
 #: loefsys/members/admin.py
 msgid "Pseudonymize selected users"
@@ -959,11 +976,6 @@ msgstr "Bovenliggend schipperschap"
 #: loefsys/members/models/skippership.py
 msgid "The skippership that must be obtained before this one."
 msgstr "Het schipperschap dat eerst behaald moet zijn."
-
-#: loefsys/members/models/skippership.py
-#: loefsys/members/templates/profiles/profile.html
-msgid "Skipperships"
-msgstr "Schipperschappen"
 
 #: loefsys/members/models/study_registration.py
 msgid "Educational institution"
@@ -1143,12 +1155,6 @@ msgstr "Log in om verder te gaan"
 #: loefsys/members/templates/registration/reset_disabled.html
 msgid "Forgot your password?"
 msgstr "Wachtwoord vergeten?"
-
-#: loefsys/members/templates/login.html
-#: loefsys/members/templates/registration/password_reset_complete.html
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Log in"
-msgstr "Log in"
 
 #: loefsys/members/templates/profiles/profile.html
 #: templates/cotton/menu/mobile.html
@@ -1622,6 +1628,10 @@ msgid "This item cannot be reserved."
 msgstr "Dit item kan niet gereserveerd worden."
 
 #: loefsys/reservations/models/reservation.py
+msgid "Pending"
+msgstr "In behandeling"
+
+#: loefsys/reservations/models/reservation.py
 msgid "Approved"
 msgstr "Goedgekeurd"
 
@@ -1797,10 +1807,6 @@ msgid "Filter by type"
 msgstr "Filter op type"
 
 #: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "All"
-msgstr "Alles"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
 msgid "Show more"
 msgstr "Toon meer"
 
@@ -1890,10 +1896,6 @@ msgstr "Archief van oudere reserveringen"
 #: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "Active and recent reservations"
 msgstr "Actieve en recente reserveringen"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "New reservation"
-msgstr "Nieuwe reservering"
 
 #: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "Apply"
@@ -2059,9 +2061,21 @@ msgid_plural "%(counter)s of %(capacity)s spots left"
 msgstr[0] "%(counter)s van %(capacity)s plek vrij"
 msgstr[1] "%(counter)s van %(capacity)s plekken vrij"
 
+#: templates/cotton/event_row.html templates/cotton/event_status.html
+msgid "Full"
+msgstr "Vol"
+
 #: templates/cotton/event_status.html
 msgid "Registered"
 msgstr "Ingeschreven"
+
+#: templates/cotton/event_status.html
+msgid "Draft"
+msgstr "Concept"
+
+#: templates/cotton/event_status.html
+msgid "Registration open"
+msgstr "Inschrijving open"
 
 #: templates/cotton/menu/about_links.html
 msgid "About the association"
@@ -2090,10 +2104,6 @@ msgstr "Activiteiten"
 #: templates/cotton/menu/mobile.html
 msgid "Account"
 msgstr "Account"
-
-#: templates/cotton/menu/mobile.html
-msgid "Agenda"
-msgstr "Agenda"
 
 #: templates/cotton/menu/mobile.html
 msgid "Menu"
