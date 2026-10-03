@@ -20,6 +20,7 @@ from .security import SecuritySettings
 from .admin import AdminSettings
 from .database import DatabaseSettings
 from .locale import LocaleSettings
+from .celery import CelerySettings
 # from .logging import LoggingSettings
 # isort: on
 # fmt: on
@@ -34,6 +35,7 @@ load_dotenv()
 # the part of the app that requires the specific module and we need to set up the
 # configuration correctly.
 class Settings(
+    CelerySettings,
     DatabaseSettings,
     StorageSettings,
     LocaleSettings,
