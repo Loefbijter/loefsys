@@ -47,9 +47,9 @@ class Reservation(TimeStampedModel):
     """
 
     class RequestStatus(models.IntegerChoices):
-        PENDING = 0, _("In behandeling")
-        APPROVED = 1, _("Goedgekeurd")
-        DENIED = 2, _("Geweigerd")
+        PENDING = 0, _("Pending")
+        APPROVED = 1, _("Approved")
+        DENIED = 2, _("Denied")
 
     reservable = models.ForeignKey(Reservable, on_delete=models.CASCADE)
     user = models.ForeignKey(
@@ -141,7 +141,7 @@ class Reservation(TimeStampedModel):
         self.clean_timeslot()
 
         if not self.reservable.is_reservable:
-            raise ValidationError("This item is not reservable at the moment.")
+            raise ValidationError(_("This item is not reservable at the moment."))
 
         if self.reservable.type.category == ReservableCategories.BOAT:
             try:

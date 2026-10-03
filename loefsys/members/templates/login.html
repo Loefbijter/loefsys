@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 
-{% load static %}
+{% load i18n static %}
 
 {% block title %}
-    Login
+    {% translate "Login" %}
 {% endblock %}
 
 {% block content %}
     <div class="grid gap-6 max-w-120 justify-self-center justify-items-center">
         <img class="h-20 w-auto" src="{% static 'loefbijter-logo.svg' %}" alt="N.S.Z.V. De Loefbijter"/>
         <c-card>
-            <c-header.h2 class="mx-auto">Log in om verder te gaan</c-header.h2>
+            <c-header.h2 class="mx-auto">{% translate "Log in to continue" %}</c-header.h2>
             <form method="post" class="grid gap-4">
                 {% csrf_token %}
                 {{ form }}
-                <c-link href="{% url 'reset-disabled' %}">Wachtwoord vergeten?</c-link>
-                <c-button type="submit">Log in</c-button>
+                <c-link href="{% url 'reset-disabled' %}">{% translate "Forgot your password?" %}</c-link>
+                <c-button type="submit">{% translate "Log in" %}</c-button>
                 <!-- <p class="text-center">Geen account? -->
                     <!-- <c-link href="">Account aanmaken</c-link> -->
                 </p>
             </form>
         </c-card>
+        <c-language-switch class="text-sm" />
     </div>
 {% endblock %}
