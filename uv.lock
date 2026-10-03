@@ -707,6 +707,7 @@ dev = [
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "ruff" },
+    { name = "types-python-dateutil" },
 ]
 docs = [
     { name = "sphinx" },
@@ -751,6 +752,7 @@ dev = [
     { name = "mypy", specifier = ">=1.14.1" },
     { name = "pre-commit", specifier = ">=4.1.0" },
     { name = "ruff", specifier = ">=0.14.3" },
+    { name = "types-python-dateutil", specifier = ">=2.9.0.20260807" },
 ]
 docs = [
     { name = "sphinx", specifier = ">=8.1.3" },
@@ -1470,6 +1472,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/11/5e/e5dd718d0b92c57eaf1101e4d605354396e881ef57126ff11e66e138f3aa/starmerge-0.2.0.tar.gz", hash = "sha256:0dc8155212825750e5780ed123ef450cb016ba58cc6145dbea69b26a303f86e3", size = 49640, upload-time = "2025-10-02T19:04:45.255Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1b/80/7402d05d94350c5bce32fe2cf2b184cde0c1ffb094f3524931f9ae715ac3/starmerge-0.2.0-py3-none-any.whl", hash = "sha256:36e12356652a0729ac3017b0c4bd4315dba205b5ba97f98009c260d9d840c127", size = 26474, upload-time = "2025-10-02T19:04:43.793Z" },
+]
+
+[[package]]
+name = "types-python-dateutil"
+version = "2.9.0.20260807"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c8/4e/b3fa538f9cb38dfece0d6ccf6d3d0d925bdedb144fb9c8129dfc007cd003/types_python_dateutil-2.9.0.20260807.tar.gz", hash = "sha256:e0b8a90d464c8684c66b7b8e4556d9074afdddcc56ca45323f0987134f9e7034", size = 17618, upload-time = "2026-08-07T04:17:13.491Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e4/5e/3715867caea2f4cea56ccb04c851cde23ed063449c3b004c7a047f20dd48/types_python_dateutil-2.9.0.20260807-py3-none-any.whl", hash = "sha256:54aa3707350ed7a9cc0776fd2f6739679d6967d11b40150985e81edcb86df4db", size = 18486, upload-time = "2026-08-07T04:17:12.504Z" },
 ]
 
 [[package]]

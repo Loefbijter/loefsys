@@ -1,5 +1,6 @@
 """Module defining the skippership model."""
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -44,3 +45,16 @@ class Skippership(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    def clean(self) -> None:
+        """Reject a parent that would make the hierarchy loop back to itself."""
+        super().clean()
+        seen = set()
+        parent = self.parent
+        while parent is not None and parent.pk not in seen:
+            if self.pk is not None and parent.pk == self.pk:
+                raise ValidationError(
+                    {"parent": _("A skippership cannot require itself.")}
+                )
+            seen.add(parent.pk)
+            parent = parent.parent

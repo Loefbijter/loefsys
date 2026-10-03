@@ -1,5 +1,7 @@
 """Tests for who sees draft (unpublished) events on the home page."""
 
+from datetime import timedelta
+
 from django.contrib.auth.models import Permission
 from django.test import TestCase
 from django.utils import timezone
@@ -15,19 +17,19 @@ class HomeDraftEventsTestCase(TestCase):
     """Drafts are hidden from members but shown to the board and organizers."""
 
     def setUp(self):
-        start = timezone.now() + timezone.timedelta(days=7)
+        start = timezone.now() + timedelta(days=7)
         G(
             Event,
             title="Gepubliceerde testactiviteit",
             start=start,
-            end=start + timezone.timedelta(hours=2),
+            end=start + timedelta(hours=2),
             published=True,
         )
         self.draft = G(
             Event,
             title="Geheime conceptactiviteit",
             start=start,
-            end=start + timezone.timedelta(hours=2),
+            end=start + timedelta(hours=2),
             published=False,
         )
 
@@ -57,7 +59,7 @@ class HomeDraftEventsTestCase(TestCase):
             GroupMembership,
             user=user,
             group=G(Board),
-            member_until=timezone.now().date() - timezone.timedelta(days=1),
+            member_until=timezone.now().date() - timedelta(days=1),
         )
         self.assert_sees_draft(user, sees_draft=False)
 

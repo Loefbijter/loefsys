@@ -3,6 +3,7 @@
 from decimal import Decimal
 
 from django import template
+from django.utils.translation import gettext as _
 
 register = template.Library()
 
@@ -11,7 +12,7 @@ register = template.Library()
 def euro(value: Decimal | float) -> str:
     """Format a numerical value as euro's."""
     if not value:
-        return "Gratis!"
+        return _("Free!")
 
     if not isinstance(value, (Decimal, float)):
         raise ValueError("The 'euro' filter only accepts Decimal or float values.")
