@@ -16,8 +16,21 @@ document.addEventListener("DOMContentLoaded", () => {
     extraParams: { show_birthdays: birthdays && birthdays.checked ? "1" : "0" },
   });
 
+  // Times are always shown in Amsterdam time, wherever the viewer is. The event
+  // filler sends Amsterdam wall-clock times and the calendar runs in that zone.
+  // Without a time zone plugin FullCalendar then hands out dates whose UTC
+  // fields hold that wall-clock time, so format them as UTC.
+  const AMS = "Europe/Amsterdam";
+  const amsNow = () =>
+    new Intl.DateTimeFormat("sv-SE", {
+      timeZone: AMS,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hourCycle: "h23",
+    }).format(new Date()).replace(" ", "T");
+
   const time = (date) =>
-    date.toLocaleTimeString(el.dataset.locale, { hour: "2-digit", minute: "2-digit", hour12: false });
+    date.toLocaleTimeString(el.dataset.locale, { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "UTC" });
 
   // List rows reuse the markup of <c-event-row> so they look the same everywhere.
   const listRow = (arg) => {
@@ -30,9 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
     tile.className = "datetile";
     tile.setAttribute("aria-hidden", "true");
     const month = document.createElement("small");
-    month.textContent = ev.start.toLocaleDateString(el.dataset.locale, { month: "short" }).replace(".", "");
+    month.textContent = ev.start.toLocaleDateString(el.dataset.locale, { month: "short", timeZone: "UTC" }).replace(".", "");
     const day = document.createElement("b");
-    day.textContent = ev.start.getDate();
+    day.textContent = ev.start.getUTCDate();
     tile.append(month, day);
 
     const body = document.createElement("div");
@@ -50,10 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
       span.append(i, text);
       meta.append(span);
     };
-    const date = (d) => d.toLocaleDateString(el.dataset.locale, { weekday: "short", day: "numeric", month: "short" });
+    const date = (d) => d.toLocaleDateString(el.dataset.locale, { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
     // FullCalendar's end is exclusive for all-day events, so step back a moment.
     const last = ev.end && new Date(ev.end.getTime() - (ev.allDay ? 1 : 0));
-    if (last && last.toDateString() !== ev.start.toDateString()) {
+    const ymd = (d) => d.toISOString().slice(0, 10);
+    if (last && ymd(last) !== ymd(ev.start)) {
       addMeta("clock", `${date(ev.start)} – ${date(last)}`);
     } else {
       addMeta("clock", ev.allDay ? el.dataset.allDay : `${time(ev.start)}${ev.end ? `–${time(ev.end)}` : ""}`);
@@ -90,6 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
     headerToolbar: false,
     height: "auto",
     locale: el.dataset.locale,
+    timeZone: AMS,
+    now: amsNow,
     firstDay: 1,
     allDayText: el.dataset.allDay,
     noEventsText: el.dataset.noEvents,

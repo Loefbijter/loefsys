@@ -370,8 +370,14 @@ class EventFillerView(View):
             data.append(
                 {
                     "title": event.title,
-                    "start": event.start,
-                    "end": event.end,
+                    # Naive Amsterdam wall-clock times; the calendar is set to the
+                    # Europe/Amsterdam time zone so they show the same everywhere.
+                    "start": timezone.localtime(event.start)
+                    .replace(tzinfo=None)
+                    .isoformat(),
+                    "end": timezone.localtime(event.end)
+                    .replace(tzinfo=None)
+                    .isoformat(),
                     "url": event.get_absolute_url(),
                     "picture_url": (
                         event.picture.url
