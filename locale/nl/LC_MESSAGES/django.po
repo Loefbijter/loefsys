@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 10:14+0200\n"
+"POT-Creation-Date: 2026-10-03 10:16+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -1919,16 +1919,25 @@ msgid "Show less"
 msgstr "Toon minder"
 
 #: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "My reservations"
-msgstr "Mijn reserveringen"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "Archive of older reservations"
 msgstr "Archief van oudere reserveringen"
 
 #: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "Active and recent reservations"
 msgstr "Actieve en recente reserveringen"
+
+#: loefsys/reservations/templates/reservations/reservation_list.html
+#: templates/cotton/menu/mobile.html
+msgid "Boats"
+msgstr "Boten"
+
+#: loefsys/reservations/templates/reservations/reservation_list.html
+msgid "My reservations"
+msgstr "Mijn reserveringen"
+
+#: loefsys/reservations/templates/reservations/reservation_list.html
+msgid "Sort by"
+msgstr "Sorteer op"
 
 #: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "Apply"
@@ -1939,12 +1948,12 @@ msgid "There are no old reservations in the archive yet"
 msgstr "Er staat nog geen oude reservering in het archief"
 
 #: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "You don't have any reservations yet"
-msgstr "Je hebt nog geen reserveringen"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "Your older reservations are placed here automatically."
 msgstr "Je oudere reserveringen worden hier automatisch geplaatst."
+
+#: loefsys/reservations/templates/reservations/reservation_list.html
+msgid "You don't have any reservations yet"
+msgstr "Je hebt nog geen reserveringen"
 
 #: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "Make your first reservation to get started."
@@ -2137,7 +2146,3 @@ msgstr "Account"
 #: templates/cotton/menu/mobile.html
 msgid "Menu"
 msgstr "Menu"
-
-#: templates/cotton/menu/mobile.html
-msgid "Boats"
-msgstr "Boten"

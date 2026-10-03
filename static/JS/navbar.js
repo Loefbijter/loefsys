@@ -42,3 +42,9 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+
+// Forms marked data-autosubmit (such as sort pickers) submit as soon as a field changes.
+document.addEventListener('change', function (event) {
+  const form = event.target.closest && event.target.closest('form[data-autosubmit]');
+  if (form) form.requestSubmit();
+});
