@@ -5,327 +5,226 @@
   {{ event.title }}
 {% endblock %}
 
+{% block main_class %}{% endblock %}
+
 {% block content %}
-  <div class="min-h-screen">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-5">
-      <!-- ============ HERO: image, title, meta, description, CTA ============ -->
-      <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div class="flex flex-col sm:flex-row">
-          <div class="w-full h-48 sm:h-auto sm:w-64 shrink-0 bg-gray-100">
-            {% if event.picture %}
-              <img class="w-full h-full object-cover" src="{{ event.picture.url }}" alt="{{ event.title }}" />
+<div class="page">
+  <c-page-header eyebrow="{{ event.get_category_display }} · {% if event.start.date == event.end.date %}{{ event.start|date:'l j F' }}{% else %}{{ event.start|date:'D j M' }} – {{ event.end|date:'D j M' }}{% endif %}" :title="event.title">
+    <c-event-status :event="event" :registration="user_registration" />
+  </c-page-header>
+
+  {% if not event.published %}
+    <c-panel tone="warn" class="notice-unpublished">
+      <p><i class="bi bi-eye-slash" aria-hidden="true"></i> {% translate "This activity is not published. Only the board and its organisers can see it." %}</p>
+    </c-panel>
+  {% endif %}
+
+  <div class="dash">
+    <div class="col">
+      <c-panel>
+        {% if event.picture %}
+          <img class="event-picture" src="{{ event.picture.url }}" alt="" />
+        {% endif %}
+        <dl class="kv">
+          <dt>{% translate "When" %}</dt>
+          <dd>
+            {% if event.start.date == event.end.date %}
+              {{ event.start|date:"l j F" }}, {{ event.start|date:"H:i" }}–{{ event.end|date:"H:i" }}
             {% else %}
-              <div class="w-full h-full flex items-center justify-center text-gray-300 text-5xl">
-                <i class="bi bi-calendar-event"></i>
-              </div>
+              {{ event.start|date:"D j M, H:i" }} – {{ event.end|date:"D j M, H:i" }}
             {% endif %}
+          </dd>
+          {% if event.location %}
+            <dt>{% translate "Location" %}</dt>
+            <dd>{{ event.location }}</dd>
+          {% endif %}
+          <dt>{% translate "Costs" %}</dt>
+          <dd>{{ event.price|euro }}</dd>
+          <dt>{% translate "Category" %}</dt>
+          <dd><c-category :event="event" /></dd>
+        </dl>
+        {% if event.description %}
+          <p class="event-description">{{ event.description }}</p>
+        {% endif %}
+      </c-panel>
+
+      {% if organizer %}
+        <c-panel title="{% translate 'Organizers' %}" icon="people">
+          <div class="badges">
+            {% for group in organizer.groups.all %}
+              <c-badge icon="people">{{ group.name }}</c-badge>
+            {% endfor %}
+            {% for organizing_user in organizer.user.all %}
+              <c-badge icon="person">{{ organizing_user.display_name }}</c-badge>
+            {% endfor %}
           </div>
+        </c-panel>
+      {% endif %}
 
-          <div class="flex-1 p-6 sm:p-8 flex flex-col">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">{{ event.title }}</h1>
-
-            <div class="flex flex-wrap gap-x-5 gap-y-1.5 mt-3 text-sm text-gray-500">
-              <span class="inline-flex items-center gap-1.5">
-                <i class="bi bi-calendar-event text-gray-400"></i>
-                {{ event.start|date:'d M y' }}{% if event.start.date != event.end.date %}
-                  – {{ event.end|date:'d M y' }}
-                {% endif %}
-              </span>
-              <span class="inline-flex items-center gap-1.5">
-                <i class="bi bi-clock text-gray-400"></i>
-                {{ event.start|date:'H:i' }} – {{ event.end|date:'H:i' }}
-              </span>
-              <span class="inline-flex items-center gap-1.5">
-                <i class="bi bi-geo-alt text-gray-400"></i>
-                {{ event.location }}
-              </span>
-              <span class="inline-flex items-center gap-1.5">
-                <i class="bi bi-cash text-gray-400"></i>
-                {{ event.price|euro }}
-              </span>
+      {% if can_view_attendees %}
+        <c-panel title="{% translate 'Attendees' %}" icon="person-check" count="{{ attendees|length }}">
+          {% if attendees %}
+            <div class="people">
+              {% for registration in attendees %}
+                {% url 'members:profile' slug=registration.contact.slug as profile_url %}
+                <c-person-row :user="registration.contact" :href="profile_url" />
+              {% endfor %}
             </div>
+          {% else %}
+            <c-empty-state icon="person-plus" title="{% translate 'Nobody has signed up yet.' %}" />
+          {% endif %}
+        </c-panel>
+      {% endif %}
+    </div>
 
-            {% if event.description %}
-              <p class="mt-4 text-sm sm:text-base text-gray-600 leading-relaxed whitespace-pre-line">{{ event.description }}</p>
-            {% endif %}
-
-            <div class="mt-6 sm:mt-auto pt-2">
-              <form method="post" class="flex flex-col sm:items-start">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="{% if registration_active %}cancel{% else %}register{% endif %}" />
-                {% with registration_button_classes=registration_active|yesno:'bg-white text-secondary border-2 border-secondary hover:bg-secondary/5,bg-secondary text-secondary-foreground hover:bg-tertiary' %}
-                  {% if event.has_form_fields and not registration_active %}
-                    <button id="registration-button" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold text-base transition-colors disabled:pointer-events-none disabled:opacity-50 h-12 px-8 shadow-sm {{ registration_button_classes }} cursor-pointer" data-open-registration-modal="true" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
-                  {% else %}
-                    <button id="registration-button" type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-semibold text-base transition-colors disabled:pointer-events-none disabled:opacity-50 h-12 px-8 shadow-sm {{ registration_button_classes }} cursor-pointer" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
-                  {% endif %}
-                {% endwith %}
-
-                {% if registration_active and event.cancellation_fine_required %}
-                  <label class="mt-3 flex items-start gap-2 text-sm text-gray-500 max-w-sm">
-                    <input id="fine-consent" name="fine-consent" type="checkbox" class="mt-1 h-4 w-4 rounded border-gray-300 text-secondary focus:ring-secondary" />
-                    <span>Ik accepteer de boete van {{ event.fine|euro }} als ik me na {{ event.cancelation_deadline|date:'d M y, H:i' }} afmeld.</span>
-                  </label>
-                  <script>
-                const fineConsent = document.getElementById('fine-consent');
-                const registrationButton = document.getElementById('registration-button');
-                if (fineConsent && registrationButton) {
-                  registrationButton.disabled = !fineConsent.checked;
-                  fineConsent.addEventListener('change', function () {
-                    registrationButton.disabled = !this.checked;
-                  });
-                }
-              </script>
-                {% endif %}
-
-                {% if registration_disabled and registration_disabled_reason %}
-                  <p class="mt-2 flex items-center gap-1.5 text-xs text-gray-400 max-w-sm">
-                    <i class="bi bi-info-circle shrink-0"></i>
-                    <span>{{ registration_disabled_reason }}</span>
-                  </p>
-                {% endif %}
-              </form>
-
-              {% if event.has_form_fields %}
-                <div id="registration-modal" data-show-registration-modal="{{ show_registration_modal|yesno:'true,false' }}" class="fixed inset-0 z-[100] hidden flex-col items-start sm:items-center justify-center bg-black/60 px-4 pb-6 pt-20 sm:pt-6 backdrop-blur-sm overflow-y-auto cursor-pointer">
-                  <div class="mx-auto my-auto flex max-h-[calc(100dvh-6rem)] sm:max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
-                    <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-                      <div>
-                        <h3 class="text-lg font-semibold text-gray-900">Vul je gegevens in</h3>
-                        <p class="mt-1 text-sm text-gray-500">Deze inschrijving heeft extra vragen. Vul ze in om jouw plek te bevestigen.</p>
-                      </div>
-                      <button type="button" class="rounded-full p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 cursor-pointer" data-close-registration-modal="true" aria-label="Sluiten"><i class="bi bi-x-lg"></i></button>
-                    </div>
-                    <div class="flex-1 overflow-y-auto px-6 py-6">
-                      <form method="post" action="{% url 'events:registration' event.slug %}" class="space-y-4">
-                        {% csrf_token %}
-                        {% for field in registration_form %}
-                          <div class="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                            <div class="flex items-start justify-between gap-3">
-                              <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-gray-900">{{ field.label }}</label>
-                              {% if field.field.required %}
-                                <span class="rounded-full bg-alert/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-alert">Verplicht</span>
-                              {% endif %}
-                            </div>
-                            {% if field.help_text %}
-                              <p class="mt-2 whitespace-pre-line text-sm leading-6 text-gray-500">{{ field.help_text }}</p>
-                            {% endif %}
-                            {% if field.field.widget.input_type == 'checkbox' %}
-                              <label class="mt-4 flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-700">
-                                {{ field }}
-                                <span>{{ field.label }}</span>
-                              </label>
-                            {% else %}
-                              <div class="mt-4">{{ field }}</div>
-                            {% endif %}
-                            {% if field.errors %}
-                              <ul class="mt-3 space-y-1 text-sm text-destructive">
-                                {% for error in field.errors %}
-                                  <li>{{ error }}</li>
-                                {% endfor %}
-                              </ul>
-                            {% endif %}
-                          </div>
-                        {% endfor %}
-                        <div class="flex justify-end gap-3 pt-2">
-                          <button type="button" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-600 transition hover:bg-gray-100 cursor-pointer" data-close-registration-modal="true">Annuleren</button>
-                          <button type="submit" class="rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary cursor-pointer">Inschrijven</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-
-                <script>
-              document.addEventListener('DOMContentLoaded', function () {
-                const modal = document.getElementById('registration-modal');
-                const trigger = document.querySelector('[data-open-registration-modal="true"]');
-                const closeButtons = document.querySelectorAll('[data-close-registration-modal="true"]');
-
-                const openModal = function () {
-                  if (!modal) return;
-                  modal.classList.remove('hidden');
-                  modal.classList.add('flex');
-                  document.body.classList.add('overflow-hidden');
-                };
-
-                const closeModal = function () {
-                  if (!modal) return;
-                  modal.classList.add('hidden');
-                  modal.classList.remove('flex');
-                  document.body.classList.remove('overflow-hidden');
-                };
-
-                if (trigger) {
-                  trigger.addEventListener('click', openModal);
-                }
-
-                closeButtons.forEach(function (button) {
-                  button.addEventListener('click', closeModal);
-                });
-
-                if (modal) {
-                  modal.addEventListener('click', function (event) {
-                    if (event.target === modal) {
-                      closeModal();
-                    }
-                  });
-
-                  document.addEventListener('keydown', function (event) {
-                    if (event.key === 'Escape') {
-                      closeModal();
-                    }
-                  });
-                }
-
-                const showRegistrationModal = modal && modal.dataset && modal.dataset.showRegistrationModal === 'true';
-                if (showRegistrationModal) {
-                  openModal();
-                }
-              });
-            </script>
-              {% endif %}
-
-              {% if not event.registration_window_open %}
-                {% translate 'Inschrijven' as register %}
-
-                {% compress js inline %}
-                <script>
-              const timeUntilStartInMiliseconds = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}") - new Date();
-
-              if (timeUntilStartInMiliseconds > 0) {
-                const registrationButton = document.getElementById("registration-button");
-
-                setTimeout(() => {
-                  registrationButton.textContent = "{{ register }}";
-                  registrationButton.disabled = false;
-                }, timeUntilStartInMiliseconds + 100); // +0.1 second to be sure we're past the start time
-              }
-            </script>
-                {% endcompress %}
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ============ REGISTRATION FACTS + CAPACITY ============ -->
-      <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
-        <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-5">Aanmeldgegevens</h2>
-
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-          <div>
-            <p class="text-xs text-gray-400">Aanmelden vanaf</p>
-            <p class="text-sm font-semibold text-gray-900 mt-1">{{ event.registration_start|date:'d M, H:i' }}</p>
-          </div>
-          <div class="sm:border-l sm:border-gray-100 sm:pl-6">
-            <p class="text-xs text-gray-400">Aanmelden tot</p>
-            <p class="text-sm font-semibold text-gray-900 mt-1">{{ event.registration_deadline|date:'d M, H:i' }}</p>
-          </div>
-          <div class="sm:border-l sm:border-gray-100 sm:pl-6">
-            <p class="text-xs text-gray-400">Afmelden tot</p>
-            <p class="text-sm font-semibold text-gray-900 mt-1">{{ event.cancelation_deadline|date:'d M, H:i' }}</p>
-          </div>
-          <div class="sm:border-l sm:border-gray-100 sm:pl-6">
-            <p class="text-xs text-gray-400">Boete bij laat afmelden</p>
-            <p class="text-sm font-semibold text-gray-900 mt-1">{{ event.fine|euro }}</p>
-          </div>
-        </div>
-
-        <div class="mt-6 pt-5 border-t border-gray-100">
-          <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
-            <span>Inschrijvingen</span>
-            <span class="font-semibold text-gray-700">
-              {% if event.capacity %}
-                {{ num_registrations }} / {{ event.capacity }}
-              {% else %}
-                {{ num_registrations }}
-              {% endif %}
-            </span>
+    <div class="col">
+      <c-panel title="{% translate 'Registration' %}" icon="pencil-square" class="phone-first">
+        <div class="cap">
+          <div class="cap-h">
+            <b>{% translate "Registrations" %}</b>
+            <span>{% if event.capacity %}{{ num_registrations }} / {{ event.capacity }}{% else %}{{ num_registrations }}{% endif %}</span>
           </div>
           {% if event.capacity %}
             {% widthratio num_registrations event.capacity 100 as fill_percentage %}
-            <div class="h-2 rounded-full bg-gray-100 overflow-hidden">
-              <div class="h-full rounded-full bg-secondary" style="width: {{ fill_percentage }}%;"></div>
-            </div>
+            <div class="bar"><i style="width: {{ fill_percentage }}%"></i></div>
+          {% endif %}
+          {% if user_registration and user_registration.status == 1 and queue_position %}
+            <span class="cap-note">{% blocktranslate trimmed with position=queue_position %}You are number {{ position }} in the queue.{% endblocktranslate %}</span>
           {% endif %}
         </div>
-      </div>
 
-      <!-- ============ ORGANIZERS ============ -->
-      {% if organizer %}
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
-          <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-4">Organisatoren</h2>
-          <div class="flex flex-wrap gap-2">
-            {% for group in organizer.groups.all %}
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700">
-                <i class="bi bi-people text-gray-400"></i>
-                {{ group.name }}
-              </span>
-            {% endfor %}
-            {% for user in organizer.user.all %}
-              <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700">
-                <i class="bi bi-person text-gray-400"></i>
-                {{ user.display_name }}
-              </span>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-
-      <!-- ============ ATTENDEES ============ -->
-      {% if can_view_attendees %}
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 sm:p-8">
-          <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-4">
-            Aanwezigen{% if attendees %}
-              <span class="text-gray-300 font-normal">({{ attendees|length }})</span>
+        <form method="post" class="register-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="{% if registration_active %}cancel{% else %}register{% endif %}" />
+          {% with registration_button_classes=registration_active|yesno:'btn btn-danger,btn btn-primary' %}
+            {% if event.has_form_fields and not registration_active %}
+              <button id="registration-button" type="button" class="{{ registration_button_classes }}" data-open-registration-modal="true" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
+            {% else %}
+              <button id="registration-button" type="submit" class="{{ registration_button_classes }}" {{ registration_disabled|yesno:'disabled,' }} title="{{ registration_disabled_reason|default:'' }}">{{ registration_button_text }}</button>
             {% endif %}
-          </h2>
+          {% endwith %}
 
-          <style>
-        .attendee-name {
-          opacity: 0;
-          transition: opacity 0.15s ease;
-        }
-        .attendee-avatar.group:hover .attendee-name,
-        .attendee-avatar.show-name .attendee-name {
-          opacity: 1;
-        }
-      </style>
+          {% if registration_active and event.cancellation_fine_required %}
+            <label class="consent">
+              <input id="fine-consent" name="fine-consent" type="checkbox" />
+              <span>{% blocktranslate trimmed with fine=event.fine|euro deadline=event.cancelation_deadline|date:'d M y, H:i' %}I accept the fine of {{ fine }} if I cancel after {{ deadline }}.{% endblocktranslate %}</span>
+            </label>
+            <script>
+              const fineConsent = document.getElementById('fine-consent');
+              const registrationButton = document.getElementById('registration-button');
+              if (fineConsent && registrationButton) {
+                registrationButton.disabled = !fineConsent.checked;
+                fineConsent.addEventListener('change', function () {
+                  registrationButton.disabled = !this.checked;
+                });
+              }
+            </script>
+          {% endif %}
 
-          <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
-            {% for registration in attendees %}
-              <button type="button" class="attendee-avatar group relative flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-full cursor-pointer" aria-label="{{ registration.contact.first_name }} {{ registration.contact.last_name }}">
-                {% if registration.contact.picture %}
-                  <img class="rounded-full size-10 sm:size-12 md:size-14 border border-gray-200 object-cover" src="{{ registration.contact.picture.url }}" alt="" />
-                {% else %}
-                  <img class="rounded-full size-10 sm:size-12 md:size-14 border border-gray-200" src="{% static 'default-profile-picture.svg' %}" alt="" />
-                {% endif %}
-                <span class="attendee-name pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-1 text-xs text-white shadow-lg z-10">{{ registration.contact.first_name }} {{ registration.contact.last_name }}</span>
-              </button>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
+          {% if registration_disabled and registration_disabled_reason %}
+            <p class="register-note"><i class="bi bi-info-circle" aria-hidden="true"></i><span>{{ registration_disabled_reason }}</span></p>
+          {% endif %}
+        </form>
+
+        <dl class="kv kv-compact">
+          <dt>{% translate "Registration opens" %}</dt>
+          <dd>{{ event.registration_start|date:'D j M, H:i' }}</dd>
+          <dt>{% translate "Registration closes" %}</dt>
+          <dd>{{ event.registration_deadline|date:'D j M, H:i' }}</dd>
+          <dt>{% translate "Cancel before" %}</dt>
+          <dd>{{ event.cancelation_deadline|date:'D j M, H:i' }}</dd>
+          <dt>{% translate "Late cancellation fine" %}</dt>
+          <dd>{{ event.fine|euro }}</dd>
+        </dl>
+      </c-panel>
     </div>
   </div>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const avatars = document.querySelectorAll('.attendee-avatar');
+  {% if event.has_form_fields %}
+    <div id="registration-modal" data-show-registration-modal="{{ show_registration_modal|yesno:'true,false' }}" class="dialog-backdrop" hidden>
+      <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="registration-modal-title">
+        <div class="dialog-h">
+          <div>
+            <h2 id="registration-modal-title">{% translate "Fill in your details" %}</h2>
+            <p>{% blocktranslate trimmed %}This registration has additional questions. Answer them to confirm your spot.{% endblocktranslate %}</p>
+          </div>
+          <button type="button" class="btn btn-ghost btn-icon" data-close-registration-modal="true" aria-label="{% translate "Close" %}"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+        </div>
+        <form method="post" action="{% url 'events:registration' event.slug %}" class="dialog-body">
+          {% csrf_token %}
+          {% for field in registration_form %}
+            <div class="question">
+              <div class="question-h">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% if field.field.required %}<c-chip kind="warn">{% translate "Required" %}</c-chip>{% endif %}
+              </div>
+              {% if field.help_text %}<p class="question-help">{{ field.help_text }}</p>{% endif %}
+              {% if field.field.widget.input_type == 'checkbox' %}
+                <label class="consent">{{ field }}<span>{{ field.label }}</span></label>
+              {% else %}
+                <div class="question-input">{{ field }}</div>
+              {% endif %}
+              {% if field.errors %}
+                <ul class="question-errors">
+                  {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <div class="dialog-f">
+            <button type="button" class="btn btn-secondary" data-close-registration-modal="true">{% translate "Cancel" %}</button>
+            <button type="submit" class="btn btn-primary">{% translate "Register" %}</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
-    avatars.forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        const wasOpen = btn.classList.contains('show-name');
-        avatars.forEach(function (b) { b.classList.remove('show-name'); });
-        if (!wasOpen) btn.classList.add('show-name');
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('registration-modal');
+        const trigger = document.querySelector('[data-open-registration-modal="true"]');
+        if (!modal) return;
+
+        const openModal = function () {
+          modal.hidden = false;
+          document.body.classList.add('overflow-hidden');
+        };
+        const closeModal = function () {
+          modal.hidden = true;
+          document.body.classList.remove('overflow-hidden');
+        };
+
+        if (trigger) trigger.addEventListener('click', openModal);
+        document.querySelectorAll('[data-close-registration-modal="true"]').forEach(function (button) {
+          button.addEventListener('click', closeModal);
+        });
+        modal.addEventListener('click', function (event) {
+          if (event.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') closeModal();
+        });
+        if (modal.dataset.showRegistrationModal === 'true') openModal();
       });
-    });
+    </script>
+  {% endif %}
 
-    document.addEventListener('click', function () {
-      avatars.forEach(function (b) { b.classList.remove('show-name'); });
-    });
-  });
-</script>
+  {% if not event.registration_window_open %}
+    {% translate "Register" as register %}
+    {% compress js inline %}
+    <script>
+      const timeUntilStartInMiliseconds = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}") - new Date();
+
+      if (timeUntilStartInMiliseconds > 0) {
+        const registrationButton = document.getElementById("registration-button");
+
+        setTimeout(() => {
+          registrationButton.textContent = "{{ register|escapejs }}";
+          registrationButton.disabled = false;
+        }, timeUntilStartInMiliseconds + 100); // +0.1 second to be sure we're past the start time
+      }
+    </script>
+    {% endcompress %}
+  {% endif %}
+</div>
 {% endblock %}

@@ -65,6 +65,8 @@ coverage.xml
 # Translations
 *.mo
 *.pot
+# The compiled catalogues are committed so deployments need no gettext tools.
+!locale/**/*.mo
 
 # Django stuff:
 staticfiles/

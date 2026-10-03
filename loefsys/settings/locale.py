@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import cast
 
 from cbs import env
+from django.utils.translation import gettext_lazy as _
 
 from .auth import AuthSettings
 from .base import BaseSettings
@@ -14,10 +15,15 @@ denv = env["DJANGO_"]
 
 
 class LocaleSettings(AuthSettings, TemplateSettings, BaseSettings):
-    """Class containing the configuration for the localization."""
+    """Class containing the configuration for the localization.
+
+    Source strings are written in English. Dutch is the default language for every
+    visitor; English is only shown when a user picks it with the language switcher.
+    """
 
     TIME_ZONE = denv("Europe/Amsterdam")
-    LANGUAGE_CODE = "nl-NL"
+    LANGUAGE_CODE = "nl"
+    LANGUAGES = (("nl", _("Dutch")), ("en", _("English")))
     USE_I18N = True
     USE_TZ = True
 
@@ -28,7 +34,12 @@ class LocaleSettings(AuthSettings, TemplateSettings, BaseSettings):
         return (cast(Path, self.LOCALE_DIR),)
 
     def MIDDLEWARE(self) -> Sequence[str]:  # noqa N802 D102
-        return *super().MIDDLEWARE(), "django.middleware.locale.LocaleMiddleware"
+        # Activate the language before any middleware that may render or redirect.
+        middleware = list(super().MIDDLEWARE())
+        session = "django.contrib.sessions.middleware.SessionMiddleware"
+        index = middleware.index(session) + 1 if session in middleware else 0
+        middleware.insert(index, "loefsys.core.i18n.LanguageMiddleware")
+        return tuple(middleware)
 
     def templates_context_processors(self) -> Sequence[str]:  # noqa D102
         return (

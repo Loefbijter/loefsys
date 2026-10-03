@@ -1,0 +1,9 @@
+<c-vars eyebrow="" title="" sub="" class="" />
+<header class="ph {{ class }}">
+    <div>
+        {% if eyebrow %}<div class="ph-eyebrow">{{ eyebrow }}</div>{% endif %}
+        <h1>{{ title }}</h1>
+        {% if sub %}<p class="ph-sub">{{ sub }}</p>{% endif %}
+    </div>
+    {% if slot %}<div class="ph-actions">{{ slot }}</div>{% endif %}
+</header>

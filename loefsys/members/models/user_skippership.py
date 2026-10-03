@@ -1,7 +1,9 @@
 """Module defining the user skippership model."""
 
+from collections.abc import Collection
 from datetime import date
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -22,7 +24,12 @@ class UserSkippership(models.Model):
         The date the skippership was obtained.
     given_by : ~django.db.models.query.QuerySet of ~loefsys.members.models.user.User
         The skippers that have authorized that the user obtained the skippership.
+    pending_skippership_ids : ~collections.abc.Collection of int
+        Skipperships the user is being given in the same form submission, which
+        count as held when checking the required skippership.
     """
+
+    pending_skippership_ids: Collection[int] = frozenset()
 
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE, related_name="user_skipperships"
@@ -53,3 +60,22 @@ class UserSkippership(models.Model):
 
     def __str__(self) -> str:
         return f"{self.skippership.name} {self.user.display_name}"
+
+    def clean(self) -> None:
+        """Require the user to hold the skippership's parent skippership."""
+        super().clean()
+        if self.skippership_id is None:
+            return
+        required = self.skippership.parent
+        if required is None or required.pk in self.pending_skippership_ids:
+            return
+        if (
+            self.user_id is None
+            or not UserSkippership.objects.filter(
+                user_id=self.user_id, skippership=required
+            ).exists()
+        ):
+            raise ValidationError(
+                _("%(skippership)s requires %(required)s first."),
+                params={"skippership": self.skippership, "required": required},
+            )
