@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% translate "No access" %}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-[70vh] gap-8 py-16">
+    <img src="{% static 'loefbijter-logo.svg' %}" alt="{% translate 'Loefbijter logo' %}" class="h-24 w-auto" />
+
+    <div class="max-w-3xl rounded-[2rem] border border-white/10 bg-secondary/90 p-10 shadow-2xl text-center">
+        <p class="text-sm font-semibold uppercase tracking-[0.35em] text-white/70">
+            {% translate "403 - No access" %}
+        </p>
+        <h1 class="mt-4 text-5xl font-black text-white sm:text-6xl">{% translate "No access" %}</h1>
+        <p class="mt-4 text-lg leading-8 text-white/80 sm:text-xl">
+            {% blocktranslate trimmed %}You don't have permission to view this page. If you think you should, ask the board, or let us know via <a href="mailto: webcie@loefbijter.nl" class="font-bold text-white underline">webcie@loefbijter.nl</a>.{% endblocktranslate %}
+        </p>
+
+        <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <button
+                type="button"
+                onclick="window.history.back();"
+                class="btn btn-primary rounded-3xl border-2 px-8 py-3 text-base font-bold shadow-lg bg-white/90 text-foreground hover:bg-gray-200"
+            >
+                {% translate "Go back" %}
+            </button>
+            <a href="{% url 'home:home' %}" class="rounded-3xl border-2 border-white/60 px-8 py-3 text-base font-bold text-white hover:bg-white/10">
+                {% translate "Home" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

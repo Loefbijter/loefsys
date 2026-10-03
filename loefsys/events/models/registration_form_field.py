@@ -42,6 +42,8 @@ class RegistrationFormField(models.Model):
 
     class Meta:
         order_with_respect_to = "event"
+        verbose_name = _("registration form field")
+        verbose_name_plural = _("registration form fields")
 
     def __str__(self):
         return self.subject

@@ -98,6 +98,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         return f"events/{self.slug}/picture.jpg"
 
     picture = models.ImageField(
+        _("Picture"),
         upload_to=event_picture_upload_path,
         null=True,
         blank=True,
@@ -147,7 +148,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     location = models.CharField(_("Location"), max_length=255)
 
     is_open_event = models.BooleanField(
-        help_text=_("Event is open for non-members"), default=False
+        _("Open event"), help_text=_("Event is open for non-members"), default=False
     )
     published = models.BooleanField(_("Published"), default=False)
 
@@ -176,6 +177,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     objects = EventManager()
 
     class Meta:
+        verbose_name = _("event")
+        verbose_name_plural = _("events")
         permissions = tuple(
             (
                 category.permission_codename,
@@ -404,9 +407,19 @@ class EventOrganizer(TimeStampedModel):
     )
 
     groups = models.ManyToManyField(
-        to=LoefbijterGroup, related_name="organizing_group", blank=True
+        to=LoefbijterGroup,
+        related_name="organizing_group",
+        blank=True,
+        verbose_name=_("groups"),
     )
 
     user: models.ManyToManyField = models.ManyToManyField(
-        to=get_user_model(), related_name="organizer", blank=True
+        to=get_user_model(),
+        related_name="organizer",
+        blank=True,
+        verbose_name=_("members"),
     )
+
+    class Meta:
+        verbose_name = _("event organizer")
+        verbose_name_plural = _("event organizers")

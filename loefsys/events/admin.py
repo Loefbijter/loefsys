@@ -195,6 +195,19 @@ class EventAdmin(ExportableModelAdmin):
             obj is None or obj.category in allowed_categories(request.user)
         )
 
+    def save_related(self, request, form, formsets, change):
+        """Make whoever creates an event one of its organizers.
+
+        Activity managers can't pick individual organizers, so without this an
+        event they create wouldn't show up under their own events.
+        """
+        super().save_related(request, form, formsets, change)
+        if not change:
+            organizer, _created = EventOrganizer.objects.get_or_create(
+                event=form.instance
+            )
+            organizer.user.add(request.user)
+
     def formfield_for_choice_field(self, db_field, request, **kwargs):
         """Limit the category choices to the categories the user may manage."""
         if db_field.name == "category":
