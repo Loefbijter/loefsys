@@ -430,12 +430,15 @@
 
   /* Desktop shows the top banner and the bottom wave; phones get the wave tab bar. */
   .site-main { padding-bottom: 5.5rem; }
+  /* Fixed page-level action bars (e.g. the reservation form) sit just above the phone tab bar. */
+  .action-bar { position: fixed; left: 0; right: 0; bottom: var(--chrome-bottom, 0px); z-index: 50; background: color-mix(in oklab, var(--surface) 95%, transparent); backdrop-filter: blur(8px); border-top: 1px solid var(--line); box-shadow: 0 -4px 16px oklch(0.2 0.04 245 / 0.06); }
   .bottomnav, .foldout, .foldout-backdrop { display: none; }
   @media (max-width: 47.99rem) {
     .topbar, .footwave { display: none; }
     .bottomnav { display: flex; }
     .foldout:not([hidden]), .foldout-backdrop:not([hidden]) { display: block; }
     .site-main { padding-bottom: 7rem; }
+    :root { --chrome-bottom: calc(5.125rem + env(safe-area-inset-bottom, 0px)); }
   }
 }
 
