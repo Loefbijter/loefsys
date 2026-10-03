@@ -61,6 +61,7 @@ class EventDetailView(LoginRequiredMixin, DetailView):
 
         return super().get_context_data(**kwargs) | {
             "registration_active": user_registration is not None,
+            "user_registration": user_registration,
             "queue_position": user_registration.get_queue_position
             if user_registration
             else None,

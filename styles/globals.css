@@ -334,6 +334,40 @@
   .bar { height: 0.5rem; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
   .bar > i { display: block; height: 100%; background: var(--loef-1); border-radius: inherit; }
 
+  /* Activity page */
+  .event-picture { width: 100%; max-height: 18rem; object-fit: cover; border-radius: 0.75rem; }
+  .event-description { white-space: pre-line; color: var(--fg); line-height: 1.6; }
+  .cap { display: grid; gap: 0.375rem; }
+  .cap-h { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.8125rem; }
+  .cap-h span, .cap-note { color: var(--muted); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+  .register-form { display: grid; gap: 0.625rem; }
+  .register-form > .btn { width: 100%; padding-block: 0.75rem; font-size: 0.9375rem; }
+  .register-form > .btn-danger { border-color: color-mix(in oklab, var(--bad) 45%, var(--line)); }
+  .register-note { display: flex; gap: 0.375rem; align-items: baseline; color: var(--muted); font-size: 0.8125rem; }
+  .consent { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.875rem; color: var(--fg); }
+  .consent input { margin-top: 0.2rem; accent-color: var(--loef-2); }
+  .kv-compact { grid-template-columns: minmax(0, 1fr) auto; font-size: 0.875rem; padding-top: 0.75rem; border-top: 1px solid var(--line); }
+  .kv-compact dd { text-align: right; font-variant-numeric: tabular-nums; margin: 0; }
+  @media (max-width: 47.99rem) {
+    .kv-compact { grid-template-columns: minmax(0, 1fr) auto; gap: 0.625rem 1rem; }
+  }
+
+  /* Dialog */
+  .dialog-backdrop { position: fixed; inset: 0; z-index: 100; background: oklch(0.15 0.03 245 / 0.55); backdrop-filter: blur(4px); padding: 1.5rem 1rem; overflow-y: auto; }
+  .dialog-backdrop:not([hidden]) { display: grid; place-items: center; }
+  .dialog { width: 100%; max-width: 40rem; max-height: calc(100dvh - 3rem); display: flex; flex-direction: column; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 1.125rem; box-shadow: 0 10px 40px oklch(0.2 0.04 245 / 0.25); overflow: hidden; }
+  .dialog-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: 1.125rem 1.25rem; border-bottom: 1px solid var(--line); }
+  .dialog-h h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; color: var(--heading); }
+  .dialog-h p { color: var(--muted); font-size: 0.875rem; margin-top: 0.25rem; }
+  .dialog-body { padding: 1.125rem 1.25rem; overflow-y: auto; display: grid; gap: 0.75rem; }
+  .dialog-f { display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.25rem; }
+  .question { border: 1px solid var(--line); background: var(--surface-2); border-radius: 0.75rem; padding: 0.875rem; display: grid; gap: 0.5rem; }
+  .question-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; font-weight: 600; color: var(--heading); }
+  .question-help { white-space: pre-line; color: var(--muted); font-size: 0.875rem; }
+  .question-input :is(input, select, textarea) { width: 100%; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: 0.5rem; padding: 0.5rem 0.75rem; }
+  .question-input :is(input, select, textarea):focus { outline: 2px solid var(--loef-1); outline-offset: 1px; }
+  .question-errors { color: var(--bad); font-size: 0.875rem; }
+
   /* ---------- Wave banners and navigation ---------- */
   .topbar { position: sticky; top: 0; z-index: 50; }
   .topbar-band { background: var(--wave); color: var(--on-wave); display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem 0.25rem; }

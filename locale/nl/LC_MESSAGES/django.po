@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 10:11+0200\n"
+"POT-Creation-Date: 2026-10-03 10:14+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -117,7 +117,7 @@ msgstr "Inschrijfdeadline"
 msgid "Cancelation deadline"
 msgstr "Afmelddeadline"
 
-#: loefsys/events/models/event.py
+#: loefsys/events/models/event.py loefsys/events/templates/events/event.html
 msgid "Category"
 msgstr "Categorie"
 
@@ -137,7 +137,7 @@ msgstr "Boete"
 msgid "Fine if participant does not show up."
 msgstr "Boete als de deelnemer niet komt opdagen."
 
-#: loefsys/events/models/event.py
+#: loefsys/events/models/event.py loefsys/events/templates/events/event.html
 #: loefsys/events/templates/events/my_event_detail.html
 #: loefsys/reservations/forms.py loefsys/reservations/models/reservable.py
 #: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
@@ -304,9 +304,60 @@ msgid "Birthday"
 msgstr "Verjaardag"
 
 #: loefsys/events/templates/events/event.html
+msgid "When"
+msgstr "Wanneer"
+
+#: loefsys/events/templates/events/event.html
+msgid "Costs"
+msgstr "Kosten"
+
+#: loefsys/events/templates/events/event.html
+#: loefsys/events/templates/events/my_event_detail.html
+msgid "Organizers"
+msgstr "Organisatoren"
+
+#: loefsys/events/templates/events/event.html
+msgid "Attendees"
+msgstr "Aanwezigen"
+
+#: loefsys/events/templates/events/event.html
+msgid "Nobody has signed up yet."
+msgstr "Nog niemand ingeschreven."
+
+#: loefsys/events/templates/events/event.html
+msgid "Registration"
+msgstr "Inschrijving"
+
+#: loefsys/events/templates/events/event.html
+#: loefsys/events/templates/events/my_event_detail.html
+msgid "Registrations"
+msgstr "Inschrijvingen"
+
+#: loefsys/events/templates/events/event.html
+#, python-format
+msgid "You are number %(position)s in the queue."
+msgstr "Je staat op plek %(position)s in de wachtrij."
+
+#: loefsys/events/templates/events/event.html
 #, python-format
 msgid "I accept the fine of %(fine)s if I cancel after %(deadline)s."
 msgstr "Ik accepteer de boete van %(fine)s als ik me na %(deadline)s afmeld."
+
+#: loefsys/events/templates/events/event.html
+msgid "Registration opens"
+msgstr "Aanmelden vanaf"
+
+#: loefsys/events/templates/events/event.html
+msgid "Registration closes"
+msgstr "Aanmelden tot"
+
+#: loefsys/events/templates/events/event.html
+msgid "Cancel before"
+msgstr "Afmelden tot"
+
+#: loefsys/events/templates/events/event.html
+msgid "Late cancellation fine"
+msgstr "Boete bij laat afmelden"
 
 #: loefsys/events/templates/events/event.html
 msgid "Fill in your details"
@@ -339,40 +390,6 @@ msgstr "Annuleren"
 #: loefsys/events/views.py
 msgid "Register"
 msgstr "Inschrijven"
-
-#: loefsys/events/templates/events/event.html
-msgid "Registration details"
-msgstr "Aanmeldgegevens"
-
-#: loefsys/events/templates/events/event.html
-msgid "Registration opens"
-msgstr "Aanmelden vanaf"
-
-#: loefsys/events/templates/events/event.html
-msgid "Registration closes"
-msgstr "Aanmelden tot"
-
-#: loefsys/events/templates/events/event.html
-msgid "Cancel before"
-msgstr "Afmelden tot"
-
-#: loefsys/events/templates/events/event.html
-msgid "Late cancellation fine"
-msgstr "Boete bij laat afmelden"
-
-#: loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Registrations"
-msgstr "Inschrijvingen"
-
-#: loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Organizers"
-msgstr "Organisatoren"
-
-#: loefsys/events/templates/events/event.html
-msgid "Attendees"
-msgstr "Aanwezigen"
 
 #: loefsys/events/templates/events/event_feed.html
 msgid "Connect calendar"
