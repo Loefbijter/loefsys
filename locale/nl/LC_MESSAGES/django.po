@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 10:18+0200\n"
+"POT-Creation-Date: 2026-10-03 10:19+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -300,6 +300,7 @@ msgid "Categories"
 msgstr "Categorieën"
 
 #: loefsys/events/templates/events/calendar.html loefsys/members/models/user.py
+#: loefsys/members/templates/profiles/profile.html
 msgid "Birthday"
 msgstr "Verjaardag"
 
@@ -791,6 +792,7 @@ msgid "Skipperships"
 msgstr "Schipperschappen"
 
 #: loefsys/home/templates/home/index.html
+#: loefsys/members/templates/profiles/profile.html
 msgid "No skipperships yet."
 msgstr "Nog geen schipperschappen."
 
@@ -989,6 +991,7 @@ msgid "Alumnus"
 msgstr "Alumnus"
 
 #: loefsys/members/models/membership.py
+#: loefsys/members/templates/profiles/profile.html
 msgid "Member"
 msgstr "Lid"
 
@@ -1124,6 +1127,7 @@ msgstr ""
 "van elk van zijn groepen."
 
 #: loefsys/members/models/user.py
+#: loefsys/members/templates/profiles/profile.html
 msgid "Phone number"
 msgstr "Telefoonnummer"
 
@@ -1182,6 +1186,7 @@ msgstr ""
 "en één speciaal teken bevatten."
 
 #: loefsys/members/templates/cotton/profile_icon.html
+#: loefsys/members/templates/profiles/profile.html
 #: templates/cotton/menu/mobile.html
 msgid "My profile"
 msgstr "Mijn profiel"
@@ -1209,10 +1214,6 @@ msgid "Profile"
 msgstr "Profiel"
 
 #: loefsys/members/templates/profiles/profile.html
-msgid "Your public profile"
-msgstr "Jouw publiek profiel"
-
-#: loefsys/members/templates/profiles/profile.html
 #: loefsys/members/templates/profiles/profile_edit.html
 msgid "Edit profile"
 msgstr "Profiel bewerken"
@@ -1233,8 +1234,16 @@ msgid "Profile picture of %(name)s"
 msgstr "Profielfoto van %(name)s"
 
 #: loefsys/members/templates/profiles/profile.html
-msgid "Active member"
-msgstr "Actief lid"
+msgid "Details"
+msgstr "Gegevens"
+
+#: loefsys/members/templates/profiles/profile.html
+msgid "Email"
+msgstr "E-mail"
+
+#: loefsys/members/templates/profiles/profile.html
+msgid "This member keeps their details private."
+msgstr "Dit lid houdt zijn of haar gegevens privé."
 
 #: loefsys/members/templates/profiles/profile_edit.html
 msgid "Edit your profile"
