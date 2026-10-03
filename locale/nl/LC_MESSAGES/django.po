@@ -26,7 +26,7 @@ msgstr "Geselecteerde rijen exporteren naar Excel"
 msgid "Free!"
 msgstr "Gratis!"
 
-#: loefsys/core/tests/test_i18n.py loefsys/settings/locale.py
+#: loefsys/core/tests/test_i18n.py loefsys/settings.py
 msgid "English"
 msgstr "Engels"
 
@@ -2017,7 +2017,7 @@ msgstr "Maak je eerste reservering om te beginnen."
 msgid "Make a reservation"
 msgstr "Maak reservering"
 
-#: loefsys/settings/locale.py
+#: loefsys/settings.py
 msgid "Dutch"
 msgstr "Nederlands"
 
