@@ -97,3 +97,47 @@ class AdminPermissionUserListTestCase(TestCase):
         response = self.client.get(url)
         self.assertContains(response, "beheerder@example.com")
         self.assertNotContains(response, "lid@example.com")
+
+
+class AdminDashboardTestCase(TestCase):
+    """The dashboard only shows what the user has permission to see."""
+
+    def setUp(self):
+        self.user = G(get_user_model(), is_superuser=False)
+        self.user.user_permissions.add(
+            Permission.objects.get(
+                codename="view_event", content_type__app_label="events"
+            )
+        )
+        self.client.force_login(self.user)
+
+    def test_index_hides_cards_without_permission(self):
+        response = self.client.get(reverse("admin:index"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'id="chart-events-past"')
+        self.assertNotContains(response, 'id="kpi-reservations"')
+        self.assertNotContains(response, 'id="kpi-pending-link"')
+        self.assertNotContains(response, 'id="kpi-damage"')
+        self.assertNotContains(response, 'id="kpi-skippers"')
+
+    def test_data_leaves_out_sections_without_permission(self):
+        response = self.client.get(reverse("admin:admin-dashboard-data"))
+        data = response.json()
+        self.assertNotIn("error", data)
+        self.assertEqual(data["reservations"]["series"], [])
+        self.assertEqual(data["reservations"]["pending_requests"], 0)
+        self.assertEqual(data["damage"]["series"], [])
+        self.assertEqual(data["skippers"]["series"], [])
+        self.assertTrue(data["events"]["category_labels"])
+
+    def test_superuser_sees_all_cards(self):
+        self.client.force_login(
+            get_user_model().objects.create_superuser(
+                email="super@example.com", password=PASSWORD
+            )
+        )
+        response = self.client.get(reverse("admin:index"))
+        self.assertContains(response, 'id="kpi-reservations"')
+        self.assertContains(response, 'id="kpi-pending-link"')
+        self.assertContains(response, 'id="kpi-damage"')
+        self.assertContains(response, 'id="kpi-skippers"')

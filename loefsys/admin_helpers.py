@@ -13,6 +13,14 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
 
+DASHBOARD_PERMISSIONS = {
+    "skippers": "members.view_userskippership",
+    "reservations": "reservations.view_reservation",
+    "damage": "reservations.view_boatdamagerecord",
+    "events": "events.view_event",
+}
+"""The permission needed to see each section of the admin dashboard."""
+
 
 class ExportableAdminMixin:
     """Mixin that exposes Excel export for filtered admin record sets."""
@@ -115,6 +123,17 @@ class ExportableAdminMixin:
             except Exception:
                 event_model = None
                 event_categories_model = None
+
+            # Only report on what the user is allowed to see; the dashboard
+            # template hides the matching cards.
+            if not user.has_perm(DASHBOARD_PERMISSIONS["skippers"]):
+                user_skippership_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["reservations"]):
+                reservation_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["damage"]):
+                boat_damage_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["events"]):
+                event_model = None
 
             try:
                 now = timezone.now()
@@ -245,8 +264,10 @@ class ExportableAdminMixin:
                 events_by_category = {}
                 events_series_by_category = {}
                 event_total = 0
-                # default empty mapping for labels if events model not available
+                # default empty mappings if events model not available
                 category_label_map = {}
+                past_month_by_category = {}
+                upcoming_month_by_category = {}
                 if event_model is not None and event_categories_model is not None:
                     # categories mapping
                     categories = []
