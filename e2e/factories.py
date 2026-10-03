@@ -55,7 +55,9 @@ def make_event(
     now = timezone.now()
     start = start or now + timedelta(days=days_ahead)
     if registration_open:
-        registration_start = now - timedelta(days=1)
+        # Open well before both now and the start, so the deadlines below stay after
+        # it even for an event earlier today (such as the calendar's noon events).
+        registration_start = min(now, start) - timedelta(days=2)
     else:
         registration_start = start - timedelta(days=3)
     registration_deadline = start - timedelta(hours=1)
