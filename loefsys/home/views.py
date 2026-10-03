@@ -188,6 +188,7 @@ class SchippersView(TemplateView):
             skippers_by_group.append({"label": group_name, "schippers": group_entries})
 
         context["skippers_by_level"] = skippers_by_group
+        context["skipper_count"] = len(user_skipperships_by_user)
         context["skipper_groups"] = skippers_by_group
         return context
 

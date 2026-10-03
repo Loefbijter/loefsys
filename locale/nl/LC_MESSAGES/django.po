@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 10:16+0200\n"
+"POT-Creation-Date: 2026-10-03 10:18+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -720,6 +720,7 @@ msgid "Updated at"
 msgstr "Bijgewerkt op"
 
 #: loefsys/home/templates/home/association-information.html
+#: loefsys/home/templates/home/schippers.html
 #: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
 msgid "About us"
 msgstr "Over ons"
@@ -770,6 +771,7 @@ msgid "Your reservations"
 msgstr "Jouw reserveringen"
 
 #: loefsys/home/templates/home/index.html
+#: loefsys/home/templates/home/schippers.html
 #: loefsys/reservations/templates/reservations/reservation_form.html
 msgid "All"
 msgstr "Alles"
@@ -803,12 +805,31 @@ msgid "Skippers"
 msgstr "Schippers"
 
 #: loefsys/home/templates/home/schippers.html
+#, python-format
 msgid ""
-"Here you can find all skippers within Loefbijter. Want to go sailing some "
-"time? Send a skipper a message or talk to them at the borrel!"
-msgstr ""
-"Hier vind je alle schippers binnen Loefbijter. Wil je een keer zeilen? App "
-"een schipper of praat met ze op de borrel!"
+"%(counter)s member may skipper. Want to go sailing some time? Send a skipper "
+"a message or talk to them at the borrel!"
+msgid_plural ""
+"%(counter)s members may skipper. Want to go sailing some time? Send a "
+"skipper a message or talk to them at the borrel!"
+msgstr[0] ""
+"%(counter)s lid mag schipperen. Wil je een keer zeilen? App een schipper of "
+"praat met ze op de borrel!"
+msgstr[1] ""
+"%(counter)s leden mogen schipperen. Wil je een keer zeilen? App een schipper "
+"of praat met ze op de borrel!"
+
+#: loefsys/home/templates/home/schippers.html
+msgid "Search for a skipper"
+msgstr "Zoek een schipper"
+
+#: loefsys/home/templates/home/schippers.html
+#: loefsys/members/models/__disabled__.skippership.py
+#: loefsys/members/models/skippership.py
+#: loefsys/reservations/templates/reservations/reservation_form.html
+#: templates/cotton/menu/about_links.html
+msgid "Skippership"
+msgstr "Schipperschap"
 
 #: loefsys/home/templates/home/schippers.html
 #, python-format
@@ -818,12 +839,12 @@ msgstr[0] "%(counter)s schipper"
 msgstr[1] "%(counter)s schippers"
 
 #: loefsys/home/templates/home/schippers.html
-msgid "View profile"
-msgstr "Bekijk profiel"
+msgid "No skippers found"
+msgstr "Geen schippers gevonden"
 
 #: loefsys/home/templates/home/schippers.html
-msgid "There are currently no skippers registered at this level."
-msgstr "Er zijn momenteel geen schippers geregistreerd op dit niveau."
+msgid "Try another name or choose All."
+msgstr "Probeer een andere naam of kies Alle."
 
 #: loefsys/home/templates/home/schippers.html
 msgid "No skippers have been registered yet."
@@ -869,13 +890,6 @@ msgstr "Persoonlijke gegevens"
 #: loefsys/members/admin.py
 msgid "Groups"
 msgstr "Groepen"
-
-#: loefsys/members/models/__disabled__.skippership.py
-#: loefsys/members/models/skippership.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-#: templates/cotton/menu/about_links.html
-msgid "Skippership"
-msgstr "Schipperschap"
 
 #: loefsys/members/models/__disabled__.skippership.py
 #: loefsys/members/models/skippership.py

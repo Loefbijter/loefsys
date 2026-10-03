@@ -262,6 +262,8 @@
   .field:focus-within { border-color: var(--loef-1); }
   .filter { border: 1px solid var(--line); background: var(--surface); color: var(--muted); padding: 0.3rem 0.75rem; border-radius: 999px; font-weight: 600; font-size: 0.8125rem; }
   .filter:hover { border-color: var(--loef-1); }
+  .skipper-search { min-width: min(16.25rem, 100%); }
+  .panel[hidden], [data-filter-item][hidden] { display: none; }
   .filter[aria-current="true"], .filter[aria-pressed="true"] { background: var(--loef-2); border-color: var(--loef-2); color: oklch(0.98 0.01 230); }
 
   /* Switch */
