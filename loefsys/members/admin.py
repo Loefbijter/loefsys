@@ -4,19 +4,42 @@ from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import PermissionDenied
 from django.db.utils import OperationalError
-from django.forms import ModelMultipleChoiceField
+from django.forms import BaseInlineFormSet, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
 
 from loefsys.admin_helpers import ExportableModelAdmin
 from loefsys.privacy import pseudonymize_users
 
 from .models import Skippership, User, UserSkippership
+from .skipperships import backfill_required_skipperships
+
+
+class UserSkippershipFormSet(BaseInlineFormSet):
+    """Formset that lets a skippership and its required one be added together."""
+
+    def add_fields(self, form, index):
+        """Tell each row which skipperships the other rows are adding."""
+        super().add_fields(form, index)
+        form.instance.pending_skippership_ids = self._submitted_skippership_ids()
+
+    def _submitted_skippership_ids(self) -> set[int]:
+        """Return the skipperships selected in the submitted, non-deleted rows."""
+        if not self.is_bound:
+            return set()
+        ids = set()
+        for i in range(self.total_form_count()):
+            prefix = f"{self.prefix}-{i}"
+            value = self.data.get(f"{prefix}-skippership", "")
+            if value.isdigit() and not self.data.get(f"{prefix}-DELETE"):
+                ids.add(int(value))
+        return ids
 
 
 class UserSkippershipInline(admin.TabularInline):
     """Inline admin for assigning skipperships to a user."""
 
     model = UserSkippership
+    formset = UserSkippershipFormSet
     extra = 1
     autocomplete_fields = ("skippership", "given_by")
 
@@ -144,6 +167,19 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
 class SkippershipAdmin(ExportableModelAdmin):
     """Admin class for the Skippership model."""
 
-    list_display = ("name",)
+    list_display = ("name", "parent")
     search_fields = ("name",)
+    autocomplete_fields = ("parent",)
     inlines = (SkippershipUserInline,)
+
+    def save_model(self, request, obj, form, change):
+        """Give existing skippers the skipperships a new parent makes required."""
+        super().save_model(request, obj, form, change)
+        if obj.parent_id is not None and "parent" in form.changed_data:
+            count = backfill_required_skipperships(Skippership, UserSkippership)
+            if count:
+                messages.info(
+                    request,
+                    _("Added %(count)d required skipperships to existing skippers.")
+                    % {"count": count},
+                )
