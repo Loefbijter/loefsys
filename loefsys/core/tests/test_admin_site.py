@@ -38,6 +38,14 @@ class AdminAccessTestCase(TestCase):
         response = self.client.get(reverse("admin:index"))
         self.assertEqual(response.status_code, 200)
 
+    def test_forbidden_admin_page_shows_the_site_403_page(self):
+        self.grant_permission()
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("admin:members_user_changelist"))
+        self.assertEqual(response.status_code, 403)
+        self.assertTemplateUsed(response, "403.html")
+        self.assertContains(response, "Geen toegang", status_code=403)
+
     def test_admin_permission_gives_access(self):
         self.user.user_permissions.add(
             Permission.objects.get(

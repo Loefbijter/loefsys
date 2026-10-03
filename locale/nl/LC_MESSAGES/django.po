@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 16:01+0200\n"
+"POT-Creation-Date: 2026-10-03 16:03+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -821,8 +821,8 @@ msgstr "Bijgewerkt op"
 msgid "About us"
 msgstr "Over ons"
 
-#: loefsys/home/templates/home/index.html templates/cotton/menu/desktop.html
-#: templates/cotton/menu/mobile.html
+#: loefsys/home/templates/home/index.html templates/403.html
+#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
 msgid "Home"
 msgstr "Home"
 
@@ -1547,7 +1547,8 @@ msgid "Temporary password: %(temporary_password)s"
 msgstr "Tijdelijk wachtwoord: %(temporary_password)s"
 
 #: loefsys/members/templates/registration/reset_disabled.html
-#: templates/404.html templates/500.html templates/cotton/logo.html
+#: templates/403.html templates/404.html templates/500.html
+#: templates/cotton/logo.html
 msgid "Loefbijter logo"
 msgstr "Loefbijter-logo"
 
@@ -2089,6 +2090,29 @@ msgstr "Maak reservering"
 msgid "Dutch"
 msgstr "Nederlands"
 
+#: templates/403.html
+msgid "No access"
+msgstr "Geen toegang"
+
+#: templates/403.html
+msgid "403 - No access"
+msgstr "403 - Geen toegang"
+
+#: templates/403.html
+msgid ""
+"You don't have permission to view this page. If you think you should, ask "
+"the board, or let us know via <a href=\"mailto: webcie@loefbijter.nl\" "
+"class=\"font-bold text-white underline\">webcie@loefbijter.nl</a>."
+msgstr ""
+"Je hebt geen toegang tot deze pagina. Denk je dat dat wel zou moeten, vraag "
+"het dan aan het bestuur of laat het ons weten via <a href=\"mailto: "
+"webcie@loefbijter.nl\" class=\"font-bold text-white "
+"underline\">webcie@loefbijter.nl</a>."
+
+#: templates/403.html templates/404.html templates/500.html
+msgid "Go back"
+msgstr "Ga terug"
+
 #: templates/404.html
 msgid "Page not found"
 msgstr "Pagina niet gevonden"
@@ -2110,10 +2134,6 @@ msgstr ""
 "Die pagina bestaat niet. Mocht er iets kapot zijn, laat het ons weten via <a "
 "href=\"mailto: webcie@loefbijter.nl\" class=\"font-bold text-white "
 "underline\">webcie@loefbijter.nl</a>."
-
-#: templates/404.html templates/500.html
-msgid "Go back"
-msgstr "Ga terug"
 
 #: templates/500.html
 msgid "Something went wrong"
