@@ -74,6 +74,20 @@ def test_member_reserves_a_room(member_page, live_server, member):
     ).exists()
 
 
+def test_member_reserves_on_a_phone(member_phone_page, live_server, member):
+    """RES-9: a member can make a reservation on their phone."""
+    factories.make_room("Testkamer", location=Locations.BOARDROOM)
+    start, end = slot()
+
+    member_phone_page.goto(f"{live_server.url}/reservations/add/{Locations.BOARDROOM}")
+    fill_reservation_form(member_phone_page, "Testkamer", start, end)
+
+    expect(member_phone_page).to_have_url(f"{live_server.url}/reservations/")
+    assert Reservation.objects.filter(
+        user=member, reservable__name="Testkamer"
+    ).exists()
+
+
 def test_member_switches_location(member_page, live_server):
     """RES-3: choosing a location shows the items kept there."""
     factories.make_room("Testkamer", location=Locations.BOARDROOM)

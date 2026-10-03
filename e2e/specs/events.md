@@ -6,6 +6,9 @@ to join.**
 - **EVT-1** The calendar shows this week's published activities and never drafts.
 - **EVT-2** Clicking an activity in the calendar opens its page.
 - **EVT-3** The activity page shows the title, time, location and description.
+- **EVT-12** The time registration opens is shown in Dutch time.
+  *Known bug: the button and the note below it show the time in UTC (two hours early
+  in summer), while the details list shows the right time.*
 - **EVT-8** A draft activity can't be opened by members (not found).
 
 **As a member, I want to register for an activity and cancel when I can't make it.**

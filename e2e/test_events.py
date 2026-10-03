@@ -2,6 +2,7 @@
 
 import re
 
+import pytest
 from django.utils import timezone
 from playwright.sync_api import expect
 
@@ -113,6 +114,20 @@ def test_registration_not_open_yet(member_page, live_server):
     expect(registration_button(member_page)).to_contain_text(
         re.compile(r"(vanaf|from)", re.I)
     )
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="Known bug: the registration texts format dates in UTC, not local time.",
+)
+def test_registration_opening_time_is_local(member_page, live_server):
+    """EVT-12: the time registration opens is shown in Dutch time."""
+    event = factories.make_event("Winterborrel", days_ahead=20, registration_open=False)
+    opens = timezone.localtime(event.registration_start).strftime("%H:%M")
+
+    member_page.goto(live_server.url + event.get_absolute_url())
+
+    expect(registration_button(member_page)).to_contain_text(opens)
 
 
 def test_unpublished_event_is_not_found(member_page, live_server):

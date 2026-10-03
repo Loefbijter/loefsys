@@ -11,6 +11,8 @@ it.**
   there.
 - **RES-4** Reserving a boat that needs a skippership asks for a skipper; the chosen
   skipper is stored on the reservation.
+- **RES-9** The same works on a phone: the "Reserveren" button can be reached and
+  pressed.
 - **RES-5** An item that is already reserved for an overlapping period can't be
   reserved; the form says why.
 
