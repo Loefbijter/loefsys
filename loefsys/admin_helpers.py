@@ -14,6 +14,14 @@ from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
 
+DASHBOARD_PERMISSIONS = {
+    "skippers": "members.view_userskippership",
+    "reservations": "reservations.view_reservation",
+    "damage": "reservations.view_boatdamagerecord",
+    "events": "events.view_event",
+}
+"""The permission needed to see each section of the admin dashboard."""
+
 if TYPE_CHECKING:
     _MixinBase = admin.ModelAdmin
 else:
@@ -89,15 +97,13 @@ class ExportableAdminMixin(_MixinBase):
             from django.http import JsonResponse
             from django.utils import timezone
 
-            # Explicitly ensure the requesting user is an active staff member.
-            # admin.site.admin_view already applies staff checks, but do a double-check
+            from loefsys.core.admin_site import can_access_admin
+
+            # Explicitly ensure the requesting user may access the admin.
+            # admin.site.admin_view already applies this check, but do a double-check
             # so this endpoint cannot be accidentally exposed without the admin wrapper.
             user = getattr(request, "user", None)
-            if (
-                not user
-                or not getattr(user, "is_active", False)
-                or not getattr(user, "is_staff", False)
-            ):
+            if not user or not can_access_admin(user):
                 raise PermissionDenied
 
             # Lazy imports of models to avoid circular imports at import-time
@@ -128,6 +134,17 @@ class ExportableAdminMixin(_MixinBase):
             except Exception:
                 event_model = None
                 event_categories_model = None
+
+            # Only report on what the user is allowed to see; the dashboard
+            # template hides the matching cards.
+            if not user.has_perm(DASHBOARD_PERMISSIONS["skippers"]):
+                user_skippership_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["reservations"]):
+                reservation_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["damage"]):
+                boat_damage_model = None
+            if not user.has_perm(DASHBOARD_PERMISSIONS["events"]):
+                event_model = None
 
             try:
                 now = timezone.now()
@@ -258,8 +275,10 @@ class ExportableAdminMixin(_MixinBase):
                 events_by_category = {}
                 events_series_by_category = {}
                 event_total = 0
-                # default empty mapping for labels if events model not available
+                # default empty mappings if events model not available
                 category_label_map: dict[str, Any] = {}
+                past_month_by_category: dict[str, Any] = {}
+                upcoming_month_by_category: dict[str, Any] = {}
                 if event_model is not None and event_categories_model is not None:
                     # categories mapping
                     categories = []

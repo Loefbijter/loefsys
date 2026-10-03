@@ -1,6 +1,5 @@
 {% load i18n static %}
-<a href="{% url 'home:home' %}"
-   class="px-3 py-1.5 flex items-center gap-1.5 bg-background text-secondary border-t border-accent rounded-full shadow-sm hover:shadow-md">
-    <img src="{% static 'loefbijter-logo.svg' %}" alt="{% translate 'Loefbijter logo' %}" class="w-12">
-    <span class="hidden md:block font-bold">N.S.Z.V. De Loefbijter</span>
+<a href="{% url 'home:home' %}" class="logo-pill">
+    <img src="{% static 'loefbijter-logo.svg' %}" alt="{% translate 'Loefbijter logo' %}">
+    <span class="hidden lg:block">N.S.Z.V. De Loefbijter</span>
 </a>

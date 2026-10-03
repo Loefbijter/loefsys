@@ -1,0 +1,53 @@
+name: End-to-end tests
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: django-insecure-loefbijter
+      DJANGO_DATABASE_URL: sqlite:///db.sqlite
+      DJANGO_DEBUG: false
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.2.0
+
+      - name: Install python
+        run: uv python install
+
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+
+      - name: Build the stylesheet
+        run: uv run manage.py tailwind --minify
+
+      - name: Install Chromium
+        run: uv run playwright install --with-deps chromium
+
+      - name: Run the end-to-end tests
+        run: >-
+          uv run pytest e2e
+          --tracing retain-on-failure
+          --screenshot only-on-failure
+          --output test-results
+
+      - name: Upload traces and screenshots of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: test-results/
+          retention-days: 14

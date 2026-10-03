@@ -156,7 +156,7 @@
         <p class="mt-2 text-sm text-foreground/60">{% translate "Drag and zoom the image so your face fits in the circle." %}</p>
 
         <div class="profile-cropper mt-4 overflow-hidden rounded-full border border-black/10 bg-black/[0.03] mx-auto w-48 h-48 sm:w-56 sm:h-56 md:w-72 md:h-72">
-            <img id="crop-image" src="" alt="{% translate 'Crop profile picture' %}" class="block max-w-full max-h-full">
+            <img id="crop-image" alt="{% translate 'Crop profile picture' %}" class="block max-w-full max-h-full">
         </div>
 
         <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -230,7 +230,7 @@
                 cropper = null;
             }
             if (cropImage) {
-                cropImage.src = "";
+                cropImage.removeAttribute("src");
             }
         };
 

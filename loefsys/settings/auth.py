@@ -15,6 +15,8 @@ class AuthSettings(TemplateSettings, BaseSettings):
 
     AUTH_USER_MODEL = "members.User"
 
+    AUTHENTICATION_BACKENDS = ("loefsys.members.backends.LoefbijterGroupBackend",)
+
     # from: https://docs.djangoproject.com/en/5.0/topics/auth/passwords/#using-argon2-with-django
     PASSWORD_HASHERS = (
         "django.contrib.auth.hashers.Argon2PasswordHasher",
