@@ -1,0 +1,9 @@
+<c-vars user href="" sub="" />
+<a class="row" href="{{ href }}">
+    <c-avatar :user="user" />
+    <div class="row-body">
+        <div class="row-title">{{ user.display_name }}</div>
+        {% if sub %}<div class="row-meta">{{ sub }}</div>{% endif %}
+    </div>
+    <div class="row-end"><i class="bi bi-chevron-right" aria-hidden="true"></i></div>
+</a>

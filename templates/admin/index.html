@@ -7,10 +7,13 @@
 <h1>{% translate "Front page" %}</h1>
 <div id="admin-dashboard" style="display:block;">
   <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+    {% if perms.members.view_userskippership %}
     <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
       <h3>{% translate "New skippers this month" %}</h3>
       <div id="kpi-skippers" style="font-size:1.6rem;">…</div>
     </div>
+    {% endif %}
+    {% if perms.reservations.view_reservation %}
     <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
       <h3>{% translate "Reservations this month" %}</h3>
       <div id="kpi-reservations" style="font-size:1.6rem;">…</div>
@@ -19,13 +22,17 @@
       <h3>{% translate "Pending reservation requests" %}</h3>
       <div><a id="kpi-pending-link" href="{% url 'admin:reservations_reservation_changelist' %}?request_status=0" style="font-size:1.6rem;display:inline-block;text-decoration:none;color:inherit;"> <span id="kpi-pending">…</span></a></div>
     </div>
+    {% endif %}
+    {% if perms.reservations.view_boatdamagerecord %}
     <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
       <h3>{% translate "New damage reports" %}</h3>
       <div id="kpi-damage" style="font-size:1.6rem;">…</div>
     </div>
+    {% endif %}
   </div>
 
   <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+    {% if perms.members.view_userskippership %}
     <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;display:flex;gap:1rem;align-items:flex-start;">
       <div style="flex:1;">
         <h4>{% translate "New skippers (recent months)" %}</h4>
@@ -36,13 +43,17 @@
         <canvas id="chart-skippers-types" width="220" height="160"></canvas>
       </div>
     </div>
+    {% endif %}
+    {% if perms.reservations.view_reservation %}
     <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
       <h4>{% translate "Reservations (recent months)" %}</h4>
       <canvas id="chart-reservations" width="400" height="160"></canvas>
     </div>
+    {% endif %}
   </div>
 
   <div style="margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap;">
+    {% if perms.events.view_event %}
     <div style="flex:1 1 600px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
       <h4>{% translate "Events by category" %}</h4>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
@@ -56,10 +67,13 @@
         </div>
       </div>
     </div>
+    {% endif %}
+    {% if perms.reservations.view_boatdamagerecord %}
     <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
       <h4>{% translate "Damage reports (recent months)" %}</h4>
       <canvas id="chart-damage" width="400" height="160"></canvas>
     </div>
+    {% endif %}
   </div>
 </div>
 

@@ -134,7 +134,7 @@ class LogbookReminderTestCase(TestCase):
 
     def test_task_and_command_send_reminders(self):
         self.reserve(ended_ago=datetime.timedelta(hours=3))
-        self.assertEqual(reminder_task.apply().get(), 1)
+        self.assertEqual(reminder_task(), 1)
 
         self.reserve(ended_ago=datetime.timedelta(hours=5))
         out = StringIO()

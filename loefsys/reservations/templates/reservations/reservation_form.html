@@ -45,7 +45,7 @@
 
             <!-- Location tabs -->
             <nav class="mt-6">
-                <ul class="grid grid-cols-4 gap-1 bg-black/5 p-1.5 rounded-full text-sm font-semibold overflow-hidden">
+                <ul class="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-black/5 p-1.5 rounded-3xl sm:rounded-full text-sm font-semibold">
                     <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
                            class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 1 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
@@ -415,7 +415,7 @@
     </form>
 
     <!-- ============ FIXED SUBMIT BAR ============ -->
-    <div class="fixed bottom-0 left-0 right-0 z-30 bg-white/95 backdrop-blur border-t border-black/10 shadow-[0_-4px_16px_rgba(0,0,0,0.06)]">
+    <div class="action-bar">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center gap-3">
             <div class="flex-1 text-center sm:text-left">
                 <p class="text-foreground/50 text-xs uppercase font-semibold tracking-wide">{% translate "Selected" %}</p>
@@ -472,7 +472,13 @@
         function ensureStart() {
             let start = parseDT(startInput?.value);
             if (!start) {
-                start = new Date();
+                // The fields hold Amsterdam wall-clock time, so start from the
+                // current time in Amsterdam rather than the viewer's own zone.
+                start = parseDT(new Intl.DateTimeFormat("sv-SE", {
+                    timeZone: "Europe/Amsterdam",
+                    year: "numeric", month: "2-digit", day: "2-digit",
+                    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+                }).format(new Date()));
                 start.setMinutes(start.getMinutes() < 30 ? 30 : 0);
                 if (start.getMinutes() === 0) start.setHours(start.getHours() + 1);
                 if (startInput) {

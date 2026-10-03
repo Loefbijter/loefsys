@@ -1,73 +1,43 @@
-{% load i18n static %}
-<style>
-#mobile-menu-toggle-checkbox:checked ~ #mobile-slide-overlay {
-    display: block;
-    opacity: 0.4;
-}
-#mobile-menu-toggle-checkbox:checked ~ #mobile-slide-menu {
-    transform: translateX(0);
-}
-#mobile-slide-overlay {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-#mobile-slide-menu {
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-}
-</style>
-<input id="mobile-menu-toggle-checkbox" type="checkbox" class="hidden" aria-hidden="true">
-<nav class="sticky top-0 z-50 bg-primary text-primary-foreground">
-    <div class="flex items-center justify-between gap-3 p-4">
-        <label for="mobile-menu-toggle-checkbox" class="flex items-center gap-3 rounded-full border border-primary-foreground/20 bg-background/90 px-3 py-2 text-left shadow-sm hover:bg-background transition cursor-pointer">
-            <img src="{% static 'loefbijter-logo.svg' %}" alt="{% translate 'Loefbijter logo' %}" class="w-10 h-auto">
-            <span class="sr-only">{% translate "Toggle navigation" %}</span>
-        </label>
-        <c-profile-icon />
+{% comment %}Phone navigation: a tab bar in the bottom wave with the logo as the menu button.{% endcomment %}
+{% load i18n static requireapp %}
+{% with ns=request.resolver_match.namespace view=request.resolver_match.view_name %}
+<div id="phone-menu-backdrop" class="foldout-backdrop" hidden></div>
+<div id="phone-menu" class="menu foldout" role="menu" hidden>
+    {% requireapp "loefsys.events" %}
+    <a href="{% url 'events:events' %}" role="menuitem"><span class="menu-label"><i class="bi bi-calendar3" aria-hidden="true"></i>{% translate "Activities" %}</span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+    {% if request.user.is_authenticated and request.user.organizer.exists %}
+        <a href="{% url 'events:my_events' %}" role="menuitem"><span class="menu-label"><i class="bi bi-list-check" aria-hidden="true"></i>{% translate "My events" %}</span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+    {% endif %}
+    {% endrequireapp %}
+    {% requireapp "loefsys.reservations" %}
+    <a href="{% url 'reservations:reservations' %}" role="menuitem"><span class="menu-label"><i class="bi bi-water" aria-hidden="true"></i>{% translate "Reservations" %}</span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+    {% endrequireapp %}
+    <div class="menu-group">{% translate "About us" %}</div>
+    <c-menu.about-links />
+    <div class="menu-group">{% translate "Account" %}</div>
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'members:user-profile' %}" role="menuitem"><span class="menu-label"><i class="bi bi-person" aria-hidden="true"></i>{% translate "My profile" %}</span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+    {% else %}
+        <a href="{% url 'login' %}" role="menuitem"><span class="menu-label"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>{% translate "Log in" %}</span></a>
+    {% endif %}
+    <div class="px-3 py-2"><c-language-switch class="font-medium" /></div>
+    {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'members:logout' %}">
+            {% csrf_token %}
+            <button type="submit" role="menuitem"><span class="menu-label"><i class="bi bi-box-arrow-right" aria-hidden="true"></i>{% translate "Log out" %}</span></button>
+        </form>
+    {% endif %}
+</div>
+<nav class="bottomnav" aria-label="{% translate 'Main menu' %}">
+    <c-waves base="nav" />
+    <div class="bottomnav-band">
+        <a class="tab" href="{% url 'home:home' %}" {% if view == 'home:home' %}aria-current="page"{% endif %}><span class="tab-icon"><i class="bi bi-house" aria-hidden="true"></i></span>{% translate "Home" %}</a>
+        <a class="tab" href="{% url 'events:events' %}" {% if ns == 'events' %}aria-current="page"{% endif %}><span class="tab-icon"><i class="bi bi-calendar3" aria-hidden="true"></i></span>{% translate "Agenda" %}</a>
+        <button type="button" class="logo-btn" data-menu-toggle data-backdrop="phone-menu-backdrop" aria-controls="phone-menu" aria-expanded="false" aria-label="{% translate 'Menu' %}">
+            <img src="{% static 'loefbijter-logo.svg' %}" alt="">
+        </button>
+        <a class="tab" href="{% url 'reservations:reservations' %}" {% if ns == 'reservations' %}aria-current="page"{% endif %}><span class="tab-icon"><i class="bi bi-water" aria-hidden="true"></i></span>{% translate "Boats" %}</a>
+        <a class="tab" href="{% url 'members:user-profile' %}" {% if ns == 'members' %}aria-current="page"{% endif %}><span class="tab-icon"><i class="bi bi-person" aria-hidden="true"></i></span>{% translate "Profile" %}</a>
     </div>
 </nav>
-<label for="mobile-menu-toggle-checkbox" id="mobile-slide-overlay" class="fixed inset-0 bg-black/30 opacity-0 cursor-pointer" style="z-index:950;"></label>
-<div id="mobile-slide-menu" class="fixed inset-y-0 left-0 flex w-72 max-w-full flex-col overflow-y-auto border-r border-gray-200 bg-white text-foreground shadow-xl" style="z-index:1100;">
-    <div class="flex items-center justify-between gap-3 border-b border-gray-200 p-4">
-        <a href="{% url 'home:home' %}" class="flex items-center gap-3">
-            <img src="{% static 'loefbijter-logo.svg' %}" alt="{% translate 'Loefbijter logo' %}" class="w-10 h-auto">
-            <span class="font-semibold">Loefbijter</span>
-        </a>
-        <label for="mobile-menu-toggle-checkbox" aria-label="{% translate 'Close navigation' %}" class="rounded-full p-2 text-gray-700 hover:bg-gray-100 cursor-pointer">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </label>
-    </div>
-    <nav class="flex-1 p-4 space-y-2" aria-label="{% translate 'Mobile navigation' %}">
-        <a href="{% url 'events:events' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "Activities" %}</a>
-        {% if request.user.is_authenticated %}
-            {% if request.user.organizer.exists %}
-                <a href="{% url 'events:my_events' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "My events" %}</a>
-            {% endif %}
-        {% endif %}
-        <a href="{% url 'reservations:reservations' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "Reservations" %}</a>
-        <!-- <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Reserveer</a>
-        <a href="#" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">Gallerij</a> -->
-        <div class="border-t border-gray-200 pt-4 mt-4">
-            <p class="px-4 pb-2 text-xs uppercase tracking-wide text-gray-500 cursor-pointer">{% translate "About us" %}</p>
-            <a href="{% url 'home:association-information' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "About the association" %}</a>
-            <a href="{% url 'home:schippers' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "Skippers" %}</a>
-            <a href="{% url 'home:schipperschap' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "Skippership" %}</a>
-            <a href="{% url 'home:styleguide' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "Styleguide" %}</a>
-            <a href="{% url 'home:verenigingslied' %}" class="block rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">{% translate "Association song" %}</a>
-            <a href="https://drive.google.com/drive/folders/1z6ZQ5UGqoeWruBcpEumM75iBnBiPNXwK" target="_blank" rel="noopener noreferrer"
-                class="flex items-center justify-between gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-100">
-                <span>{% translate "Association documents" %}</span>
-                <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 3h7v7M10 14L21 3M21 14v7H3V3h7" />
-                </svg>
-            </a>
-        </div>
-        <div class="border-t border-gray-200 pt-4 mt-4">
-            <c-language-switch class="px-4 py-3 text-sm font-semibold text-gray-900" />
-        </div>
-    </nav>
-</div>
-<script src="{% static 'JS/navbar.js' %}" defer></script>
+{% endwith %}

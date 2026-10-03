@@ -13,6 +13,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
 
+from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 from loefsys.reservations.forms import (
     BoatLogbookForm,
     CreateReservationForm,
@@ -28,6 +29,8 @@ from loefsys.reservations.models.reservation import Reservation
 class ReservationListView(LoginRequiredMixin, ListView):
     """Reservation list view."""
 
+    request: AuthenticatedHttpRequest
+
     model = Reservation
     context_object_name = "reservations"
 
@@ -40,7 +43,7 @@ class ReservationListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         """Only show instances of Reservation made by the user, with the option to sort them."""  # noqa: E501
         form = SortByReservationForm(self.request.GET)
-        sort_by = "start"
+        sort_by: str | Lower = "start"
 
         if form.is_valid() and form.cleaned_data["sort_by"]:
             match form.cleaned_data["sort_by"]:
@@ -80,7 +83,7 @@ class ReservationListView(LoginRequiredMixin, ListView):
         """Include the sort form in the context data."""
         context = super().get_context_data(**kwargs)
         form = SortByReservationForm(self.request.GET)
-        sort_by = "start"
+        sort_by: str | Lower = "start"
 
         if form.is_valid() and form.cleaned_data["sort_by"]:
             match form.cleaned_data["sort_by"]:
@@ -189,6 +192,8 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
 class ReservationUpdateView(LoginRequiredMixin, UpdateView):
     """Reservation update view."""
 
+    request: AuthenticatedHttpRequest
+
     model = Reservation
     form_class = CreateReservationForm
     success_url = reverse_lazy("reservations:reservations")
@@ -279,7 +284,7 @@ class BoatLogbookView(LoginRequiredMixin, FormView):
             return redirect("reservations:reservation-detail", pk=self.reservation.pk)
 
         try:
-            self.object = self.reservation.boat_logbook
+            self.object: BoatLogbook | None = self.reservation.boat_logbook
         except BoatLogbook.DoesNotExist:
             self.object = None
 
@@ -324,6 +329,7 @@ class BoatLogbookView(LoginRequiredMixin, FormView):
 class ReservationDeleteView(LoginRequiredMixin, DeleteView):
     """Reservation delete view."""
 
+    request: AuthenticatedHttpRequest
     model = Reservation
     context_object_name = "reservation"
     template_name = "reservations/reservation_confirm_delete.html"
@@ -335,9 +341,15 @@ class ReservationDeleteView(LoginRequiredMixin, DeleteView):
         context["RequestStatus"] = Reservation.RequestStatus
         return context
 
+    def get_queryset(self):
+        """Only allow deleting instances of Reservation made by the user."""
+        return Reservation.objects.filter(user=self.request.user)
+
 
 class ReservationDetailView(LoginRequiredMixin, DetailView):
     """Reservation detail view."""
+
+    request: AuthenticatedHttpRequest
 
     model = Reservation
     context_object_name = "reservation"
