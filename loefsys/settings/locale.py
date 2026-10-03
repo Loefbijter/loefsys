@@ -4,14 +4,11 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import cast
 
-from cbs import env
 from django.utils.translation import gettext_lazy as _
 
 from .auth import AuthSettings
 from .base import BaseSettings
 from .templates import TemplateSettings
-
-denv = env["DJANGO_"]
 
 
 class LocaleSettings(AuthSettings, TemplateSettings, BaseSettings):
@@ -21,7 +18,9 @@ class LocaleSettings(AuthSettings, TemplateSettings, BaseSettings):
     visitor; English is only shown when a user picks it with the language switcher.
     """
 
-    TIME_ZONE = denv("Europe/Amsterdam")
+    # Fixed rather than read from the environment: times are always shown in
+    # Amsterdam time.
+    TIME_ZONE = "Europe/Amsterdam"
     LANGUAGE_CODE = "nl"
     LANGUAGES = (("nl", _("Dutch")), ("en", _("English")))
     USE_I18N = True

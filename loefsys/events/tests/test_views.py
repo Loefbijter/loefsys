@@ -1,5 +1,5 @@
 import tempfile
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
@@ -91,6 +91,25 @@ class EventFillerViewTestCase(TestCase):
                 self.assertEqual(len(data), 1)
                 self.assertEqual(data[0]["picture_url"], event.picture.url)
                 self.assertEqual(data[0]["url"], event.get_absolute_url())
+
+    def test_event_filler_returns_amsterdam_times(self):
+        """Event times are Amsterdam wall-clock times, whatever the viewer's zone."""
+        # 08:40 UTC is 10:40 in Europe/Amsterdam (CEST).
+        start = datetime(2099, 7, 1, 8, 40, tzinfo=UTC)
+        G(
+            Event,
+            start=start,
+            end=start + timedelta(hours=2),
+            registration_start=start - timedelta(days=7),
+            registration_deadline=start - timedelta(days=1),
+            cancelation_deadline=start - timedelta(days=1),
+            published=True,
+        )
+
+        data = self.client.get(reverse("events:event_filler")).json()
+
+        self.assertEqual(data[0]["start"], "2099-07-01T10:40:00")
+        self.assertEqual(data[0]["end"], "2099-07-01T12:40:00")
 
     def test_event_filler_toggle_includes_only_public_birthdays(self):
         """Birthdays should stay hidden by default and require an explicit toggle."""

@@ -61,12 +61,12 @@ def phone_page(browser, browser_context_args):
     context = browser.new_context(**{**browser_context_args, **PHONE})
     page = context.new_page()
     page.set_default_timeout(10_000)
-    _serve_cdn_from_node_modules(page)
+    serve_cdn_from_node_modules(page)
     yield page
     context.close()
 
 
-def _serve_cdn_from_node_modules(page: Page) -> None:
+def serve_cdn_from_node_modules(page: Page) -> None:
     """Answer jsDelivr requests from ``node_modules`` when the package is there.
 
     CI fetches from the CDN directly. Locally, or in sandboxes without access to
@@ -91,7 +91,7 @@ def _serve_cdn_from_node_modules(page: Page) -> None:
 def page(page: Page) -> Page:
     """Return pytest-playwright's page, with CDN requests served locally if possible."""
     page.set_default_timeout(10_000)
-    _serve_cdn_from_node_modules(page)
+    serve_cdn_from_node_modules(page)
     return page
 
 

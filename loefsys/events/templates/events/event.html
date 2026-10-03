@@ -213,7 +213,7 @@
     {% translate "Register" as register %}
     {% compress js inline %}
     <script>
-      const timeUntilStartInMiliseconds = new Date("{{ event.registration_start|date:'Y-m-d H:i:s' }}") - new Date();
+      const timeUntilStartInMiliseconds = new Date("{{ event.registration_start|date:'c' }}") - new Date();
 
       if (timeUntilStartInMiliseconds > 0) {
         const registrationButton = document.getElementById("registration-button");

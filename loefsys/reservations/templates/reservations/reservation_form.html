@@ -472,7 +472,13 @@
         function ensureStart() {
             let start = parseDT(startInput?.value);
             if (!start) {
-                start = new Date();
+                // The fields hold Amsterdam wall-clock time, so start from the
+                // current time in Amsterdam rather than the viewer's own zone.
+                start = parseDT(new Intl.DateTimeFormat("sv-SE", {
+                    timeZone: "Europe/Amsterdam",
+                    year: "numeric", month: "2-digit", day: "2-digit",
+                    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+                }).format(new Date()));
                 start.setMinutes(start.getMinutes() < 30 ? 30 : 0);
                 if (start.getMinutes() === 0) start.setHours(start.getHours() + 1);
                 if (startInput) {

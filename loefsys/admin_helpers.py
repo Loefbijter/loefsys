@@ -147,7 +147,7 @@ class ExportableAdminMixin(_MixinBase):
                 event_model = None
 
             try:
-                now = timezone.now()
+                now = timezone.localtime()
                 # Start at beginning of current month
                 first_of_month = now.replace(
                     day=1, hour=0, minute=0, second=0, microsecond=0
