@@ -54,7 +54,7 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
             model_name = self.model._meta.model_name
             perm = f"{app}.pseudonymize_{model_name}"
             try:
-                allowed = user.has_perm(perm)
+                allowed = user is not None and user.has_perm(perm)
             except Exception:
                 allowed = False
 

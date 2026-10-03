@@ -303,8 +303,8 @@ class EventRegistrationTestCase(TestCase):
                 ).first(),
                 field=self.form_field_text,
             )
-            .first()
-            .value,
+            .values_list("value", flat=True)
+            .first(),
         )
 
         self.assertEqual(
@@ -317,8 +317,8 @@ class EventRegistrationTestCase(TestCase):
                 ).first(),
                 field=self.form_field_boolean,
             )
-            .first()
-            .value,
+            .values_list("value", flat=True)
+            .first(),
         )
 
         self.assertEqual(
@@ -331,8 +331,8 @@ class EventRegistrationTestCase(TestCase):
                 ).first(),
                 field=self.form_field_integer,
             )
-            .first()
-            .value,
+            .values_list("value", flat=True)
+            .first(),
         )
 
         self.assertEqual(
@@ -347,8 +347,8 @@ class EventRegistrationTestCase(TestCase):
                 ).first(),
                 field=self.form_field_datetime,
             )
-            .first()
-            .value,
+            .values_list("value", flat=True)
+            .first(),
         )
 
         # response = self.client.get(
@@ -415,8 +415,8 @@ class EventRegistrationTestCase(TestCase):
                 ).first(),
                 field=self.form_field_required_text,
             )
-            .first()
-            .value,
+            .values_list("value", flat=True)
+            .first(),
         )
 
         # self.client.get(

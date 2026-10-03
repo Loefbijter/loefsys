@@ -16,6 +16,7 @@ from django.utils.translation import gettext as _
 from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
 
+from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 from loefsys.events.exceptions import NoUserObjectError
 from loefsys.events.models.feed_token import FeedToken
 
@@ -246,7 +247,7 @@ class RegistrationFormView(LoginRequiredMixin, FormView):
 
     template_name = "events/registration_form.html"
     form_class = EventFieldsForm
-    event = None
+    event: Event
     success_url = None
 
     def __get_registration(self, event, contact):
@@ -382,6 +383,8 @@ class EventFillerView(View):
             for user in user_model.objects.filter(
                 birthday__isnull=False, show_birthday=True
             ):
+                if user.birthday is None:
+                    continue
                 birthday_this_year = user.birthday.replace(year=today.year)
                 if birthday_this_year < today:
                     birthday_this_year = user.birthday.replace(year=today.year + 1)
@@ -425,6 +428,8 @@ class EventFeedView(TemplateView, LoginRequiredMixin):
 class MyEventsView(LoginRequiredMixin, TemplateView):
     """View for listing the current user's organized events."""
 
+    request: AuthenticatedHttpRequest
+
     template_name = "events/my_events.html"
 
     @staticmethod
@@ -461,6 +466,8 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
 
 class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
     """View for organizers to inspect their own event registrations."""
+
+    request: AuthenticatedHttpRequest
 
     model = Event
     template_name = "events/my_event_detail.html"

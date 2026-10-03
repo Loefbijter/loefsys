@@ -19,7 +19,7 @@ class Command(BaseCommand):
         parser.add_argument("-w", "--watch", action="store_true")
         parser.add_argument("-m", "--minify", action="store_true")
 
-    def handle(self, *_: tuple[Any, ...], **options: dict[str, object]) -> str | None:
+    def handle(self, *_: tuple[Any, ...], **options: dict[str, object]) -> None:
         """Perform the actual logic of the command."""
         args = ["-i", settings.TAILWIND_INPUT_CSS, "-o", settings.TAILWIND_OUTPUT_CSS]
         if options["minify"]:
