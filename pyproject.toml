@@ -40,7 +40,11 @@ dev = [
     "django-dynamic-fixture>=4.0.1",
     "django-stubs>=5.1.2",
     "mypy>=1.14.1",
+    "playwright==1.56.*",
     "pre-commit>=4.1.0",
+    "pytest>=8",
+    "pytest-django>=4.9",
+    "pytest-playwright>=0.7",
     "ruff>=0.14.3",
 ]
 docs = [
@@ -89,6 +93,8 @@ select = [
 "**/{tests}/*" = ["D100", "D101", "D102", "D104"]
 "**/__init__.py" = ["PLC0415"]
 "**/__disabled__.**.py" = ["N999"]
+# pytest fixtures are requested by argument name, and HTTP status codes read fine.
+"e2e/*" = ["ARG001", "PLR0913", "PLR2004"]
 
 [tool.ruff.lint.isort]
 case-sensitive = true
@@ -116,3 +122,9 @@ plugins = ["mypy_django_plugin.main"]
 [tool.django-stubs]
 django_settings_module = "loefsys.settings"
 strict_settings = false
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "loefsys.settings"
+testpaths = ["e2e"]
+pythonpath = ["."]
+addopts = "--browser chromium"
