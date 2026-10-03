@@ -4,7 +4,7 @@
 {% block content %}
 <div id="content-main">
     <p>
-        {% blocktranslate with reservable=reservation.reservable user=reservation.user start=reservation.start end=reservation.end %}
+        {% blocktranslate trimmed with reservable=reservation.reservable user=reservation.user start=reservation.start end=reservation.end %}
         Reservation for {{ reservable }} by {{ user }}, from {{ start }} to {{ end }}.
         {% endblocktranslate %}
     </p>
@@ -21,23 +21,23 @@
             <div class="form-row">
                 <label>
                     <input type="radio" name="status" value="accepted" {% if selected_status == "accepted" %}checked{% endif %}>
-                    {% translate "Accepteren" %}
+                    {% translate "Accept" %}
                 </label>
                 <label>
                     <input type="radio" name="status" value="denied" {% if selected_status == "denied" %}checked{% endif %}>
-                    {% translate "Weigeren" %}
+                    {% translate "Deny" %}
                 </label>
             </div>
             <div class="form-row">
-                <label for="id_denial_reason">{% translate "Reden voor weigering" %}</label>
+                <label for="id_denial_reason">{% translate "Reason for denial" %}</label>
                 <textarea id="id_denial_reason" name="denial_reason" rows="3" cols="60">{{ denial_reason }}</textarea>
-                <div class="help">{% translate "Alleen verplicht wanneer je de reservering weigert." %}</div>
+                <div class="help">{% translate "Only required when you deny the reservation." %}</div>
             </div>
         </fieldset>
 
         <div class="submit-row">
-            <input type="submit" value="{% translate 'Opslaan' %}" class="default">
-            <a href="{{ next }}" class="button cancel-link">{% translate "Annuleren" %}</a>
+            <input type="submit" value="{% translate 'Save' %}" class="default">
+            <a href="{{ next }}" class="button cancel-link">{% translate "Cancel" %}</a>
         </div>
     </form>
 </div>

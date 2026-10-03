@@ -40,6 +40,12 @@ jobs:
           uv run manage.py makemigrations
           uv run manage.py migrate
 
+      - name: Check the translations are up to date
+        run: |
+          sudo apt-get update && sudo apt-get install -y gettext
+          uv run manage.py makemessages -l nl --add-location file --no-obsolete -i node_modules
+          git diff --exit-code -I "POT-Creation-Date" -- locale/
+
       - name: Run system checks
         run: uv run manage.py check
 

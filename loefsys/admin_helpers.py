@@ -237,7 +237,7 @@ class ExportableAdminMixin:
                                 cnt=Count("id")
                             )
                             for g in grouped:
-                                typename = g.get("boat__type__name") or "Unknown"
+                                typename = g.get("boat__type__name") or _("Unknown")
                                 damage_by_type[str(typename)] = g.get("cnt", 0)
 
                     damage_total = damage_series[-1] if damage_series else 0

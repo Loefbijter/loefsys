@@ -1,7 +1,7 @@
-{% load static %}
+{% load i18n static %}
 <a href="{% url 'members:user-profile' %}" class="{{ class }}">
     <img
             class="size-10 rounded-full border-2 border-tertiary shadow-sm hover:shadow-md border-t-tertiary-accent"
             src="{% if user.picture %}{{ user.picture.url }}{% else %}{% static 'default-profile-picture.svg' %}{% endif %}"
-            alt="User Profile">
+            alt="{% translate 'User profile' %}">
 </a>

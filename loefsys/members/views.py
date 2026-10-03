@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.crypto import get_random_string
+from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
@@ -27,7 +28,7 @@ class UserProfileEditForm(forms.ModelForm):
         input_formats=["%d-%m-%Y", "%Y-%m-%d"],
         widget=forms.TextInput(
             attrs={
-                "placeholder": "dd-mm-jjjj",
+                "placeholder": gettext_lazy("dd-mm-yyyy"),
                 "inputmode": "numeric",
                 "autocomplete": "bday",
                 "maxlength": "10",
@@ -179,14 +180,14 @@ class UserSetPasswordView(LoginRequiredMixin, FormView):
         form.save()
         # Keep the user logged in after password change
         update_session_auth_hash(self.request, self.request.user)
-        messages.success(self.request, "Wachtwoord succesvol bijgewerkt.")
+        messages.success(self.request, _("Password updated successfully."))
         return super().form_valid(form)
 
 
 class PasswordResetByEmailForm(forms.Form):
     """Simple form asking for the user's email address."""
 
-    email = forms.EmailField(label="E-mailadres")
+    email = forms.EmailField(label=gettext_lazy("Email address"))
 
 
 class PasswordResetByEmailView(FormView):
@@ -222,7 +223,7 @@ class PasswordResetByEmailView(FormView):
                 user.save()
 
                 # Send the temporary password via email using the project's template
-                subject = "Tijdelijk wachtwoord - Loefsys"
+                subject = _("Temporary password - Loefsys")
                 from_email = (
                     getattr(settings, "DEFAULT_FROM_EMAIL", None)
                     or getattr(settings, "SERVER_EMAIL", None)
@@ -256,10 +257,7 @@ class PasswordResetByEmailView(FormView):
 
         messages.success(
             self.request,
-            (
-                "Als het opgegeven e-mailadres bestaat, is er een tijdelijk "
-                "wachtwoord gestuurd."
-            ),
+            _("If the given email address exists, a temporary password has been sent."),
         )
         return super().form_valid(form)
 

@@ -92,6 +92,7 @@ class RequireLoginMiddleware:
             "/reset/",  # Allow password reset pages (reset confirm and reset done)
             "/reset-disabled/",  # Allow reset disabled message page
             "/admin/",
+            "/i18n/",  # Allow choosing a language before logging in
             "/__reload__/",
             "/__debug__/",
             settings.STATIC_URL if hasattr(settings, "STATIC_URL") else "/static/",

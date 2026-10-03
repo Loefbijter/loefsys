@@ -47,6 +47,6 @@ class AdminExportTestCase(TestCase):
         rows = list(sheet.values)
 
         self.assertEqual(rows[0][0], "Id")
-        self.assertEqual(rows[0][1], "Title")
+        self.assertEqual(rows[0][1], "Titel")
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[1][1], "Published announcement")
