@@ -3,7 +3,6 @@
 import re
 from datetime import timedelta
 
-import pytest
 from django.utils import timezone
 from playwright.sync_api import expect
 
@@ -177,10 +176,6 @@ def test_member_cannot_open_someone_elses_reservation(
     assert response.status == 404
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Known bug: ReservationDeleteView doesn't limit deletion to the owner.",
-)
 def test_member_cannot_delete_someone_elses_reservation(
     member_page, live_server, other_member
 ):
