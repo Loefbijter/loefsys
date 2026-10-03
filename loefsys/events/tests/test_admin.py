@@ -1,13 +1,14 @@
 from datetime import timedelta
 
+from django.contrib.admin.sites import site
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event, EventRegistration
+from loefsys.events.models import Event, EventOrganizer, EventRegistration
 from loefsys.events.models.choices import EventCategories
 from loefsys.events.permissions import ACTIVITY_MANAGERS_GROUP, allowed_categories
 
@@ -66,6 +67,31 @@ class ActivityManagerAdminTestCase(TestCase):
         url = reverse("admin:events_event_change", args=[self.sailing_event.pk])
         response = self.client.get(url)
         self.assertNotEqual(response.status_code, 200)
+
+    def test_creator_becomes_organizer(self):
+        """An event created in the admin lists its creator as an organizer."""
+        event = make_event(EventCategories.LEISURE, "Nieuwe borrel")
+        request = RequestFactory().post("/")
+        request.user = self.manager
+        model_admin = site._registry[Event]
+        form = model_admin.get_form(request)(instance=event)
+        setattr(form, "save_m2m", lambda: None)  # set by form.save(commit=False)
+        model_admin.save_related(request, form, [], change=False)
+        organizer = EventOrganizer.objects.get(event=event)
+        self.assertQuerySetEqual(organizer.user.all(), [self.manager])
+
+    def test_editing_doesnt_add_organizer(self):
+        request = RequestFactory().post("/")
+        request.user = self.manager
+        model_admin = site._registry[Event]
+        form = model_admin.get_form(request)(instance=self.leisure_event)
+        setattr(form, "save_m2m", lambda: None)  # set by form.save(commit=False)
+        model_admin.save_related(request, form, [], change=True)
+        self.assertFalse(
+            EventOrganizer.objects.filter(
+                event=self.leisure_event, user=self.manager
+            ).exists()
+        )
 
     def test_category_choices_are_limited(self):
         response = self.client.get(reverse("admin:events_event_add"))
