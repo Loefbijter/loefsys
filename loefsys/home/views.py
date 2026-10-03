@@ -25,9 +25,7 @@ class HomeView(View):
         announcements = Announcement.objects.filter(
             published=True, announcement_start__lte=now, announcement_end__gte=now
         ).order_by("-announcement_start")
-        events = Event.objects.filter(start__gte=now).order_by("start")
-        if not self.request.user.is_active:
-            events = events.filter(published=True)
+        events = Event.objects.filter(published=True, start__gte=now).order_by("start")
 
         # Show top 4 upcoming events as a preview
         raw_upcoming = list(events[:4])
