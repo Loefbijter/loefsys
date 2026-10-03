@@ -44,6 +44,8 @@ class Reservation(TimeStampedModel):
         The status of the reservation.
     denial_reason : str
         A string containing clarification of the denial of the request.
+    logbook_reminder_sent_at : ~datetime.datetime
+        When the member was emailed to fill in the logbook, if that happened.
     """
 
     class RequestStatus(models.IntegerChoices):
@@ -73,6 +75,12 @@ class Reservation(TimeStampedModel):
     end = models.DateTimeField(verbose_name=_("End time"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
     denial_reason = models.TextField(blank=True, verbose_name=_("Denial reason"))
+    logbook_reminder_sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        editable=False,
+        verbose_name=_("Logbook reminder sent at"),
+    )
 
     class Meta:
         constraints = (

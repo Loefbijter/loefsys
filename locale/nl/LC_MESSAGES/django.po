@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 17:26+0200\n"
+"POT-Creation-Date: 2026-10-03 14:09+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -1303,6 +1303,7 @@ msgstr "Terug naar inloggen"
 
 #: loefsys/members/templates/registration/password_reset_email.html
 #: loefsys/members/templates/registration/password_reset_temporary_email.txt
+#: loefsys/reservations/templates/reservations/emails/logbook_reminder_body.txt
 #, python-format
 msgid "Hello %(name)s,"
 msgstr "Hallo %(name)s,"
@@ -1336,6 +1337,7 @@ msgstr ""
 
 #: loefsys/members/templates/registration/password_reset_email.html
 #: loefsys/members/templates/registration/password_reset_temporary_email.txt
+#: loefsys/reservations/templates/reservations/emails/logbook_reminder_body.txt
 msgid "Kind regards,"
 msgstr "Met vriendelijke groet,"
 
@@ -1635,6 +1637,10 @@ msgid "Denial reason"
 msgstr "Afwijsreden"
 
 #: loefsys/reservations/models/reservation.py
+msgid "Logbook reminder sent at"
+msgstr "Logboekherinnering verstuurd op"
+
+#: loefsys/reservations/models/reservation.py
 msgid "End time cannot be before the start time."
 msgstr "De eindtijd kan niet voor de starttijd liggen."
 
@@ -1682,6 +1688,32 @@ msgstr "Geen bestand gekozen"
 #: loefsys/reservations/templates/reservations/boat_logbook_form.html
 msgid "Add photo"
 msgstr "Foto toevoegen"
+
+#: loefsys/reservations/templates/reservations/emails/logbook_reminder_body.txt
+#, python-format
+msgid ""
+"You reserved %(boat)s on %(date)s, from %(start)s to %(end)s. The logbook "
+"for that reservation is still empty."
+msgstr ""
+"Je had %(boat)s gereserveerd op %(date)s, van %(start)s tot %(end)s. Het "
+"logboek van die reservering is nog leeg."
+
+#: loefsys/reservations/templates/reservations/emails/logbook_reminder_body.txt
+msgid "Please fill it in, so the next crew knows the state of the boat:"
+msgstr "Vul het in, zodat de volgende bemanning weet hoe de boot erbij ligt:"
+
+#: loefsys/reservations/templates/reservations/emails/logbook_reminder_body.txt
+msgid ""
+"It only takes a minute: the wind force, the motor hours, whether you "
+"refuelled and any new damage."
+msgstr ""
+"Het kost maar een minuut: de windkracht, de motoruren, of je hebt getankt "
+"en eventuele nieuwe schade."
+
+#: loefsys/reservations/templates/reservations/emails/logbook_reminder_subject.txt
+#, python-format
+msgid "Fill in the logbook for %(boat)s"
+msgstr "Vul het logboek in voor %(boat)s"
 
 #: loefsys/reservations/templates/reservations/question_form.html
 #: loefsys/reservations/templates/reservations/reservation_list.html

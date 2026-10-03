@@ -22,6 +22,9 @@ class BaseSettings(ClassySettings):
     BROWSER_RELOAD_ENABLED = denv.bool(False)
     ALLOWED_HOSTS = denv.list("")
 
+    SITE_URL = denv("http://localhost:8000")
+    """The address of the site, used for links in emails sent outside a request."""
+
     ROOT_URLCONF = "loefsys.urls"
     WSGI_APPLICATION = "loefsys.wsgi.application"
 
