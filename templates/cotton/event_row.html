@@ -1,0 +1,23 @@
+{% comment %}One line per event, used in lists, the dashboard and the agenda.{% endcomment %}
+{% load i18n event_ui %}
+<c-vars event registration="" />
+{% now "Y-m-d H:i" as now_str %}
+{% with spots=event|spots_left %}
+<a class="row {% if event.end|date:'Y-m-d H:i' < now_str %}row-past{% endif %}" href="{{ event.get_absolute_url }}">
+    <c-date-tile :date="event.start" />
+    <div class="row-body">
+        <div class="row-title">{{ event.title }}</div>
+        <div class="row-meta">
+            <span><i class="bi bi-clock" aria-hidden="true"></i>{% if event.start.date == event.end.date %}{{ event.start|date:"D H:i" }}–{{ event.end|date:"H:i" }}{% else %}{{ event.start|date:"D j M" }} – {{ event.end|date:"D j M" }}{% endif %}</span>
+            {% if event.location %}<span><i class="bi bi-geo-alt" aria-hidden="true"></i>{{ event.location }}</span>{% endif %}
+            {% if spots is not None %}<span><i class="bi bi-people" aria-hidden="true"></i>{% if spots %}{% blocktranslate trimmed count counter=spots with capacity=event.capacity %}{{ counter }} of {{ capacity }} spot left{% plural %}{{ counter }} of {{ capacity }} spots left{% endblocktranslate %}{% else %}{% translate "Full" %}{% endif %}</span>{% endif %}
+        </div>
+        <c-event-status :event="event" :registration="registration" class="chip-n" />
+    </div>
+    <div class="row-end">
+        <c-category :event="event" />
+        <c-event-status :event="event" :registration="registration" />
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    </div>
+</a>
+{% endwith %}

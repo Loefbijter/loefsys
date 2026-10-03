@@ -1,0 +1,27 @@
+{% comment %}The member's next activity, shown large at the top of the dashboard.{% endcomment %}
+{% load i18n %}
+<c-vars event registration="" eyebrow="" />
+<article class="hero">
+    <div class="hero-when">
+        <small>{{ event.start|date:"l" }}</small><b>{{ event.start|date:"j" }}</b><small>{{ event.start|date:"F" }}</small>
+    </div>
+    <div class="hero-what">
+        <div class="hero-top">
+            <span class="eyebrow">{% if eyebrow %}{{ eyebrow }}{% else %}{% translate "Your next activity" %}{% endif %}</span>
+            <c-event-status :event="event" :registration="registration" />
+        </div>
+        <h3>{{ event.title }}</h3>
+        <div class="hero-meta">
+            <span><i class="bi bi-clock" aria-hidden="true"></i>{% if event.start.date == event.end.date %}{{ event.start|date:"H:i" }}–{{ event.end|date:"H:i" }}{% else %}{{ event.start|date:"j M H:i" }} – {{ event.end|date:"j M H:i" }}{% endif %}</span>
+            {% if event.location %}<span><i class="bi bi-geo-alt" aria-hidden="true"></i>{{ event.location }}</span>{% endif %}
+            <c-category :event="event" />
+        </div>
+        <div class="hero-acts">
+            <a class="btn btn-secondary" href="{{ event.get_absolute_url }}">{% translate "View activity" %}</a>
+            {{ slot }}
+            {% if registration and event.cancelation_deadline %}
+                <span class="hero-note">{% blocktranslate trimmed with deadline=event.cancelation_deadline|date:"D j M, H:i" %}Cancel without a fine until {{ deadline }}{% endblocktranslate %}</span>
+            {% endif %}
+        </div>
+    </div>
+</article>

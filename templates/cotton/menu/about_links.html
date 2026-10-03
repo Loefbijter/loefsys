@@ -1,0 +1,8 @@
+{% comment %}The "About us" links, shared by the desktop dropdown and the phone menu.{% endcomment %}
+{% load i18n %}
+<a href="{% url 'home:association-information' %}" role="menuitem"><span class="menu-label"><i class="bi bi-info-circle" aria-hidden="true"></i>{% translate "About the association" %}</span></a>
+<a href="{% url 'home:schippers' %}" role="menuitem"><span class="menu-label"><i class="bi bi-life-preserver" aria-hidden="true"></i>{% translate "Skippers" %}</span></a>
+<a href="{% url 'home:schipperschap' %}" role="menuitem"><span class="menu-label"><i class="bi bi-award" aria-hidden="true"></i>{% translate "Skippership" %}</span></a>
+<a href="{% url 'home:styleguide' %}" role="menuitem"><span class="menu-label"><i class="bi bi-palette" aria-hidden="true"></i>{% translate "Styleguide" %}</span></a>
+<a href="{% url 'home:verenigingslied' %}" role="menuitem"><span class="menu-label"><i class="bi bi-music-note-beamed" aria-hidden="true"></i>{% translate "Association song" %}</span></a>
+<a href="https://drive.google.com/drive/folders/1z6ZQ5UGqoeWruBcpEumM75iBnBiPNXwK" target="_blank" rel="noopener noreferrer" role="menuitem"><span class="menu-label"><i class="bi bi-folder2-open" aria-hidden="true"></i>{% translate "Association documents" %}</span><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>

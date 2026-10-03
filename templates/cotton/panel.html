@@ -1,0 +1,17 @@
+{% comment %}
+A titled container; the only "card" a page should need.
+Usage: <c-panel title="..." icon="calendar-event" count="3"><c-slot name="action">...</c-slot>body</c-panel>
+`icon` is a Bootstrap Icons name; `tone="warn"` tints the panel for things that need attention.
+{% endcomment %}
+<c-vars title="" icon="" count="" tone="" class="" />
+<section class="panel {% if tone %}panel-{{ tone }}{% endif %} {{ class }}" {{ attrs }}>
+    {% if title or action %}
+        <div class="panel-h">
+            {% if title %}
+                <h2>{% if icon %}<i class="bi bi-{{ icon }}" aria-hidden="true"></i>{% endif %}{{ title }}{% if count != "" %} <span class="panel-count">{{ count }}</span>{% endif %}</h2>
+            {% endif %}
+            {{ action }}
+        </div>
+    {% endif %}
+    {{ slot }}
+</section>

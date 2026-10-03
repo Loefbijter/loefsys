@@ -1,0 +1,6 @@
+{% load tz %}
+<c-vars date />
+{% now "Y-m-d" as today %}
+<div class="datetile {% if date|date:'Y-m-d' == today %}datetile-today{% endif %}" aria-hidden="true">
+    <small>{{ date|date:"M" }}</small><b>{{ date|date:"j" }}</b>
+</div>

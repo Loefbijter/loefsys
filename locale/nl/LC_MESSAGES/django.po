@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 17:26+0200\n"
+"POT-Creation-Date: 2026-10-03 10:03+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -79,7 +79,7 @@ msgstr "Training"
 msgid "Active"
 msgstr "Actief"
 
-#: loefsys/events/models/choices.py
+#: loefsys/events/models/choices.py templates/cotton/event_status.html
 msgid "In queue"
 msgstr "In wachtrij"
 
@@ -702,15 +702,16 @@ msgid_plural "%(counter)s spots left"
 msgstr[0] "%(counter)s vrij"
 msgstr[1] "%(counter)s vrij"
 
-#: loefsys/home/templates/home/banner.html
+#: loefsys/home/templates/home/banner.html templates/cotton/event_status.html
 msgid "Draft"
 msgstr "Concept"
 
-#: loefsys/home/templates/home/banner.html
+#: loefsys/home/templates/home/banner.html templates/cotton/event_row.html
+#: templates/cotton/event_status.html
 msgid "Full"
 msgstr "Vol"
 
-#: loefsys/home/templates/home/banner.html
+#: loefsys/home/templates/home/banner.html templates/cotton/event_status.html
 msgid "Registration open"
 msgstr "Inschrijving open"
 
@@ -752,14 +753,14 @@ msgstr ""
 "<a href=\"%(login_url)s\" class=\"font-medium text-[#234193] hover:text-"
 "[#1BB1E6]\">Log in</a> om je reserveringen te zien en te beheren."
 
-#: loefsys/home/templates/home/index.html
+#: loefsys/home/templates/home/index.html templates/cotton/menu/desktop.html
+#: templates/cotton/menu/mobile.html
 msgid "Home"
 msgstr "Home"
 
 #: loefsys/home/templates/home/schippers.html
 #: loefsys/members/models/__disabled__.skippership.py
-#: loefsys/members/models/skippership.py templates/cotton/menu/desktop.html
-#: templates/cotton/menu/mobile.html
+#: loefsys/members/models/skippership.py templates/cotton/menu/about_links.html
 msgid "Skippers"
 msgstr "Schippers"
 
@@ -818,7 +819,7 @@ msgstr "Groepen"
 #: loefsys/members/models/__disabled__.skippership.py
 #: loefsys/members/models/skippership.py
 #: loefsys/reservations/templates/reservations/reservation_form.html
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
+#: templates/cotton/menu/about_links.html
 msgid "Skippership"
 msgstr "Schipperschap"
 
@@ -1122,6 +1123,11 @@ msgstr ""
 "en één speciaal teken bevatten."
 
 #: loefsys/members/templates/cotton/profile_icon.html
+#: templates/cotton/menu/mobile.html
+msgid "My profile"
+msgstr "Mijn profiel"
+
+#: loefsys/members/templates/cotton/profile_icon.html
 msgid "User profile"
 msgstr "Gebruikersprofiel"
 
@@ -1140,10 +1146,12 @@ msgstr "Wachtwoord vergeten?"
 
 #: loefsys/members/templates/login.html
 #: loefsys/members/templates/registration/password_reset_complete.html
+#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
 msgid "Log in"
 msgstr "Log in"
 
 #: loefsys/members/templates/profiles/profile.html
+#: templates/cotton/menu/mobile.html
 msgid "Profile"
 msgstr "Profiel"
 
@@ -1162,6 +1170,7 @@ msgid "Set password"
 msgstr "Wachtwoord instellen"
 
 #: loefsys/members/templates/profiles/profile.html
+#: templates/cotton/menu/mobile.html
 msgid "Log out"
 msgstr "Uitloggen"
 
@@ -1370,7 +1379,6 @@ msgstr "Tijdelijk wachtwoord: %(temporary_password)s"
 
 #: loefsys/members/templates/registration/reset_disabled.html
 #: templates/404.html templates/500.html templates/cotton/logo.html
-#: templates/cotton/menu/mobile.html
 msgid "Loefbijter logo"
 msgstr "Loefbijter-logo"
 
@@ -1721,6 +1729,7 @@ msgstr "Bewerk reservering"
 
 #: loefsys/reservations/templates/reservations/reservation_detail.html
 #: loefsys/reservations/templates/reservations/reservation_list.html
+#: templates/cotton/reservation_status.html
 msgid "Fill in logbook"
 msgstr "Vul logboek in"
 
@@ -2030,34 +2039,66 @@ msgstr "Reden voor weigering"
 msgid "Only required when you deny the reservation."
 msgstr "Alleen verplicht wanneer je de reservering weigert."
 
+#: templates/cotton/event_hero.html
+msgid "Your next activity"
+msgstr "Jouw volgende activiteit"
+
+#: templates/cotton/event_hero.html
+msgid "View activity"
+msgstr "Bekijk activiteit"
+
+#: templates/cotton/event_hero.html
+#, python-format
+msgid "Cancel without a fine until %(deadline)s"
+msgstr "Kosteloos afmelden tot %(deadline)s"
+
+#: templates/cotton/event_row.html
+#, python-format
+msgid "%(counter)s of %(capacity)s spot left"
+msgid_plural "%(counter)s of %(capacity)s spots left"
+msgstr[0] "%(counter)s van %(capacity)s plek vrij"
+msgstr[1] "%(counter)s van %(capacity)s plekken vrij"
+
+#: templates/cotton/event_status.html
+msgid "Registered"
+msgstr "Ingeschreven"
+
+#: templates/cotton/menu/about_links.html
+msgid "About the association"
+msgstr "Over de Vereniging"
+
+#: templates/cotton/menu/about_links.html
+msgid "Styleguide"
+msgstr "Styleguide"
+
+#: templates/cotton/menu/about_links.html
+msgid "Association song"
+msgstr "Verenigingslied"
+
+#: templates/cotton/menu/about_links.html
+msgid "Association documents"
+msgstr "Verenigingsdocumenten"
+
+#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
+msgid "Main menu"
+msgstr "Hoofdmenu"
+
 #: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
 msgid "Activities"
 msgstr "Activiteiten"
 
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "About the association"
-msgstr "Over de Vereniging"
-
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Styleguide"
-msgstr "Styleguide"
-
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Association song"
-msgstr "Verenigingslied"
-
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Association documents"
-msgstr "Verenigingsdocumenten"
+#: templates/cotton/menu/mobile.html
+msgid "Account"
+msgstr "Account"
 
 #: templates/cotton/menu/mobile.html
-msgid "Toggle navigation"
-msgstr "Navigatie openen/sluiten"
+msgid "Agenda"
+msgstr "Agenda"
 
 #: templates/cotton/menu/mobile.html
-msgid "Close navigation"
-msgstr "Navigatie sluiten"
+msgid "Menu"
+msgstr "Menu"
 
 #: templates/cotton/menu/mobile.html
-msgid "Mobile navigation"
-msgstr "Mobiele navigatie"
+msgid "Boats"
+msgstr "Boten"

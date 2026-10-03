@@ -1,0 +1,17 @@
+{% comment %}
+Status chip for an event: the visitor's own registration first, then the event's state.
+Pass `registration` (from {% registration_for %}) when known.
+{% endcomment %}
+{% load i18n %}
+<c-vars event registration="" class="" />
+{% if registration and registration.status == 0 %}
+    <c-chip kind="ok" class="{{ class }}">{% translate "Registered" %}</c-chip>
+{% elif registration and registration.status == 1 %}
+    <c-chip kind="warn" class="{{ class }}">{% translate "In queue" %}</c-chip>
+{% elif not event.published %}
+    <c-chip class="{{ class }}">{% translate "Draft" %}</c-chip>
+{% elif event.max_capacity_reached %}
+    <c-chip kind="bad" class="{{ class }}">{% translate "Full" %}</c-chip>
+{% elif event.registrations_open %}
+    <c-chip kind="info" class="{{ class }}">{% translate "Registration open" %}</c-chip>
+{% endif %}
