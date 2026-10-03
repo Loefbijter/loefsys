@@ -9,7 +9,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event, EventOrganizer, EventRegistration
+from loefsys.events.models import (
+    Event,
+    EventOrganizer,
+    EventRegistration,
+    RegistrationFormField,
+)
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
 
 
@@ -282,3 +287,81 @@ class MyEventsFeatureTestCase(TestCase):
             reverse("events:my_events_event", kwargs={"slug": self.event.slug})
         )
         self.assertEqual(response.status_code, 404)
+
+
+class RegistrationFormDraftEventTestCase(TestCase):
+    """The registration form must not be reachable for draft events."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.event = G(
+            Event,
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=6),
+            cancelation_deadline=now + timedelta(days=6),
+            published=False,
+        )
+        G(
+            RegistrationFormField,
+            event=self.event,
+            type=RegistrationFormField.TEXT_FIELD,
+            required=False,
+        )
+        self.member = G(get_user_model())
+        self.client.force_login(self.member)
+
+    def test_draft_event_registration_form_is_not_found(self):
+        """Opening the form for a draft returns 404 and creates no registration."""
+        response = self.client.get(
+            reverse("events:registration", kwargs={"slug": self.event.slug})
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(
+            EventRegistration.objects.filter(
+                event=self.event, contact=self.member
+            ).exists()
+        )
+
+
+class DraftEventVisibilityTestCase(TestCase):
+    """Draft event pages and calendar entries are only shown to those allowed."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.event = G(
+            Event,
+            title="Geheime conceptactiviteit",
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            published=False,
+        )
+        self.organizer = G(get_user_model())
+        G(EventOrganizer, event=self.event).user.add(self.organizer)
+
+    def test_member_gets_404_on_draft_event_page(self):
+        """A regular member cannot open a draft."""
+        self.client.force_login(G(get_user_model()))
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+    def test_organizer_sees_draft_event_page_marked_as_draft(self):
+        """An organizer can open their draft and sees that it is unpublished."""
+        self.client.force_login(self.organizer)
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Deze activiteit is niet gepubliceerd.")
+
+    def test_calendar_hides_draft_from_member(self):
+        """The calendar data leaves drafts out for regular members."""
+        self.client.force_login(G(get_user_model()))
+        response = self.client.get(reverse("events:event_filler"))
+        self.assertNotIn("Geheime conceptactiviteit", response.content.decode())
+
+    def test_calendar_marks_draft_for_organizer(self):
+        """The calendar data shows drafts to organizers, flagged as unpublished."""
+        self.client.force_login(self.organizer)
+        response = self.client.get(reverse("events:event_filler"))
+        entries = {entry["title"]: entry for entry in response.json()}
+        self.assertFalse(entries["Geheime conceptactiviteit"]["published"])

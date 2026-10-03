@@ -38,9 +38,7 @@ class HomeView(View):
         announcements = Announcement.objects.filter(
             published=True, announcement_start__lte=now, announcement_end__gte=now
         ).order_by("-announcement_start")
-        events = Event.objects.filter(start__gte=now).order_by("start")
-        if not user.is_active:
-            events = events.filter(published=True)
+        events = Event.objects.visible_to(user).filter(start__gte=now).order_by("start")
 
         next_registration = None
         user_reservations = None

@@ -3,7 +3,6 @@
 import re
 from datetime import timedelta
 
-import pytest
 from django.utils import timezone
 from playwright.sync_api import expect
 
@@ -61,10 +60,6 @@ def test_home_shows_current_announcements(member_page, live_server):
     expect(member_page.get_by_text("Oud bericht")).to_have_count(0)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="Known bug: HomeView shows unpublished events to every active member.",
-)
 def test_home_hides_draft_events(member_page, live_server):
     """HOME-4: draft activities are not shown to members."""
     factories.make_event("Geheime conceptactiviteit", published=False)

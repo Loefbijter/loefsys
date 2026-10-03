@@ -29,8 +29,11 @@ class EventDetailView(LoginRequiredMixin, DetailView):
     """View for viewing an event."""
 
     model = Event
-    queryset = Event.objects.filter(published=True)
     template_name = "events/event.html"
+
+    def get_queryset(self):
+        """Return the events the current user may see, drafts included if allowed."""
+        return Event.objects.visible_to(self.request.user)
 
     def get_context_data(self, **kwargs):
         """Add variables to the context.
@@ -322,7 +325,7 @@ class RegistrationFormView(LoginRequiredMixin, FormView):
 
     def dispatch(self, request, *args, **kwargs):
         """Return the proper response to a request."""
-        self.event = get_object_or_404(Event, slug=self.kwargs["slug"])
+        self.event = get_object_or_404(Event, slug=self.kwargs["slug"], published=True)
         self.success_url = self.event.get_absolute_url()
         if self.event.has_form_fields:
             return super().dispatch(request, *args, **kwargs)
@@ -360,7 +363,7 @@ class EventFillerView(View):
         show_birthdays = request.GET.get("show_birthdays", "0") in {"1", "true", "True"}
         data = []
 
-        for event in Event.objects.filter(published=True):
+        for event in Event.objects.visible_to(request.user):
             data.append(
                 {
                     "title": event.title,
