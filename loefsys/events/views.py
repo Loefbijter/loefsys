@@ -185,7 +185,9 @@ class EventDetailView(LoginRequiredMixin, DetailView):
         elif not obj.registrations_open():
             if obj.registration_start and timezone.now() < obj.registration_start:
                 text = _("Register from %(date)s") % {
-                    "date": date_format(obj.registration_start, "DATETIME_FORMAT")
+                    "date": date_format(
+                        timezone.localtime(obj.registration_start), "DATETIME_FORMAT"
+                    )
                 }
             else:
                 text = _("Registrations closed")
@@ -228,13 +230,17 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             and timezone.now() < obj.registration_start
         ):
             reason = _("Registration opens on %(date)s.") % {
-                "date": date_format(obj.registration_start, "DATETIME_FORMAT")
+                "date": date_format(
+                    timezone.localtime(obj.registration_start), "DATETIME_FORMAT"
+                )
             }
         elif obj.registration_deadline is None:
             reason = _("Registrations are closed.")
         elif timezone.now() > obj.registration_deadline:
             reason = _("Registrations closed on %(date)s.") % {
-                "date": date_format(obj.registration_deadline, "DATETIME_FORMAT")
+                "date": date_format(
+                    timezone.localtime(obj.registration_deadline), "DATETIME_FORMAT"
+                )
             }
         else:
             reason = _("Registrations are currently closed.")
@@ -382,7 +388,7 @@ class EventFillerView(View):
             )
 
         if show_birthdays:
-            today = timezone.now().date()
+            today = timezone.localdate()
             user_model = get_user_model()
             for user in user_model.objects.filter(
                 birthday__isnull=False, show_birthday=True
