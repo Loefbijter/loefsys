@@ -14,17 +14,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     environment: default
+    strategy:
+      matrix:
+        django_debug: [true, false]
     env:
       DJANGO_SECRET_KEY: django-insecure-loefbijter
       DJANGO_DATABASE_URL: sqlite:///db.sqlite
-      DJANGO_DEBUG: true
+      DJANGO_DEBUG: ${{ matrix.django_debug }}
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Install python
         run: uv python install
@@ -36,6 +39,9 @@ jobs:
         run: |
           uv run manage.py makemigrations
           uv run manage.py migrate
+
+      - name: Run system checks
+        run: uv run manage.py check
 
       - name: Run the tests
         run: uv run manage.py test

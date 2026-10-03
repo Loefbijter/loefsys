@@ -3,10 +3,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .reservable import ReservableItem
+from .reservable import Reservable
 
 
-class Room(ReservableItem):
+class ReservableRoom(Reservable):
     """Model defining a room that can be reserved.
 
     A room is a place the Loefbijter owns which can be used by any part within

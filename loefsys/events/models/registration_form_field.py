@@ -117,7 +117,10 @@ class AbstractRegistrationInformation(models.Model):
         abstract = True
 
     def __str__(self):
-        return f"{self.registration} - {self.field}: {self.value}"
+        # The concrete subclasses declare a `value` field. Use getattr so static
+        # type checkers do not error on the abstract base class.
+        value = getattr(self, "value", None)
+        return f"{self.registration} - {self.field}: {value}"
 
 
 class BooleanRegistrationInformation(AbstractRegistrationInformation):

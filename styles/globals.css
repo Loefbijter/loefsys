@@ -7,7 +7,8 @@
   * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
   * the scope of this path.
   */
-@source "../**/*.{html,js,py}";
+@source "../templates";
+@source "../loefsys";
 
 @theme {
   --color-loef-0: oklch(0.95 0.05 230);
@@ -43,6 +44,10 @@
   --color-destructive: oklch(0.6 0.2 30);
   --color-destructive-foreground: oklch(1 0 0);
   --color-destructive-accent: oklch(0.65 0.2 30);
+
+  --color-success: oklch(0.7 0.15 145);
+  --color-success-foreground: oklch(0.15 0 0);
+  --color-success-accent: oklch(0.8 0.15 145);
 
   --radius: 0.5rem;
   --radius-lg: var(--radius);

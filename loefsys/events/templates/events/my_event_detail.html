@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+  <div class="min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">{{ event.title }}</h1>
+          <p class="mt-2 text-sm text-gray-500">Hier vind je een overzicht van de huidig ingeschreven deelnemers en contactinformatie.</p>
+        </div>
+        <a href="{{ event_page_url }}" class="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+          Bekijk eventpagina
+        </a>
+      </div>
+
+      <div class="grid gap-4 lg:grid-cols-[1.5fr_0.8fr]">
+        <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div class="space-y-4">
+            <p class="text-sm text-gray-500">{{ event.get_category_display }}</p>
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">Start</dt>
+                <dd class="mt-1 text-sm font-semibold text-gray-900">{{ event.start|date:'d M Y H:i' }}</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">Einde</dt>
+                <dd class="mt-1 text-sm font-semibold text-gray-900">{{ event.end|date:'d M Y H:i' }}</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">Locatie</dt>
+                <dd class="mt-1 text-sm font-semibold text-gray-900">{{ event.location }}</dd>
+              </div>
+              <div>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">Inschrijvingen</dt>
+                <dd class="mt-1 text-sm font-semibold text-gray-900">{{ attendees|length }}</dd>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h2 class="text-lg font-semibold text-gray-900">Organisatoren</h2>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {% if event.eventorganizer.groups.all %}
+              {% for group in event.eventorganizer.groups.all %}
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700">
+                  <i class="bi bi-people text-gray-400"></i>
+                  {{ group.name }}
+                </span>
+              {% endfor %}
+            {% endif %}
+            {% if event.eventorganizer.user.all %}
+              {% for user in event.eventorganizer.user.all %}
+                <span class="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700">
+                  <i class="bi bi-person text-gray-400"></i>
+                  {{ user.display_name }}
+                </span>
+              {% endfor %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-900">Deelnemers</h2>
+            <p class="mt-1 text-sm text-gray-500">Bekijk de profielen en contactinformatie van je deelnemers.</p>
+          </div>
+          {% if training_event %}
+            <span class="inline-flex items-center rounded-full bg-secondary/10 px-3 py-1 text-sm font-semibold text-secondary">
+              Training: telefoonnummers en POD-links zichtbaar
+            </span>
+          {% endif %}
+        </div>
+
+        <div class="mt-6 space-y-3">
+          {% if attendees %}
+            {% for registration in attendees %}
+              <div class="rounded-3xl border border-gray-200 bg-slate-50 p-4 sm:p-5">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <a href="{% url 'members:profile' slug=registration.contact.slug %}" class="text-lg font-semibold text-secondary hover:underline">{{ registration.contact.display_name }}</a>
+                    <p class="text-sm text-gray-500">{{ registration.contact.email }}</p>
+                  </div>
+                  <div class="text-sm text-gray-500">
+                    {% if registration.contact.lichting %}
+                      <span>{{ registration.contact.lichting }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                {% if training_event %}
+                  <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                    <div>
+                      <p class="text-xs uppercase tracking-wide text-gray-400">Telefoon</p>
+                      <p class="mt-1 text-sm font-semibold text-gray-900">{{ registration.contact.phone_number|default:'Niet beschikbaar' }}</p>
+                    </div>
+                    <div>
+                      <p class="text-xs uppercase tracking-wide text-gray-400">POD-links</p>
+                      <div class="mt-1 flex flex-wrap gap-2">
+                        {% if registration.contact.pod_kb_link %}
+                          <a href="{{ registration.contact.pod_kb_link }}" target="_blank" rel="noreferrer noopener" class="rounded-full border border-gray-200 px-3 py-1 text-sm font-semibold text-secondary hover:bg-secondary/10">KB POD</a>
+                        {% endif %}
+                        {% if registration.contact.pod_zb_link %}
+                          <a href="{{ registration.contact.pod_zb_link }}" target="_blank" rel="noreferrer noopener" class="rounded-full border border-gray-200 px-3 py-1 text-sm font-semibold text-secondary hover:bg-secondary/10">ZB POD</a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="text-sm text-gray-600">Er zijn nog geen geregistreerde deelnemers voor dit event.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

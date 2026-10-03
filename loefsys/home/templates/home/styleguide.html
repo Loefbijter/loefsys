@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}
+Styleguide
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold mb-8 text-foreground">Styleguide</h1>
+
+    <p class="text-lg mb-8 text-foreground">
+        Welkom bij de Loefsys styleguide. Dit document presenteert de aanbevolen stijlen en kleuren voor de website.
+    </p>
+
+    {# Color Palette Section #}
+    <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-secondary">Kleurenpalet</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {# Loef Levels #}
+            <div class="space-y-4">
+                <h3 class="text-xl font-semibold text-foreground">Loef Colors</h3>
+
+                <div class="space-y-3">
+                    <div class="p-4 rounded bg-loef-0 border-2 border-loef-3">
+                        <p class="text-sm font-medium text-loef-3">Loef-0</p>
+                        <p class="text-xs text-loef-2">Lightest variant</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-loef-1 border-2 border-loef-0-offset">
+                        <p class="text-sm font-medium text-loef-0-offset">Loef-1</p>
+                        <p class="text-xs text-loef-0-offset">Primary color</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-loef-2 border-2 border-loef-0-offset">
+                        <p class="text-sm font-medium text-loef-0-offset">Loef-2</p>
+                        <p class="text-xs text-loef-0-offset">Secondary variant</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-loef-3 border-2 border-loef-0-offset">
+                        <p class="text-sm font-medium text-loef-0-offset">Loef-3</p>
+                        <p class="text-xs text-loef-0-offset">Darkest variant</p>
+                    </div>
+                </div>
+            </div>
+
+            {# Semantic Colors #}
+            <div class="space-y-4">
+                <h3 class="text-xl font-semibold text-foreground">Semantische Kleuren</h3>
+
+                <div class="space-y-3">
+                    <div class="p-4 rounded bg-primary text-primary-foreground border-2 border-primary-accent">
+                        <p class="text-sm font-medium">Primary</p>
+                        <p class="text-xs opacity-75">Main brand color</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-secondary text-secondary-foreground border-2 border-secondary-accent">
+                        <p class="text-sm font-medium">Secondary</p>
+                        <p class="text-xs opacity-75">Supporting color</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-alert text-alert-foreground border-2 border-alert-accent">
+                        <p class="text-sm font-medium">Alert</p>
+                        <p class="text-xs opacity-75">Warning messages</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-destructive text-destructive-foreground border-2 border-destructive-accent">
+                        <p class="text-sm font-medium">Destructive</p>
+                        <p class="text-xs opacity-75">Danger actions</p>
+                    </div>
+                </div>
+            </div>
+
+            {# Text Colors #}
+            <div class="space-y-4">
+                <h3 class="text-xl font-semibold text-foreground">Tekstkleuren</h3>
+
+                <div class="space-y-3">
+                    <div class="p-4 rounded bg-background border-2 border-foreground">
+                        <p class="text-foreground font-medium">Foreground</p>
+                        <p class="text-xs text-foreground opacity-75">Primary text</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-background border-2 border-primary-accent">
+                        <p class="text-primary-foreground font-medium">Primary Foreground</p>
+                        <p class="text-xs text-primary-foreground opacity-75">On primary</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-background border-2 border-secondary-accent">
+                        <p class="text-secondary-foreground font-medium">Secondary Foreground</p>
+                        <p class="text-xs text-secondary-foreground opacity-75">On secondary</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-background border-2 border-alert">
+                        <p class="text-alert-foreground font-medium">Alert Foreground</p>
+                        <p class="text-xs text-alert-foreground opacity-75">On alert</p>
+                    </div>
+                </div>
+            </div>
+
+            {# Offsets #}
+            <div class="space-y-4">
+                <h3 class="text-xl font-semibold text-foreground">Offset Variants</h3>
+
+                <div class="space-y-3">
+                    <div class="p-4 rounded bg-loef-0-offset border-2 border-loef-3">
+                        <p class="text-sm font-medium text-loef-3">Loef-0 Offset</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-loef-1-offset border-2 border-loef-0-offset">
+                        <p class="text-sm font-medium text-loef-0-offset">Loef-1 Offset</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-loef-2-offset border-2 border-loef-0-offset">
+                        <p class="text-sm font-medium text-loef-0-offset">Loef-2 Offset</p>
+                    </div>
+
+                    <div class="p-4 rounded bg-loef-3-offset border-2 border-loef-0-offset">
+                        <p class="text-sm font-medium text-loef-0-offset">Loef-3 Offset</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {# Typography Section #}
+    <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-secondary">Typografie</h2>
+
+        <div class="space-y-6 bg-background p-6 rounded-lg border-2 border-primary">
+            <div>
+                <h3 class="text-4xl font-bold text-foreground">Heading 1 - H1</h3>
+                <p class="text-sm text-foreground opacity-75">Voor pagina titels</p>
+            </div>
+
+            <div>
+                <h2 class="text-3xl font-bold text-secondary">Heading 2 - H2</h2>
+                <p class="text-sm text-foreground opacity-75">Voor sectie koppelingen</p>
+            </div>
+
+            <div>
+                <h3 class="text-2xl font-semibold text-foreground">Heading 3 - H3</h3>
+                <p class="text-sm text-foreground opacity-75">Voor subsecties</p>
+            </div>
+
+            <div>
+                <p class="text-lg text-foreground">Normale alinea - Large text</p>
+                <p class="text-sm text-foreground opacity-75">Voor body content</p>
+            </div>
+
+            <div>
+                <p class="text-sm text-foreground">Kleine tekst - Small text</p>
+                <p class="text-xs text-foreground opacity-75">Voor helpende tekst</p>
+            </div>
+
+            <div>
+                <p class="text-base font-bold text-foreground">Bold text - gebruikt voor nadruk</p>
+            </div>
+
+            <div>
+                <p class="text-base italic text-foreground">Italic text - gebruikt voor citaten</p>
+            </div>
+        </div>
+    </section>
+
+    {# Component Examples #}
+    <section>
+        <h2 class="text-3xl font-bold mb-6 text-secondary">Componenten</h2>
+
+        <div class="space-y-6">
+            <div>
+                <h3 class="text-xl font-semibold mb-3 text-foreground">Links</h3>
+                <c-menu.item href="#">Dit is een styleguide link</c-menu.item>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold mb-3 text-foreground">Kaarten</h3>
+                <c-card>
+                    <h4 class="text-lg font-semibold mb-2 text-foreground">Kaart Voorbeeld</h4>
+                    <p class="text-foreground">Dit is een voorbeeld kaart component met aangeraden styling.</p>
+                </c-card>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold mb-3 text-foreground">Scheiding</h3>
+                <c-separator/>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

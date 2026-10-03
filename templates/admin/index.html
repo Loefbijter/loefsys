@@ -1,0 +1,243 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block title %}{% trans "Site administration" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Voorpagina" %}</h1>
+<div id="admin-dashboard" style="display:block;">
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+    <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
+      <h3>{% trans "Nieuwe schippers deze maand" %}</h3>
+      <div id="kpi-skippers" style="font-size:1.6rem;">…</div>
+    </div>
+    <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
+      <h3>{% trans "Reservaties deze maand" %}</h3>
+      <div id="kpi-reservations" style="font-size:1.6rem;">…</div>
+    </div>
+    <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
+      <h3>{% trans "Openstaande reserveringsaanvragen" %}</h3>
+      <div><a id="kpi-pending-link" href="{% url 'admin:reservations_reservation_changelist' %}?request_status=0" style="font-size:1.6rem;display:inline-block;text-decoration:none;color:inherit;"> <span id="kpi-pending">…</span></a></div>
+    </div>
+    <div class="card" style="flex:1 1 200px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
+      <h3>{% trans "Nieuwe schade meldingen" %}</h3>
+      <div id="kpi-damage" style="font-size:1.6rem;">…</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+    <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;display:flex;gap:1rem;align-items:flex-start;">
+      <div style="flex:1;">
+        <h4>{% trans "Nieuwe schippers (laatste maanden)" %}</h4>
+        <canvas id="chart-skippers" width="320" height="160"></canvas>
+      </div>
+      <div style="width:220px;">
+        <h4 style="font-size:0.9rem;margin-top:0">{% trans "Per soort schipper (huidige maand)" %}</h4>
+        <canvas id="chart-skippers-types" width="220" height="160"></canvas>
+      </div>
+    </div>
+    <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
+      <h4>{% trans "Reservaties (laatste maanden)" %}</h4>
+      <canvas id="chart-reservations" width="400" height="160"></canvas>
+    </div>
+  </div>
+
+  <div style="margin-top:1rem;display:flex;gap:1rem;flex-wrap:wrap;">
+    <div style="flex:1 1 600px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
+      <h4>{% trans "Evenementen per categorie" %}</h4>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <div style="flex:1;min-width:260px;">
+          <h5 style="margin:0 0 6px 0;font-size:0.95rem">{% trans "Afgelopen maand (gehouden)" %}</h5>
+          <canvas id="chart-events-past" width="320" height="220"></canvas>
+        </div>
+        <div style="flex:1;min-width:260px;">
+          <h5 style="margin:0 0 6px 0;font-size:0.95rem">{% trans "Komende maand (gepland)" %}</h5>
+          <canvas id="chart-events-upcoming" width="320" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1 1 400px;padding:1rem;border:1px solid #e0e0e0;border-radius:6px;">
+      <h4>{% trans "Schade meldingen (laatste maanden)" %}</h4>
+      <canvas id="chart-damage" width="400" height="160"></canvas>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<!-- App links hidden here because they are available in the admin sidebar navigation -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function () {
+  const url = "{% url 'admin:admin-dashboard-data' %}";
+
+  function colorForIndex(i) {
+    const palette = ["#3b82f6", "#10b981", "#f97316", "#ef4444", "#8b5cf6", "#06b6d4", "#f59e0b"]
+    return palette[i % palette.length]
+  }
+
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      // KPI helper to set text safely
+      function setKpi(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      }
+
+      // KPIs
+      setKpi('kpi-skippers', data.skippers.current_month ?? 0);
+      setKpi('kpi-reservations', data.reservations.current_month ?? 0);
+      setKpi('kpi-events', data.events.current_month ?? 0);
+      setKpi('kpi-damage', data.damage.current_month ?? 0);
+      // pending reservation requests
+      if (data.reservations && typeof data.reservations.pending_requests !== 'undefined') {
+        setKpi('kpi-pending', data.reservations.pending_requests || 0);
+      }
+
+      const labels = data.labels || [];
+
+      // Skippers chart
+      (function(){
+        const el = document.getElementById('chart-skippers');
+        if (el && el.getContext) {
+          const ctxSkippers = el.getContext('2d');
+          new Chart(ctxSkippers, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Nieuwe schippers',
+                data: data.skippers.series || [],
+                borderColor: colorForIndex(0),
+                backgroundColor: colorForIndex(0) + '33',
+                fill: true,
+              }]
+            }
+          });
+        }
+
+        // Skippers by type pie (current month)
+        const elType = document.getElementById('chart-skippers-types');
+        if (elType && elType.getContext) {
+          const byType = (data.skippers && data.skippers.by_type) || {};
+          const typeLabels = (data.skippers && data.skippers.type_labels) || {};
+          const entries = Object.keys(byType).map(k => ({ key: k, label: typeLabels[k] || k, value: byType[k] || 0 }));
+          // sort descending by count for better UX
+          entries.sort((a,b) => b.value - a.value);
+          const labelsType = entries.map(e => e.label);
+          const valuesType = entries.map(e => e.value);
+          const colorsType = entries.map((_, i) => colorForIndex(i) + 'cc');
+
+          const ctxType = elType.getContext('2d');
+          new Chart(ctxType, {
+            type: 'pie',
+            data: {
+              labels: labelsType,
+              datasets: [{ data: valuesType, backgroundColor: colorsType, borderColor: colorsType.map(c => c.replace('cc','')), borderWidth: 1 }]
+            },
+            options: { responsive: true }
+          });
+        }
+      })();
+
+      // Reservations chart
+      (function(){
+        const el = document.getElementById('chart-reservations');
+        if (el && el.getContext) {
+          const ctxRes = el.getContext('2d');
+          new Chart(ctxRes, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Reservaties',
+                data: data.reservations.series || [],
+                borderColor: colorForIndex(1),
+                backgroundColor: colorForIndex(1) + '33',
+                fill: true,
+              }]
+            }
+          });
+        }
+      })();
+
+      // Events: past month and upcoming month per category
+      (function(){
+        const labelsMap = data.events.category_labels || {};
+        // determine category keys in stable order (by label)
+        const keys = Object.keys(labelsMap).sort((a,b) => (labelsMap[a]||a).localeCompare(labelsMap[b]||b));
+
+        // helper to build dataset arrays from a mapping
+        function buildArrays(map) {
+          return keys.map(k => map && map[k] ? map[k] : 0);
+        }
+
+        // Past month
+        const elPast = document.getElementById('chart-events-past');
+        if (elPast && elPast.getContext) {
+          const valuesPast = buildArrays(data.events.past_month_by_category || {});
+          const labels = keys.map(k => labelsMap[k] || k);
+          const colors = keys.map((_,i) => colorForIndex(i) + 'cc');
+          const ctxPast = elPast.getContext('2d');
+          new Chart(ctxPast, {
+            type: 'pie',
+            data: { labels: labels, datasets: [{ data: valuesPast, backgroundColor: colors, borderColor: colors.map(c=>c.replace('cc','')), borderWidth: 1 }] },
+            options: { responsive: true }
+          });
+        }
+
+        // Upcoming month
+        const elUp = document.getElementById('chart-events-upcoming');
+        if (elUp && elUp.getContext) {
+          const valuesUp = buildArrays(data.events.upcoming_month_by_category || {});
+          const labels = keys.map(k => labelsMap[k] || k);
+          const colors = keys.map((_,i) => colorForIndex(i) + 'cc');
+          const ctxUp = elUp.getContext('2d');
+          new Chart(ctxUp, {
+            type: 'pie',
+            data: { labels: labels, datasets: [{ data: valuesUp, backgroundColor: colors, borderColor: colors.map(c=>c.replace('cc','')), borderWidth: 1 }] },
+            options: { responsive: true }
+          });
+        }
+      })();
+
+      // Damage pie chart by ship type (sorted by ship type name)
+      (function(){
+        const el = document.getElementById('chart-damage');
+        if (!el || !el.getContext) return;
+        const ctxDamage = el.getContext('2d');
+        const damageByType = data.damage.by_type || {};
+        const damageEntries = Object.keys(damageByType).map(k => ({ type: k, cnt: damageByType[k] || 0 }));
+        // sort by type name (alphabetical)
+        damageEntries.sort((a, b) => a.type.localeCompare(b.type));
+        const damageLabels = damageEntries.map(e => e.type);
+        const damageValues = damageEntries.map(e => e.cnt);
+        const damageColors = damageEntries.map((_, i) => colorForIndex(i) + 'cc');
+
+        new Chart(ctxDamage, {
+          type: 'pie',
+          data: {
+            labels: damageLabels,
+            datasets: [{
+              data: damageValues,
+              backgroundColor: damageColors,
+              borderColor: damageColors.map(c => c.replace('cc', '')),
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true
+          }
+        });
+      })();
+
+    })
+    .catch(err => {
+      console.error('Failed to load admin dashboard data', err);
+    });
+})();
+</script>
+
+{% endblock %}

@@ -18,10 +18,10 @@ jobs:
 
     steps:
       - name: Checkout the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v8.2.0
 
       - name: Install python
         run: uv python install
@@ -33,7 +33,7 @@ jobs:
         run: uv run manage.py generate_docs
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           name: html-docs
           path: docs/_build/html
@@ -47,11 +47,11 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Deploy to Github Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        id: deploy
+        uses: actions/deploy-pages@v5
         with:
           artifact_name: html-docs

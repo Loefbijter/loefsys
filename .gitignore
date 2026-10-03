@@ -1,7 +1,15 @@
+collectedstatic/
+.ruff_cache/
+
 db.sqlite*
 .vscode/
-loefsys/*/migrations/0*.py
 media/
+
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
 ### Python template
 # Byte-compiled / optimized / DLL files

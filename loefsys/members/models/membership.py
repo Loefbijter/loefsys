@@ -59,7 +59,7 @@ class Membership(models.Model):
     )
 
     def __str__(self):
-        return f"Membership ${self.membership_type} for {self.member.user.display_name}"
+        return f"Membership {self.membership_type} for {self.member.display_name}"
 
     def clean(self):
         """Run validation on the model."""

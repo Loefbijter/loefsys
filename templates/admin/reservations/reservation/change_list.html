@@ -1,0 +1,13 @@
+{% extends "admin/change_list_export.html" %}
+
+{% block content %}
+{{ block.super }}
+{% for obj in cl.result_list %}
+    {% if obj.request_status == RequestStatus.PENDING %}
+        <form id="reservation-accept-{{ obj.pk }}" method="post" action="{% url 'admin:reservations_reservation_accept' obj.pk %}" hidden>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        </form>
+    {% endif %}
+{% endfor %}
+{% endblock %}

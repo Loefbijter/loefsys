@@ -8,16 +8,24 @@ from .views import (
     EventDetailView,
     EventFeedView,
     EventFillerView,
+    MyEventOrganizerDetailView,
+    MyEventsView,
     RegistrationFormView,
 )
 
 app_name = "events"
 
 urlpatterns = [
-    path("<slug:slug>/", EventDetailView.as_view(), name="event"),
+    path("organized/", MyEventsView.as_view(), name="my_events"),
+    path(
+        "organized/<slug:slug>/",
+        MyEventOrganizerDetailView.as_view(),
+        name="my_events_event",
+    ),
     path(
         "<slug:slug>/registration/", RegistrationFormView.as_view(), name="registration"
     ),
+    path("<slug:slug>/", EventDetailView.as_view(), name="event"),
     path("", CalendarView.as_view(), name="events"),
     path("event_filler", EventFillerView.as_view(), name="event_filler"),
     path("registeredical", RegisteredEventFeed(), name="registered_event_feed"),

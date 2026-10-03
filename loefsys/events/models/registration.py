@@ -90,11 +90,14 @@ class EventRegistration(TimeStampedModel):
         if self.status != RegistrationStatus.QUEUED:
             return None
 
-        return EventRegistration.objects.filter(
-            created__lt=self.created,
-            event=self.event,
-            status=RegistrationStatus.QUEUED,
-        ).count() + 1
+        return (
+            EventRegistration.objects.filter(
+                created__lt=self.created,
+                event=self.event,
+                status=RegistrationStatus.QUEUED,
+            ).count()
+            + 1
+        )
 
     objects = EventRegistrationManager()
 

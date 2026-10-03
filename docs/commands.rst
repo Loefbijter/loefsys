@@ -8,6 +8,10 @@ Project-specific Commands
 
     uv sync --locked
 
+* Sync your virtual env including optional dependencies for docs generation::
+
+    uv sync --locked --all-groups
+
 * Run the formatter::
 
     uv run ruff format
@@ -48,10 +52,6 @@ See `django-admin <https://docs.djangoproject.com/en/5.2/ref/django-admin/>` for
 
     uv run manage.py runserver
 
-* Start the Tailwind development server::
+* Start the Tailwind CSS development server::
 
-    uv run manage.py tailwind dev
-
-* Start the Django dev server and Tailwind dev server in one command::
-
-    uv run manage.py tailwind start
+    uv run manage.py tailwind

@@ -1,0 +1,730 @@
+{% extends "base.html" %}
+
+{% block title %}
+Schipperschapniveaus
+{% endblock %}
+
+{% block head %}
+<style>
+    /* Keep a permanent gutter so the scrollbar appearing/disappearing (e.g. when
+       switching to a shorter tab) never shifts the centered content sideways. */
+    html {
+        scrollbar-gutter: stable;
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto w-full">
+
+    <!-- Header -->
+    <div class="mb-10">
+        <h1 class="text-3xl sm:text-4xl font-bold text-foreground tracking-tight">Schipperschapniveaus</h1>
+        <p class="mt-2 text-base sm:text-lg text-foreground opacity-70">Certificeringsniveaus en bijbehorende rechten en eisen</p>
+    </div>
+
+    <!-- Category tabs -->
+    <div role="tablist" aria-label="Bootcategorie" class="grid grid-cols-3 gap-1 p-1 mb-8 rounded-full border border-foreground/10 bg-foreground/[0.03] max-w-xl">
+        <button type="button" role="tab" id="tab-zwaardboot" aria-controls="panel-zwaardboot" aria-selected="true"
+            data-tab-trigger data-tab="zwaardboot"
+            class="tab-trigger active flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 bg-primary text-white">
+            <svg class="shrink-0" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3v11" />
+                <path d="M12 4.5l4.5 7H12z" />
+                <path d="M4 15h16l-1.8 3.1A4 4 0 0114.8 20H9.2a4 4 0 01-3.4-1.9z" />
+            </svg>
+            <span class="truncate">Zwaardboot</span>
+        </button>
+        <button type="button" role="tab" id="tab-kielboot" aria-controls="panel-kielboot" aria-selected="false"
+            data-tab-trigger data-tab="kielboot"
+            class="tab-trigger flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 text-foreground/60 hover:text-foreground">
+            <svg class="shrink-0" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2v9" />
+                <path d="M12 3.5l5 7.5H12z" />
+                <path d="M3 14h18l-2.3 3.4A4 4 0 0115.5 19h-7a4 4 0 01-3.2-1.6z" />
+                <path d="M12 19l-1 3h2z" />
+            </svg>
+            <span class="truncate">Kielboot</span>
+        </button>
+        <button type="button" role="tab" id="tab-kajuitjacht" aria-controls="panel-kajuitjacht" aria-selected="false"
+            data-tab-trigger data-tab="kajuitjacht"
+            class="tab-trigger flex items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 text-foreground/60 hover:text-foreground">
+            <svg class="shrink-0" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2v5.5" />
+                <path d="M12 3l3.2 4.5H12z" />
+                <rect x="9" y="9.5" width="6" height="3.5" rx="0.6" />
+                <path d="M3 15.5h18l-2.3 3.1A4 4 0 0115.5 20h-7a4 4 0 01-3.2-1.4z" />
+            </svg>
+            <span class="truncate">Kajuitjacht</span>
+        </button>
+    </div>
+
+    <!-- Zwaardboot panel -->
+    <div id="panel-zwaardboot" role="tabpanel" aria-labelledby="tab-zwaardboot" data-tab-panel
+        style="display: grid; grid-template-rows: 1fr; transition: grid-template-rows 350ms ease;">
+    <div class="overflow-hidden">
+    <div class="space-y-3 pb-1">
+
+        <!-- Pico Schipper -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="true" aria-controls="content-pico"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-[11px] tracking-wide mx-3">PICO</span>
+                        <span class="min-w-0">
+                            <span class="block text-base sm:text-lg font-bold text-foreground">Pico Schipper</span>
+                            <span class="block text-xs font-semibold text-secondary">Startniveau</span>
+                        </span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 10 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" style="transform: rotate(180deg)" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-pico" data-accordion-content style="display: grid; grid-template-rows: 1fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van verenigings-Pico's tot en met 10 knopen constante wind met vlagen van maximaal 15 knopen</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Meenemen van een niet-(Pico)schipper of extern op dezelfde Pico</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <p class="text-xs text-foreground/50 mb-2">Kies 1 van de volgende:</p>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Goedkeuring van één instructeur/RS Mylar</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Goedkeuring van twee Laser/RS Dacron</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>CWO 2 Laser Pico en goedkeuring Laserschipper of hoger</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- Laserschipper -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-laser"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-[11px] tracking-wide mx-3">LSR</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">Laserschipper</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 26 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-laser" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van verenigings-Pico's tot en met 26 knopen wind</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik maken van het sportzeil</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Traileren van de Laser Pico('s)</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Meenemen van een niet- of Pico-schipper op een andere Pico tot en met 16 knopen constante wind en vlagen van maximaal 18 knopen (in overleg met Assessor Vloot)</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <div class="space-y-2.5">
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">Goedkeuring ZB instructeur of RS Mylar</p>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                        <span class="text-[10px] font-bold tracking-widest text-foreground/40">OF</span>
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                    </div>
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">Goedkeuring 2 RS dacron schippers</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- RS500 Dacron Schipper -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-dacron"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-[10px] tracking-wide mx-3">RS-D</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">RS500 Dacron Schipper</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 26 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-dacron" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van de RS500 met Dacron zeilen tot en met 26 knopen</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Meenemen van (minimaal) een Picoschipper als bemanning</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van de Laser 2</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <div class="space-y-2.5">
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">Laserschipper en goedkeuring 2 RS mylar schippers of goedkeuring ZB instructeur</p>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                        <span class="text-[10px] font-bold tracking-widest text-foreground/40">OF</span>
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                    </div>
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">CWO Zwaardboot tweemans III en goedkeuring van RS mylar of hoger</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- RS500 Mylar Schipper -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-mylar"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-[10px] tracking-wide mx-3">RS-M</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">RS500 Mylar Schipper</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 26 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-mylar" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van de RS500 met Mylar trainingszeilen tot en met 26 knopen</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Meenemen van een niet schipper als bemanning</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Deelnemen aan zeilwedstrijden met de Mylar wedstrijdzeilen</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <p class="text-xs text-foreground/50 mb-2">Alle van de volgende punten:</p>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>RS500 schipper</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Goedkeuring ZB instructeur</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Met goed gevolg theorie examen afgelegd</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- MoBo Schipper -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-mobo"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-[11px] tracking-wide mx-3">MoBo</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">MoBo (Motorboot) Schipper</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 26 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-mobo" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van verenigings-motorboot tot en met 26 knopen</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Niet onder de brug door</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Max. 5 personen (incl. schipper)</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <div class="space-y-2.5">
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">Laserschipper of hoger en goedkeuring ZB instructeur of KB2 of hoger</p>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                        <span class="text-[10px] font-bold tracking-widest text-foreground/40">OF</span>
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                    </div>
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">Klein vaarbewijs 1 en goedkeuring ZB instructeur of KB2 of hoger</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+    </div>
+    </div>
+    </div>
+
+    <!-- Kielboot panel -->
+    <div id="panel-kielboot" role="tabpanel" aria-labelledby="tab-kielboot" data-tab-panel
+        style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 350ms ease;" inert>
+    <div class="overflow-hidden">
+    <div class="space-y-3 pb-1">
+
+        <!-- KB1 -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="true" aria-controls="content-kb1"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-wide mx-3">KB1</span>
+                        <span class="min-w-0">
+                            <span class="block text-base sm:text-lg font-bold text-foreground">Kielbootschipper 1</span>
+                            <span class="block text-xs font-semibold text-secondary">Startniveau</span>
+                        </span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 10 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" style="transform: rotate(180deg)" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-kb1" data-accordion-content style="display: grid; grid-template-rows: 1fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van verenigings-Valken tot en met 10 knopen constante wind met vlagen van maximaal 15 knopen</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Zonder gebruik van de motor</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Varen op de hoofdplassen (niet onder bruggen door)</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <p class="text-xs text-foreground/50 mb-2">Kies 1 van de volgende:</p>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Goedkeuring van één KB3 of hoger</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>KB-CWO2 en akkoord van één KB2 of hoger</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Afgetekende vorderingsstaat</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- KB2 -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-kb2"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-wide mx-3">KB2</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">Kielbootschipper 2</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 26 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-kb2" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van verenigings-Valken tot en met 26 knopen</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Met gebruik motor</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Schipperen op weekenden</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>KB1 en akkoord van één KB3 of hoger en één KB2 of hoger middels praktijkexamen</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- KB3 -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-kb3"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-wide mx-3">KB3</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">Kielbootschipper 3</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            ≤ 26 kn
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-kb3" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik van verenigings-Valken tot en met 26 knopen</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Met gebruik motor</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Schipperen op weekenden</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik spinnaker</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <div class="space-y-2.5">
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">KB2 + goedkeuring van twee KB3 of hoger en met goed gevolg theorie examen afgelegd</p>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                        <span class="text-[10px] font-bold tracking-widest text-foreground/40">OF</span>
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                    </div>
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <p class="text-sm text-foreground/90">KB-CWO 3 en goedkeuring van één KB3 of hoger, een lagerwal heeft laten zien en met goed gevolg theorie examen afgelegd</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+    </div>
+    </div>
+    </div>
+
+    <!-- Kajuitjacht panel -->
+    <div id="panel-kajuitjacht" role="tabpanel" aria-labelledby="tab-kajuitjacht" data-tab-panel
+        style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 350ms ease;" inert>
+    <div class="overflow-hidden">
+    <div class="space-y-3 pb-1">
+
+        <!-- KJS -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="true" aria-controls="content-kjs"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-wide mx-3">KJS</span>
+                        <span class="min-w-0">
+                            <span class="block text-base sm:text-lg font-bold text-foreground">Kajuitjachtschipper</span>
+                            <span class="block text-xs font-semibold text-secondary">Startniveau</span>
+                        </span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            tot 6 Bft
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" style="transform: rotate(180deg)" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-kjs" data-accordion-content style="display: grid; grid-template-rows: 1fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik kajuitjacht tot 6 Bft</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>In Friesland</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <div class="space-y-2.5">
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <ul class="space-y-1.5 text-sm text-foreground/90">
+                                            <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Kielbootschipper 2</span></li>
+                                            <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Doorlopen instructie kajuitjacht zeilen</span></li>
+                                            <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Goedkeuring Kajuitjachtinstructeur</span></li>
+                                        </ul>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                        <span class="text-[10px] font-bold tracking-widest text-foreground/40">OF</span>
+                                        <span class="h-px flex-1 bg-foreground/10"></span>
+                                    </div>
+                                    <div class="rounded-lg border border-foreground/10 p-3">
+                                        <ul class="space-y-1.5 text-sm text-foreground/90">
+                                            <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Kielbootschipper 3</span></li>
+                                            <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Doorlopen rondleiding kajuitjacht</span></li>
+                                            <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Goedkeuring Kajuitjachtschipper (Ruime Sop) of Kajuitjachtinstructeur</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- KJS-RS -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-kjsrs"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-[10px] tracking-wide mx-3">KJS-RS</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">Kajuitjachtschipper Ruime Sop</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            tot 6 Bft
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-kjsrs" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik kajuitjacht tot 6 Bft</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>In Friesland, het IJsselmeer en op de Nederlandse kustwateren</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <p class="text-xs text-foreground/50 mb-2">Alle van de volgende punten:</p>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Kajuitjachtschipper</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Klein vaarbewijs 2 behaald of vervangend theorie-examen</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+        <!-- KJI -->
+        <c-card>
+            <div class="accordion-item" data-accordion>
+                <button type="button" data-accordion-trigger aria-expanded="false" aria-controls="content-kji"
+                    class="w-full flex items-center justify-between gap-3 text-left py-1">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full bg-primary/10 text-primary font-bold text-xs tracking-wide mx-3">KJI</span>
+                        <span class="block text-base sm:text-lg font-bold text-foreground">Kajuitjachtinstructeur</span>
+                    </span>
+                    <span class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10.5a2.5 2.5 0 100-5" /><path d="M3 12.5h14a2.5 2.5 0 110 5" /><path d="M3 17h7a2 2 0 110 4" /></svg>
+                            tot 6 Bft
+                        </span>
+                        <svg data-chevron class="transition-transform duration-300" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+                    </span>
+                </button>
+
+                <div id="content-kji" data-accordion-content style="display: grid; grid-template-rows: 0fr; transition: grid-template-rows 300ms ease;">
+                    <div class="overflow-hidden">
+                        <div class="pt-5 pb-1 grid sm:grid-cols-2 gap-6 sm:gap-10">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-primary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8.3 12.3l2.4 2.4 4.6-5" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Rechten</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Gebruik kajuitjacht tot 6 Bft</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>In Friesland, het IJsselmeer en op de Nederlandse kustwateren</span></li>
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-primary/50 shrink-0"></span><span>Opleiden kajuitjachtschippers</span></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-2.5 text-secondary">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M9 8.5h6M9 12h6M9 15.5h4" /></svg>
+                                    <span class="text-xs font-bold uppercase tracking-wide">Eisen</span>
+                                </div>
+                                <ul class="space-y-1.5 text-sm text-foreground/90">
+                                    <li class="flex gap-2"><span class="mt-1.5 w-1 h-1 rounded-full bg-secondary/60 shrink-0"></span><span>Als instructeur oude niveau</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </c-card>
+
+    </div>
+    </div>
+    </div>
+
+</div>
+
+<script>
+    (function () {
+        // Tab switching
+        var tabTriggers = document.querySelectorAll('[data-tab-trigger]');
+        var tabPanels = document.querySelectorAll('[data-tab-panel]');
+
+        tabTriggers.forEach(function (trigger) {
+            trigger.addEventListener('click', function () {
+                var target = trigger.getAttribute('data-tab');
+
+                tabTriggers.forEach(function (t) {
+                    var active = t === trigger;
+                    t.setAttribute('aria-selected', active ? 'true' : 'false');
+                    t.classList.toggle('bg-primary', active);
+                    t.classList.toggle('text-white', active);
+                    t.classList.toggle('text-foreground/60', !active);
+                });
+
+                tabPanels.forEach(function (panel) {
+                    var isTarget = panel.id === 'panel-' + target;
+                    panel.style.gridTemplateRows = isTarget ? '1fr' : '0fr';
+                    panel.toggleAttribute('inert', !isTarget);
+                });
+            });
+        });
+
+        // Accordion toggling
+        document.querySelectorAll('[data-accordion-trigger]').forEach(function (trigger) {
+            trigger.addEventListener('click', function () {
+                var expanded = trigger.getAttribute('aria-expanded') === 'true';
+                var content = document.getElementById(trigger.getAttribute('aria-controls'));
+                var chevron = trigger.querySelector('[data-chevron]');
+
+                trigger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+                content.style.gridTemplateRows = expanded ? '0fr' : '1fr';
+                if (chevron) {
+                    chevron.style.transform = expanded ? 'rotate(0deg)' : 'rotate(180deg)';
+                }
+            });
+        });
+    })();
+</script>
+{% endblock %}
