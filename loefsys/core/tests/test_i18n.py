@@ -92,7 +92,9 @@ class DutchCatalogueTestCase(TestCase):
 
     def test_compiled_catalogue_matches_po(self):
         with MO_FILE.open("rb") as file:
-            catalog = gettext.GNUTranslations(file)._catalog
+            # The parsed messages live in the private _catalog attribute, which the
+            # typeshed stubs don't declare.
+            catalog: dict = vars(gettext.GNUTranslations(file))["_catalog"]
         stale = []
         for e in parse_po(PO_FILE):
             prefix = f"{e['msgctxt']}\x04" if "msgctxt" in e else ""
