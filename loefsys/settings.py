@@ -192,6 +192,10 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Apache terminates TLS and sets X-Forwarded-Proto; without this Django
 # believes every request is plain HTTP.
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# Plain HTTP is only for local development. Staging and production (the Docker
+# setup) turn this on, so any request that reaches Django over HTTP is redirected
+# to HTTPS.
+SECURE_SSL_REDIRECT = env_bool("DJANGO_SECURE_SSL_REDIRECT", False)
 CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 # Localization
