@@ -50,7 +50,6 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "django": ("https://docs.djangoproject.com/en/5.0/", None),
     "django_ext": ("https://django-extensions.readthedocs.io/en/latest/", None),
-    "django_cbs": ("https://django-classy-settings.readthedocs.io/latest/", None),
     "sphinx": ("https://www.sphinx-doc.org/en/master/", None),
     "mypy": ("https://mypy.readthedocs.io/en/latest/", None),
 }
