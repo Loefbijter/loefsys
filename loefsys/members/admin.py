@@ -3,6 +3,7 @@
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Exists, OuterRef
 from django.db.utils import OperationalError
 from django.forms import BaseInlineFormSet, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
@@ -51,6 +52,30 @@ class SkippershipUserInline(admin.TabularInline):
     fk_name = "skippership"
     extra = 1
     autocomplete_fields = ("user", "given_by")
+
+
+class AdminPermissionFilter(admin.SimpleListFilter):
+    """Filter users on whether they were given the Admin permission directly.
+
+    Everyone who had the old staff flag got this permission, so this lists them
+    in one place to move them into the right groups.
+    """
+
+    title = _("Admin permission")
+    parameter_name = "admin_permission"
+
+    def lookups(self, _request, _model_admin):
+        """Return the filter options."""
+        return [("yes", _("Yes")), ("no", _("No"))]
+
+    def queryset(self, _request, queryset):
+        """Return the users matching the selected option."""
+        match self.value():
+            case "yes":
+                return queryset.filter(has_admin_permission=True)
+            case "no":
+                return queryset.filter(has_admin_permission=False)
+        return queryset
 
 
 @admin.register(User)
@@ -106,7 +131,7 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
                 )
             },
         ),
-        (_("Permissions"), {"fields": ("is_staff", "is_superuser")}),
+        (_("Permissions"), {"fields": ("is_superuser", "user_permissions")}),
         (_("Groups"), {"fields": ("groups", "loefbijter_groups")}),
     )
 
@@ -127,14 +152,38 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
                 )
             },
         ),
-        (_("Permissions"), {"fields": ("is_staff", "is_superuser")}),
+        (_("Permissions"), {"fields": ("is_superuser",)}),
         (_("Groups"), {"fields": ("groups",)}),
     )
 
-    list_display = ("email", "first_name", "last_name", "is_staff")
+    list_display = ("email", "first_name", "last_name", "has_admin_permission")
+    list_filter = (AdminPermissionFilter, "is_superuser", "is_active", "groups")
     search_fields = ("email", "first_name", "last_name")
     ordering = ("email",)
-    filter_horizontal = ("groups",)
+    filter_horizontal = ("groups", "user_permissions")
+
+    @admin.display(
+        description=_("Admin"), boolean=True, ordering="has_admin_permission"
+    )
+    def has_admin_permission(self, user):
+        """Return whether the user was given the Admin permission directly."""
+        return user.has_admin_permission
+
+    def get_queryset(self, request):
+        """Annotate whether each user holds the Admin permission directly."""
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(
+                has_admin_permission=Exists(
+                    User.user_permissions.through.objects.filter(
+                        user=OuterRef("pk"),
+                        permission__codename="access_admin",
+                        permission__content_type__app_label="members",
+                    )
+                )
+            )
+        )
 
     def get_fieldsets(self, request, obj=None):
         """Return the fieldsets for the User model."""

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 17:26+0200\n"
+"POT-Creation-Date: 2026-10-03 14:51+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -29,6 +29,28 @@ msgstr "Gratis!"
 #: loefsys/core/tests/test_i18n.py loefsys/settings/locale.py
 msgid "English"
 msgstr "Engels"
+
+#: loefsys/events/admin.py
+msgid "Registration"
+msgstr "Inschrijving"
+
+#: loefsys/events/admin.py loefsys/events/templates/events/event.html
+#: loefsys/events/templates/events/my_event_detail.html
+msgid "Registrations"
+msgstr "Inschrijvingen"
+
+#: loefsys/events/admin.py loefsys/groups/models/group.py
+#: loefsys/reservations/models/reservable.py
+msgid "Name"
+msgstr "Naam"
+
+#: loefsys/events/admin.py
+msgid "Email"
+msgstr "E-mail"
+
+#: loefsys/events/admin.py loefsys/members/models/user.py
+msgid "Phone number"
+msgstr "Telefoonnummer"
 
 #: loefsys/events/feeds.py
 msgid "Registered Loefbijter Events"
@@ -338,11 +360,6 @@ msgstr "Boete bij laat afmelden"
 
 #: loefsys/events/templates/events/event.html
 #: loefsys/events/templates/events/my_event_detail.html
-msgid "Registrations"
-msgstr "Inschrijvingen"
-
-#: loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/my_event_detail.html
 msgid "Organizers"
 msgstr "Organisatoren"
 
@@ -587,10 +604,6 @@ msgstr ""
 msgid "Fraternities"
 msgstr "Disputen"
 
-#: loefsys/groups/models/group.py loefsys/reservations/models/reservable.py
-msgid "Name"
-msgstr "Naam"
-
 #: loefsys/groups/models/group.py loefsys/members/admin.py
 msgid "Permissions"
 msgstr "Rechten"
@@ -799,6 +812,20 @@ msgid "Loefbijter song"
 msgstr "Loefbijterlied"
 
 #: loefsys/members/admin.py
+msgid "Admin permission"
+msgstr "Beheerrecht"
+
+#: loefsys/members/admin.py
+#: loefsys/reservations/templates/reservations/reservation_form.html
+msgid "Yes"
+msgstr "Ja"
+
+#: loefsys/members/admin.py
+#: loefsys/reservations/templates/reservations/reservation_form.html
+msgid "No"
+msgstr "Nee"
+
+#: loefsys/members/admin.py
 msgid "Pseudonymize selected users"
 msgstr "Geselecteerde gebruikers pseudonimiseren"
 
@@ -814,6 +841,16 @@ msgstr "Persoonlijke gegevens"
 #: loefsys/members/admin.py
 msgid "Groups"
 msgstr "Groepen"
+
+#: loefsys/members/admin.py
+msgid "Admin"
+msgstr "Beheer"
+
+#: loefsys/members/admin.py
+#, python-format
+msgid "Added %(count)d required skipperships to existing skippers."
+msgstr ""
+"%(count)d vereiste schipperschappen toegevoegd aan bestaande schippers."
 
 #: loefsys/members/models/__disabled__.skippership.py
 #: loefsys/members/models/skippership.py
@@ -964,6 +1001,10 @@ msgstr "Het schipperschap dat eerst behaald moet zijn."
 msgid "Skipperships"
 msgstr "Schipperschappen"
 
+#: loefsys/members/models/skippership.py
+msgid "A skippership cannot require itself."
+msgstr "Een schipperschap kan zichzelf niet vereisen."
+
 #: loefsys/members/models/study_registration.py
 msgid "Educational institution"
 msgstr "Onderwijsinstelling"
@@ -989,14 +1030,6 @@ msgstr "RSC-kaartnummer"
 #: loefsys/members/views.py
 msgid "Email address"
 msgstr "E-mailadres"
-
-#: loefsys/members/models/user.py
-msgid "Staff status"
-msgstr "Stafstatus"
-
-#: loefsys/members/models/user.py
-msgid "Designates whether the user can log into this admin site."
-msgstr "Bepaalt of de gebruiker kan inloggen op deze beheersite."
 
 #: loefsys/members/models/user.py
 msgid "Designates whether this user should be treated as active."
@@ -1064,10 +1097,6 @@ msgstr ""
 "van elk van zijn groepen."
 
 #: loefsys/members/models/user.py
-msgid "Phone number"
-msgstr "Telefoonnummer"
-
-#: loefsys/members/models/user.py
 msgid "KB POD link"
 msgstr "KB POD-link"
 
@@ -1096,6 +1125,11 @@ msgstr "gebruiker"
 #: loefsys/members/models/user.py
 msgid "users"
 msgstr "gebruikers"
+
+#: loefsys/members/models/user_skippership.py
+#, python-format
+msgid "%(skippership)s requires %(required)s first."
+msgstr "%(skippership)s vereist eerst %(required)s."
 
 #: loefsys/members/password_validators.py
 msgid "The password must contain at least one uppercase letter."
@@ -1818,14 +1852,6 @@ msgstr "Beschikbaar"
 #: loefsys/reservations/templates/reservations/reservation_form.html
 msgid "Engine"
 msgstr "Motor"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Yes"
-msgstr "Ja"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "No"
-msgstr "Nee"
 
 #: loefsys/reservations/templates/reservations/reservation_form.html
 msgid "Provider"
