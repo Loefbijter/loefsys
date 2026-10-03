@@ -359,7 +359,7 @@
   .cap-h { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.8125rem; }
   .cap-h span, .cap-note { color: var(--muted); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
   .register-form { display: grid; gap: 0.625rem; }
-  .register-form > .btn { width: 100%; padding-block: 0.75rem; font-size: 0.9375rem; }
+  .register-form > .btn { width: 100%; padding-block: 0.75rem; font-size: 0.9375rem; white-space: normal; text-align: center; }
   .register-form > .btn-danger { border-color: color-mix(in oklab, var(--bad) 45%, var(--line)); }
   .register-note { display: flex; gap: 0.375rem; align-items: baseline; color: var(--muted); font-size: 0.8125rem; }
   .consent { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 0.875rem; color: var(--fg); }
