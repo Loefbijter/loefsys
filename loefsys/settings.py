@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -61,7 +62,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.admin",
+    "loefsys.core.admin_apps.LoefsysAdminConfig",
     "django.contrib.staticfiles",
     "django_cotton",
     "compressor",
@@ -92,13 +93,14 @@ if DEBUG:
     MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 MIDDLEWARE += [
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # Activate the language before any middleware that may render or redirect.
+    "loefsys.core.i18n.LanguageMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # Require login for anonymous users across most pages. Public paths are
     # whitelisted separately.
     "loefsys.core.middleware.RequireLoginMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
 ]
 
 # Templates
@@ -149,6 +151,8 @@ DATABASES = {
 LOGIN_URL = "members:login"
 AUTH_USER_MODEL = "members.User"
 
+AUTHENTICATION_BACKENDS = ["loefsys.members.backends.LoefbijterGroupBackend"]
+
 # from: https://docs.djangoproject.com/en/5.0/topics/auth/passwords/#using-argon2-with-django
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
@@ -190,8 +194,14 @@ CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS")
 
 # Localization
 
-TIME_ZONE = os.environ.get("DJANGO_TIME_ZONE", "Europe/Amsterdam")
-LANGUAGE_CODE = "nl-NL"
+# Source strings are written in English. Dutch is the default language for every
+# visitor; English is only shown when a user picks it with the language switcher.
+
+# Fixed rather than read from the environment: times are always shown in
+# Amsterdam time.
+TIME_ZONE = "Europe/Amsterdam"
+LANGUAGE_CODE = "nl"
+LANGUAGES = [("nl", _("Dutch")), ("en", _("English"))]
 USE_I18N = True
 USE_TZ = True
 

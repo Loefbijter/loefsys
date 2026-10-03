@@ -9,10 +9,10 @@
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 class="text-3xl font-bold text-gray-900">{{ event.title }}</h1>
-          <p class="mt-2 text-sm text-gray-500">Hier vind je een overzicht van de huidig ingeschreven deelnemers en contactinformatie.</p>
+          <p class="mt-2 text-sm text-gray-500">{% blocktranslate trimmed %}Here you will find an overview of the currently registered participants and their contact information.{% endblocktranslate %}</p>
         </div>
         <a href="{{ event_page_url }}" class="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
-          Bekijk eventpagina
+          {% translate "View event page" %}
         </a>
       </div>
 
@@ -22,19 +22,19 @@
             <p class="text-sm text-gray-500">{{ event.get_category_display }}</p>
             <div class="grid gap-3 sm:grid-cols-2">
               <div>
-                <dt class="text-xs uppercase tracking-wide text-gray-400">Start</dt>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">{% translate "Start" %}</dt>
                 <dd class="mt-1 text-sm font-semibold text-gray-900">{{ event.start|date:'d M Y H:i' }}</dd>
               </div>
               <div>
-                <dt class="text-xs uppercase tracking-wide text-gray-400">Einde</dt>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">{% translate "End" %}</dt>
                 <dd class="mt-1 text-sm font-semibold text-gray-900">{{ event.end|date:'d M Y H:i' }}</dd>
               </div>
               <div>
-                <dt class="text-xs uppercase tracking-wide text-gray-400">Locatie</dt>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">{% translate "Location" %}</dt>
                 <dd class="mt-1 text-sm font-semibold text-gray-900">{{ event.location }}</dd>
               </div>
               <div>
-                <dt class="text-xs uppercase tracking-wide text-gray-400">Inschrijvingen</dt>
+                <dt class="text-xs uppercase tracking-wide text-gray-400">{% translate "Registrations" %}</dt>
                 <dd class="mt-1 text-sm font-semibold text-gray-900">{{ attendees|length }}</dd>
               </div>
             </div>
@@ -42,7 +42,7 @@
         </div>
 
         <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 class="text-lg font-semibold text-gray-900">Organisatoren</h2>
+          <h2 class="text-lg font-semibold text-gray-900">{% translate "Organizers" %}</h2>
           <div class="mt-4 flex flex-wrap gap-2">
             {% if event.eventorganizer.groups.all %}
               {% for group in event.eventorganizer.groups.all %}
@@ -67,12 +67,12 @@
       <div class="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 class="text-xl font-semibold text-gray-900">Deelnemers</h2>
-            <p class="mt-1 text-sm text-gray-500">Bekijk de profielen en contactinformatie van je deelnemers.</p>
+            <h2 class="text-xl font-semibold text-gray-900">{% translate "Participants" %}</h2>
+            <p class="mt-1 text-sm text-gray-500">{% translate "View the profiles and contact information of your participants." %}</p>
           </div>
           {% if training_event %}
             <span class="inline-flex items-center rounded-full bg-secondary/10 px-3 py-1 text-sm font-semibold text-secondary">
-              Training: telefoonnummers en POD-links zichtbaar
+              {% translate "Training: phone numbers and POD links visible" %}
             </span>
           {% endif %}
         </div>
@@ -94,13 +94,14 @@
                 </div>
 
                 {% if training_event %}
+                  {% translate "Not available" as not_available %}
                   <div class="mt-4 grid gap-3 sm:grid-cols-2">
                     <div>
-                      <p class="text-xs uppercase tracking-wide text-gray-400">Telefoon</p>
-                      <p class="mt-1 text-sm font-semibold text-gray-900">{{ registration.contact.phone_number|default:'Niet beschikbaar' }}</p>
+                      <p class="text-xs uppercase tracking-wide text-gray-400">{% translate "Phone" %}</p>
+                      <p class="mt-1 text-sm font-semibold text-gray-900">{{ registration.contact.phone_number|default:not_available }}</p>
                     </div>
                     <div>
-                      <p class="text-xs uppercase tracking-wide text-gray-400">POD-links</p>
+                      <p class="text-xs uppercase tracking-wide text-gray-400">{% translate "POD links" %}</p>
                       <div class="mt-1 flex flex-wrap gap-2">
                         {% if registration.contact.pod_kb_link %}
                           <a href="{{ registration.contact.pod_kb_link }}" target="_blank" rel="noreferrer noopener" class="rounded-full border border-gray-200 px-3 py-1 text-sm font-semibold text-secondary hover:bg-secondary/10">KB POD</a>
@@ -115,7 +116,7 @@
               </div>
             {% endfor %}
           {% else %}
-            <p class="text-sm text-gray-600">Er zijn nog geen geregistreerde deelnemers voor dit event.</p>
+            <p class="text-sm text-gray-600">{% translate "There are no registered participants for this event yet." %}</p>
           {% endif %}
         </div>
       </div>

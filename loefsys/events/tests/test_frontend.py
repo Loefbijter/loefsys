@@ -3,7 +3,7 @@
 import io
 import shutil
 import tempfile
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
 from unittest import skip
 
 from PIL import Image
@@ -296,6 +296,35 @@ class EventRegistrationTestCase(TestCase):
             r"<button[^>]*id=\"registration-button\"[^>]*\sdisabled(?:\s*=\s*(?:\"[^\"]*\"|'[^']*'|[^\s>]+))?(?=\s|>)",
         )
         self.assertRegex(content, r'title="Inschrijven vanaf [^"]+"')
+
+    def test_registration_start_is_shown_in_local_time(self):
+        """Test that the registration start in the button is in local time, not UTC."""
+        self.client.force_login(user=self.user1)
+        # 08:40 UTC is 10:40 in Europe/Amsterdam (CEST).
+        registration_start = datetime(2099, 10, 20, 8, 40, tzinfo=UTC)
+        future_event = G(
+            Event,
+            title="Future registration event",
+            description="Event for which registration opens later.",
+            start=registration_start + timedelta(days=7),
+            end=registration_start + timedelta(days=8),
+            registration_start=registration_start,
+            registration_deadline=registration_start + timedelta(days=6),
+            cancelation_deadline=registration_start + timedelta(days=6),
+            category=EventCategories.LEISURE,
+            capacity=30,
+            price=0.00,
+            fine=0.00,
+            location="The Netherlands",
+            is_open_event=True,
+            published=True,
+            send_cancel_email=False,
+        )
+        response = self.client.get(future_event.get_absolute_url())
+        content = response.content.decode()
+
+        self.assertRegex(content, r'title="Inschrijven vanaf [^"]*10:40[^"]*"')
+        self.assertNotRegex(content, r'title="Inschrijven vanaf [^"]*08:40[^"]*"')
 
     def test_event_without_registration_start_allows_registration_until_deadline(self):
         """Test that events without an explicit registration start can still open."""

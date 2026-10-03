@@ -1,4 +1,5 @@
 import tempfile
+from datetime import UTC, datetime, timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
@@ -8,7 +9,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event, EventOrganizer, EventRegistration
+from loefsys.events.models import (
+    Event,
+    EventOrganizer,
+    EventRegistration,
+    RegistrationFormField,
+)
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
 
 
@@ -19,11 +25,11 @@ class EventDetailAttendeesTestCase(TestCase):
         now = timezone.now()
         self.event = G(
             Event,
-            start=now + timezone.timedelta(days=7),
-            end=now + timezone.timedelta(days=7, hours=2),
-            registration_start=now - timezone.timedelta(days=1),
-            registration_deadline=now + timezone.timedelta(days=6),
-            cancelation_deadline=now + timezone.timedelta(days=6),
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=6),
+            cancelation_deadline=now + timedelta(days=6),
             published=True,
         )
         self.attendee = G(get_user_model())
@@ -58,11 +64,11 @@ class EventFillerViewTestCase(TestCase):
                 event = G(
                     Event,
                     title="Evenement met foto",
-                    start=timezone.now() + timezone.timedelta(days=7),
-                    end=timezone.now() + timezone.timedelta(days=8),
-                    registration_start=timezone.now() - timezone.timedelta(days=1),
-                    registration_deadline=timezone.now() + timezone.timedelta(days=6),
-                    cancelation_deadline=timezone.now() + timezone.timedelta(days=6),
+                    start=timezone.now() + timedelta(days=7),
+                    end=timezone.now() + timedelta(days=8),
+                    registration_start=timezone.now() - timedelta(days=1),
+                    registration_deadline=timezone.now() + timedelta(days=6),
+                    cancelation_deadline=timezone.now() + timedelta(days=6),
                     category=1,
                     capacity=10,
                     price=0.00,
@@ -85,6 +91,25 @@ class EventFillerViewTestCase(TestCase):
                 self.assertEqual(len(data), 1)
                 self.assertEqual(data[0]["picture_url"], event.picture.url)
                 self.assertEqual(data[0]["url"], event.get_absolute_url())
+
+    def test_event_filler_returns_amsterdam_times(self):
+        """Event times are Amsterdam wall-clock times, whatever the viewer's zone."""
+        # 08:40 UTC is 10:40 in Europe/Amsterdam (CEST).
+        start = datetime(2099, 7, 1, 8, 40, tzinfo=UTC)
+        G(
+            Event,
+            start=start,
+            end=start + timedelta(hours=2),
+            registration_start=start - timedelta(days=7),
+            registration_deadline=start - timedelta(days=1),
+            cancelation_deadline=start - timedelta(days=1),
+            published=True,
+        )
+
+        data = self.client.get(reverse("events:event_filler")).json()
+
+        self.assertEqual(data[0]["start"], "2099-07-01T10:40:00")
+        self.assertEqual(data[0]["end"], "2099-07-01T12:40:00")
 
     def test_event_filler_toggle_includes_only_public_birthdays(self):
         """Birthdays should stay hidden by default and require an explicit toggle."""
@@ -125,11 +150,11 @@ class EventFillerViewTestCase(TestCase):
             Event,
             title="Evenement met boete",
             description="Dit is het evenementbeschrijving.",
-            start=timezone.now() + timezone.timedelta(days=7),
-            end=timezone.now() + timezone.timedelta(days=7, hours=2),
-            registration_start=timezone.now() - timezone.timedelta(days=7),
-            registration_deadline=timezone.now() + timezone.timedelta(days=2),
-            cancelation_deadline=timezone.now() - timezone.timedelta(days=1),
+            start=timezone.now() + timedelta(days=7),
+            end=timezone.now() + timedelta(days=7, hours=2),
+            registration_start=timezone.now() - timedelta(days=7),
+            registration_deadline=timezone.now() + timedelta(days=2),
+            cancelation_deadline=timezone.now() - timedelta(days=1),
             category=1,
             capacity=10,
             price=10.00,
@@ -173,11 +198,11 @@ class MyEventsFeatureTestCase(TestCase):
         self.event = G(
             Event,
             title="Training Event",
-            start=now + timezone.timedelta(days=7),
-            end=now + timezone.timedelta(days=8),
-            registration_start=now - timezone.timedelta(days=1),
-            registration_deadline=now + timezone.timedelta(days=6),
-            cancelation_deadline=now + timezone.timedelta(days=6),
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=8),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=6),
+            cancelation_deadline=now + timedelta(days=6),
             category=EventCategories.TRAINING,
             capacity=10,
             price=0.00,
@@ -211,11 +236,11 @@ class MyEventsFeatureTestCase(TestCase):
         recent_event = G(
             Event,
             title="Recente training",
-            start=now - timezone.timedelta(days=3),
-            end=now - timezone.timedelta(days=2),
-            registration_start=now - timezone.timedelta(days=10),
-            registration_deadline=now - timezone.timedelta(days=5),
-            cancelation_deadline=now - timezone.timedelta(days=4),
+            start=now - timedelta(days=3),
+            end=now - timedelta(days=2),
+            registration_start=now - timedelta(days=10),
+            registration_deadline=now - timedelta(days=5),
+            cancelation_deadline=now - timedelta(days=4),
             category=EventCategories.TRAINING,
             capacity=10,
             price=0.00,
@@ -228,11 +253,11 @@ class MyEventsFeatureTestCase(TestCase):
         archive_event = G(
             Event,
             title="Oude training",
-            start=now - timezone.timedelta(days=20),
-            end=now - timezone.timedelta(days=15),
-            registration_start=now - timezone.timedelta(days=30),
-            registration_deadline=now - timezone.timedelta(days=25),
-            cancelation_deadline=now - timezone.timedelta(days=23),
+            start=now - timedelta(days=20),
+            end=now - timedelta(days=15),
+            registration_start=now - timedelta(days=30),
+            registration_deadline=now - timedelta(days=25),
+            cancelation_deadline=now - timedelta(days=23),
             category=EventCategories.TRAINING,
             capacity=10,
             price=0.00,
@@ -281,3 +306,81 @@ class MyEventsFeatureTestCase(TestCase):
             reverse("events:my_events_event", kwargs={"slug": self.event.slug})
         )
         self.assertEqual(response.status_code, 404)
+
+
+class RegistrationFormDraftEventTestCase(TestCase):
+    """The registration form must not be reachable for draft events."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.event = G(
+            Event,
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=6),
+            cancelation_deadline=now + timedelta(days=6),
+            published=False,
+        )
+        G(
+            RegistrationFormField,
+            event=self.event,
+            type=RegistrationFormField.TEXT_FIELD,
+            required=False,
+        )
+        self.member = G(get_user_model())
+        self.client.force_login(self.member)
+
+    def test_draft_event_registration_form_is_not_found(self):
+        """Opening the form for a draft returns 404 and creates no registration."""
+        response = self.client.get(
+            reverse("events:registration", kwargs={"slug": self.event.slug})
+        )
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(
+            EventRegistration.objects.filter(
+                event=self.event, contact=self.member
+            ).exists()
+        )
+
+
+class DraftEventVisibilityTestCase(TestCase):
+    """Draft event pages and calendar entries are only shown to those allowed."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.event = G(
+            Event,
+            title="Geheime conceptactiviteit",
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            published=False,
+        )
+        self.organizer = G(get_user_model())
+        G(EventOrganizer, event=self.event).user.add(self.organizer)
+
+    def test_member_gets_404_on_draft_event_page(self):
+        """A regular member cannot open a draft."""
+        self.client.force_login(G(get_user_model()))
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertEqual(response.status_code, 404)
+
+    def test_organizer_sees_draft_event_page_marked_as_draft(self):
+        """An organizer can open their draft and sees that it is unpublished."""
+        self.client.force_login(self.organizer)
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Deze activiteit is niet gepubliceerd.")
+
+    def test_calendar_hides_draft_from_member(self):
+        """The calendar data leaves drafts out for regular members."""
+        self.client.force_login(G(get_user_model()))
+        response = self.client.get(reverse("events:event_filler"))
+        self.assertNotIn("Geheime conceptactiviteit", response.content.decode())
+
+    def test_calendar_marks_draft_for_organizer(self):
+        """The calendar data shows drafts to organizers, flagged as unpublished."""
+        self.client.force_login(self.organizer)
+        response = self.client.get(reverse("events:event_filler"))
+        entries = {entry["title"]: entry for entry in response.json()}
+        self.assertFalse(entries["Geheime conceptactiviteit"]["published"])

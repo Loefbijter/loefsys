@@ -1,6 +1,7 @@
 """Module defining the forms for events."""
 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .models import RegistrationFormField
 
@@ -67,7 +68,7 @@ class EventFieldsForm(forms.Form):
                         widget=forms.Textarea(
                             attrs={
                                 "rows": 5,
-                                "placeholder": "Typ hier je antwoord...",
+                                "placeholder": _("Type your answer here..."),
                                 "class": (
                                     "block w-full rounded-lg border border-slate-300 "
                                     "px-3 py-2.5 text-sm text-slate-900 shadow-sm "

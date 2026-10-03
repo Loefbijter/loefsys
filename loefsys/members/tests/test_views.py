@@ -18,7 +18,7 @@ class UserProfileViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, reverse("members:user-profile-edit"))
-        self.assertContains(response, "Profiel Bewerken")
+        self.assertContains(response, "Profiel bewerken")
 
     def test_profile_edit_page_renders_with_correct_urls(self):
         """The profile edit page renders its form and cancel links with valid URLs."""
