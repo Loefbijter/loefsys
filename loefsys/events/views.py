@@ -1,7 +1,6 @@
 """Module defining the views for events."""
 
 from datetime import timedelta
-from typing import ClassVar
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -334,23 +333,25 @@ class CalendarView(LoginRequiredMixin, TemplateView):
 
     template_name = "events/calendar.html"
 
+    def get_context_data(self, **kwargs):
+        """Add the categories for the colour legend."""
+        context = super().get_context_data(**kwargs)
+        context["categories"] = [
+            (category.name.lower(), category.label) for category in EventCategories
+        ]
+        return context
+
 
 class EventFillerView(View):
     """View for the event filler."""
 
-    CATEGORY_COLORS: ClassVar[dict[int, str]] = {
-        EventCategories.OTHER: "#a855f7",
-        EventCategories.ALUMNI: "#f59e0b",
-        EventCategories.ASSOCIATION: "#0ea5e9",
-        EventCategories.COMPETITION: "#14b8a6",
-        EventCategories.LEISURE: "#ec4899",
-        EventCategories.SAILING: "#2563eb",
-        EventCategories.TRAINING: "#22c55e",
-    }
-
-    def get_event_color(self, event):
-        """Return the color for an event category."""
-        return self.CATEGORY_COLORS.get(event.category, "#6366f1")
+    @staticmethod
+    def category_class(event) -> str:
+        """Return the ``.cat-<key>`` class that colours an event in the calendar."""
+        try:
+            return f"cat-{EventCategories(event.category).name.lower()}"
+        except ValueError:
+            return "cat-other"
 
     def get(self, request):
         """Get the events for the calendar."""
@@ -370,9 +371,9 @@ class EventFillerView(View):
                         and getattr(event.picture, "url", None)
                         else None
                     ),
-                    "color": self.get_event_color(event),
-                    "backgroundColor": self.get_event_color(event),
-                    "borderColor": self.get_event_color(event),
+                    "location": event.location,
+                    "category": event.get_category_display(),
+                    "classNames": [self.category_class(event)],
                 }
             )
 
@@ -393,7 +394,7 @@ class EventFillerView(View):
                         "end": (birthday_this_year + timedelta(days=1)).isoformat(),
                         "allDay": True,
                         "url": reverse("members:profile", kwargs={"slug": user.slug}),
-                        "color": "var(--color-secondary)",
+                        "classNames": ["cat-birthday"],
                     }
                 )
 

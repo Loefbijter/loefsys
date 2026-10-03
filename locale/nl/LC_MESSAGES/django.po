@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 10:07+0200\n"
+"POT-Creation-Date: 2026-10-03 10:11+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -236,12 +236,24 @@ msgid "Calendar"
 msgstr "Kalender"
 
 #: loefsys/events/templates/events/calendar.html
-msgid "All day"
-msgstr "Hele dag"
+#: loefsys/home/templates/home/index.html templates/cotton/menu/mobile.html
+msgid "Agenda"
+msgstr "Agenda"
 
 #: loefsys/events/templates/events/calendar.html
-msgid "No events to show"
-msgstr "Geen evenementen om te tonen"
+#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
+msgid "Activities"
+msgstr "Activiteiten"
+
+#: loefsys/events/templates/events/calendar.html
+msgid "Everything the association organises. Open an activity to sign up."
+msgstr ""
+"Alles wat de vereniging organiseert. Open een activiteit om je in te "
+"schrijven."
+
+#: loefsys/events/templates/events/calendar.html
+msgid "Link to calendar"
+msgstr "Link met agenda"
 
 #: loefsys/events/templates/events/calendar.html
 msgid "Previous period"
@@ -256,28 +268,40 @@ msgid "Next period"
 msgstr "Volgende periode"
 
 #: loefsys/events/templates/events/calendar.html
-msgid "List"
-msgstr "Lijst"
+msgid "Show birthdays"
+msgstr "Toon verjaardagen"
 
 #: loefsys/events/templates/events/calendar.html
-msgid "Week"
-msgstr "Week"
+msgid "View"
+msgstr "Weergave"
 
 #: loefsys/events/templates/events/calendar.html
 msgid "Month"
 msgstr "Maand"
 
 #: loefsys/events/templates/events/calendar.html
-msgid "Show birthdays"
-msgstr "Toon verjaardagen"
+msgid "Week"
+msgstr "Week"
 
 #: loefsys/events/templates/events/calendar.html
-msgid "Link to calendar"
-msgstr "Link met agenda"
+msgid "List"
+msgstr "Lijst"
 
 #: loefsys/events/templates/events/calendar.html
-msgid "Sync calendar"
-msgstr "Synchroniseer agenda"
+msgid "All day"
+msgstr "Hele dag"
+
+#: loefsys/events/templates/events/calendar.html
+msgid "No events to show"
+msgstr "Geen evenementen om te tonen"
+
+#: loefsys/events/templates/events/calendar.html
+msgid "Categories"
+msgstr "Categorieën"
+
+#: loefsys/events/templates/events/calendar.html loefsys/members/models/user.py
+msgid "Birthday"
+msgstr "Verjaardag"
 
 #: loefsys/events/templates/events/event.html
 #, python-format
@@ -702,10 +726,6 @@ msgstr "Log in"
 msgid "Upcoming events"
 msgstr "Aankomende evenementen"
 
-#: loefsys/home/templates/home/index.html templates/cotton/menu/mobile.html
-msgid "Agenda"
-msgstr "Agenda"
-
 #: loefsys/home/templates/home/index.html
 msgid "No upcoming events."
 msgstr "Geen aankomende evenementen."
@@ -1055,10 +1075,6 @@ msgstr "Profielfoto"
 #: loefsys/members/models/user.py
 msgid "Gender"
 msgstr "Geslacht"
-
-#: loefsys/members/models/user.py
-msgid "Birthday"
-msgstr "Verjaardag"
 
 #: loefsys/members/models/user.py
 msgid "Display birthday"
@@ -2096,10 +2112,6 @@ msgstr "Verenigingsdocumenten"
 #: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
 msgid "Main menu"
 msgstr "Hoofdmenu"
-
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Activities"
-msgstr "Activiteiten"
 
 #: templates/cotton/menu/mobile.html
 msgid "Account"
