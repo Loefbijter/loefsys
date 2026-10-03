@@ -329,6 +329,7 @@ class BoatLogbookView(LoginRequiredMixin, FormView):
 class ReservationDeleteView(LoginRequiredMixin, DeleteView):
     """Reservation delete view."""
 
+    request: AuthenticatedHttpRequest
     model = Reservation
     context_object_name = "reservation"
     template_name = "reservations/reservation_confirm_delete.html"
