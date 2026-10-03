@@ -45,7 +45,7 @@
 
             <!-- Location tabs -->
             <nav class="mt-6">
-                <ul class="grid grid-cols-4 gap-1 bg-black/5 p-1.5 rounded-full text-sm font-semibold overflow-hidden">
+                <ul class="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-black/5 p-1.5 rounded-3xl sm:rounded-full text-sm font-semibold">
                     <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
                            class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 1 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
