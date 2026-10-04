@@ -1002,7 +1002,8 @@ msgstr "Persoonlijke gegevens"
 msgid "Groups"
 msgstr "Groepen"
 
-#: loefsys/members/admin.py
+#: loefsys/members/admin.py templates/cotton/menu/desktop.html
+#: templates/cotton/menu/mobile.html
 msgid "Admin"
 msgstr "Beheer"
 

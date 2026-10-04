@@ -9,10 +9,12 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
 )
 from django.urls import include, path, re_path, reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # There is no CommonMiddleware, so APPEND_SLASH does not redirect /admin.
+    path("admin", RedirectView.as_view(url="/admin/", permanent=True)),
     path("i18n/", include("django.conf.urls.i18n")),
     # Provide a top-level named login URL to support templates using {% url 'login' %}.
     path(

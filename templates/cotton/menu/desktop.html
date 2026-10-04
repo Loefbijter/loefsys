@@ -27,6 +27,9 @@
         </div>
         <div class="topbar-end">
             <c-language-switch />
+            {% if request.user.is_staff %}
+                <a class="topnav-item" href="{% url 'admin:index' %}"><i class="bi bi-speedometer2" aria-hidden="true"></i>{% translate "Admin" %}</a>
+            {% endif %}
             {% if request.user.is_authenticated %}
                 <c-profile-icon />
             {% else %}

@@ -149,3 +149,34 @@ class AdminDashboardTestCase(TestCase):
         self.assertContains(response, 'id="kpi-pending-link"')
         self.assertContains(response, 'id="kpi-damage"')
         self.assertContains(response, 'id="kpi-skippers"')
+
+
+class AdminWithoutSlashTestCase(TestCase):
+    """``/admin`` without the trailing slash leads to the admin as well."""
+
+    def test_admin_without_slash_redirects_to_admin(self):
+        self.client.force_login(G(get_user_model(), is_superuser=True))
+        response = self.client.get("/admin")
+        self.assertRedirects(response, reverse("admin:index"), status_code=301)
+
+
+class AdminHeaderLinkTestCase(TestCase):
+    """The site header links to the admin only for users who may access it."""
+
+    def setUp(self):
+        self.user = G(get_user_model(), is_superuser=False)
+        self.admin_url = reverse("admin:index")
+
+    def test_user_without_permissions_sees_no_admin_link(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("home:home"))
+        self.assertNotContains(response, f'href="{self.admin_url}"')
+
+    def test_user_with_permission_sees_admin_link(self):
+        group = Group.objects.create(name="Testgroep")
+        group.permissions.add(Permission.objects.get(codename="view_event"))
+        self.user.groups.add(group)
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("home:home"))
+        # Once in the desktop header and once in the phone menu.
+        self.assertContains(response, f'href="{self.admin_url}"', count=2)
