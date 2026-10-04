@@ -23,6 +23,7 @@ from .exceptions import RegistrationError
 from .forms import EventFieldsForm
 from .models import Event, EventOrganizer, EventRegistration, RegistrationFormField
 from .models.choices import EventCategories, RegistrationStatus
+from .models.registration import FORM_RESPONSE_PREFETCH
 
 
 class EventDetailView(LoginRequiredMixin, DetailView):
@@ -501,8 +502,11 @@ class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["event_page_url"] = self.object.get_absolute_url()
         context["attendees"] = (
-            self.object.eventregistration_set.active().select_related("contact")
+            self.object.eventregistration_set.active()
+            .select_related("contact", "event")
+            .prefetch_related(*FORM_RESPONSE_PREFETCH)
         )
+        context["has_form"] = self.object.has_form_fields
         context["event_categories"] = EventCategories
         context["training_event"] = self.object.category == EventCategories.TRAINING
         return context
