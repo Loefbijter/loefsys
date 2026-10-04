@@ -151,6 +151,15 @@ class AdminDashboardTestCase(TestCase):
         self.assertContains(response, 'id="kpi-skippers"')
 
 
+class AdminWithoutSlashTestCase(TestCase):
+    """``/admin`` without the trailing slash leads to the admin as well."""
+
+    def test_admin_without_slash_redirects_to_admin(self):
+        self.client.force_login(G(get_user_model(), is_superuser=True))
+        response = self.client.get("/admin")
+        self.assertRedirects(response, reverse("admin:index"), status_code=301)
+
+
 class AdminHeaderLinkTestCase(TestCase):
     """The site header links to the admin only for users who may access it."""
 
