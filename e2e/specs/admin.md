@@ -20,6 +20,8 @@ seeing other members' data.**
 - **ADM-6** Activities in other categories are hidden from them.
 - **ADM-7** On their activities they see each registration's name, email address and
   phone number, read-only.
+- **ADM-10** When the activity has extra questions, each registration can be folded out
+  to read its answers.
 - **ADM-8** They can't open the member list.
 
 **As the board, I want to give someone admin access by permission instead of a staff
