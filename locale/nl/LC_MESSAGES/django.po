@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 16:03+0200\n"
+"POT-Creation-Date: 2026-10-04 12:43+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -1002,7 +1002,8 @@ msgstr "Persoonlijke gegevens"
 msgid "Groups"
 msgstr "Groepen"
 
-#: loefsys/members/admin.py
+#: loefsys/members/admin.py templates/cotton/menu/desktop.html
+#: templates/cotton/menu/mobile.html
 msgid "Admin"
 msgstr "Beheer"
 
