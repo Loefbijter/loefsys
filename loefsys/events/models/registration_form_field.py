@@ -4,8 +4,12 @@ Defines the RegistrationForm model.
 This model is used to handle registrations for events in the application.
 """
 
+from datetime import datetime
+
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
+from django.utils.formats import date_format
+from django.utils.translation import gettext, gettext_lazy as _
 
 from loefsys.events.models import event
 from loefsys.events.models.registration import EventRegistration
@@ -106,6 +110,20 @@ class RegistrationFormField(models.Model):
         field_value.value = value
         field_value.full_clean()
         field_value.save()
+
+
+def format_answer(value) -> str:
+    """Return an answer to a registration form field as readable text.
+
+    Returns an empty string when the field wasn't answered.
+    """
+    if value is None:
+        return ""
+    if isinstance(value, bool):
+        return gettext("Yes") if value else gettext("No")
+    if isinstance(value, datetime):
+        return date_format(timezone.localtime(value), "DATETIME_FORMAT")
+    return str(value)
 
 
 class AbstractRegistrationInformation(models.Model):

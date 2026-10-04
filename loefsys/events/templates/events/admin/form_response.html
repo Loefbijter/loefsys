@@ -1,0 +1,11 @@
+{% load i18n event_ui %}{% spaceless %}
+<details class="form-response"{% if open %} open{% endif %}>
+  <summary style="cursor:pointer;">{% blocktranslate trimmed count counter=answers|length %}{{ counter }} question{% plural %}{{ counter }} questions{% endblocktranslate %}</summary>
+  <dl style="margin:0.5rem 0 0;">
+    {% for field, value in answers %}
+      <dt style="font-weight:bold;margin:0;">{{ field.subject }}</dt>
+      <dd style="margin:0 0 0.5rem;">{% with text=value|answer %}{% if text %}{{ text }}{% else %}<em>{% translate "No answer" %}</em>{% endif %}{% endwith %}</dd>
+    {% endfor %}
+  </dl>
+</details>
+{% endspaceless %}
