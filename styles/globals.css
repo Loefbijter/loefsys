@@ -281,6 +281,17 @@
   .form-help ul { list-style: disc; padding-left: 1.25rem; }
   .form-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
+  /* Login, password reset and error pages: the logo over one centred panel */
+  .page.solo { max-width: 28rem; padding-top: 2rem; }
+  .page.solo.error { max-width: 38rem; text-align: center; }
+  .solo-logo { height: 5rem; width: auto; justify-self: center; }
+  .solo-title { font-family: var(--font-display); font-weight: 800; font-size: 1.5rem; line-height: 1.15; letter-spacing: -0.01em; color: var(--heading); text-wrap: balance; }
+  .error .solo-title { font-size: clamp(2.5rem, 8vw, 3.5rem); line-height: 1.05; }
+  .solo-text { color: var(--muted); }
+  .solo-text a { color: var(--link); font-weight: 600; text-decoration: underline; }
+  .error .form-actions { justify-content: center; }
+  .solo-foot { justify-self: center; font-size: 0.875rem; color: var(--muted); }
+
   /* Switch */
   .toggle { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.875rem; cursor: pointer; color: var(--fg); }
   .toggle input { appearance: none; width: 2.5rem; height: 1.5rem; border-radius: 999px; background: color-mix(in oklab, var(--muted) 40%, var(--line)); position: relative; cursor: pointer; transition: background-color .2s; margin: 0; flex: none; }
