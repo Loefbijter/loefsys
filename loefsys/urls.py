@@ -26,7 +26,7 @@ urlpatterns = [
     re_path(
         r"^reset/(?P<uidb64>[^/]*)/(?P<token>[^/]*)/$",
         PasswordResetConfirmView.as_view(
-            template_name="registration/password_reset_confirm.html",
+            template_name="registration/reset_confirm.html",
             success_url=reverse_lazy("password_reset_complete"),
         ),
         name="password_reset_confirm",
@@ -34,7 +34,7 @@ urlpatterns = [
     path(
         "reset/done/",
         PasswordResetCompleteView.as_view(
-            template_name="registration/password_reset_complete.html"
+            template_name="registration/reset_complete.html"
         ),
         name="password_reset_complete",
     ),
