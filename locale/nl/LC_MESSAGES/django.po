@@ -1426,6 +1426,15 @@ msgstr "Het schipperschap dat eerst behaald moet zijn."
 msgid "The team"
 msgstr "Het team"
 
+msgid "Theme: dark"
+msgstr "Thema: donker"
+
+msgid "Theme: follow device"
+msgstr "Thema: volg apparaat"
+
+msgid "Theme: light"
+msgstr "Thema: licht"
+
 msgid "There are no old reservations in the archive yet"
 msgstr "Er staat nog geen oude reservering in het archief"
 

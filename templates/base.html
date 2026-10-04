@@ -4,6 +4,8 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    {# Apply the saved colour theme before anything is drawn; see static/JS/theme.js. #}
+    <script>try { const t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
     <title>{% block title %}{% endblock %} | Loefbijter</title>
     <link rel="icon" type="image/svg+xml" sizes="any" href="{% static 'loefbijter-logo.svg' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.4/font/bootstrap-icons.css">
     <script src="{% static 'JS/navbar.js' %}" defer></script>
     <script src="{% static 'JS/sailboat.js' %}" defer></script>
+    <script src="{% static 'JS/theme.js' %}" defer></script>
     {% block head %}{% endblock head %}
 </head>
 <body>

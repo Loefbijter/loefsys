@@ -16,27 +16,33 @@
  *
  * The three logo blues (loef-1..3) are fixed. Everything else is a semantic token
  * that switches between the light palette ("nevel", a cool misty blue-white) and the
- * dark palette ("nacht", deep navy) with the visitor's system setting.
+ * dark palette ("nacht", deep navy) with the visitor's system setting, unless the
+ * theme switch picks one.
  */
 :root {
   --loef-1: oklch(0.7 0.15 230);
   --loef-2: oklch(0.5 0.15 230);
   --loef-3: oklch(0.3 0.15 230);
 
-  --bg: oklch(0.97 0.012 230);
-  --surface: oklch(1 0 0);
-  --surface-2: oklch(0.955 0.016 230);
-  --line: oklch(0.9 0.02 230);
-  --fg: oklch(0.27 0.05 240);
-  --heading: var(--loef-3);
-  --muted: oklch(0.52 0.03 240);
-  --link: var(--loef-2);
-  --wave: var(--loef-1);
-  --on-wave: var(--loef-3);
-  --logo-bg: oklch(1 0 0);
+  /* Light and dark values: light-dark() picks one based on color-scheme, which follows
+     the device unless the theme switch sets data-theme (see static/JS/theme.js). */
+  color-scheme: light dark;
+  --bg: light-dark(oklch(0.97 0.012 230), oklch(0.2 0.04 245));
+  --surface: light-dark(oklch(1 0 0), oklch(0.245 0.045 245));
+  --surface-2: light-dark(oklch(0.955 0.016 230), oklch(0.28 0.05 245));
+  --line: light-dark(oklch(0.9 0.02 230), oklch(0.34 0.05 245));
+  --fg: light-dark(oklch(0.27 0.05 240), oklch(0.93 0.015 230));
+  --heading: light-dark(var(--loef-3), oklch(0.96 0.02 230));
+  --muted: light-dark(oklch(0.52 0.03 240), oklch(0.72 0.03 235));
+  --link: light-dark(var(--loef-2), var(--loef-1));
+  --wave: light-dark(var(--loef-1), oklch(0.36 0.1 240));
+  --on-wave: light-dark(var(--loef-3), oklch(0.96 0.015 230));
+  --logo-bg: light-dark(oklch(1 0 0), oklch(0.94 0.03 230));
   --brand-block: var(--loef-2);
   --on-brand: oklch(0.98 0.01 230);
-  --shadow: 0 1px 2px oklch(0.3 0.05 240 / 0.06), 0 4px 16px oklch(0.3 0.05 240 / 0.06);
+  --shadow:
+    0 1px 2px light-dark(oklch(0.3 0.05 240 / 0.06), oklch(0 0 0 / 0.3)),
+    0 4px 16px light-dark(oklch(0.3 0.05 240 / 0.06), transparent);
 
   --ok: oklch(0.6 0.13 155);
   --warn: oklch(0.72 0.14 70);
@@ -56,23 +62,8 @@
   --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: oklch(0.2 0.04 245);
-    --surface: oklch(0.245 0.045 245);
-    --surface-2: oklch(0.28 0.05 245);
-    --line: oklch(0.34 0.05 245);
-    --fg: oklch(0.93 0.015 230);
-    --heading: oklch(0.96 0.02 230);
-    --muted: oklch(0.72 0.03 235);
-    --link: var(--loef-1);
-    --wave: oklch(0.36 0.1 240);
-    --on-wave: oklch(0.96 0.015 230);
-    --logo-bg: oklch(0.94 0.03 230);
-    --shadow: 0 1px 2px oklch(0 0 0 / 0.3);
-    color-scheme: dark;
-  }
-}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
 
 /* Tailwind colour utilities. The older names stay so existing templates keep working. */
 @theme inline {

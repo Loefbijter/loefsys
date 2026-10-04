@@ -23,6 +23,7 @@
     {% else %}
         <a href="{% url 'login' %}" role="menuitem"><span class="menu-label"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>{% translate "Log in" %}</span></a>
     {% endif %}
+    <c-theme-switch label role="menuitem" />
     <div class="px-3 py-2"><c-language-switch class="font-medium" /></div>
     {% if request.user.is_authenticated %}
         <form method="post" action="{% url 'members:logout' %}">

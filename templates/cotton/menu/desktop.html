@@ -26,6 +26,7 @@
             </div>
         </div>
         <div class="topbar-end">
+            <c-theme-switch class="text-lg leading-none" />
             <c-language-switch />
             {% if request.user.is_staff %}
                 <a class="topnav-item" href="{% url 'admin:index' %}"><i class="bi bi-speedometer2" aria-hidden="true"></i>{% translate "Admin" %}</a>
