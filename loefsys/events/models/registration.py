@@ -43,8 +43,10 @@ class EventRegistration(TimeStampedModel):
         The amount paid for this registration by the contact.
     """
 
-    event = models.ForeignKey(Event, models.CASCADE)
-    contact = models.ForeignKey(get_user_model(), models.SET_NULL, null=True)
+    event = models.ForeignKey(Event, models.CASCADE, verbose_name=_("Event"))
+    contact = models.ForeignKey(
+        get_user_model(), models.SET_NULL, null=True, verbose_name=_("Member")
+    )
 
     status = models.PositiveSmallIntegerField(
         choices=RegistrationStatus, blank=True, verbose_name=_("Status")
@@ -103,6 +105,8 @@ class EventRegistration(TimeStampedModel):
 
     class Meta:
         unique_together = ("event", "contact", "status")
+        verbose_name = _("registration")
+        verbose_name_plural = _("registrations")
 
     def __str__(self) -> str:
         return f"{self.event} | {self.contact}"

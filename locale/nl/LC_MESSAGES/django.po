@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 14:57+0200\n"
+"POT-Creation-Date: 2026-10-03 16:03+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -29,6 +29,26 @@ msgstr "Gratis!"
 #: loefsys/core/tests/test_i18n.py loefsys/settings.py
 msgid "English"
 msgstr "Engels"
+
+#: loefsys/core/third_party_strings.py
+msgid "created"
+msgstr "aangemaakt"
+
+#: loefsys/core/third_party_strings.py
+msgid "modified"
+msgstr "gewijzigd"
+
+#: loefsys/core/third_party_strings.py
+msgid "title"
+msgstr "titel"
+
+#: loefsys/core/third_party_strings.py
+msgid "description"
+msgstr "beschrijving"
+
+#: loefsys/core/third_party_strings.py
+msgid "slug"
+msgstr "slug"
 
 #: loefsys/events/admin.py loefsys/events/templates/events/event.html
 msgid "Registration"
@@ -114,6 +134,10 @@ msgstr "Afgemeld"
 msgid "Cancelled and fined"
 msgstr "Afgemeld met boete"
 
+#: loefsys/events/models/event.py
+msgid "Picture"
+msgstr "Afbeelding"
+
 #: loefsys/events/models/event.py loefsys/reservations/forms.py
 #: loefsys/reservations/models/reservation.py
 #: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
@@ -169,6 +193,10 @@ msgid "Location"
 msgstr "Locatie"
 
 #: loefsys/events/models/event.py
+msgid "Open event"
+msgstr "Open activiteit"
+
+#: loefsys/events/models/event.py
 msgid "Event is open for non-members"
 msgstr "Evenement is open voor niet-leden"
 
@@ -189,9 +217,38 @@ msgstr ""
 "deadline afmeldt."
 
 #: loefsys/events/models/event.py
+msgid "event"
+msgstr "activiteit"
+
+#: loefsys/events/models/event.py
+msgid "events"
+msgstr "activiteiten"
+
+#: loefsys/events/models/event.py loefsys/events/models/registration.py
 #: loefsys/events/models/registration_form_field.py
 msgid "Event"
 msgstr "Evenement"
+
+#: loefsys/events/models/event.py
+msgid "groups"
+msgstr "groepen"
+
+#: loefsys/events/models/event.py
+msgid "members"
+msgstr "leden"
+
+#: loefsys/events/models/event.py
+msgid "event organizer"
+msgstr "organisatie"
+
+#: loefsys/events/models/event.py
+msgid "event organizers"
+msgstr "organisaties"
+
+#: loefsys/events/models/registration.py loefsys/members/models/membership.py
+#: loefsys/members/templates/profiles/profile.html
+msgid "Member"
+msgstr "Lid"
 
 #: loefsys/events/models/registration.py
 msgid "Status"
@@ -200,6 +257,14 @@ msgstr "Status"
 #: loefsys/events/models/registration.py
 msgid "Costs paid"
 msgstr "Betaalde kosten"
+
+#: loefsys/events/models/registration.py
+msgid "registration"
+msgstr "inschrijving"
+
+#: loefsys/events/models/registration.py
+msgid "registrations"
+msgstr "inschrijvingen"
 
 #: loefsys/events/models/registration_form_field.py
 #: loefsys/reservations/models/__disabled__.log.py
@@ -249,6 +314,14 @@ msgstr "Beschrijving"
 #: loefsys/reservations/models/__disabled__.log.py
 msgid "Required"
 msgstr "Verplicht"
+
+#: loefsys/events/models/registration_form_field.py
+msgid "registration form field"
+msgstr "inschrijfvraag"
+
+#: loefsys/events/models/registration_form_field.py
+msgid "registration form fields"
+msgstr "inschrijfvragen"
 
 #: loefsys/events/models/registration_form_field.py
 msgid "last changed"
@@ -328,7 +401,7 @@ msgid "Categories"
 msgstr "Categorieën"
 
 #: loefsys/events/templates/events/calendar.html loefsys/members/models/user.py
-#: loefsys/members/templates/profiles/profile.html
+#: loefsys/members/templates/profiles/profile.html loefsys/members/views.py
 msgid "Birthday"
 msgstr "Verjaardag"
 
@@ -748,8 +821,8 @@ msgstr "Bijgewerkt op"
 msgid "About us"
 msgstr "Over ons"
 
-#: loefsys/home/templates/home/index.html templates/cotton/menu/desktop.html
-#: templates/cotton/menu/mobile.html
+#: loefsys/home/templates/home/index.html templates/403.html
+#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
 msgid "Home"
 msgstr "Home"
 
@@ -1035,11 +1108,6 @@ msgstr "Passief buitengewoon lidmaatschap"
 #: loefsys/members/models/choices.py
 msgid "Alumnus"
 msgstr "Alumnus"
-
-#: loefsys/members/models/membership.py
-#: loefsys/members/templates/profiles/profile.html
-msgid "Member"
-msgstr "Lid"
 
 #: loefsys/members/models/membership.py
 msgid "Membership type"
@@ -1479,7 +1547,8 @@ msgid "Temporary password: %(temporary_password)s"
 msgstr "Tijdelijk wachtwoord: %(temporary_password)s"
 
 #: loefsys/members/templates/registration/reset_disabled.html
-#: templates/404.html templates/500.html templates/cotton/logo.html
+#: templates/403.html templates/404.html templates/500.html
+#: templates/cotton/logo.html
 msgid "Loefbijter logo"
 msgstr "Loefbijter-logo"
 
@@ -2021,6 +2090,29 @@ msgstr "Maak reservering"
 msgid "Dutch"
 msgstr "Nederlands"
 
+#: templates/403.html
+msgid "No access"
+msgstr "Geen toegang"
+
+#: templates/403.html
+msgid "403 - No access"
+msgstr "403 - Geen toegang"
+
+#: templates/403.html
+msgid ""
+"You don't have permission to view this page. If you think you should, ask "
+"the board, or let us know via <a href=\"mailto: webcie@loefbijter.nl\" "
+"class=\"font-bold text-white underline\">webcie@loefbijter.nl</a>."
+msgstr ""
+"Je hebt geen toegang tot deze pagina. Denk je dat dat wel zou moeten, vraag "
+"het dan aan het bestuur of laat het ons weten via <a href=\"mailto: "
+"webcie@loefbijter.nl\" class=\"font-bold text-white "
+"underline\">webcie@loefbijter.nl</a>."
+
+#: templates/403.html templates/404.html templates/500.html
+msgid "Go back"
+msgstr "Ga terug"
+
 #: templates/404.html
 msgid "Page not found"
 msgstr "Pagina niet gevonden"
@@ -2042,10 +2134,6 @@ msgstr ""
 "Die pagina bestaat niet. Mocht er iets kapot zijn, laat het ons weten via <a "
 "href=\"mailto: webcie@loefbijter.nl\" class=\"font-bold text-white "
 "underline\">webcie@loefbijter.nl</a>."
-
-#: templates/404.html templates/500.html
-msgid "Go back"
-msgstr "Ga terug"
 
 #: templates/500.html
 msgid "Something went wrong"
