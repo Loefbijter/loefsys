@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-03 16:03+0200\n"
+"POT-Creation-Date: 2026-10-04 12:51+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -72,6 +72,10 @@ msgstr "E-mail"
 #: loefsys/members/templates/profiles/profile.html
 msgid "Phone number"
 msgstr "Telefoonnummer"
+
+#: loefsys/events/admin.py
+msgid "Form response"
+msgstr "Formulierantwoorden"
 
 #: loefsys/events/feeds.py
 msgid "Registered Loefbijter Events"
@@ -323,9 +327,31 @@ msgstr "inschrijfvraag"
 msgid "registration form fields"
 msgstr "inschrijfvragen"
 
+#: loefsys/events/models/registration_form_field.py loefsys/members/admin.py
+#: loefsys/reservations/templates/reservations/reservation_form.html
+msgid "Yes"
+msgstr "Ja"
+
+#: loefsys/events/models/registration_form_field.py loefsys/members/admin.py
+#: loefsys/reservations/templates/reservations/reservation_form.html
+msgid "No"
+msgstr "Nee"
+
 #: loefsys/events/models/registration_form_field.py
 msgid "last changed"
 msgstr "laatst gewijzigd"
+
+#: loefsys/events/templates/events/admin/form_response.html
+#, python-format
+msgid "%(counter)s question"
+msgid_plural "%(counter)s questions"
+msgstr[0] "%(counter)s vraag"
+msgstr[1] "%(counter)s vragen"
+
+#: loefsys/events/templates/events/admin/form_response.html
+#: loefsys/events/templates/events/my_event_detail.html
+msgid "No answer"
+msgstr "Geen antwoord"
 
 #: loefsys/events/templates/events/calendar.html
 msgid "Calendar"
@@ -548,20 +574,16 @@ msgid "View event page"
 msgstr "Bekijk eventpagina"
 
 #: loefsys/events/templates/events/my_event_detail.html
-msgid "Start"
-msgstr "Start"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "End"
-msgstr "Einde"
-
-#: loefsys/events/templates/events/my_event_detail.html
 msgid "Participants"
 msgstr "Deelnemers"
 
 #: loefsys/events/templates/events/my_event_detail.html
-msgid "View the profiles and contact information of your participants."
-msgstr "Bekijk de profielen en contactinformatie van je deelnemers."
+msgid "Show all answers"
+msgstr "Alle antwoorden tonen"
+
+#: loefsys/events/templates/events/my_event_detail.html
+msgid "Hide all answers"
+msgstr "Alle antwoorden verbergen"
 
 #: loefsys/events/templates/events/my_event_detail.html
 msgid "Training: phone numbers and POD links visible"
@@ -581,8 +603,20 @@ msgid "POD links"
 msgstr "POD-links"
 
 #: loefsys/events/templates/events/my_event_detail.html
+msgid "View profile"
+msgstr "Bekijk profiel"
+
+#: loefsys/events/templates/events/my_event_detail.html
 msgid "There are no registered participants for this event yet."
 msgstr "Er zijn nog geen geregistreerde deelnemers voor dit event."
+
+#: loefsys/events/templates/events/my_event_detail.html
+msgid "Start"
+msgstr "Start"
+
+#: loefsys/events/templates/events/my_event_detail.html
+msgid "End"
+msgstr "Einde"
 
 #: loefsys/events/templates/events/my_events.html
 #: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
@@ -974,16 +1008,6 @@ msgstr "Goedenavond"
 #: loefsys/members/admin.py
 msgid "Admin permission"
 msgstr "Beheerrecht"
-
-#: loefsys/members/admin.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Yes"
-msgstr "Ja"
-
-#: loefsys/members/admin.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "No"
-msgstr "Nee"
 
 #: loefsys/members/admin.py
 msgid "Pseudonymize selected users"
