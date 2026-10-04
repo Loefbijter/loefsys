@@ -4,6 +4,7 @@ collectedstatic/
 db.sqlite*
 .vscode/
 media/
+backups/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
