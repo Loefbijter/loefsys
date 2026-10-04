@@ -261,7 +261,7 @@ STORAGES = {
 # Tailwind
 
 TAILWIND_APP_NAME = "loefsys.theme"
-TAILWIND_VERSION = "v4.1.17"
+TAILWIND_VERSION = "v4.3.3"
 TAILWIND_BIN_PATH = os.environ.get("TAILWIND_BIN_PATH")
 TAILWIND_INPUT_CSS = BASE_DIR / "styles" / "globals.css"
 NPM_BIN_PATH = os.environ.get("NPM_BIN_PATH", "npm")

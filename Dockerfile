@@ -2,7 +2,7 @@
 
 FROM ghcr.io/astral-sh/uv:0.9 AS uv
 
-FROM python:3.13-slim AS builder
+FROM python:3.14-slim AS builder
 COPY --from=uv /uv /uvx /usr/local/bin/
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
@@ -34,7 +34,7 @@ RUN uv run manage.py collectstatic --no-input
 # The .mo files are not in git; build them from the .po catalogues.
 RUN uv run manage.py compilemessages
 
-FROM python:3.13-slim AS runtime
+FROM python:3.14-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/app/.venv/bin:$PATH" \

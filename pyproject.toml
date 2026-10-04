@@ -40,7 +40,7 @@ dev = [
     "django-dynamic-fixture>=4.0.1",
     "django-stubs>=5.1.2",
     "mypy>=1.14.1",
-    "playwright==1.56.*",
+    "playwright==1.63.*",
     "pre-commit>=4.1.0",
     "pytest>=8",
     "pytest-django>=4.9",

@@ -300,3 +300,6 @@ test-results/
 
 # Compiled translations, built from the .po files with compilemessages
 locale/**/*.mo
+
+# direnv's cache for the Nix dev shell
+.direnv/
