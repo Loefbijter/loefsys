@@ -15,7 +15,7 @@
  * Design tokens.
  *
  * The three logo blues (loef-1..3) are fixed. Everything else is a semantic token
- * that switches between the light palette ("zeildoek", a warm off-white) and the
+ * that switches between the light palette ("nevel", a cool misty blue-white) and the
  * dark palette ("nacht", deep navy) with the visitor's system setting.
  */
 :root {
@@ -23,10 +23,10 @@
   --loef-2: oklch(0.5 0.15 230);
   --loef-3: oklch(0.3 0.15 230);
 
-  --bg: oklch(0.985 0.008 85);
+  --bg: oklch(0.97 0.012 230);
   --surface: oklch(1 0 0);
-  --surface-2: oklch(0.965 0.01 85);
-  --line: oklch(0.91 0.012 85);
+  --surface-2: oklch(0.955 0.016 230);
+  --line: oklch(0.9 0.02 230);
   --fg: oklch(0.27 0.05 240);
   --heading: var(--loef-3);
   --muted: oklch(0.52 0.03 240);
@@ -36,7 +36,7 @@
   --logo-bg: oklch(1 0 0);
   --brand-block: var(--loef-2);
   --on-brand: oklch(0.98 0.01 230);
-  --shadow: 0 1px 2px oklch(0.3 0.05 240 / 0.06), 0 4px 16px oklch(0.3 0.05 240 / 0.05);
+  --shadow: 0 1px 2px oklch(0.3 0.05 240 / 0.06), 0 4px 16px oklch(0.3 0.05 240 / 0.06);
 
   --ok: oklch(0.6 0.13 155);
   --warn: oklch(0.72 0.14 70);
