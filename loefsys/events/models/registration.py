@@ -13,6 +13,17 @@ from .choices import RegistrationStatus
 from .event import Event
 from .managers import EventRegistrationManager
 
+ANSWER_SETS = {
+    "boolean": "booleanregistrationinformation_set",
+    "integer": "integerregistrationinformation_set",
+    "text": "textregistrationinformation_set",
+    "datetime": "datetimeregistrationinformation_set",
+}
+"""The related name holding a registration's answers, per form field type."""
+
+FORM_RESPONSE_PREFETCH = ("event__registrationformfield_set", *ANSWER_SETS.values())
+"""Lookups to prefetch for :attr:`EventRegistration.form_fields`."""
+
 
 class EventRegistration(TimeStampedModel):
     """Registration model for an event.
@@ -75,9 +86,26 @@ class EventRegistration(TimeStampedModel):
 
     @property
     def form_fields(self):
-        """Get form fields and their values on the registration form."""
-        fields = self.event.registrationformfield_set.all()
-        return [(field, field.get_value_for(self)) for field in fields]
+        """Get form fields and their values on the registration form.
+
+        Fields without an answer get ``None``. Prefetch
+        :data:`FORM_RESPONSE_PREFETCH` when listing many registrations, so this
+        doesn't hit the database for every registration.
+
+        Returns
+        -------
+        list of tuple of ~loefsys.events.models.RegistrationFormField and value
+            The fields of the event's registration form, in form order.
+        """
+        answers = {
+            (answer_set, answer.field_id): answer.value
+            for answer_set in ANSWER_SETS.values()
+            for answer in getattr(self, answer_set).all()
+        }
+        return [
+            (field, answers.get((ANSWER_SETS.get(field.type, ""), field.pk)))
+            for field in self.event.registrationformfield_set.all()
+        ]
 
     @property
     def get_queue_position(self) -> int | None:

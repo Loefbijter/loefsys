@@ -395,6 +395,25 @@
     .kv-compact { grid-template-columns: minmax(0, 1fr) auto; gap: 0.625rem 1rem; }
   }
 
+  /* Organiser's view of an activity: a participant row that folds out */
+  .participants > .panel-h { flex-wrap: wrap; }
+  .fold > summary { cursor: pointer; list-style: none; }
+  .fold > summary::-webkit-details-marker { display: none; }
+  .fold > summary:hover { border-color: color-mix(in oklab, var(--loef-1) 60%, var(--line)); }
+  .fold > summary:focus-visible { outline: 2px solid var(--loef-1); outline-offset: 2px; }
+  .fold-icon { transition: transform .15s; }
+  .fold[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .fold[open] .fold-icon { transform: rotate(180deg); }
+  .fold-body { display: grid; gap: 0.875rem; padding: 0.875rem 0.75rem; border: 1px solid var(--line); border-top: 0; border-radius: 0 0 0.75rem 0.75rem; background: var(--surface-2); font-size: 0.875rem; }
+  .fold-body .kv { grid-template-columns: 12rem minmax(0, 1fr); }
+  .fold-link { justify-self: start; padding-inline: 0; }
+  .answers dd { white-space: pre-line; }
+  .answer-empty { color: var(--muted); font-style: italic; font-weight: 400; }
+  .kv-plain { border-top: 0; padding-top: 0; }
+  @media (max-width: 47.99rem) {
+    .fold-body .kv { grid-template-columns: minmax(0, 1fr); }
+  }
+
   /* Dialog */
   .dialog-backdrop { position: fixed; inset: 0; z-index: 100; background: oklch(0.15 0.03 245 / 0.55); backdrop-filter: blur(4px); padding: 1.5rem 1rem; overflow-y: auto; }
   .dialog-backdrop:not([hidden]) { display: grid; place-items: center; }

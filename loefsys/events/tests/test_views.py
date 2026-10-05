@@ -4,7 +4,9 @@ from datetime import UTC, datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import connection
 from django.test import TestCase, override_settings
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
@@ -306,6 +308,85 @@ class MyEventsFeatureTestCase(TestCase):
             reverse("events:my_events_event", kwargs={"slug": self.event.slug})
         )
         self.assertEqual(response.status_code, 404)
+
+
+class MyEventFormResponsesTestCase(TestCase):
+    """Organizers can fold out each participant's answers to the registration form."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.organizer = G(get_user_model())
+        self.event = G(
+            Event,
+            title="Borrel met formulier",
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=6),
+            cancelation_deadline=now + timedelta(days=6),
+            category=EventCategories.LEISURE,
+            published=True,
+        )
+        organizer = G(EventOrganizer, event=self.event)
+        organizer.user.add(self.organizer)
+
+        self.diet = G(
+            RegistrationFormField,
+            event=self.event,
+            subject="Dieetwensen",
+            type=RegistrationFormField.TEXT_FIELD,
+        )
+        self.car = G(
+            RegistrationFormField,
+            event=self.event,
+            subject="Kom je met de auto?",
+            type=RegistrationFormField.BOOLEAN_FIELD,
+        )
+        self.answered = G(
+            EventRegistration,
+            event=self.event,
+            contact=G(get_user_model(), first_name="Ada", last_name="Antwoord"),
+        )
+        self.diet.set_value_for(self.answered, "Geen pinda's")
+        self.car.set_value_for(self.answered, True)
+        G(
+            EventRegistration,
+            event=self.event,
+            contact=G(get_user_model(), first_name="Bram", last_name="Blanco"),
+        )
+        self.client.force_login(self.organizer)
+        self.url = reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+
+    def test_responses_fold_out_per_participant(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '<details class="fold">', count=2)
+        self.assertContains(response, "Dieetwensen", count=2)
+        self.assertContains(response, "Geen pinda&#x27;s")
+        self.assertContains(response, "Ja")
+        self.assertContains(response, "Geen antwoord", count=2)
+        self.assertContains(response, "data-fold-all")
+
+    def test_responses_are_prefetched(self):
+        """The number of queries doesn't grow with the number of participants."""
+        self.client.get(self.url)  # warm up the session and permission caches
+        with CaptureQueriesContext(connection) as before:
+            self.client.get(self.url)
+        for _ in range(3):
+            registration = G(
+                EventRegistration, event=self.event, contact=G(get_user_model())
+            )
+            self.diet.set_value_for(registration, "Vegetarisch")
+        with CaptureQueriesContext(connection) as after:
+            self.client.get(self.url)
+        self.assertEqual(len(after), len(before))
+
+    def test_no_fold_out_without_form(self):
+        self.event.registrationformfield_set.all().delete()
+        response = self.client.get(self.url)
+        self.assertNotContains(response, '<details class="fold">')
+        self.assertNotContains(response, "data-fold-all")
+        self.assertContains(response, "Ada Antwoord")
 
 
 class RegistrationFormDraftEventTestCase(TestCase):

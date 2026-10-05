@@ -34,6 +34,12 @@ msgstr[0] "%(counter)s van %(capacity)s plek vrij"
 msgstr[1] "%(counter)s van %(capacity)s plekken vrij"
 
 #, python-format
+msgid "%(counter)s question"
+msgid_plural "%(counter)s questions"
+msgstr[0] "%(counter)s vraag"
+msgstr[1] "%(counter)s vragen"
+
+#, python-format
 msgid "%(counter)s skipper"
 msgid_plural "%(counter)s skippers"
 msgstr[0] "%(counter)s schipper"
@@ -584,6 +590,9 @@ msgstr "Wachtwoord vergeten"
 msgid "Forgot your password?"
 msgstr "Wachtwoord vergeten?"
 
+msgid "Form response"
+msgstr "Formulierantwoorden"
+
 msgid "Fraternities"
 msgstr "Disputen"
 
@@ -639,6 +648,9 @@ msgid ""
 msgstr ""
 "Hier vind je een overzicht van de huidig ingeschreven deelnemers en "
 "contactinformatie."
+
+msgid "Hide all answers"
+msgstr "Alle antwoorden verbergen"
 
 msgid "Home"
 msgstr "Home"
@@ -885,6 +897,9 @@ msgstr "Nee"
 
 msgid "No access"
 msgstr "Geen toegang"
+
+msgid "No answer"
+msgstr "Geen antwoord"
 
 msgid "No boat or room chosen yet"
 msgstr "Nog geen boot of ruimte gekozen"
@@ -1223,6 +1238,9 @@ msgstr "Nieuw wachtwoord instellen"
 msgid "Set password"
 msgstr "Wachtwoord instellen"
 
+msgid "Show all answers"
+msgstr "Alle antwoorden tonen"
+
 msgid "Show birthdays"
 msgstr "Toon verjaardagen"
 
@@ -1519,8 +1537,8 @@ msgstr "Bekijk eventpagina"
 msgid "View logbook"
 msgstr "Bekijk logboek"
 
-msgid "View the profiles and contact information of your participants."
-msgstr "Bekijk de profielen en contactinformatie van je deelnemers."
+msgid "View profile"
+msgstr "Bekijk profiel"
 
 msgid "Want to reserve multiple days? Just choose a later end date."
 msgstr "Wil je meerdere dagen reserveren? Kies gewoon een latere einddatum."

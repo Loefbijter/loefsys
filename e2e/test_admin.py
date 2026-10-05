@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group, Permission
 from playwright.sync_api import expect
 
 from e2e import factories
+from loefsys.events.models import RegistrationFormField
 from loefsys.events.models.choices import EventCategories
 from loefsys.reservations.models.reservation import Reservation
 
@@ -145,6 +146,27 @@ def test_activity_manager_sees_contact_details_of_registrations(
     expect(registrations).to_contain_text("Testa Zeilmaker")
     expect(registrations).to_contain_text("+31612345678")
     expect(registrations.locator("input[type=text], select")).to_have_count(0)
+
+
+def test_activity_manager_folds_out_form_answers(
+    page, live_server, activity_manager, member
+):
+    """ADM-10: each registration can be folded out to read its form answers."""
+    event = factories.make_event("Regatta Testmeer", category=EventCategories.SAILING)
+    question = RegistrationFormField.objects.create(
+        event=event, subject="Welke boot wil je varen?", required=False
+    )
+    question.set_value_for(factories.register(event, member), "Een Laser")
+    admin_log_in(page, live_server.url, activity_manager)
+
+    page.goto(f"{live_server.url}/admin/events/event/{event.pk}/change/")
+
+    registrations = page.locator(".inline-group", has_text=member.email)
+    answer = registrations.get_by_text("Een Laser")
+    expect(answer).to_be_hidden()
+    registrations.locator("summary").click()
+    expect(answer).to_be_visible()
+    expect(registrations).to_contain_text("Welke boot wil je varen?")
 
 
 def test_activity_manager_cannot_browse_members(page, live_server, activity_manager):

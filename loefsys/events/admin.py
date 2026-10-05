@@ -8,23 +8,26 @@ from typing import ClassVar
 
 from django.contrib import admin
 from django.db.models.fields import BLANK_CHOICE_DASH
+from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as _
 
 from loefsys.admin_helpers import ExportableModelAdmin
 
-from .models import Event, EventOrganizer, EventRegistration
-from .models.registration_form_field import (
-    BooleanRegistrationInformation,
-    DatetimeRegistrationInformation,
-    IntegerRegistrationInformation,
-    RegistrationFormField,
-    TextRegistrationInformation,
-)
+from .models import Event, EventOrganizer, EventRegistration, RegistrationFormField
+from .models.registration import FORM_RESPONSE_PREFETCH
 from .permissions import allowed_categories
 
 
+def render_form_response(registration, *, open_=False):
+    """Render the answers a registration gave to the event's registration form."""
+    return render_to_string(
+        "events/admin/form_response.html",
+        {"answers": registration.form_fields, "open": open_},
+    )
+
+
 class RegistrationFormInline(admin.TabularInline):
-    """Inline admin interface for registration form fields."""
+    """Inline admin interface for the questions of an event's registration form."""
 
     model = RegistrationFormField
     extra = 0
@@ -54,7 +57,8 @@ class EventRegistrationInline(admin.TabularInline):
 
     Only the name, email address and phone number of each registered person are
     shown, so that activity managers can contact participants without getting
-    access to the rest of their member data.
+    access to the rest of their member data. When the event has a registration
+    form, each row can also be folded out to show the answers given.
     """
 
     model = EventRegistration
@@ -66,9 +70,25 @@ class EventRegistrationInline(admin.TabularInline):
     verbose_name = _("Registration")
     verbose_name_plural = _("Registrations")
 
+    def get_fields(self, request, obj=None):
+        """Add the form response column for events with a registration form."""
+        fields = super().get_fields(request, obj)
+        if obj is not None and obj.has_form_fields:
+            return [*fields, "form_response"]
+        return fields
+
+    def get_readonly_fields(self, request, obj=None):
+        """Keep every column read-only, the form response included."""
+        return self.get_fields(request, obj)
+
     def get_queryset(self, request):
-        """Return the registrations with their contact fetched in the same query."""
-        return super().get_queryset(request).select_related("contact")
+        """Return the registrations with their contact and form answers."""
+        return (
+            super()
+            .get_queryset(request)
+            .select_related("contact", "event")
+            .prefetch_related(*FORM_RESPONSE_PREFETCH)
+        )
 
     def has_view_permission(self, request, obj=None):  # noqa: ARG002
         """Allow everyone who can view the event to see its registrations."""
@@ -105,42 +125,10 @@ class EventRegistrationInline(admin.TabularInline):
         contact = registration.contact
         return str(contact.phone_number) if contact and contact.phone_number else "-"
 
-
-class AbstractRegistrationInformationInline(admin.TabularInline):
-    """Base class for registration information inline."""
-
-    extra = 0
-    can_delete = False
-    fields = ("field", "value")
-    readonly_fields = ("field",)
-
-    def has_add_permission(self, request, obj=None):  # noqa ARG002
-        """Make sure that admin cannot add new fields to an already submitted answer."""
-        return False
-
-
-class BooleanRegistrationInformationInline(AbstractRegistrationInformationInline):
-    """Inline admin interface for registration information."""
-
-    model = BooleanRegistrationInformation
-
-
-class TextRegistrationInformationInline(AbstractRegistrationInformationInline):
-    """Inline admin interface for registration information."""
-
-    model = TextRegistrationInformation
-
-
-class DatetimeRegistrationInformationInline(AbstractRegistrationInformationInline):
-    """Inline admin interface for registration information."""
-
-    model = DatetimeRegistrationInformation
-
-
-class IntegerRegistrationInformationInline(AbstractRegistrationInformationInline):
-    """Inline admin interface for registration information."""
-
-    model = IntegerRegistrationInformation
+    @admin.display(description=_("Form response"))
+    def form_response(self, registration):
+        """Return the answers to the registration form, folded away."""
+        return render_form_response(registration)
 
 
 @admin.register(Event)
@@ -223,15 +211,9 @@ class EventRegistrationAdmin(ExportableModelAdmin):
     """Admin interface for managing event registrations."""
 
     list_display = ("__str__", "status")
+    readonly_fields = ("form_response",)
 
-    inlines = (
-        BooleanRegistrationInformationInline,
-        TextRegistrationInformationInline,
-        IntegerRegistrationInformationInline,
-        DatetimeRegistrationInformationInline,
-    )
-
-
-@admin.register(RegistrationFormField)
-class RegistrationFormAdmin(ExportableModelAdmin):
-    """Admin interface for managing registration form fields."""
+    @admin.display(description=_("Form response"))
+    def form_response(self, registration):
+        """Return the answers this registration gave to the registration form."""
+        return render_form_response(registration, open_=True)
