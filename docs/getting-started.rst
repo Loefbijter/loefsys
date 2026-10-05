@@ -6,7 +6,7 @@ Prerequisites
 -------------
 In order to contribute to the project, you should have the following prerequisites:
 
-#. Install `Git <https://git-scm.com/>`_ and `Node.js <https://nodejs.org/>`_.
+#. Install `Git <https://git-scm.com/>`_, `Node.js <https://nodejs.org/>`_ and `GNU gettext <https://www.gnu.org/software/gettext/>`_ (``apt install gettext`` or ``brew install gettext``), which builds the translations.
 
 #. Ensure you have Python 3.12 installed or higher. You can check which version you are running by executing the following command in your terminal::
 
@@ -37,6 +37,10 @@ In order to contribute to the project, you should have the following prerequisit
 #. Then run the following command::
 
     $ uv run manage.py migrate
+
+#. Compile the Dutch translations (run this again after pulling changes to ``locale/``)::
+
+    $ uv run manage.py compilemessages
 
 #. Next, start the tailwind CSS server with::
 

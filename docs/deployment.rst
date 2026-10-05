@@ -6,6 +6,7 @@ Overview
 --------
 * Pushing to ``main`` builds the image, pushes it to GHCR (GitHub Container Registry), and deploys it to staging automatically (``.github/workflows/deploy-staging.yml``).
 * Publishing a GitHub Release does the same for production (``.github/workflows/deploy-production.yml``), gated behind a required-reviewer approval on the ``production`` GitHub Environment.
+* The image is built with the compiled translations: the ``.mo`` files are not in git, and the Dockerfile runs ``compilemessages`` in its builder stage.
 * Both workflows take a database backup and run migrations before recreating the ``web`` container. Neither workflow provisions a host, installs Docker, or creates a database from scratch -- see `Pre-flight checklist`_.
 
 .. _pre-flight-checklist:
