@@ -109,4 +109,5 @@ class DutchCatalogueTestCase(TestCase):
 
     def test_dutch_is_active_by_default(self):
         with translation.override(settings.LANGUAGE_CODE):
-            self.assertEqual(translation.gettext("English"), "Engels")
+            # One of our own strings, so this fails when locale/ isn't compiled.
+            self.assertEqual(translation.gettext("Free!"), "Gratis!")

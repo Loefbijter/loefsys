@@ -213,6 +213,8 @@ USE_TZ = True
 
 LOCALE_DIR = BASE_DIR / "locale"
 LOCALE_PATHS = [LOCALE_DIR]
+# Compiles the translations (the .mo files are not in git) before the tests run.
+TEST_RUNNER = "loefsys.core.test_runner.TestRunner"
 
 # Static files and media storage
 

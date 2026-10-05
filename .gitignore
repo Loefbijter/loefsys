@@ -297,3 +297,6 @@ dump.rdb
 
 # Playwright traces and screenshots of failed end-to-end tests
 test-results/
+
+# Compiled translations, built from the .po files with compilemessages
+locale/**/*.mo
