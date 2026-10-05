@@ -1,112 +1,59 @@
 """Module defining the tests or the event registration frontend."""
 
-import io
-import shutil
-import tempfile
 from datetime import UTC, datetime, timedelta
-from unittest import skip
 
-from PIL import Image
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, TestCase, override_settings
+from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event
-from loefsys.events.models.choices import EventCategories
+from loefsys.events.models import Event, EventRegistration
+from loefsys.events.models.choices import EventCategories, RegistrationStatus
 from loefsys.members.models import User
 
 
-@override_settings(MEDIA_ROOT=lambda self: self.test_media_dir)
-def generate_test_image_file(name="test.jpg", size=(100, 100), color=(255, 0, 0)):
-    """Generate test image file."""
-    file = io.BytesIO()
-    image = Image.new("RGB", size, color)
-    image.save(file, "JPEG")
-    file.seek(0)
-    return SimpleUploadedFile(name, file.read(), content_type="image/jpeg")
-
-
-@skip("Homepage does not render events yet")
 class EventHomepageTestCase(TestCase):
     """Tests for the homepage regarding events."""
 
     def setUp(self):
-        """Set up users and events."""
+        """Set up a member and an upcoming event."""
         self.client = Client()
-        self.test_media_dir = tempfile.mkdtemp()
-        self.user1 = G(
-            User,
-            email="1@user.nl",
-            password="secret1",
-            phone_number="+31612345678",
-            nickname="A",
-            picture=None,
-        )
-        self.override = self.settings(MEDIA_ROOT=self.test_media_dir)
-        self.override.enable()
-
-    def tearDown(self):
-        """Clean up method after tests are done."""
-        shutil.rmtree(self.test_media_dir)
-
-    def test_indexpage_event_picture(self):
-        """Test if picture shows up correctly on index page."""
+        self.user1 = G(User, email="1@user.nl", password="secret1", picture=None)
         now = timezone.now()
-        event_with_picture = G(
+        self.event = G(
             Event,
-            title="Event with picture",
-            description="Event with picture.",
+            title="Klusdag",
             start=now + timedelta(days=7),
             end=now + timedelta(days=8),
-            registration_start=now - timedelta(days=1),
-            registration_deadline=now + timedelta(days=6),
-            cancelation_deadline=now + timedelta(days=6),
             category=EventCategories.LEISURE,
-            capacity=0,
-            price=0.00,
-            fine=0.00,
-            location="The Netherlands",
-            is_open_event=True,
             published=True,
-            send_cancel_email=False,
         )
-        event_with_picture.picture = generate_test_image_file()
-        event_with_picture.save()
-
         self.client.force_login(user=self.user1)
-        response = self.client.get("/")
-        self.assertContains(
-            response=response,
-            text=f"/media/{event_with_picture.event_picture_upload_path(None)}",
-        )
 
-    def test_indexpage_event_no_picture(self):
-        """Test if default picture shows up correctly on index page."""
-        now = timezone.now()
+    def test_next_registered_event_is_the_hero(self):
+        """The next activity the member registered for is shown large at the top."""
         G(
-            Event,
-            title="Event without picture",
-            description="Event without picture.",
-            start=now + timedelta(days=7),
-            end=now + timedelta(days=8),
-            registration_start=now - timedelta(days=1),
-            registration_deadline=now + timedelta(days=6),
-            cancelation_deadline=now + timedelta(days=6),
-            category=EventCategories.LEISURE,
-            capacity=0,
-            price=0.00,
-            fine=0.00,
-            location="The Netherlands",
-            is_open_event=True,
-            published=True,
-            send_cancel_email=False,
+            EventRegistration,
+            event=self.event,
+            contact=self.user1,
+            status=RegistrationStatus.ACTIVE,
         )
 
-        self.client.force_login(user=self.user1)
         response = self.client.get("/")
-        self.assertContains(response=response, text="/media/events/default.png")
+
+        self.assertEqual(response.context["next_event"], self.event)
+        self.assertNotIn(self.event, response.context["upcoming_events"])
+        self.assertContains(response, 'class="hero')
+
+    def test_unpublished_event_is_hidden_from_members(self):
+        """A member doesn't see an event that isn't published yet."""
+        self.event.published = False
+        self.event.save()
+
+        response = self.client.get("/")
+
+        self.assertIsNone(response.context["next_event"])
+        self.assertNotContains(response, "Klusdag")
 
 
 class EventRegistrationTestCase(TestCase):
@@ -442,7 +389,6 @@ class EventRegistrationTestCase(TestCase):
             r'<button[^>]*id="registration-button"[^>]*>\s*Inschrijven\s*</button>',
         )
 
-    @skip("Fines are currently not shown")
     def test_cancellation_form_shows_fine_amount(self):
         """Test if the cancellation form shows the amount that's being fined."""
         self.client.force_login(user=self.user1)
@@ -456,6 +402,7 @@ class EventRegistrationTestCase(TestCase):
             data={"action": "register"},
         )
 
-        # Check if fine amount is on cancellation form
+        # The cancel button and the consent to the fine name the amount
         response = self.client.get(self.event_with_10_euro_fine.get_absolute_url())
-        self.assertContains(response=response, text="(€10,00 boete)")
+        self.assertContains(response=response, text="Afmelden (€ 10,00 boete)")
+        self.assertContains(response=response, text="de boete van € 10,00")

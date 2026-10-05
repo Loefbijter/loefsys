@@ -282,8 +282,9 @@ msgstr "Kalender"
 msgid "Cancel"
 msgstr "Annuleren"
 
-msgid "Cancel (with fine)"
-msgstr "Afmelden (met boete)"
+#, python-format
+msgid "Cancel (%(fine)s fine)"
+msgstr "Afmelden (%(fine)s boete)"
 
 msgid "Cancel before"
 msgstr "Afmelden tot"

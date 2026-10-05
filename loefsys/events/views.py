@@ -16,6 +16,7 @@ from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
 
 from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
+from loefsys.core.templatetags.formatters import euro
 from loefsys.events.exceptions import NoUserObjectError
 from loefsys.events.models.feed_token import FeedToken
 
@@ -181,7 +182,11 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             elif not obj.can_cancel_registration():
                 text = _("Cannot cancel")
             elif obj.cancellation_fine_required():
-                text = _("Cancel (with fine)")
+                text = (
+                    _("Cancel (%(fine)s fine)") % {"fine": euro(obj.fine)}
+                    if obj.fine
+                    else _("Cancel registration")
+                )
             elif obj.cancelation_window_open():
                 text = _("Cancel registration")
             else:

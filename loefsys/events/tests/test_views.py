@@ -179,7 +179,7 @@ class EventFillerViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, event.description)
         self.assertContains(response, 'name="fine-consent"')
-        self.assertContains(response, "Afmelden (met boete)")
+        self.assertContains(response, "Afmelden (€ 5,00 boete)")
 
 
 class MyEventsFeatureTestCase(TestCase):
