@@ -4,7 +4,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-04 12:47+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -14,928 +13,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: loefsys/admin_helpers.py
-msgid "Unknown"
-msgstr "Onbekend"
-
-#: loefsys/admin_helpers.py
-msgid "Export selected rows to Excel"
-msgstr "Geselecteerde rijen exporteren naar Excel"
-
-#: loefsys/core/templatetags/formatters.py
-msgid "Free!"
-msgstr "Gratis!"
-
-#: loefsys/core/tests/test_i18n.py loefsys/settings.py
-msgid "English"
-msgstr "Engels"
-
-#: loefsys/core/third_party_strings.py
-msgid "created"
-msgstr "aangemaakt"
-
-#: loefsys/core/third_party_strings.py
-msgid "modified"
-msgstr "gewijzigd"
-
-#: loefsys/core/third_party_strings.py
-msgid "title"
-msgstr "titel"
-
-#: loefsys/core/third_party_strings.py
-msgid "description"
-msgstr "beschrijving"
-
-#: loefsys/core/third_party_strings.py
-msgid "slug"
-msgstr "slug"
-
-#: loefsys/events/admin.py loefsys/events/templates/events/event.html
-msgid "Registration"
-msgstr "Inschrijving"
-
-#: loefsys/events/admin.py loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Registrations"
-msgstr "Inschrijvingen"
-
-#: loefsys/events/admin.py loefsys/groups/models/group.py
-#: loefsys/reservations/models/reservable.py
-msgid "Name"
-msgstr "Naam"
-
-#: loefsys/events/admin.py loefsys/members/templates/profiles/profile.html
-msgid "Email"
-msgstr "E-mail"
-
-#: loefsys/events/admin.py loefsys/members/models/user.py
-#: loefsys/members/templates/profiles/profile.html
-msgid "Phone number"
-msgstr "Telefoonnummer"
-
-#: loefsys/events/admin.py
-msgid "Form response"
-msgstr "Formulierantwoorden"
-
-#: loefsys/events/feeds.py
-msgid "Registered Loefbijter Events"
-msgstr "Loefbijter-evenementen waarvoor je bent ingeschreven"
-
-#: loefsys/events/feeds.py
-msgid "Other Loefbijter Events"
-msgstr "Overige Loefbijter-evenementen"
-
-#: loefsys/events/forms.py
-msgid "Type your answer here..."
-msgstr "Typ hier je antwoord..."
-
-#: loefsys/events/models/choices.py loefsys/members/models/choices.py
-#: loefsys/reservations/models/boat.py loefsys/reservations/models/choices.py
-#: loefsys/reservations/models/reservable.py
-msgid "Other"
-msgstr "Overig"
-
-#: loefsys/events/models/choices.py
-msgid "Alumni"
-msgstr "Alumni"
-
-#: loefsys/events/models/choices.py
-msgid "Association"
-msgstr "Vereniging"
-
-#: loefsys/events/models/choices.py
-msgid "Competition"
-msgstr "Wedstrijd"
-
-#: loefsys/events/models/choices.py
-msgid "Leisure"
-msgstr "Ontspanning"
-
-#: loefsys/events/models/choices.py
-msgid "Sailing"
-msgstr "Zeilen"
-
-#: loefsys/events/models/choices.py
-msgid "Training"
-msgstr "Training"
-
-#: loefsys/events/models/choices.py
-#: loefsys/events/templates/events/my_events.html loefsys/groups/admin.py
-#: loefsys/members/models/user.py
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Active"
-msgstr "Actief"
-
-#: loefsys/events/models/choices.py templates/cotton/event_status.html
-msgid "In queue"
-msgstr "In wachtrij"
-
-#: loefsys/events/models/choices.py
-msgid "Cancelled"
-msgstr "Afgemeld"
-
-#: loefsys/events/models/choices.py
-msgid "Cancelled and fined"
-msgstr "Afgemeld met boete"
-
-#: loefsys/events/models/event.py
-msgid "Picture"
-msgstr "Afbeelding"
-
-#: loefsys/events/models/event.py loefsys/reservations/forms.py
-#: loefsys/reservations/models/reservation.py
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Start time"
-msgstr "Starttijd"
-
-#: loefsys/events/models/event.py loefsys/reservations/forms.py
-#: loefsys/reservations/models/reservation.py
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "End time"
-msgstr "Eindtijd"
-
-#: loefsys/events/models/event.py
-msgid "Start of registration window"
-msgstr "Start van inschrijfperiode"
-
-#: loefsys/events/models/event.py
-msgid "Registration deadline"
-msgstr "Inschrijfdeadline"
-
-#: loefsys/events/models/event.py
-msgid "Cancelation deadline"
-msgstr "Afmelddeadline"
-
-#: loefsys/events/models/event.py loefsys/events/templates/events/event.html
-msgid "Category"
-msgstr "Categorie"
-
-#: loefsys/events/models/event.py
-msgid "Maximum number of participants"
-msgstr "Maximaal aantal deelnemers"
-
-#: loefsys/events/models/event.py loefsys/events/models/registration.py
-msgid "Price"
-msgstr "Prijs"
-
-#: loefsys/events/models/event.py loefsys/events/models/registration.py
-msgid "Fine"
-msgstr "Boete"
-
-#: loefsys/events/models/event.py
-msgid "Fine if participant does not show up."
-msgstr "Boete als de deelnemer niet komt opdagen."
-
-#: loefsys/events/models/event.py loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/my_event_detail.html
-#: loefsys/reservations/forms.py loefsys/reservations/models/reservable.py
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Location"
-msgstr "Locatie"
-
-#: loefsys/events/models/event.py
-msgid "Open event"
-msgstr "Open activiteit"
-
-#: loefsys/events/models/event.py
-msgid "Event is open for non-members"
-msgstr "Evenement is open voor niet-leden"
-
-#: loefsys/events/models/event.py loefsys/home/models/announcement.py
-msgid "Published"
-msgstr "Gepubliceerd"
-
-#: loefsys/events/models/event.py
-msgid "Send cancellation notifications"
-msgstr "Afmeldingsmeldingen versturen"
-
-#: loefsys/events/models/event.py
-msgid ""
-"Send an email to the organising party when a member cancels their "
-"registration after the deadline."
-msgstr ""
-"Stuur een e-mail naar de organiserende partij wanneer een lid zich na de "
-"deadline afmeldt."
-
-#: loefsys/events/models/event.py
-msgid "event"
-msgstr "activiteit"
-
-#: loefsys/events/models/event.py
-msgid "events"
-msgstr "activiteiten"
-
-#: loefsys/events/models/event.py loefsys/events/models/registration.py
-#: loefsys/events/models/registration_form_field.py
-msgid "Event"
-msgstr "Evenement"
-
-#: loefsys/events/models/event.py
-msgid "groups"
-msgstr "groepen"
-
-#: loefsys/events/models/event.py
-msgid "members"
-msgstr "leden"
-
-#: loefsys/events/models/event.py
-msgid "event organizer"
-msgstr "organisatie"
-
-#: loefsys/events/models/event.py
-msgid "event organizers"
-msgstr "organisaties"
-
-#: loefsys/events/models/registration.py loefsys/members/models/membership.py
-#: loefsys/members/templates/profiles/profile.html
-msgid "Member"
-msgstr "Lid"
-
-#: loefsys/events/models/registration.py
-msgid "Status"
-msgstr "Status"
-
-#: loefsys/events/models/registration.py
-msgid "Costs paid"
-msgstr "Betaalde kosten"
-
-#: loefsys/events/models/registration.py
-msgid "registration"
-msgstr "inschrijving"
-
-#: loefsys/events/models/registration.py
-msgid "registrations"
-msgstr "inschrijvingen"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/reservations/models/__disabled__.log.py
-msgid "Boolean"
-msgstr "Ja/nee"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/reservations/models/__disabled__.log.py
-msgid "Integer"
-msgstr "Geheel getal"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/reservations/models/__disabled__.log.py
-msgid "Text"
-msgstr "Tekst"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/reservations/models/__disabled__.log.py
-msgid "Datetime"
-msgstr "Datum en tijd"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/reservations/forms.py
-#: loefsys/reservations/models/__disabled__.log.py
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Type"
-msgstr "Type"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/reservations/models/__disabled__.log.py
-msgid "Subject"
-msgstr "Onderwerp"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/groups/models/group.py
-#: loefsys/reservations/models/__disabled__.log.py
-#: loefsys/reservations/models/reservable.py
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Description"
-msgstr "Beschrijving"
-
-#: loefsys/events/models/registration_form_field.py
-#: loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/registration_form.html
-#: loefsys/reservations/models/__disabled__.log.py
-msgid "Required"
-msgstr "Verplicht"
-
-#: loefsys/events/models/registration_form_field.py
-msgid "registration form field"
-msgstr "inschrijfvraag"
-
-#: loefsys/events/models/registration_form_field.py
-msgid "registration form fields"
-msgstr "inschrijfvragen"
-
-#: loefsys/events/models/registration_form_field.py loefsys/members/admin.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Yes"
-msgstr "Ja"
-
-#: loefsys/events/models/registration_form_field.py loefsys/members/admin.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "No"
-msgstr "Nee"
-
-#: loefsys/events/models/registration_form_field.py
-msgid "last changed"
-msgstr "laatst gewijzigd"
-
-#: loefsys/events/templates/events/admin/form_response.html
-#, python-format
-msgid "%(counter)s question"
-msgid_plural "%(counter)s questions"
-msgstr[0] "%(counter)s vraag"
-msgstr[1] "%(counter)s vragen"
-
-#: loefsys/events/templates/events/admin/form_response.html
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "No answer"
-msgstr "Geen antwoord"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Calendar"
-msgstr "Kalender"
-
-#: loefsys/events/templates/events/calendar.html
-#: loefsys/home/templates/home/index.html templates/cotton/menu/mobile.html
-msgid "Agenda"
-msgstr "Agenda"
-
-#: loefsys/events/templates/events/calendar.html
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Activities"
-msgstr "Activiteiten"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Everything the association organises. Open an activity to sign up."
-msgstr ""
-"Alles wat de vereniging organiseert. Open een activiteit om je in te "
-"schrijven."
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Link to calendar"
-msgstr "Link met agenda"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Previous period"
-msgstr "Vorige periode"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Today"
-msgstr "Vandaag"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Next period"
-msgstr "Volgende periode"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Show birthdays"
-msgstr "Toon verjaardagen"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "View"
-msgstr "Weergave"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Month"
-msgstr "Maand"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Week"
-msgstr "Week"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "List"
-msgstr "Lijst"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "All day"
-msgstr "Hele dag"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "No events to show"
-msgstr "Geen evenementen om te tonen"
-
-#: loefsys/events/templates/events/calendar.html
-#: templates/cotton/event_status.html
-msgid "Unpublished"
-msgstr "Niet gepubliceerd"
-
-#: loefsys/events/templates/events/calendar.html
-msgid "Categories"
-msgstr "Categorieën"
-
-#: loefsys/events/templates/events/calendar.html loefsys/members/models/user.py
-#: loefsys/members/templates/profiles/profile.html loefsys/members/views.py
-msgid "Birthday"
-msgstr "Verjaardag"
-
-#: loefsys/events/templates/events/event.html
-msgid ""
-"This activity is not published. Only the board and its organisers can see it."
-msgstr ""
-"Deze activiteit is niet gepubliceerd. Alleen het bestuur en de organisatoren "
-"kunnen haar zien."
-
-#: loefsys/events/templates/events/event.html
-msgid "When"
-msgstr "Wanneer"
-
-#: loefsys/events/templates/events/event.html
-msgid "Costs"
-msgstr "Kosten"
-
-#: loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Organizers"
-msgstr "Organisatoren"
-
-#: loefsys/events/templates/events/event.html
-msgid "Attendees"
-msgstr "Aanwezigen"
-
-#: loefsys/events/templates/events/event.html
-msgid "Nobody has signed up yet."
-msgstr "Nog niemand ingeschreven."
-
-#: loefsys/events/templates/events/event.html
-#, python-format
-msgid "You are number %(position)s in the queue."
-msgstr "Je staat op plek %(position)s in de wachtrij."
-
-#: loefsys/events/templates/events/event.html
-#, python-format
-msgid "I accept the fine of %(fine)s if I cancel after %(deadline)s."
-msgstr "Ik accepteer de boete van %(fine)s als ik me na %(deadline)s afmeld."
-
-#: loefsys/events/templates/events/event.html
-msgid "Registration opens"
-msgstr "Aanmelden vanaf"
-
-#: loefsys/events/templates/events/event.html
-msgid "Registration closes"
-msgstr "Aanmelden tot"
-
-#: loefsys/events/templates/events/event.html
-msgid "Cancel before"
-msgstr "Afmelden tot"
-
-#: loefsys/events/templates/events/event.html
-msgid "Late cancellation fine"
-msgstr "Boete bij laat afmelden"
-
-#: loefsys/events/templates/events/event.html
-msgid "Fill in your details"
-msgstr "Vul je gegevens in"
-
-#: loefsys/events/templates/events/event.html
-msgid ""
-"This registration has additional questions. Answer them to confirm your spot."
-msgstr ""
-"Deze inschrijving heeft extra vragen. Vul ze in om jouw plek te bevestigen."
-
-#: loefsys/events/templates/events/event.html
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Close"
-msgstr "Sluiten"
-
-#: loefsys/events/templates/events/event.html
-#: loefsys/members/templates/profiles/profile_edit.html
-#: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/reset_confirm.html
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-#: loefsys/reservations/templates/reservations/reservation_form.html
-#: templates/admin/reservations/reservation/evaluate.html
-msgid "Cancel"
-msgstr "Annuleren"
-
-#: loefsys/events/templates/events/event.html
-#: loefsys/events/templates/events/registration_form.html
-#: loefsys/events/views.py
-msgid "Register"
-msgstr "Inschrijven"
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Connect calendar"
-msgstr "Agenda koppelen"
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Follow the Loefbijter calendar in your own calendar!"
-msgstr "Volg de Loefbijter-agenda op je eigen agenda!"
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "How do you connect your calendar?"
-msgstr "Hoe koppel je je agenda?"
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Open your calendar app, for example Google Calendar or Outlook."
-msgstr "Open je agenda-app, bijvoorbeeld Google Calendar of Outlook."
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Look for the option to add a calendar by URL."
-msgstr "Zoek de optie om een agenda via URL toe te voegen."
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Copy one of the links below and paste it into the URL field."
-msgstr "Kopieer een link hieronder en plak deze in het URL-veld."
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Save the changes. Your calendar is now connected."
-msgstr "Sla de wijzigingen op. Je agenda is nu gekoppeld."
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Events you are registered for"
-msgstr "Events waar je voor bent ingeschreven"
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Copy"
-msgstr "Kopieer"
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Events you are not registered for"
-msgstr "Events waar je niet voor bent ingeschreven"
-
-#: loefsys/events/templates/events/event_feed.html
-msgid "Copied!"
-msgstr "Gekopieerd!"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid ""
-"Here you will find an overview of the currently registered participants and "
-"their contact information."
-msgstr ""
-"Hier vind je een overzicht van de huidig ingeschreven deelnemers en "
-"contactinformatie."
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "View event page"
-msgstr "Bekijk eventpagina"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Participants"
-msgstr "Deelnemers"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Show all answers"
-msgstr "Alle antwoorden tonen"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Hide all answers"
-msgstr "Alle antwoorden verbergen"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Training: phone numbers and POD links visible"
-msgstr "Training: telefoonnummers en POD-links zichtbaar"
-
-#: loefsys/events/templates/events/my_event_detail.html
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Not available"
-msgstr "Niet beschikbaar"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Phone"
-msgstr "Telefoon"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "POD links"
-msgstr "POD-links"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "View profile"
-msgstr "Bekijk profiel"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "There are no registered participants for this event yet."
-msgstr "Er zijn nog geen geregistreerde deelnemers voor dit event."
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "Start"
-msgstr "Start"
-
-#: loefsys/events/templates/events/my_event_detail.html
-msgid "End"
-msgstr "Einde"
-
-#: loefsys/events/templates/events/my_events.html
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "My events"
-msgstr "Mijn events"
-
-#: loefsys/events/templates/events/my_events.html
-msgid "Archive of past events"
-msgstr "Archief van oudere evenementen"
-
-#: loefsys/events/templates/events/my_events.html
-msgid "Recent and upcoming events"
-msgstr "Recente en aankomende evenementen"
-
-#: loefsys/events/templates/events/my_events.html
-msgid "All activities"
-msgstr "Alle activiteiten"
-
-#: loefsys/events/templates/events/my_events.html
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Archive"
-msgstr "Archief"
-
-#: loefsys/events/templates/events/my_events.html
-msgid "There are no past events in the archive yet."
-msgstr "Er staat nog geen oud evenement in het archief."
-
-#: loefsys/events/templates/events/my_events.html
-msgid "You are not organizing any recent events yet."
-msgstr "Je organiseert nog geen recente events."
-
-#: loefsys/events/templates/events/registration_form.html
-#, python-format
-msgid "Register for %(title)s"
-msgstr "Inschrijven voor %(title)s"
-
-#: loefsys/events/templates/events/registration_form.html
-msgid "Answer the questions below to complete your registration."
-msgstr "Vul de vragen hieronder in om je inschrijving te voltooien."
-
-#: loefsys/events/views.py
-msgid "Leave queue"
-msgstr "Verlaat wachtrij"
-
-#: loefsys/events/views.py
-msgid "Cannot cancel"
-msgstr "Kan niet afmelden"
-
-#: loefsys/events/views.py
-msgid "Cancel (with fine)"
-msgstr "Afmelden (met boete)"
-
-#: loefsys/events/views.py
-msgid "Cancel registration"
-msgstr "Afmelden"
-
-#: loefsys/events/views.py
-#, python-format
-msgid "Register from %(date)s"
-msgstr "Inschrijven vanaf %(date)s"
-
-#: loefsys/events/views.py
-msgid "Registrations closed"
-msgstr "Inschrijvingen gesloten"
-
-#: loefsys/events/views.py
-msgid "Join queue"
-msgstr "In wachtrij"
-
-#: loefsys/events/views.py
-msgid "Cancelling is no longer possible."
-msgstr "Afmelden is niet meer mogelijk."
-
-#: loefsys/events/views.py
-msgid "Cancelling may result in a fine."
-msgstr "Afmelden kan leiden tot een boete."
-
-#: loefsys/events/views.py
-msgid "Registrations are not open because this event has not been published."
-msgstr ""
-"Inschrijvingen zijn niet geopend omdat dit evenement niet gepubliceerd is."
-
-#: loefsys/events/views.py
-#, python-format
-msgid "Registration opens on %(date)s."
-msgstr "Inschrijven vanaf %(date)s."
-
-#: loefsys/events/views.py
-msgid "Registrations are closed."
-msgstr "Inschrijvingen zijn gesloten."
-
-#: loefsys/events/views.py
-#, python-format
-msgid "Registrations closed on %(date)s."
-msgstr "Inschrijvingen zijn gesloten op %(date)s."
-
-#: loefsys/events/views.py
-msgid "Registrations are currently closed."
-msgstr "Inschrijvingen zijn momenteel gesloten."
-
-#: loefsys/events/views.py
-msgid "Unable to find the right registration."
-msgstr "Kan de juiste inschrijving niet vinden."
-
-#: loefsys/events/views.py
-#, python-format
-msgid "%(name)s - Birthday"
-msgstr "%(name)s - Verjaardag"
-
-#: loefsys/groups/admin.py
-msgid "Activity Status"
-msgstr "Activiteitsstatus"
-
-#: loefsys/groups/admin.py
-msgid "Inactive"
-msgstr "Inactief"
-
-#: loefsys/groups/models/board.py loefsys/groups/models/year_club.py
-msgid "Year"
-msgstr "Jaar"
-
-#: loefsys/groups/models/choices.py
-msgid "Mixed"
-msgstr "Gemengd"
-
-#: loefsys/groups/models/choices.py loefsys/members/models/choices.py
-msgid "Female"
-msgstr "Vrouw"
-
-#: loefsys/groups/models/choices.py loefsys/members/models/choices.py
-msgid "Male"
-msgstr "Man"
-
-#: loefsys/groups/models/committee.py
-msgid ""
-"If this is checked new members should be assigned to this committee, any "
-"members that are part of this committee satisfy their committee_duty."
-msgstr ""
-"Als dit is aangevinkt, kunnen nieuwe leden aan deze commissie worden "
-"toegewezen; leden van deze commissie voldoen aan hun commissieplicht."
-
-#: loefsys/groups/models/fraternity.py
-msgid "Fraternities"
-msgstr "Disputen"
-
-#: loefsys/groups/models/group.py loefsys/members/admin.py
-msgid "Permissions"
-msgstr "Rechten"
-
-#: loefsys/groups/models/group.py
-msgid "Date of foundation"
-msgstr "Oprichtingsdatum"
-
-#: loefsys/groups/models/group.py
-msgid "Date of discontinuation"
-msgstr "Opheffingsdatum"
-
-#: loefsys/groups/models/group.py
-msgid "The date of discontinuation can't be before the date of foundation"
-msgstr "De opheffingsdatum kan niet voor de oprichtingsdatum liggen"
-
-#: loefsys/groups/models/group.py
-msgid "Display group members"
-msgstr "Groepsleden tonen"
-
-#: loefsys/groups/models/membership.py
-msgid "User"
-msgstr "Gebruiker"
-
-#: loefsys/groups/models/membership.py
-msgid "Group"
-msgstr "Groep"
-
-#: loefsys/groups/models/membership.py
-msgid "Chair"
-msgstr "Voorzitter"
-
-#: loefsys/groups/models/membership.py
-msgid "Role"
-msgstr "Rol"
-
-#: loefsys/groups/models/membership.py
-msgid "The role of this member"
-msgstr "De rol van dit lid"
-
-#: loefsys/groups/models/membership.py
-msgid "Member since"
-msgstr "Lid sinds"
-
-#: loefsys/groups/models/membership.py
-msgid "The date this member joined in this role"
-msgstr "De datum waarop dit lid in deze rol begon"
-
-#: loefsys/groups/models/membership.py
-msgid "Member until"
-msgstr "Lid tot"
-
-#: loefsys/groups/models/membership.py
-msgid "A member until this time."
-msgstr "Lid tot deze datum."
-
-#: loefsys/groups/models/taskforce.py
-msgid ""
-"If this is checked an NDA needs to be signed to be part of this taskforce."
-msgstr ""
-"Als dit is aangevinkt, moet een geheimhoudingsverklaring (NDA) worden "
-"getekend om deel uit te maken van deze taskforce."
-
-#: loefsys/home/models/announcement.py loefsys/members/models/user.py
-msgid "Title"
-msgstr "Titel"
-
-#: loefsys/home/models/announcement.py
-msgid "Content"
-msgstr "Inhoud"
-
-#: loefsys/home/models/announcement.py
-msgid "Announcement start"
-msgstr "Begin bericht"
-
-#: loefsys/home/models/announcement.py
-msgid "Announcement end"
-msgstr "Einde bericht"
-
-#: loefsys/home/models/announcement.py
-msgid "Created at"
-msgstr "Aangemaakt op"
-
-#: loefsys/home/models/announcement.py
-msgid "Updated at"
-msgstr "Bijgewerkt op"
-
-#: loefsys/home/templates/home/association-information.html
-#: loefsys/home/templates/home/schippers.html
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "About us"
-msgstr "Over ons"
-
-#: loefsys/home/templates/home/index.html templates/403.html
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Home"
-msgstr "Home"
-
-#: loefsys/home/templates/home/index.html
-msgid "Welcome to Loefbijter"
-msgstr "Welkom bij Loefbijter"
-
-#: loefsys/home/templates/home/index.html loefsys/members/templates/login.html
-#: loefsys/members/templates/registration/reset_complete.html
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Log in"
-msgstr "Log in"
-
-#: loefsys/home/templates/home/index.html
-msgid "Upcoming events"
-msgstr "Aankomende evenementen"
-
-#: loefsys/home/templates/home/index.html
-msgid "No upcoming events."
-msgstr "Geen aankomende evenementen."
-
-#: loefsys/home/templates/home/index.html
-msgid "Announcements"
-msgstr "Berichten"
-
-#: loefsys/home/templates/home/index.html
-msgid "To do"
-msgstr "Te doen"
-
-#: loefsys/home/templates/home/index.html
-#, python-format
-msgid "Fill in the logbook for %(boat)s"
-msgstr "Vul het logboek in voor %(boat)s"
-
-#: loefsys/home/templates/home/index.html
-#, python-format
-msgid "Approve %(boat)s for %(name)s"
-msgstr "Keur %(boat)s goed voor %(name)s"
-
-#: loefsys/home/templates/home/index.html
-msgid "Your reservations"
-msgstr "Jouw reserveringen"
-
-#: loefsys/home/templates/home/index.html
-#: loefsys/home/templates/home/schippers.html
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "All"
-msgstr "Alles"
-
-#: loefsys/home/templates/home/index.html
-msgid "You have no upcoming reservations."
-msgstr "Je hebt geen aankomende reserveringen."
-
-#: loefsys/home/templates/home/index.html
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "New reservation"
-msgstr "Nieuwe reservering"
-
-#: loefsys/home/templates/home/index.html loefsys/members/models/skippership.py
-#: loefsys/members/templates/profiles/profile.html
-msgid "Skipperships"
-msgstr "Schipperschappen"
-
-#: loefsys/home/templates/home/index.html
-#: loefsys/members/templates/profiles/profile.html
-msgid "No skipperships yet."
-msgstr "Nog geen schipperschappen."
-
-#: loefsys/home/templates/home/index.html
-msgid "Log in to view and manage your reservations."
-msgstr "Log in om je reserveringen te bekijken en te beheren."
-
-#: loefsys/home/templates/home/schippers.html
-#: loefsys/members/models/__disabled__.skippership.py
-#: loefsys/members/models/skippership.py templates/cotton/menu/about_links.html
-msgid "Skippers"
-msgstr "Schippers"
-
-#: loefsys/home/templates/home/schippers.html
 #, python-format
 msgid ""
 "%(counter)s member may skipper. Want to go sailing some time? Send a skipper "
@@ -950,530 +27,60 @@ msgstr[1] ""
 "%(counter)s leden mogen schipperen. Wil je een keer zeilen? App een schipper "
 "of praat met ze op de borrel!"
 
-#: loefsys/home/templates/home/schippers.html
-msgid "Search for a skipper"
-msgstr "Zoek een schipper"
+#, python-format
+msgid "%(counter)s of %(capacity)s spot left"
+msgid_plural "%(counter)s of %(capacity)s spots left"
+msgstr[0] "%(counter)s van %(capacity)s plek vrij"
+msgstr[1] "%(counter)s van %(capacity)s plekken vrij"
 
-#: loefsys/home/templates/home/schippers.html
-#: loefsys/members/models/__disabled__.skippership.py
-#: loefsys/members/models/skippership.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-#: templates/cotton/menu/about_links.html
-msgid "Skippership"
-msgstr "Schipperschap"
+#, python-format
+msgid "%(counter)s question"
+msgid_plural "%(counter)s questions"
+msgstr[0] "%(counter)s vraag"
+msgstr[1] "%(counter)s vragen"
 
-#: loefsys/home/templates/home/schippers.html
 #, python-format
 msgid "%(counter)s skipper"
 msgid_plural "%(counter)s skippers"
 msgstr[0] "%(counter)s schipper"
 msgstr[1] "%(counter)s schippers"
 
-#: loefsys/home/templates/home/schippers.html
-msgid "No skippers found"
-msgstr "Geen schippers gevonden"
-
-#: loefsys/home/templates/home/schippers.html
-msgid "Try another name or choose All."
-msgstr "Probeer een andere naam of kies Alle."
-
-#: loefsys/home/templates/home/schippers.html
-msgid "No skippers have been registered yet."
-msgstr "Er zijn nog geen schippers geregistreerd."
-
-#: loefsys/home/templates/home/schipperschap.html
-msgid "Skippership levels"
-msgstr "Schipperschapniveaus"
-
-#: loefsys/home/templates/home/verenigingslied.html
-msgid "Loefbijter song"
-msgstr "Loefbijterlied"
-
-#: loefsys/home/views.py
-msgid "Good night"
-msgstr "Goedenacht"
-
-#: loefsys/home/views.py
-msgid "Good morning"
-msgstr "Goedemorgen"
-
-#: loefsys/home/views.py
-msgid "Good afternoon"
-msgstr "Goedemiddag"
-
-#: loefsys/home/views.py
-msgid "Good evening"
-msgstr "Goedenavond"
-
-#: loefsys/members/admin.py
-msgid "Admin permission"
-msgstr "Beheerrecht"
-
-#: loefsys/members/admin.py
-msgid "Pseudonymize selected users"
-msgstr "Geselecteerde gebruikers pseudonimiseren"
-
-#: loefsys/members/admin.py
 #, python-format
-msgid "%d users pseudonymized"
-msgstr "%d gebruikers gepseudonimiseerd"
+msgid "%(hours)s hour"
+msgid_plural "%(hours)s hours"
+msgstr[0] "%(hours)s uur"
+msgstr[1] "%(hours)s uur"
 
-#: loefsys/members/admin.py
-msgid "Personal info"
-msgstr "Persoonlijke gegevens"
-
-#: loefsys/members/admin.py
-msgid "Groups"
-msgstr "Groepen"
-
-#: loefsys/members/admin.py templates/cotton/menu/desktop.html
-#: templates/cotton/menu/mobile.html
-msgid "Admin"
-msgstr "Beheer"
-
-#: loefsys/members/admin.py
 #, python-format
-msgid "Added %(count)d required skipperships to existing skippers."
-msgstr ""
-"%(count)d vereiste schipperschappen toegevoegd aan bestaande schippers."
+msgid "%(name)s - Birthday"
+msgstr "%(name)s - Verjaardag"
 
-#: loefsys/members/models/__disabled__.skippership.py
-#: loefsys/members/models/skippership.py
-msgid "The skippers that have this skippership."
-msgstr "De schippers die dit schipperschap hebben."
-
-#: loefsys/members/models/__disabled__.user_skippership.py
-#: loefsys/members/models/user_skippership.py
-msgid "Skippership since"
-msgstr "Schipperschap sinds"
-
-#: loefsys/members/models/__disabled__.user_skippership.py
-#: loefsys/members/models/user_skippership.py
-msgid "The date the user obtained the skippership."
-msgstr "De datum waarop de gebruiker het schipperschap heeft behaald."
-
-#: loefsys/members/models/__disabled__.user_skippership.py
-#: loefsys/members/models/user_skippership.py
-msgid "Skippers authorized"
-msgstr "Geautoriseerd door schippers"
-
-#: loefsys/members/models/__disabled__.user_skippership.py
-#: loefsys/members/models/user_skippership.py
-msgid "The skippers that have authorized the skippership."
-msgstr "De schippers die het schipperschap hebben goedgekeurd."
-
-#: loefsys/members/models/address.py
-msgid "Please use the format <street> <number>"
-msgstr "Gebruik het formaat <straat> <huisnummer>"
-
-#: loefsys/members/models/address.py
-msgid "Street and house number"
-msgstr "Straat en huisnummer"
-
-#: loefsys/members/models/address.py
-msgid "Second address line"
-msgstr "Tweede adresregel"
-
-#: loefsys/members/models/address.py
-msgid "Postal code"
-msgstr "Postcode"
-
-#: loefsys/members/models/address.py
-msgid "City"
-msgstr "Plaats"
-
-#: loefsys/members/models/address.py
-msgid "Country"
-msgstr "Land"
-
-#: loefsys/members/models/choices.py
-msgid "Prefer not to say"
-msgstr "Zeg ik liever niet"
-
-#: loefsys/members/models/choices.py
-msgid "Show full name"
-msgstr "Volledige naam tonen"
-
-#: loefsys/members/models/choices.py
-msgid "Show full name with nickname"
-msgstr "Volledige naam met bijnaam tonen"
-
-#: loefsys/members/models/choices.py
-msgid "Show the nickname and last name"
-msgstr "Bijnaam en achternaam tonen"
-
-#: loefsys/members/models/choices.py
-msgid "Show only the initials and the last name"
-msgstr "Alleen voorletters en achternaam tonen"
-
-#: loefsys/members/models/choices.py
-msgid "Show only the first name"
-msgstr "Alleen voornaam tonen"
-
-#: loefsys/members/models/choices.py
-msgid "Show only the nickname"
-msgstr "Alleen bijnaam tonen"
-
-#: loefsys/members/models/choices.py
-msgid "Active membership"
-msgstr "Actief lidmaatschap"
-
-#: loefsys/members/models/choices.py
-msgid "Passive membership"
-msgstr "Passief lidmaatschap"
-
-#: loefsys/members/models/choices.py
-msgid "Active exceptional membership"
-msgstr "Actief buitengewoon lidmaatschap"
-
-#: loefsys/members/models/choices.py
-msgid "Passive exceptional membership"
-msgstr "Passief buitengewoon lidmaatschap"
-
-#: loefsys/members/models/choices.py
-msgid "Alumnus"
-msgstr "Alumnus"
-
-#: loefsys/members/models/membership.py
-msgid "Membership type"
-msgstr "Soort lidmaatschap"
-
-#: loefsys/members/models/membership.py
-msgid "Membership start"
-msgstr "Begin lidmaatschap"
-
-#: loefsys/members/models/membership.py
-msgid "The date the member's membership started"
-msgstr "De datum waarop het lidmaatschap van het lid begon"
-
-#: loefsys/members/models/membership.py
-msgid "Membership end"
-msgstr "Einde lidmaatschap"
-
-#: loefsys/members/models/membership.py
-msgid "The date the member's membership ends/ended."
-msgstr "De datum waarop het lidmaatschap van het lid eindigt/eindigde."
-
-#: loefsys/members/models/membership.py
-msgid "End date can't be before start date."
-msgstr "De einddatum kan niet voor de begindatum liggen."
-
-#: loefsys/members/models/membership.py
-msgid "The membership overlaps with existing memberships."
-msgstr "Het lidmaatschap overlapt met bestaande lidmaatschappen."
-
-#: loefsys/members/models/skippership.py
-msgid "Parent skippership"
-msgstr "Bovenliggend schipperschap"
-
-#: loefsys/members/models/skippership.py
-msgid "The skippership that must be obtained before this one."
-msgstr "Het schipperschap dat eerst behaald moet zijn."
-
-#: loefsys/members/models/skippership.py
-msgid "A skippership cannot require itself."
-msgstr "Een schipperschap kan zichzelf niet vereisen."
-
-#: loefsys/members/models/study_registration.py
-msgid "Educational institution"
-msgstr "Onderwijsinstelling"
-
-#: loefsys/members/models/study_registration.py
-msgid "Study programme"
-msgstr "Studie"
-
-#: loefsys/members/models/study_registration.py
-msgid "Student number"
-msgstr "Studentnummer"
-
-#: loefsys/members/models/study_registration.py
-msgid "Enter a valid student- or e/z/u-number."
-msgstr "Voer een geldig student- of e/z/u-nummer in."
-
-#: loefsys/members/models/study_registration.py
-msgid "RSC card number"
-msgstr "RSC-kaartnummer"
-
-#: loefsys/members/models/user.py
-#: loefsys/members/templates/registration/reset_form.html
-#: loefsys/members/views.py
-msgid "Email address"
-msgstr "E-mailadres"
-
-#: loefsys/members/models/user.py
-msgid "Designates whether this user should be treated as active."
-msgstr "Bepaalt of deze gebruiker als actief wordt beschouwd."
-
-#: loefsys/members/models/user.py
-msgid "First name"
-msgstr "Voornaam"
-
-#: loefsys/members/models/user.py
-msgid "Last name"
-msgstr "Achternaam"
-
-#: loefsys/members/models/user.py
-msgid "Initials"
-msgstr "Voorletters"
-
-#: loefsys/members/models/user.py
-msgid "Nickname"
-msgstr "Bijnaam"
-
-#: loefsys/members/models/user.py
-msgid "Lichting"
-msgstr "Lichting"
-
-#: loefsys/members/models/user.py
-msgid "The member's lichting, for example '57e lichting'."
-msgstr "De lichting van het lid, bijvoorbeeld '57e lichting'."
-
-#: loefsys/members/models/user.py
-msgid "Additional title for the user, editable by the board."
-msgstr "Extra titel voor de gebruiker, aan te passen door het bestuur."
-
-#: loefsys/members/models/user.py
-msgid "Display name preference"
-msgstr "Weergave van je naam"
-
-#: loefsys/members/models/user.py
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Profile picture"
-msgstr "Profielfoto"
-
-#: loefsys/members/models/user.py
-msgid "Gender"
-msgstr "Geslacht"
-
-#: loefsys/members/models/user.py
-msgid "Display birthday"
-msgstr "Verjaardag tonen"
-
-#: loefsys/members/models/user.py
-msgid "Loefbijter groups"
-msgstr "Loefbijter-groepen"
-
-#: loefsys/members/models/user.py
-msgid ""
-"The groups this user belongs to. A user will get all permissions granted to "
-"each of their groups."
-msgstr ""
-"De groepen waartoe deze gebruiker behoort. Een gebruiker krijgt alle rechten "
-"van elk van zijn groepen."
-
-#: loefsys/members/models/user.py
-msgid "KB POD link"
-msgstr "KB POD-link"
-
-#: loefsys/members/models/user.py
-msgid "Paste the link to your KB POD (Google Sheets) so it can be edited."
-msgstr ""
-"Plak de link naar je KB POD (Google Sheets) zodat deze bewerkt kan worden."
-
-#: loefsys/members/models/user.py
-msgid "ZB POD link"
-msgstr "ZB POD-link"
-
-#: loefsys/members/models/user.py
-msgid "Paste the link to your ZB POD (Google Sheets) so it can be edited."
-msgstr ""
-"Plak de link naar je ZB POD (Google Sheets) zodat deze bewerkt kan worden."
-
-#: loefsys/members/models/user.py
-msgid "Note"
-msgstr "Notitie"
-
-#: loefsys/members/models/user.py
-msgid "user"
-msgstr "gebruiker"
-
-#: loefsys/members/models/user.py
-msgid "users"
-msgstr "gebruikers"
-
-#: loefsys/members/models/user_skippership.py
 #, python-format
 msgid "%(skippership)s requires %(required)s first."
 msgstr "%(skippership)s vereist eerst %(required)s."
 
-#: loefsys/members/password_validators.py
-msgid "The password must contain at least one uppercase letter."
-msgstr "Het wachtwoord moet minstens één hoofdletter bevatten."
-
-#: loefsys/members/password_validators.py
-msgid "The password must contain at least one lowercase letter."
-msgstr "Het wachtwoord moet minstens één kleine letter bevatten."
-
-#: loefsys/members/password_validators.py
-msgid "The password must contain at least one digit."
-msgstr "Het wachtwoord moet minstens één cijfer bevatten."
-
-#: loefsys/members/password_validators.py
-msgid "The password must contain at least one special character."
-msgstr "Het wachtwoord moet minstens één speciaal teken bevatten."
-
-#: loefsys/members/password_validators.py
-msgid ""
-"The password must contain at least one uppercase letter, one lowercase "
-"letter, one digit and one special character."
-msgstr ""
-"Het wachtwoord moet minstens één hoofdletter, één kleine letter, één cijfer "
-"en één speciaal teken bevatten."
-
-#: loefsys/members/templates/cotton/profile_icon.html
-#: loefsys/members/templates/profiles/profile.html
-#: loefsys/members/templates/profiles/set_password.html
-#: templates/cotton/menu/mobile.html
-msgid "My profile"
-msgstr "Mijn profiel"
-
-#: loefsys/members/templates/cotton/profile_icon.html
-msgid "User profile"
-msgstr "Gebruikersprofiel"
-
-#: loefsys/members/templates/login.html
-msgid "Login"
-msgstr "Inloggen"
-
-#: loefsys/members/templates/login.html
-msgid "Log in to continue"
-msgstr "Log in om verder te gaan"
-
-#: loefsys/members/templates/login.html
-#: loefsys/members/templates/registration/reset_disabled.html
-msgid "Forgot your password?"
-msgstr "Wachtwoord vergeten?"
-
-#: loefsys/members/templates/profiles/profile.html
-#: templates/cotton/menu/mobile.html
-msgid "Profile"
-msgstr "Profiel"
-
-#: loefsys/members/templates/profiles/profile.html
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Edit profile"
-msgstr "Profiel bewerken"
-
-#: loefsys/members/templates/profiles/profile.html
-#: loefsys/members/templates/profiles/set_password.html
-msgid "Set password"
-msgstr "Wachtwoord instellen"
-
-#: loefsys/members/templates/profiles/profile.html
-#: templates/cotton/menu/mobile.html
-msgid "Log out"
-msgstr "Uitloggen"
-
-#: loefsys/members/templates/profiles/profile.html
 #, python-format
-msgid "Profile picture of %(name)s"
-msgstr "Profielfoto van %(name)s"
+msgid "%d users pseudonymized"
+msgstr "%d gebruikers gepseudonimiseerd"
 
-#: loefsys/members/templates/profiles/profile.html
-msgid "Details"
-msgstr "Gegevens"
+msgid "403 - No access"
+msgstr "403 - Geen toegang"
 
-#: loefsys/members/templates/profiles/profile.html
-msgid "This member keeps their details private."
-msgstr "Dit lid houdt zijn of haar gegevens privé."
+msgid "404 - Page not found"
+msgstr "404 - Pagina niet gevonden"
 
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Edit your profile"
-msgstr "Pas je profiel aan"
+msgid "500 - Internal server error"
+msgstr "500 - Interne serverfout"
 
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Update your details and save the changes."
-msgstr "Werk je gegevens bij en sla de wijzigingen op."
+msgid "A damage description is required when new damage was found."
+msgstr "Een schadebeschrijving is verplicht als er nieuwe schade is gevonden."
 
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Current profile picture"
-msgstr "Huidige profielfoto"
+msgid "A denial reason is required when denying a reservation."
+msgstr "Een afwijsreden is verplicht als je een reservering weigert."
 
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Choose photo"
-msgstr "Foto kiezen"
+msgid "A member until this time."
+msgstr "Lid tot deze datum."
 
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Remove"
-msgstr "Verwijderen"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "No photo chosen"
-msgstr "Geen foto gekozen"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "User details"
-msgstr "Gebruikersgegevens"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Member details"
-msgstr "Lidgegevens"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Save new information"
-msgstr "Nieuwe informatie opslaan"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Adjust your profile picture"
-msgstr "Pas je profielfoto aan"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Drag and zoom the image so your face fits in the circle."
-msgstr "Versleep en zoom de afbeelding zodat je gezicht in de cirkel past."
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Crop profile picture"
-msgstr "Profielfoto bijsnijden"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Left"
-msgstr "Links"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Right"
-msgstr "Rechts"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Reset"
-msgstr "Reset"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Save photo"
-msgstr "Foto opslaan"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-msgid "Profile picture preview"
-msgstr "Voorbeeld profielfoto"
-
-#: loefsys/members/templates/profiles/profile_edit.html
-#: loefsys/members/views.py
-msgid "dd-mm-yyyy"
-msgstr "dd-mm-jjjj"
-
-#: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/reset_confirm.html
-msgid "New password"
-msgstr "Nieuw wachtwoord"
-
-#: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/reset_confirm.html
-msgid "Confirm new password"
-msgstr "Bevestig nieuw wachtwoord"
-
-#: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/reset_confirm.html
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-#: templates/admin/reservations/reservation/evaluate.html
-msgid "Save"
-msgstr "Opslaan"
-
-#: loefsys/members/templates/registration/password_reset_email.html
-#: loefsys/members/templates/registration/password_reset_temporary_email.txt
-#, python-format
-msgid "Hello %(name)s,"
-msgstr "Hallo %(name)s,"
-
-#: loefsys/members/templates/registration/password_reset_email.html
 msgid ""
 "A request was made to reset the password for your account. If you did not "
 "request this, please ignore this email."
@@ -1481,93 +88,289 @@ msgstr ""
 "Er is verzocht om het wachtwoord voor je account opnieuw in te stellen. Als "
 "je dit niet hebt aangevraagd, negeer dan deze e-mail."
 
-#: loefsys/members/templates/registration/password_reset_email.html
-msgid "Your temporary password is:"
-msgstr "Je tijdelijke wachtwoord is:"
+msgid "A reservation already exists for this timeslot."
+msgstr "Er bestaat al een reservering voor dit tijdslot."
 
-#: loefsys/members/templates/registration/password_reset_email.html
-#: loefsys/members/templates/registration/password_reset_temporary_email.txt
-msgid ""
-"Log in with this password and change it immediately via your profile "
-"(Profile > Set password)."
-msgstr ""
-"Log in met dit wachtwoord en wijzig het direct via je profiel (Profiel > "
-"Wachtwoord instellen)."
+msgid "A skippership cannot require itself."
+msgstr "Een schipperschap kan zichzelf niet vereisen."
 
-#: loefsys/members/templates/registration/password_reset_email.html
-#: loefsys/members/templates/registration/password_reset_temporary_email.txt
-msgid "If you did not request this, please contact the site administrator."
-msgstr ""
-"Als je dit niet hebt aangevraagd, neem dan contact op met de sitebeheerder."
-
-#: loefsys/members/templates/registration/password_reset_email.html
-#: loefsys/members/templates/registration/password_reset_temporary_email.txt
-msgid "Kind regards,"
-msgstr "Met vriendelijke groet,"
-
-#: loefsys/members/templates/registration/password_reset_email.html
-msgid "The team"
-msgstr "Het team"
-
-#: loefsys/members/templates/registration/password_reset_temporary_email.txt
 msgid "A temporary password was requested for your account."
 msgstr "Er is verzocht om een tijdelijk wachtwoord voor je account."
 
-#: loefsys/members/templates/registration/password_reset_temporary_email.txt
+msgid "A-Z"
+msgstr "A-Z"
+
+msgid "About the association"
+msgstr "Over de Vereniging"
+
+msgid "About us"
+msgstr "Over ons"
+
+msgid "Accept"
+msgstr "Accepteren"
+
+msgid "Account"
+msgstr "Account"
+
+msgid "Active"
+msgstr "Actief"
+
+msgid "Active and recent reservations"
+msgstr "Actieve en recente reserveringen"
+
+msgid "Active exceptional membership"
+msgstr "Actief buitengewoon lidmaatschap"
+
+msgid "Active membership"
+msgstr "Actief lidmaatschap"
+
+msgid "Activities"
+msgstr "Activiteiten"
+
+msgid "Activity Status"
+msgstr "Activiteitsstatus"
+
+msgid "Add a photo of the boat"
+msgstr "Voeg een foto van de boot toe"
+
+msgid "Add photo"
+msgstr "Foto toevoegen"
+
 #, python-format
-msgid "Temporary password: %(temporary_password)s"
-msgstr "Tijdelijk wachtwoord: %(temporary_password)s"
-
-#: loefsys/members/templates/registration/reset_complete.html
-msgid "Password reset"
-msgstr "Wachtwoord opnieuw ingesteld"
-
-#: loefsys/members/templates/registration/reset_complete.html
-#: loefsys/members/templates/registration/reset_confirm.html
-#: loefsys/members/templates/registration/reset_disabled.html
-#: loefsys/members/templates/registration/reset_done.html
-#: loefsys/members/templates/registration/reset_form.html templates/403.html
-#: templates/404.html templates/500.html templates/cotton/logo.html
-msgid "Loefbijter logo"
-msgstr "Loefbijter-logo"
-
-#: loefsys/members/templates/registration/reset_complete.html
-msgid ""
-"Your password has been updated successfully. You can now log in with your "
-"new password."
+msgid "Added %(count)d required skipperships to existing skippers."
 msgstr ""
-"Je wachtwoord is succesvol bijgewerkt. Je kunt nu inloggen met je nieuwe "
-"wachtwoord."
+"%(count)d vereiste schipperschappen toegevoegd aan bestaande schippers."
 
-#: loefsys/members/templates/registration/reset_confirm.html
-msgid "Set a new password"
-msgstr "Nieuw wachtwoord instellen"
+msgid "Additional title for the user, editable by the board."
+msgstr "Extra titel voor de gebruiker, aan te passen door het bestuur."
 
-#: loefsys/members/templates/registration/reset_confirm.html
-msgid "Enter your new password and confirm it."
-msgstr "Voer je nieuwe wachtwoord in en bevestig het."
+msgid "Adjust your profile picture"
+msgstr "Pas je profielfoto aan"
 
-#: loefsys/members/templates/registration/reset_confirm.html
+msgid "Admin"
+msgstr "Beheer"
+
+msgid "Admin permission"
+msgstr "Beheerrecht"
+
+msgid "Agenda"
+msgstr "Agenda"
+
+msgid "All"
+msgstr "Alles"
+
+msgid "All activities"
+msgstr "Alle activiteiten"
+
+msgid "All day"
+msgstr "Hele dag"
+
+msgid "Alumni"
+msgstr "Alumni"
+
+msgid "Alumnus"
+msgstr "Alumnus"
+
 msgid ""
-"This link is invalid, possibly because it has already been used. Ask the web "
-"committee for a new password."
+"An email has been sent with instructions to reset your password. Check your "
+"inbox (and spam folder)."
 msgstr ""
-"Deze link is ongeldig, waarschijnlijk omdat hij al is gebruikt. Vraag de "
-"webcie om een nieuw wachtwoord."
+"Er is een e-mail gestuurd met instructies om je wachtwoord opnieuw in te "
+"stellen. Controleer je inbox (en spammap)."
 
-#: loefsys/members/templates/registration/reset_confirm.html
-#: loefsys/members/templates/registration/reset_disabled.html
-#: loefsys/members/templates/registration/reset_done.html
-#: loefsys/members/templates/registration/reset_form.html
+msgid "Announcement end"
+msgstr "Einde bericht"
+
+msgid "Announcement start"
+msgstr "Begin bericht"
+
+msgid "Announcements"
+msgstr "Berichten"
+
+msgid "Answer the questions below to complete your registration."
+msgstr "Vul de vragen hieronder in om je inschrijving te voltooien."
+
+msgid "Apply"
+msgstr "Toepassen"
+
+msgid "Approval"
+msgstr "Goedkeuring"
+
+#, python-format
+msgid "Approve %(boat)s for %(name)s"
+msgstr "Keur %(boat)s goed voor %(name)s"
+
+msgid "Approved"
+msgstr "Goedgekeurd"
+
+msgid "Archive"
+msgstr "Archief"
+
+msgid "Archive of older reservations"
+msgstr "Archief van oudere reserveringen"
+
+msgid "Archive of past events"
+msgstr "Archief van oudere evenementen"
+
+msgid ""
+"Are you sure you want to delete this reservation? This cannot be undone."
+msgstr ""
+"Weet je zeker dat je deze reservering wilt verwijderen? Dit kan niet "
+"ongedaan worden gemaakt."
+
+msgid "Association"
+msgstr "Vereniging"
+
+msgid "Association documents"
+msgstr "Verenigingsdocumenten"
+
+msgid "Association song"
+msgstr "Verenigingslied"
+
+msgid "Attendees"
+msgstr "Aanwezigen"
+
+msgid "Authorized skipper"
+msgstr "Bevoegde schipper"
+
+msgid "Available"
+msgstr "Beschikbaar"
+
 msgid "Back to login"
 msgstr "Terug naar inloggen"
 
-#: loefsys/members/templates/registration/reset_disabled.html
-#: loefsys/members/templates/registration/reset_form.html
-msgid "Forgot password"
-msgstr "Wachtwoord vergeten"
+msgid "Back to overview"
+msgstr "Terug naar overzicht"
 
-#: loefsys/members/templates/registration/reset_disabled.html
+msgid "Back to reservation"
+msgstr "Terug naar reservering"
+
+msgid "Bastion"
+msgstr "Bastion"
+
+msgid "Birthday"
+msgstr "Verjaardag"
+
+msgid "Boardroom"
+msgstr "Bestuurskamer"
+
+msgctxt "location tab"
+msgid "Boardroom"
+msgstr "BK"
+
+msgid "Boat"
+msgstr "Boot"
+
+msgid "Boat has an engine"
+msgstr "Boot heeft een motor"
+
+msgid "Boat provider"
+msgstr "Aanbieder van de boot"
+
+msgid "Boats"
+msgstr "Boten"
+
+msgid "Boolean"
+msgstr "Ja/nee"
+
+msgid "By skipper type (current month)"
+msgstr "Per soort schipper (huidige maand)"
+
+msgid "Calendar"
+msgstr "Kalender"
+
+msgid "Cancel"
+msgstr "Annuleren"
+
+msgid "Cancel (with fine)"
+msgstr "Afmelden (met boete)"
+
+msgid "Cancel before"
+msgstr "Afmelden tot"
+
+msgid "Cancel registration"
+msgstr "Afmelden"
+
+#, python-format
+msgid "Cancel without a fine until %(deadline)s"
+msgstr "Kosteloos afmelden tot %(deadline)s"
+
+msgid "Cancelation deadline"
+msgstr "Afmelddeadline"
+
+msgid "Cancelled"
+msgstr "Afgemeld"
+
+msgid "Cancelled and fined"
+msgstr "Afgemeld met boete"
+
+msgid "Cancelling is no longer possible."
+msgstr "Afmelden is niet meer mogelijk."
+
+msgid "Cancelling may result in a fine."
+msgstr "Afmelden kan leiden tot een boete."
+
+msgid "Cannot cancel"
+msgstr "Kan niet afmelden"
+
+msgid "Capacity"
+msgstr "Capaciteit"
+
+msgid "Categories"
+msgstr "Categorieën"
+
+msgid "Category"
+msgstr "Categorie"
+
+msgid "Ceulemans"
+msgstr "Ceulemans"
+
+msgid "Chair"
+msgstr "Voorzitter"
+
+msgid "Change"
+msgstr "Wijzigen"
+
+msgid "Change reservation status"
+msgstr "Reserveringsstatus wijzigen"
+
+msgid "Choose a boat or room"
+msgstr "Kies een boot of ruimte"
+
+msgid "Choose a location, a period and the boat or room you want to reserve."
+msgstr ""
+"Kies een locatie, een periode en de boot of ruimte die je wilt reserveren."
+
+msgid "Choose a skipper"
+msgstr "Kies een schipper"
+
+msgid "Choose a status."
+msgstr "Kies een status."
+
+msgid "Choose photo"
+msgstr "Foto kiezen"
+
+msgid "Choose the period"
+msgstr "Kies de periode"
+
+msgid "City"
+msgstr "Plaats"
+
+msgid "Close"
+msgstr "Sluiten"
+
+msgid "Competition"
+msgstr "Wedstrijd"
+
+msgid "Confirm new password"
+msgstr "Bevestig nieuw wachtwoord"
+
+msgid "Confirm reservation deletion"
+msgstr "Bevestig verwijdering reservering"
+
+msgid "Connect calendar"
+msgstr "Agenda koppelen"
+
 msgid ""
 "Contact <a href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a> and "
 "we will create a new password for you as soon as possible."
@@ -1576,247 +379,1182 @@ msgstr ""
 "nl\">webcie@loefbijter.nl</a>, wij maken zo snel mogelijk een nieuw "
 "wachtwoord voor je aan."
 
-#: loefsys/members/templates/registration/reset_done.html
+msgid "Content"
+msgstr "Inhoud"
+
+msgid "Copied!"
+msgstr "Gekopieerd!"
+
+msgid "Copy"
+msgstr "Kopieer"
+
+msgid "Copy one of the links below and paste it into the URL field."
+msgstr "Kopieer een link hieronder en plak deze in het URL-veld."
+
+msgid "Costs"
+msgstr "Kosten"
+
+msgid "Costs paid"
+msgstr "Betaalde kosten"
+
+msgid "Country"
+msgstr "Land"
+
+msgid "Created at"
+msgstr "Aangemaakt op"
+
+msgid "Crop profile picture"
+msgstr "Profielfoto bijsnijden"
+
+msgid "Current damage information"
+msgstr "Huidige schade-informatie"
+
+msgid "Current profile picture"
+msgstr "Huidige profielfoto"
+
+msgid "Damage description"
+msgstr "Schadebeschrijving"
+
+msgid "Damage reports (recent months)"
+msgstr "Schademeldingen (laatste maanden)"
+
+msgid "Date of discontinuation"
+msgstr "Opheffingsdatum"
+
+msgid "Date of foundation"
+msgstr "Oprichtingsdatum"
+
+msgid "Datetime"
+msgstr "Datum en tijd"
+
+msgid "Delete reservation"
+msgstr "Verwijder reservering"
+
+msgid "Denial reason"
+msgstr "Afwijsreden"
+
+msgid "Denied"
+msgstr "Geweigerd"
+
+msgid "Deny"
+msgstr "Weigeren"
+
+msgid "Describe the new damage"
+msgstr "Beschrijf de nieuwe schade"
+
+msgid "Description"
+msgstr "Beschrijving"
+
+msgid "Designates whether this user should be treated as active."
+msgstr "Bepaalt of deze gebruiker als actief wordt beschouwd."
+
+msgid "Details"
+msgstr "Gegevens"
+
+msgid "Did you discover new damage?"
+msgstr "Heb je nieuwe schade ontdekt?"
+
+msgid "Did you refuel the boat?"
+msgstr "Heb je de boot afgetankt?"
+
+msgid "Display birthday"
+msgstr "Verjaardag tonen"
+
+msgid "Display group members"
+msgstr "Groepsleden tonen"
+
+msgid "Display name preference"
+msgstr "Weergave van je naam"
+
+msgid "Drag and zoom the image so your face fits in the circle."
+msgstr "Versleep en zoom de afbeelding zodat je gezicht in de cirkel past."
+
+msgid "Dutch"
+msgstr "Nederlands"
+
+msgid "Edit profile"
+msgstr "Profiel bewerken"
+
+msgid "Edit reservation"
+msgstr "Bewerk reservering"
+
+msgid "Edit your profile"
+msgstr "Pas je profiel aan"
+
+msgid "Educational institution"
+msgstr "Onderwijsinstelling"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Email address"
+msgstr "E-mailadres"
+
 msgid "Email sent"
 msgstr "E-mail verzonden"
 
-#: loefsys/members/templates/registration/reset_done.html
-msgid ""
-"An email has been sent with instructions to reset your password. Check your "
-"inbox (and spam folder)."
-msgstr ""
-"Er is een e-mail gestuurd met instructies om je wachtwoord opnieuw in te "
-"stellen. Controleer je inbox (en spammap)."
+msgid "End"
+msgstr "Einde"
 
-#: loefsys/members/templates/registration/reset_form.html
+msgid "End date can't be before start date."
+msgstr "De einddatum kan niet voor de begindatum liggen."
+
+msgid "End time"
+msgstr "Eindtijd"
+
+msgid "End time cannot be before the start time."
+msgstr "De eindtijd kan niet voor de starttijd liggen."
+
+msgid "Engine"
+msgstr "Motor"
+
+msgid "English"
+msgstr "Engels"
+
+msgid "Enter a valid student- or e/z/u-number."
+msgstr "Voer een geldig student- of e/z/u-nummer in."
+
 msgid ""
 "Enter your email address; we will send you a link to reset your password."
 msgstr ""
 "Voer je e-mailadres in; we sturen een link om je wachtwoord opnieuw in te "
 "stellen."
 
-#: loefsys/members/templates/registration/reset_form.html
-msgid "Send email"
-msgstr "Verstuur e-mail"
+msgid "Enter your new password and confirm it."
+msgstr "Voer je nieuwe wachtwoord in en bevestig het."
 
-#: loefsys/members/views.py
-msgid "Password updated successfully."
-msgstr "Wachtwoord succesvol bijgewerkt."
+msgid "Evaluation"
+msgstr "Beoordeling"
 
-#: loefsys/members/views.py
-msgid "Temporary password - Loefsys"
-msgstr "Tijdelijk wachtwoord - Loefsys"
+msgid "Event"
+msgstr "Evenement"
 
-#: loefsys/members/views.py
+msgid "Event is open for non-members"
+msgstr "Evenement is open voor niet-leden"
+
+msgid "Events by category"
+msgstr "Evenementen per categorie"
+
+msgid "Events you are not registered for"
+msgstr "Events waar je niet voor bent ingeschreven"
+
+msgid "Events you are registered for"
+msgstr "Events waar je voor bent ingeschreven"
+
+msgid "Everything the association organises. Open an activity to sign up."
+msgstr ""
+"Alles wat de vereniging organiseert. Open een activiteit om je in te "
+"schrijven."
+
+msgid "Export filtered rows"
+msgstr "Gefilterde rijen exporteren"
+
+msgid "Export selected rows to Excel"
+msgstr "Geselecteerde rijen exporteren naar Excel"
+
+msgid "Female"
+msgstr "Vrouw"
+
+msgid "Fill in logbook"
+msgstr "Vul logboek in"
+
+#, python-format
+msgid "Fill in the logbook for %(boat)s"
+msgstr "Vul het logboek in voor %(boat)s"
+
+#, python-format
+msgid "Fill in the logbook for %(boat_name)s."
+msgstr "Vul het logboek in voor %(boat_name)s."
+
+msgid "Fill in your details"
+msgstr "Vul je gegevens in"
+
+msgid "Filter by type"
+msgstr "Filter op type"
+
+msgid "Fine"
+msgstr "Boete"
+
+msgid "Fine if participant does not show up."
+msgstr "Boete als de deelnemer niet komt opdagen."
+
+msgid "First name"
+msgstr "Voornaam"
+
+msgid "Follow the Loefbijter calendar in your own calendar!"
+msgstr "Volg de Loefbijter-agenda op je eigen agenda!"
+
+msgid "Forgot password"
+msgstr "Wachtwoord vergeten"
+
+msgid "Forgot your password?"
+msgstr "Wachtwoord vergeten?"
+
+msgid "Form response"
+msgstr "Formulierantwoorden"
+
+msgid "Fraternities"
+msgstr "Disputen"
+
+msgid "Free"
+msgstr "Vrij"
+
+msgid "Free!"
+msgstr "Gratis!"
+
+msgid "From"
+msgstr "Van"
+
+msgid "Front page"
+msgstr "Voorpagina"
+
+msgid "Full"
+msgstr "Vol"
+
+msgid "Full name"
+msgstr "Volledige naam"
+
+msgid "Gender"
+msgstr "Geslacht"
+
+msgid "Go back"
+msgstr "Ga terug"
+
+msgid "Good afternoon"
+msgstr "Goedemiddag"
+
+msgid "Good evening"
+msgstr "Goedenavond"
+
+msgid "Good morning"
+msgstr "Goedemorgen"
+
+msgid "Good night"
+msgstr "Goedenacht"
+
+msgid "Group"
+msgstr "Groep"
+
+msgid "Groups"
+msgstr "Groepen"
+
+#, python-format
+msgid "Hello %(name)s,"
+msgstr "Hallo %(name)s,"
+
+msgid ""
+"Here you will find an overview of the currently registered participants and "
+"their contact information."
+msgstr ""
+"Hier vind je een overzicht van de huidig ingeschreven deelnemers en "
+"contactinformatie."
+
+msgid "Hide all answers"
+msgstr "Alle antwoorden verbergen"
+
+msgid "Home"
+msgstr "Home"
+
+msgid "How do you connect your calendar?"
+msgstr "Hoe koppel je je agenda?"
+
+msgid "How many engine hours did you run?"
+msgstr "Hoeveel motoruren heb je gemaakt?"
+
+#, python-format
+msgid "I accept the fine of %(fine)s if I cancel after %(deadline)s."
+msgstr "Ik accepteer de boete van %(fine)s als ik me na %(deadline)s afmeld."
+
 msgid "If the given email address exists, a temporary password has been sent."
 msgstr ""
 "Als het opgegeven e-mailadres bestaat, is er een tijdelijk wachtwoord "
 "gestuurd."
 
-#: loefsys/reservations/admin.py
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Reservation details"
-msgstr "Reserveringsdetails"
+msgid ""
+"If this is checked an NDA needs to be signed to be part of this taskforce."
+msgstr ""
+"Als dit is aangevinkt, moet een geheimhoudingsverklaring (NDA) worden "
+"getekend om deel uit te maken van deze taskforce."
 
-#: loefsys/reservations/admin.py
-msgid "Approval"
-msgstr "Goedkeuring"
+msgid ""
+"If this is checked new members should be assigned to this committee, any "
+"members that are part of this committee satisfy their committee_duty."
+msgstr ""
+"Als dit is aangevinkt, kunnen nieuwe leden aan deze commissie worden "
+"toegewezen; leden van deze commissie voldoen aan hun commissieplicht."
 
-#: loefsys/reservations/admin.py
-msgid "Reservation accepted."
-msgstr "Reservering geaccepteerd."
+msgid "If you did not request this, please contact the site administrator."
+msgstr ""
+"Als je dit niet hebt aangevraagd, neem dan contact op met de sitebeheerder."
 
-#: loefsys/reservations/admin.py
-msgid "Choose a status."
-msgstr "Kies een status."
+msgid "In queue"
+msgstr "In wachtrij"
 
-#: loefsys/reservations/admin.py
-msgid "Reservation status updated."
-msgstr "Reserveringsstatus bijgewerkt."
+msgid "Inactive"
+msgstr "Inactief"
 
-#: loefsys/reservations/admin.py
-msgid "Change reservation status"
-msgstr "Reserveringsstatus wijzigen"
+msgid "Initials"
+msgstr "Voorletters"
 
-#: loefsys/reservations/admin.py
-msgid "Evaluation"
-msgstr "Beoordeling"
+msgid "Integer"
+msgstr "Geheel getal"
 
-#: loefsys/reservations/admin.py
-#: templates/admin/reservations/reservation/evaluate.html
-msgid "Accept"
-msgstr "Accepteren"
-
-#: loefsys/reservations/admin.py
-#: templates/admin/reservations/reservation/evaluate.html
-msgid "Deny"
-msgstr "Weigeren"
-
-#: loefsys/reservations/admin.py
-msgid "Change"
-msgstr "Wijzigen"
-
-#: loefsys/reservations/forms.py
 msgid "Item to reserve"
 msgstr "Te reserveren item"
 
-#: loefsys/reservations/forms.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Choose a skipper"
-msgstr "Kies een schipper"
+msgid "Join queue"
+msgstr "In wachtrij"
 
-#: loefsys/reservations/forms.py
-msgid "No skipper selected"
-msgstr "Geen schipper geselecteerd"
+msgid "KB POD link"
+msgstr "KB POD-link"
 
-#: loefsys/reservations/forms.py
+msgid "Kind regards,"
+msgstr "Met vriendelijke groet,"
+
+msgid "Kraaij"
+msgstr "Kraaij"
+
+msgid "Kraaijenbergse Plassen"
+msgstr "Kraaijenbergse Plassen"
+
+msgid "Last name"
+msgstr "Achternaam"
+
+msgid "Late cancellation fine"
+msgstr "Boete bij laat afmelden"
+
+msgid "Leave queue"
+msgstr "Verlaat wachtrij"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Leisure"
+msgstr "Ontspanning"
+
+msgid "Lichting"
+msgstr "Lichting"
+
+msgid "Link to calendar"
+msgstr "Link met agenda"
+
+msgid "List"
+msgstr "Lijst"
+
+msgid "Location"
+msgstr "Locatie"
+
+msgid "Loefbijter"
+msgstr "Loefbijter"
+
+msgid "Loefbijter groups"
+msgstr "Loefbijter-groepen"
+
+msgid "Loefbijter logo"
+msgstr "Loefbijter-logo"
+
+msgid "Loefbijter song"
+msgstr "Loefbijterlied"
+
+msgid "Log in"
+msgstr "Log in"
+
+msgid "Log in to continue"
+msgstr "Log in om verder te gaan"
+
+msgid "Log in to view and manage your reservations."
+msgstr "Log in om je reserveringen te bekijken en te beheren."
+
+msgid ""
+"Log in with this password and change it immediately via your profile "
+"(Profile > Set password)."
+msgstr ""
+"Log in met dit wachtwoord en wijzig het direct via je profiel (Profiel > "
+"Wachtwoord instellen)."
+
+msgid "Log out"
+msgstr "Uitloggen"
+
+msgid "Logbook"
+msgstr "Logboek"
+
+msgid "Login"
+msgstr "Inloggen"
+
+msgid "Look for the option to add a calendar by URL."
+msgstr "Zoek de optie om een agenda via URL toe te voegen."
+
+msgid "Main menu"
+msgstr "Hoofdmenu"
+
+msgid "Make a reservation"
+msgstr "Maak reservering"
+
+msgid "Make your first reservation to get started."
+msgstr "Maak je eerste reservering om te beginnen."
+
+msgid "Male"
+msgstr "Man"
+
+msgid "Manage reservation"
+msgstr "Beheer reservering"
+
+msgid "Material"
+msgstr "Materiaal"
+
+msgid "Material type"
+msgstr "Materiaaltype"
+
+msgid "Maximum number of participants"
+msgstr "Maximaal aantal deelnemers"
+
+msgid "Member"
+msgstr "Lid"
+
+msgid "Member details"
+msgstr "Lidgegevens"
+
+msgid "Member since"
+msgstr "Lid sinds"
+
+msgid "Member until"
+msgstr "Lid tot"
+
+msgid "Membership end"
+msgstr "Einde lidmaatschap"
+
+msgid "Membership start"
+msgstr "Begin lidmaatschap"
+
+msgid "Membership type"
+msgstr "Soort lidmaatschap"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Mixed"
+msgstr "Gemengd"
+
+msgid "Month"
+msgstr "Maand"
+
+msgid "More info"
+msgstr "Meer info"
+
+msgid "Motor hours"
+msgstr "Motoruren"
+
+msgid "My events"
+msgstr "Mijn events"
+
+msgid "My profile"
+msgstr "Mijn profiel"
+
+msgid "My reservations"
+msgstr "Mijn reserveringen"
+
+msgid "Name"
+msgstr "Naam"
+
+msgid "New damage description"
+msgstr "Beschrijving nieuwe schade"
+
+msgid "New damage reports"
+msgstr "Nieuwe schademeldingen"
+
+msgid "New password"
+msgstr "Nieuw wachtwoord"
+
+msgid "New reservation"
+msgstr "Nieuwe reservering"
+
+msgid "New skipper's name"
+msgstr "Naam nieuwe schipper"
+
+msgid "New skippers"
+msgstr "Nieuwe schippers"
+
+msgid "New skippers (recent months)"
+msgstr "Nieuwe schippers (laatste maanden)"
+
+msgid "New skippers this month"
+msgstr "Nieuwe schippers deze maand"
+
 msgid "Newest first"
 msgstr "Nieuwste eerst"
 
-#: loefsys/reservations/forms.py
-msgid "A-Z"
-msgstr "A-Z"
+msgid "Next month (planned)"
+msgstr "Komende maand (gepland)"
 
-#: loefsys/reservations/forms.py loefsys/reservations/models/logbook.py
-msgid "Did you discover new damage?"
-msgstr "Heb je nieuwe schade ontdekt?"
+msgid "Next period"
+msgstr "Volgende periode"
 
-#: loefsys/reservations/forms.py
-msgid "Describe the new damage"
-msgstr "Beschrijf de nieuwe schade"
+msgid "Nickname"
+msgstr "Bijnaam"
 
-#: loefsys/reservations/forms.py
-msgid "What was the wind force? (Bft)"
-msgstr "Wat was de windkracht? (Bft)"
+msgid "No"
+msgstr "Nee"
 
-#: loefsys/reservations/forms.py
-msgid "How many engine hours did you run?"
-msgstr "Hoeveel motoruren heb je gemaakt?"
+msgid "No access"
+msgstr "Geen toegang"
 
-#: loefsys/reservations/forms.py loefsys/reservations/models/logbook.py
-msgid "Did you refuel the boat?"
-msgstr "Heb je de boot afgetankt?"
+msgid "No answer"
+msgstr "Geen antwoord"
 
-#: loefsys/reservations/forms.py
-msgid "Add a photo of the boat"
-msgstr "Voeg een foto van de boot toe"
+msgid "No boat or room chosen yet"
+msgstr "Nog geen boot of ruimte gekozen"
 
-#: loefsys/reservations/forms.py
+msgid "No events to show"
+msgstr "Geen evenementen om te tonen"
+
+msgid "No file chosen"
+msgstr "Geen bestand gekozen"
+
+msgid "No photo chosen"
+msgstr "Geen foto gekozen"
+
+msgid "No skipper selected"
+msgstr "Geen schipper geselecteerd"
+
+msgid "No skippers found"
+msgstr "Geen schippers gevonden"
+
+msgid "No skippers have been registered yet."
+msgstr "Er zijn nog geen schippers geregistreerd."
+
+msgid "No skipperships yet."
+msgstr "Nog geen schipperschappen."
+
+msgid "No upcoming events."
+msgstr "Geen aankomende evenementen."
+
+msgid "Nobody has signed up yet."
+msgstr "Nog niemand ingeschreven."
+
+msgid "Not available"
+msgstr "Niet beschikbaar"
+
+msgid "Note"
+msgstr "Notitie"
+
+msgid "Only required when you deny the reservation."
+msgstr "Alleen verplicht wanneer je de reservering weigert."
+
+msgid "Oops…"
+msgstr "Oeps…"
+
+msgid "Open event"
+msgstr "Open activiteit"
+
+msgid "Open your calendar app, for example Google Calendar or Outlook."
+msgstr "Open je agenda-app, bijvoorbeeld Google Calendar of Outlook."
+
+msgid "Organizers"
+msgstr "Organisatoren"
+
+msgid "Other"
+msgstr "Overig"
+
+msgctxt "location tab"
+msgid "Other"
+msgstr "Overige"
+
+msgid "Other Loefbijter Events"
+msgstr "Overige Loefbijter-evenementen"
+
+msgid "POD links"
+msgstr "POD-links"
+
+msgid "Page not found"
+msgstr "Pagina niet gevonden"
+
+msgid "Parent skippership"
+msgstr "Bovenliggend schipperschap"
+
+msgid "Participants"
+msgstr "Deelnemers"
+
+msgid "Passive exceptional membership"
+msgstr "Passief buitengewoon lidmaatschap"
+
+msgid "Passive membership"
+msgstr "Passief lidmaatschap"
+
+msgid "Password reset"
+msgstr "Wachtwoord opnieuw ingesteld"
+
+msgid "Password updated successfully."
+msgstr "Wachtwoord succesvol bijgewerkt."
+
+msgid "Past month (held)"
+msgstr "Afgelopen maand (gehouden)"
+
+msgid "Paste the link to your KB POD (Google Sheets) so it can be edited."
+msgstr ""
+"Plak de link naar je KB POD (Google Sheets) zodat deze bewerkt kan worden."
+
+msgid "Paste the link to your ZB POD (Google Sheets) so it can be edited."
+msgstr ""
+"Plak de link naar je ZB POD (Google Sheets) zodat deze bewerkt kan worden."
+
+msgid "Pending"
+msgstr "In behandeling"
+
+msgid "Pending reservation requests"
+msgstr "Openstaande reserveringsaanvragen"
+
+msgid "Permissions"
+msgstr "Rechten"
+
+msgid "Personal info"
+msgstr "Persoonlijke gegevens"
+
+msgid "Phone"
+msgstr "Telefoon"
+
+msgid "Phone number"
+msgstr "Telefoonnummer"
+
+msgid "Photo of the boat"
+msgstr "Foto van de boot"
+
+msgid "Picture"
+msgstr "Afbeelding"
+
 msgid ""
 "Please describe the new damage if you indicate that there is new damage."
 msgstr "Beschrijf de nieuwe schade als je aangeeft dat er nieuwe schade is."
 
-#: loefsys/reservations/models/boat.py loefsys/reservations/models/choices.py
-msgid "Loefbijter"
-msgstr "Loefbijter"
+msgid "Please use the format <street> <number>"
+msgstr "Gebruik het formaat <straat> <huisnummer>"
 
-#: loefsys/reservations/models/boat.py loefsys/reservations/models/choices.py
-msgid "Ceulemans"
-msgstr "Ceulemans"
+msgid "Postal code"
+msgstr "Postcode"
 
-#: loefsys/reservations/models/boat.py loefsys/reservations/models/room.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Capacity"
-msgstr "Capaciteit"
+msgid "Prefer not to say"
+msgstr "Zeg ik liever niet"
 
-#: loefsys/reservations/models/boat.py
-msgid "Boat has an engine"
-msgstr "Boot heeft een motor"
+msgid "Previous period"
+msgstr "Vorige periode"
 
-#: loefsys/reservations/models/boat.py
-msgid "Boat provider"
-msgstr "Aanbieder van de boot"
+msgid "Price"
+msgstr "Prijs"
 
-#: loefsys/reservations/models/boat.py
+msgid "Profile"
+msgstr "Profiel"
+
+msgid "Profile picture"
+msgstr "Profielfoto"
+
+#, python-format
+msgid "Profile picture of %(name)s"
+msgstr "Profielfoto van %(name)s"
+
+msgid "Profile picture preview"
+msgstr "Voorbeeld profielfoto"
+
+msgid "Provider"
+msgstr "Aanbieder"
+
+msgid "Pseudonymize selected users"
+msgstr "Geselecteerde gebruikers pseudonimiseren"
+
+msgid "Published"
+msgstr "Gepubliceerd"
+
+msgid "Quick set (adjusts the end time automatically):"
+msgstr "Snel instellen (past de eindtijd automatisch aan):"
+
+msgid "RSC card number"
+msgstr "RSC-kaartnummer"
+
+msgid "Reason for denial"
+msgstr "Reden voor weigering"
+
+msgid "Recent and upcoming events"
+msgstr "Recente en aankomende evenementen"
+
+msgid "Register"
+msgstr "Inschrijven"
+
+#, python-format
+msgid "Register for %(title)s"
+msgstr "Inschrijven voor %(title)s"
+
+#, python-format
+msgid "Register from %(date)s"
+msgstr "Inschrijven vanaf %(date)s"
+
+msgid "Registered"
+msgstr "Ingeschreven"
+
+msgid "Registered Loefbijter Events"
+msgstr "Loefbijter-evenementen waarvoor je bent ingeschreven"
+
+msgid "Registration"
+msgstr "Inschrijving"
+
+msgid "Registration closes"
+msgstr "Aanmelden tot"
+
+msgid "Registration deadline"
+msgstr "Inschrijfdeadline"
+
+msgid "Registration open"
+msgstr "Inschrijving open"
+
+msgid "Registration opens"
+msgstr "Aanmelden vanaf"
+
+#, python-format
+msgid "Registration opens on %(date)s."
+msgstr "Inschrijven vanaf %(date)s."
+
+msgid "Registrations"
+msgstr "Inschrijvingen"
+
+msgid "Registrations are closed."
+msgstr "Inschrijvingen zijn gesloten."
+
+msgid "Registrations are currently closed."
+msgstr "Inschrijvingen zijn momenteel gesloten."
+
+msgid "Registrations are not open because this event has not been published."
+msgstr ""
+"Inschrijvingen zijn niet geopend omdat dit evenement niet gepubliceerd is."
+
+msgid "Registrations closed"
+msgstr "Inschrijvingen gesloten"
+
+#, python-format
+msgid "Registrations closed on %(date)s."
+msgstr "Inschrijvingen zijn gesloten op %(date)s."
+
+msgid "Remove"
+msgstr "Verwijderen"
+
+msgid "Request status"
+msgstr "Status aanvraag"
+
+msgid "Required"
+msgstr "Verplicht"
+
 msgid "Required skippership"
 msgstr "Vereist schipperschap"
 
-#: loefsys/reservations/models/boat.py
-msgid "The skippership required to use this boat."
-msgstr "Het schipperschap dat vereist is om deze boot te gebruiken."
-
-#: loefsys/reservations/models/choices.py
-#: loefsys/reservations/models/logbook.py
-#: loefsys/reservations/models/reservable.py
-msgid "Boat"
-msgstr "Boot"
-
-#: loefsys/reservations/models/choices.py
-#: loefsys/reservations/models/reservable.py
-msgid "Room"
-msgstr "Ruimte"
-
-#: loefsys/reservations/models/choices.py
-#: loefsys/reservations/models/reservable.py
-msgid "Material"
-msgstr "Materiaal"
-
-#: loefsys/reservations/models/choices.py
-#: loefsys/reservations/models/reservable.py
-msgid "Boardroom"
-msgstr "Bestuurskamer"
-
-#: loefsys/reservations/models/choices.py
-#: loefsys/reservations/models/reservable.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Bastion"
-msgstr "Bastion"
-
-#: loefsys/reservations/models/choices.py
-#: loefsys/reservations/models/reservable.py
-msgid "Kraaijenbergse Plassen"
-msgstr "Kraaijenbergse Plassen"
-
-#: loefsys/reservations/models/logbook.py
-msgid "Damage description"
-msgstr "Schadebeschrijving"
-
-#: loefsys/reservations/models/logbook.py
-msgid "Reservation"
-msgstr "Reservering"
-
-#: loefsys/reservations/models/logbook.py
-msgid "Wind force (Bft)"
-msgstr "Windkracht (Bft)"
-
-#: loefsys/reservations/models/logbook.py
-msgid "Motor hours"
-msgstr "Motoruren"
-
-#: loefsys/reservations/models/logbook.py
-msgid "New damage description"
-msgstr "Beschrijving nieuwe schade"
-
-#: loefsys/reservations/models/logbook.py
-msgid "Photo of the boat"
-msgstr "Foto van de boot"
-
-#: loefsys/reservations/models/logbook.py
-msgid "A damage description is required when new damage was found."
-msgstr "Een schadebeschrijving is verplicht als er nieuwe schade is gevonden."
-
-#: loefsys/reservations/models/material.py
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Size"
-msgstr "Maat"
-
-#: loefsys/reservations/models/reservable.py
-msgid "Material type"
-msgstr "Materiaaltype"
-
-#: loefsys/reservations/models/reservable.py
-msgid "Reservable category"
-msgstr "Categorie"
-
-#: loefsys/reservations/models/reservable.py
-msgid "Type description"
-msgstr "Typebeschrijving"
-
-#: loefsys/reservations/models/reservable.py
 msgid "Reservable"
 msgstr "Reserveerbaar"
 
-#: loefsys/reservations/models/reservable.py
+msgid "Reservable category"
+msgstr "Categorie"
+
+msgid "Reservation"
+msgstr "Reservering"
+
+msgid "Reservation accepted."
+msgstr "Reservering geaccepteerd."
+
+msgid "Reservation details"
+msgstr "Reserveringsdetails"
+
+#, python-format
+msgid "Reservation for %(reservable)s by %(user)s, from %(start)s to %(end)s."
+msgstr ""
+"Reservering voor %(reservable)s door %(user)s, van %(start)s tot %(end)s."
+
+msgid "Reservation status updated."
+msgstr "Reserveringsstatus bijgewerkt."
+
+msgid "Reservations"
+msgstr "Reserveringen"
+
+msgid "Reservations (recent months)"
+msgstr "Reservaties (laatste maanden)"
+
+msgid "Reservations this month"
+msgstr "Reservaties deze maand"
+
+msgid "Reserve"
+msgstr "Reserveren"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Role"
+msgstr "Rol"
+
+msgid "Room"
+msgstr "Ruimte"
+
+msgid "Sailing"
+msgstr "Zeilen"
+
+msgid "Save"
+msgstr "Opslaan"
+
+msgid "Save new information"
+msgstr "Nieuwe informatie opslaan"
+
+msgid "Save photo"
+msgstr "Foto opslaan"
+
+msgid "Save the changes. Your calendar is now connected."
+msgstr "Sla de wijzigingen op. Je agenda is nu gekoppeld."
+
+msgid "Search and choose a skipper"
+msgstr "Zoek en kies een schipper"
+
+msgid "Search for a skipper"
+msgstr "Zoek een schipper"
+
+msgid "Search skipper..."
+msgstr "Zoek schipper..."
+
+msgid "Second address line"
+msgstr "Tweede adresregel"
+
+msgid "Selected"
+msgstr "Geselecteerd"
+
+msgid ""
+"Send an email to the organising party when a member cancels their "
+"registration after the deadline."
+msgstr ""
+"Stuur een e-mail naar de organiserende partij wanneer een lid zich na de "
+"deadline afmeldt."
+
+msgid "Send cancellation notifications"
+msgstr "Afmeldingsmeldingen versturen"
+
+msgid "Send email"
+msgstr "Verstuur e-mail"
+
+msgid "Set a new password"
+msgstr "Nieuw wachtwoord instellen"
+
+msgid "Set password"
+msgstr "Wachtwoord instellen"
+
+msgid "Show all answers"
+msgstr "Alle antwoorden tonen"
+
+msgid "Show birthdays"
+msgstr "Toon verjaardagen"
+
+msgid "Show full name"
+msgstr "Volledige naam tonen"
+
+msgid "Show full name with nickname"
+msgstr "Volledige naam met bijnaam tonen"
+
+msgid "Show less"
+msgstr "Toon minder"
+
+msgid "Show more"
+msgstr "Toon meer"
+
+msgid "Show only the first name"
+msgstr "Alleen voornaam tonen"
+
+msgid "Show only the initials and the last name"
+msgstr "Alleen voorletters en achternaam tonen"
+
+msgid "Show only the nickname"
+msgstr "Alleen bijnaam tonen"
+
+msgid "Show the nickname and last name"
+msgstr "Bijnaam en achternaam tonen"
+
+msgid "Site administration"
+msgstr "Sitebeheer"
+
+msgid "Size"
+msgstr "Maat"
+
+msgid "Skipper"
+msgstr "Schipper"
+
+msgid "Skippers"
+msgstr "Schippers"
+
+msgid "Skippers authorized"
+msgstr "Geautoriseerd door schippers"
+
+msgid "Skippership"
+msgstr "Schipperschap"
+
+msgid "Skippership levels"
+msgstr "Schipperschapniveaus"
+
+msgid "Skippership since"
+msgstr "Schipperschap sinds"
+
+msgid "Skipperships"
+msgstr "Schipperschappen"
+
+msgid "Something went wrong"
+msgstr "Er is iets misgegaan"
+
+msgid ""
+"Something went wrong while loading the page. Please try again or go back to "
+"the previous page."
+msgstr ""
+"Er is iets misgegaan bij het laden van de pagina. Probeer het nogmaals of ga "
+"terug naar de vorige pagina."
+
+msgid "Sort by"
+msgstr "Sorteer op"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Start of registration window"
+msgstr "Start van inschrijfperiode"
+
+msgid "Start time"
+msgstr "Starttijd"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Street and house number"
+msgstr "Straat en huisnummer"
+
+msgid "Student number"
+msgstr "Studentnummer"
+
+msgid "Study programme"
+msgstr "Studie"
+
+msgid "Styleguide"
+msgstr "Styleguide"
+
+msgid "Subject"
+msgstr "Onderwerp"
+
+msgid "Taken"
+msgstr "Bezet"
+
+msgid "Temporary password - Loefsys"
+msgstr "Tijdelijk wachtwoord - Loefsys"
+
+#, python-format
+msgid "Temporary password: %(temporary_password)s"
+msgstr "Tijdelijk wachtwoord: %(temporary_password)s"
+
+msgid "Text"
+msgstr "Tekst"
+
+msgid ""
+"That page does not exist. If something is broken, let us know via <a "
+"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
+msgstr ""
+"Die pagina bestaat niet. Mocht er iets kapot zijn, laat het ons weten via <a "
+"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
+
+msgid "The date of discontinuation can't be before the date of foundation"
+msgstr "De opheffingsdatum kan niet voor de oprichtingsdatum liggen"
+
+msgid "The date the member's membership ends/ended."
+msgstr "De datum waarop het lidmaatschap van het lid eindigt/eindigde."
+
+msgid "The date the member's membership started"
+msgstr "De datum waarop het lidmaatschap van het lid begon"
+
+msgid "The date the user obtained the skippership."
+msgstr "De datum waarop de gebruiker het schipperschap heeft behaald."
+
+msgid "The date this member joined in this role"
+msgstr "De datum waarop dit lid in deze rol begon"
+
+msgid ""
+"The groups this user belongs to. A user will get all permissions granted to "
+"each of their groups."
+msgstr ""
+"De groepen waartoe deze gebruiker behoort. Een gebruiker krijgt alle rechten "
+"van elk van zijn groepen."
+
+msgid "The member's lichting, for example '57e lichting'."
+msgstr "De lichting van het lid, bijvoorbeeld '57e lichting'."
+
+msgid "The membership overlaps with existing memberships."
+msgstr "Het lidmaatschap overlapt met bestaande lidmaatschappen."
+
+msgid "The password must contain at least one digit."
+msgstr "Het wachtwoord moet minstens één cijfer bevatten."
+
+msgid "The password must contain at least one lowercase letter."
+msgstr "Het wachtwoord moet minstens één kleine letter bevatten."
+
+msgid "The password must contain at least one special character."
+msgstr "Het wachtwoord moet minstens één speciaal teken bevatten."
+
+msgid ""
+"The password must contain at least one uppercase letter, one lowercase "
+"letter, one digit and one special character."
+msgstr ""
+"Het wachtwoord moet minstens één hoofdletter, één kleine letter, één cijfer "
+"en één speciaal teken bevatten."
+
+msgid "The password must contain at least one uppercase letter."
+msgstr "Het wachtwoord moet minstens één hoofdletter bevatten."
+
+msgid "The role of this member"
+msgstr "De rol van dit lid"
+
+msgid "The selected boat requires an authorized skipper to be set."
+msgstr "Voor de gekozen boot moet een bevoegde schipper worden opgegeven."
+
+msgid "The selected skipper does not have the required skippership."
+msgstr "De gekozen schipper heeft niet het vereiste schipperschap."
+
+msgid "The skippers that have authorized the skippership."
+msgstr "De schippers die het schipperschap hebben goedgekeurd."
+
+msgid "The skippers that have this skippership."
+msgstr "De schippers die dit schipperschap hebben."
+
+msgid "The skippership required to use this boat."
+msgstr "Het schipperschap dat vereist is om deze boot te gebruiken."
+
+msgid "The skippership that must be obtained before this one."
+msgstr "Het schipperschap dat eerst behaald moet zijn."
+
+msgid "The team"
+msgstr "Het team"
+
+msgid "There are no old reservations in the archive yet"
+msgstr "Er staat nog geen oude reservering in het archief"
+
+msgid "There are no past events in the archive yet."
+msgstr "Er staat nog geen oud evenement in het archief."
+
+msgid "There are no registered participants for this event yet."
+msgstr "Er zijn nog geen geregistreerde deelnemers voor dit event."
+
+msgid ""
+"This activity is not published. Only the board and its organisers can see it."
+msgstr ""
+"Deze activiteit is niet gepubliceerd. Alleen het bestuur en de organisatoren "
+"kunnen haar zien."
+
+msgid "This item cannot be reserved."
+msgstr "Dit item kan niet gereserveerd worden."
+
+msgid "This item is not reservable at the moment."
+msgstr "Dit item is momenteel niet reserveerbaar."
+
+msgid ""
+"This link is invalid, possibly because it has already been used. Ask the web "
+"committee for a new password."
+msgstr ""
+"Deze link is ongeldig, waarschijnlijk omdat hij al is gebruikt. Vraag de "
+"webcie om een nieuw wachtwoord."
+
+msgid "This member keeps their details private."
+msgstr "Dit lid houdt zijn of haar gegevens privé."
+
+msgid ""
+"This registration has additional questions. Answer them to confirm your spot."
+msgstr ""
+"Deze inschrijving heeft extra vragen. Vul ze in om jouw plek te bevestigen."
+
+msgid ""
+"This skipper is not in the system yet. We will contact you to confirm this."
+msgstr ""
+"Deze schipper staat nog niet in het systeem. We nemen contact op om dit te "
+"bevestigen."
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "To do"
+msgstr "Te doen"
+
+msgid "Today"
+msgstr "Vandaag"
+
+msgid "Training"
+msgstr "Training"
+
+msgid "Training: phone numbers and POD links visible"
+msgstr "Training: telefoonnummers en POD-links zichtbaar"
+
+msgid "Try another name or choose All."
+msgstr "Probeer een andere naam of kies Alle."
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Type description"
+msgstr "Typebeschrijving"
+
+msgid "Type your answer here..."
+msgstr "Typ hier je antwoord..."
+
+msgid "Unable to find the right registration."
+msgstr "Kan de juiste inschrijving niet vinden."
+
+msgid "Unknown"
+msgstr "Onbekend"
+
+msgid "Unpublished"
+msgstr "Niet gepubliceerd"
+
+msgid "Until"
+msgstr "Tot"
+
+msgid "Upcoming events"
+msgstr "Aankomende evenementen"
+
+msgid "Update your details and save the changes."
+msgstr "Werk je gegevens bij en sla de wijzigingen op."
+
+msgid "Updated at"
+msgstr "Bijgewerkt op"
+
+msgid "User"
+msgstr "Gebruiker"
+
+msgid "User details"
+msgstr "Gebruikersgegevens"
+
+msgid "User profile"
+msgstr "Gebruikersprofiel"
+
+msgid "View"
+msgstr "Weergave"
+
+msgid "View activity"
+msgstr "Bekijk activiteit"
+
+msgid "View event page"
+msgstr "Bekijk eventpagina"
+
+msgid "View logbook"
+msgstr "Bekijk logboek"
+
+msgid "View profile"
+msgstr "Bekijk profiel"
+
+msgid "Want to reserve multiple days? Just choose a later end date."
+msgstr "Wil je meerdere dagen reserveren? Kies gewoon een latere einddatum."
+
+msgid "Week"
+msgstr "Week"
+
+msgid "Welcome to Loefbijter"
+msgstr "Welkom bij Loefbijter"
+
+msgid "What was the wind force? (Bft)"
+msgstr "Wat was de windkracht? (Bft)"
+
+msgid "When"
+msgstr "Wanneer"
+
 msgid ""
 "When an item is unavailable for reservation, due to maintenance for example, "
 "set this to false."
@@ -1824,318 +1562,28 @@ msgstr ""
 "Zet dit uit wanneer een item niet gereserveerd kan worden, bijvoorbeeld "
 "vanwege onderhoud."
 
-#: loefsys/reservations/models/reservable.py
-msgid "This item cannot be reserved."
-msgstr "Dit item kan niet gereserveerd worden."
-
-#: loefsys/reservations/models/reservation.py
-msgid "Pending"
-msgstr "In behandeling"
-
-#: loefsys/reservations/models/reservation.py
-msgid "Approved"
-msgstr "Goedgekeurd"
-
-#: loefsys/reservations/models/reservation.py
-msgid "Denied"
-msgstr "Geweigerd"
-
-#: loefsys/reservations/models/reservation.py
-msgid "Authorized skipper"
-msgstr "Bevoegde schipper"
-
-#: loefsys/reservations/models/reservation.py
-msgid "Request status"
-msgstr "Status aanvraag"
-
-#: loefsys/reservations/models/reservation.py
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Denial reason"
-msgstr "Afwijsreden"
-
-#: loefsys/reservations/models/reservation.py
-msgid "End time cannot be before the start time."
-msgstr "De eindtijd kan niet voor de starttijd liggen."
-
-#: loefsys/reservations/models/reservation.py
-msgid "A reservation already exists for this timeslot."
-msgstr "Er bestaat al een reservering voor dit tijdslot."
-
-#: loefsys/reservations/models/reservation.py
-msgid "This item is not reservable at the moment."
-msgstr "Dit item is momenteel niet reserveerbaar."
-
-#: loefsys/reservations/models/reservation.py
-msgid "The selected boat requires an authorized skipper to be set."
-msgstr "Voor de gekozen boot moet een bevoegde schipper worden opgegeven."
-
-#: loefsys/reservations/models/reservation.py
-msgid "The selected skipper does not have the required skippership."
-msgstr "De gekozen schipper heeft niet het vereiste schipperschap."
-
-#: loefsys/reservations/models/reservation.py
-msgid "A denial reason is required when denying a reservation."
-msgstr "Een afwijsreden is verplicht als je een reservering weigert."
-
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-msgid "Logbook"
-msgstr "Logboek"
-
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-msgid "Back to reservation"
-msgstr "Terug naar reservering"
-
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-#, python-format
-msgid "Fill in the logbook for %(boat_name)s."
-msgstr "Vul het logboek in voor %(boat_name)s."
-
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-msgid "Current damage information"
-msgstr "Huidige schade-informatie"
-
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-msgid "No file chosen"
-msgstr "Geen bestand gekozen"
-
-#: loefsys/reservations/templates/reservations/boat_logbook_form.html
-msgid "Add photo"
-msgstr "Foto toevoegen"
-
-#: loefsys/reservations/templates/reservations/question_form.html
-#: loefsys/reservations/templates/reservations/reservation_list.html
-#: templates/admin/index.html templates/cotton/menu/desktop.html
-#: templates/cotton/menu/mobile.html
-msgid "Reservations"
-msgstr "Reserveringen"
-
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-msgid "Confirm reservation deletion"
-msgstr "Bevestig verwijdering reservering"
-
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Delete reservation"
-msgstr "Verwijder reservering"
-
-#: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
-msgid ""
-"Are you sure you want to delete this reservation? This cannot be undone."
-msgstr ""
-"Weet je zeker dat je deze reservering wilt verwijderen? Dit kan niet "
-"ongedaan worden gemaakt."
-
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Back to overview"
-msgstr "Terug naar overzicht"
-
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-msgid "Manage reservation"
-msgstr "Beheer reservering"
-
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Edit reservation"
-msgstr "Bewerk reservering"
-
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-#: loefsys/reservations/templates/reservations/reservation_list.html
-#: templates/cotton/reservation_status.html
-msgid "Fill in logbook"
-msgstr "Vul logboek in"
-
-#: loefsys/reservations/templates/reservations/reservation_detail.html
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "View logbook"
-msgstr "Bekijk logboek"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Reserve"
-msgstr "Reserveren"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Choose a location, a period and the boat or room you want to reserve."
-msgstr ""
-"Kies een locatie, een periode en de boot of ruimte die je wilt reserveren."
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgctxt "location tab"
-msgid "Boardroom"
-msgstr "BK"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Kraaij"
-msgstr "Kraaij"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgctxt "location tab"
-msgid "Other"
-msgstr "Overige"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Choose the period"
-msgstr "Kies de periode"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "From"
-msgstr "Van"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Until"
-msgstr "Tot"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Quick set (adjusts the end time automatically):"
-msgstr "Snel instellen (past de eindtijd automatisch aan):"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-#, python-format
-msgid "%(hours)s hour"
-msgid_plural "%(hours)s hours"
-msgstr[0] "%(hours)s uur"
-msgstr[1] "%(hours)s uur"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
 msgid "Whole day"
 msgstr "Hele dag"
 
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Want to reserve multiple days? Just choose a later end date."
-msgstr "Wil je meerdere dagen reserveren? Kies gewoon een latere einddatum."
+msgid "Wind force (Bft)"
+msgstr "Windkracht (Bft)"
 
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Filter by type"
-msgstr "Filter op type"
+msgid "Year"
+msgstr "Jaar"
 
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Show more"
-msgstr "Toon meer"
+msgid "Yes"
+msgstr "Ja"
 
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Choose a boat or room"
-msgstr "Kies een boot of ruimte"
+msgid "You are not organizing any recent events yet."
+msgstr "Je organiseert nog geen recente events."
 
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Free"
-msgstr "Vrij"
+#, python-format
+msgid "You are number %(position)s in the queue."
+msgstr "Je staat op plek %(position)s in de wachtrij."
 
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Taken"
-msgstr "Bezet"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "More info"
-msgstr "Meer info"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Available"
-msgstr "Beschikbaar"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Engine"
-msgstr "Motor"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Provider"
-msgstr "Aanbieder"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Skipper"
-msgstr "Schipper"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Search and choose a skipper"
-msgstr "Zoek en kies een schipper"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Search skipper..."
-msgstr "Zoek schipper..."
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "New skipper's name"
-msgstr "Naam nieuwe schipper"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Full name"
-msgstr "Volledige naam"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid ""
-"This skipper is not in the system yet. We will contact you to confirm this."
-msgstr ""
-"Deze schipper staat nog niet in het systeem. We nemen contact op om dit te "
-"bevestigen."
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Selected"
-msgstr "Geselecteerd"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "No boat or room chosen yet"
-msgstr "Nog geen boot of ruimte gekozen"
-
-#: loefsys/reservations/templates/reservations/reservation_form.html
-msgid "Show less"
-msgstr "Toon minder"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Archive of older reservations"
-msgstr "Archief van oudere reserveringen"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Active and recent reservations"
-msgstr "Actieve en recente reserveringen"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-#: templates/cotton/menu/mobile.html
-msgid "Boats"
-msgstr "Boten"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "My reservations"
-msgstr "Mijn reserveringen"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Sort by"
-msgstr "Sorteer op"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Apply"
-msgstr "Toepassen"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "There are no old reservations in the archive yet"
-msgstr "Er staat nog geen oude reservering in het archief"
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Your older reservations are placed here automatically."
-msgstr "Je oudere reserveringen worden hier automatisch geplaatst."
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
 msgid "You don't have any reservations yet"
 msgstr "Je hebt nog geen reserveringen"
 
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Make your first reservation to get started."
-msgstr "Maak je eerste reservering om te beginnen."
-
-#: loefsys/reservations/templates/reservations/reservation_list.html
-msgid "Make a reservation"
-msgstr "Maak reservering"
-
-#: loefsys/settings.py
-msgid "Dutch"
-msgstr "Nederlands"
-
-#: templates/403.html
-msgid "No access"
-msgstr "Geen toegang"
-
-#: templates/403.html
-msgid "403 - No access"
-msgstr "403 - Geen toegang"
-
-#: templates/403.html
 msgid ""
 "You don't have permission to view this page. If you think you should, ask "
 "the board, or let us know via <a href=\"mailto:webcie@loefbijter."
@@ -2145,176 +1593,84 @@ msgstr ""
 "het dan aan het bestuur of laat het ons weten via <a href=\"mailto:"
 "webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
 
-#: templates/403.html templates/404.html templates/500.html
-msgid "Go back"
-msgstr "Ga terug"
+msgid "You have no upcoming reservations."
+msgstr "Je hebt geen aankomende reserveringen."
 
-#: templates/404.html
-msgid "Page not found"
-msgstr "Pagina niet gevonden"
-
-#: templates/404.html
-msgid "404 - Page not found"
-msgstr "404 - Pagina niet gevonden"
-
-#: templates/404.html templates/500.html
-msgid "Oops…"
-msgstr "Oeps…"
-
-#: templates/404.html
-msgid ""
-"That page does not exist. If something is broken, let us know via <a "
-"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
-msgstr ""
-"Die pagina bestaat niet. Mocht er iets kapot zijn, laat het ons weten via <a "
-"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
-
-#: templates/500.html
-msgid "Something went wrong"
-msgstr "Er is iets misgegaan"
-
-#: templates/500.html
-msgid "500 - Internal server error"
-msgstr "500 - Interne serverfout"
-
-#: templates/500.html
-msgid ""
-"Something went wrong while loading the page. Please try again or go back to "
-"the previous page."
-msgstr ""
-"Er is iets misgegaan bij het laden van de pagina. Probeer het nogmaals of ga "
-"terug naar de vorige pagina."
-
-#: templates/admin/change_list_export.html
-msgid "Export filtered rows"
-msgstr "Gefilterde rijen exporteren"
-
-#: templates/admin/index.html
-msgid "Site administration"
-msgstr "Sitebeheer"
-
-#: templates/admin/index.html
-msgid "Front page"
-msgstr "Voorpagina"
-
-#: templates/admin/index.html
-msgid "New skippers this month"
-msgstr "Nieuwe schippers deze maand"
-
-#: templates/admin/index.html
-msgid "Reservations this month"
-msgstr "Reservaties deze maand"
-
-#: templates/admin/index.html
-msgid "Pending reservation requests"
-msgstr "Openstaande reserveringsaanvragen"
-
-#: templates/admin/index.html
-msgid "New damage reports"
-msgstr "Nieuwe schademeldingen"
-
-#: templates/admin/index.html
-msgid "New skippers (recent months)"
-msgstr "Nieuwe schippers (laatste maanden)"
-
-#: templates/admin/index.html
-msgid "By skipper type (current month)"
-msgstr "Per soort schipper (huidige maand)"
-
-#: templates/admin/index.html
-msgid "Reservations (recent months)"
-msgstr "Reservaties (laatste maanden)"
-
-#: templates/admin/index.html
-msgid "Events by category"
-msgstr "Evenementen per categorie"
-
-#: templates/admin/index.html
-msgid "Past month (held)"
-msgstr "Afgelopen maand (gehouden)"
-
-#: templates/admin/index.html
-msgid "Next month (planned)"
-msgstr "Komende maand (gepland)"
-
-#: templates/admin/index.html
-msgid "Damage reports (recent months)"
-msgstr "Schademeldingen (laatste maanden)"
-
-#: templates/admin/index.html
-msgid "New skippers"
-msgstr "Nieuwe schippers"
-
-#: templates/admin/reservations/reservation/evaluate.html
-#, python-format
-msgid "Reservation for %(reservable)s by %(user)s, from %(start)s to %(end)s."
-msgstr ""
-"Reservering voor %(reservable)s door %(user)s, van %(start)s tot %(end)s."
-
-#: templates/admin/reservations/reservation/evaluate.html
-msgid "Reason for denial"
-msgstr "Reden voor weigering"
-
-#: templates/admin/reservations/reservation/evaluate.html
-msgid "Only required when you deny the reservation."
-msgstr "Alleen verplicht wanneer je de reservering weigert."
-
-#: templates/cotton/event_hero.html
 msgid "Your next activity"
 msgstr "Jouw volgende activiteit"
 
-#: templates/cotton/event_hero.html
-msgid "View activity"
-msgstr "Bekijk activiteit"
+msgid "Your older reservations are placed here automatically."
+msgstr "Je oudere reserveringen worden hier automatisch geplaatst."
 
-#: templates/cotton/event_hero.html
-#, python-format
-msgid "Cancel without a fine until %(deadline)s"
-msgstr "Kosteloos afmelden tot %(deadline)s"
+msgid ""
+"Your password has been updated successfully. You can now log in with your "
+"new password."
+msgstr ""
+"Je wachtwoord is succesvol bijgewerkt. Je kunt nu inloggen met je nieuwe "
+"wachtwoord."
 
-#: templates/cotton/event_row.html
-#, python-format
-msgid "%(counter)s of %(capacity)s spot left"
-msgid_plural "%(counter)s of %(capacity)s spots left"
-msgstr[0] "%(counter)s van %(capacity)s plek vrij"
-msgstr[1] "%(counter)s van %(capacity)s plekken vrij"
+msgid "Your reservations"
+msgstr "Jouw reserveringen"
 
-#: templates/cotton/event_row.html templates/cotton/event_status.html
-msgid "Full"
-msgstr "Vol"
+msgid "Your temporary password is:"
+msgstr "Je tijdelijke wachtwoord is:"
 
-#: templates/cotton/event_status.html
-msgid "Registered"
-msgstr "Ingeschreven"
+msgid "ZB POD link"
+msgstr "ZB POD-link"
 
-#: templates/cotton/event_status.html
-msgid "Registration open"
-msgstr "Inschrijving open"
+msgid "created"
+msgstr "aangemaakt"
 
-#: templates/cotton/menu/about_links.html
-msgid "About the association"
-msgstr "Over de Vereniging"
+msgid "dd-mm-yyyy"
+msgstr "dd-mm-jjjj"
 
-#: templates/cotton/menu/about_links.html
-msgid "Styleguide"
-msgstr "Styleguide"
+msgid "description"
+msgstr "beschrijving"
 
-#: templates/cotton/menu/about_links.html
-msgid "Association song"
-msgstr "Verenigingslied"
+msgid "event"
+msgstr "activiteit"
 
-#: templates/cotton/menu/about_links.html
-msgid "Association documents"
-msgstr "Verenigingsdocumenten"
+msgid "event organizer"
+msgstr "organisatie"
 
-#: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
-msgid "Main menu"
-msgstr "Hoofdmenu"
+msgid "event organizers"
+msgstr "organisaties"
 
-#: templates/cotton/menu/mobile.html
-msgid "Account"
-msgstr "Account"
+msgid "events"
+msgstr "activiteiten"
 
-#: templates/cotton/menu/mobile.html
-msgid "Menu"
-msgstr "Menu"
+msgid "groups"
+msgstr "groepen"
+
+msgid "last changed"
+msgstr "laatst gewijzigd"
+
+msgid "members"
+msgstr "leden"
+
+msgid "modified"
+msgstr "gewijzigd"
+
+msgid "registration"
+msgstr "inschrijving"
+
+msgid "registration form field"
+msgstr "inschrijfvraag"
+
+msgid "registration form fields"
+msgstr "inschrijfvragen"
+
+msgid "registrations"
+msgstr "inschrijvingen"
+
+msgid "slug"
+msgstr "slug"
+
+msgid "title"
+msgstr "titel"
+
+msgid "user"
+msgstr "gebruiker"
+
+msgid "users"
+msgstr "gebruikers"

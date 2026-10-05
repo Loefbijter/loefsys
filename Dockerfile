@@ -9,6 +9,11 @@ ENV UV_COMPILE_BYTECODE=1 \
     PYTHONDONTWRITEBYTECODE=1
 WORKDIR /app
 
+# GNU gettext, for compilemessages below. Only in the builder stage.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gettext \
+    && rm -rf /var/lib/apt/lists/*
+
 # Dependency layer, cached independently of app source changes.
 COPY pyproject.toml uv.lock ./
 RUN uv sync --locked --no-dev --no-install-project
@@ -26,6 +31,8 @@ ENV DJANGO_SECRET_KEY=build-time-unused \
 
 RUN uv run manage.py tailwind --minify
 RUN uv run manage.py collectstatic --no-input
+# The .mo files are not in git; build them from the .po catalogues.
+RUN uv run manage.py compilemessages
 
 FROM python:3.13-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \

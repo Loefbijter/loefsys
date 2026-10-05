@@ -33,7 +33,9 @@ jobs:
         run: uv python install
 
       - name: Install dependencies
-        run: uv sync --all-extras --dev
+        run: |
+          uv sync --all-extras --dev
+          sudo apt-get update && sudo apt-get install -y gettext
 
       - name: Lint and check formatting
         run: |
@@ -50,9 +52,11 @@ jobs:
 
       - name: Check the translations are up to date
         run: |
-          sudo apt-get update && sudo apt-get install -y gettext
-          uv run manage.py makemessages -l nl --add-location file --no-obsolete -i node_modules
-          git diff --exit-code -I "POT-Creation-Date" -- locale/
+          uv run manage.py makemessages
+          git diff --exit-code -- locale/
+
+      - name: Compile the translations
+        run: uv run manage.py compilemessages
 
       - name: Run system checks
         run: uv run manage.py check
