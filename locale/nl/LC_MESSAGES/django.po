@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: loefsys\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-04 12:51+0200\n"
+"POT-Creation-Date: 2026-10-04 12:47+0200\n"
 "PO-Revision-Date: 2026-10-01 17:30+0200\n"
 "Last-Translator: Loefbijter Webcie <webcie@loefbijter.nl>\n"
 "Language-Team: Dutch\n"
@@ -503,7 +503,7 @@ msgstr "Sluiten"
 #: loefsys/events/templates/events/event.html
 #: loefsys/members/templates/profiles/profile_edit.html
 #: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/password_reset_confirm.html
+#: loefsys/members/templates/registration/reset_confirm.html
 #: loefsys/reservations/templates/reservations/boat_logbook_form.html
 #: loefsys/reservations/templates/reservations/reservation_confirm_delete.html
 #: loefsys/reservations/templates/reservations/reservation_form.html
@@ -865,7 +865,7 @@ msgid "Welcome to Loefbijter"
 msgstr "Welkom bij Loefbijter"
 
 #: loefsys/home/templates/home/index.html loefsys/members/templates/login.html
-#: loefsys/members/templates/registration/password_reset_complete.html
+#: loefsys/members/templates/registration/reset_complete.html
 #: templates/cotton/menu/desktop.html templates/cotton/menu/mobile.html
 msgid "Log in"
 msgstr "Log in"
@@ -1026,7 +1026,8 @@ msgstr "Persoonlijke gegevens"
 msgid "Groups"
 msgstr "Groepen"
 
-#: loefsys/members/admin.py
+#: loefsys/members/admin.py templates/cotton/menu/desktop.html
+#: templates/cotton/menu/mobile.html
 msgid "Admin"
 msgstr "Beheer"
 
@@ -1194,7 +1195,7 @@ msgid "RSC card number"
 msgstr "RSC-kaartnummer"
 
 #: loefsys/members/models/user.py
-#: loefsys/members/templates/registration/password_reset_form.html
+#: loefsys/members/templates/registration/reset_form.html
 #: loefsys/members/views.py
 msgid "Email address"
 msgstr "E-mailadres"
@@ -1450,58 +1451,21 @@ msgid "dd-mm-yyyy"
 msgstr "dd-mm-jjjj"
 
 #: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/password_reset_confirm.html
+#: loefsys/members/templates/registration/reset_confirm.html
 msgid "New password"
 msgstr "Nieuw wachtwoord"
 
 #: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/password_reset_confirm.html
+#: loefsys/members/templates/registration/reset_confirm.html
 msgid "Confirm new password"
 msgstr "Bevestig nieuw wachtwoord"
 
 #: loefsys/members/templates/profiles/set_password.html
-#: loefsys/members/templates/registration/password_reset_confirm.html
+#: loefsys/members/templates/registration/reset_confirm.html
 #: loefsys/reservations/templates/reservations/boat_logbook_form.html
 #: templates/admin/reservations/reservation/evaluate.html
 msgid "Save"
 msgstr "Opslaan"
-
-#: loefsys/members/templates/registration/password_reset_complete.html
-msgid "Password reset"
-msgstr "Wachtwoord opnieuw ingesteld"
-
-#: loefsys/members/templates/registration/password_reset_complete.html
-msgid ""
-"Your password has been updated successfully. You can now log in with your "
-"new password."
-msgstr ""
-"Je wachtwoord is succesvol bijgewerkt. Je kunt nu inloggen met je nieuwe "
-"wachtwoord."
-
-#: loefsys/members/templates/registration/password_reset_confirm.html
-msgid "Set a new password"
-msgstr "Nieuw wachtwoord instellen"
-
-#: loefsys/members/templates/registration/password_reset_confirm.html
-msgid "Enter your new password and confirm it."
-msgstr "Voer je nieuwe wachtwoord in en bevestig het."
-
-#: loefsys/members/templates/registration/password_reset_done.html
-msgid "Email sent"
-msgstr "E-mail verzonden"
-
-#: loefsys/members/templates/registration/password_reset_done.html
-msgid ""
-"An email has been sent with instructions to reset your password. Check your "
-"inbox (and spam folder)."
-msgstr ""
-"Er is een e-mail gestuurd met instructies om je wachtwoord opnieuw in te "
-"stellen. Controleer je inbox (en spammap)."
-
-#: loefsys/members/templates/registration/password_reset_done.html
-#: loefsys/members/templates/registration/password_reset_form.html
-msgid "Back to login"
-msgstr "Terug naar inloggen"
 
 #: loefsys/members/templates/registration/password_reset_email.html
 #: loefsys/members/templates/registration/password_reset_temporary_email.txt
@@ -1545,22 +1509,6 @@ msgstr "Met vriendelijke groet,"
 msgid "The team"
 msgstr "Het team"
 
-#: loefsys/members/templates/registration/password_reset_form.html
-#: loefsys/members/templates/registration/reset_disabled.html
-msgid "Forgot password"
-msgstr "Wachtwoord vergeten"
-
-#: loefsys/members/templates/registration/password_reset_form.html
-msgid ""
-"Enter your email address; we will send you a link to reset your password."
-msgstr ""
-"Voer je e-mailadres in; we sturen een link om je wachtwoord opnieuw in te "
-"stellen."
-
-#: loefsys/members/templates/registration/password_reset_form.html
-msgid "Send email"
-msgstr "Verstuur e-mail"
-
 #: loefsys/members/templates/registration/password_reset_temporary_email.txt
 msgid "A temporary password was requested for your account."
 msgstr "Er is verzocht om een tijdelijk wachtwoord voor je account."
@@ -1570,21 +1518,86 @@ msgstr "Er is verzocht om een tijdelijk wachtwoord voor je account."
 msgid "Temporary password: %(temporary_password)s"
 msgstr "Tijdelijk wachtwoord: %(temporary_password)s"
 
+#: loefsys/members/templates/registration/reset_complete.html
+msgid "Password reset"
+msgstr "Wachtwoord opnieuw ingesteld"
+
+#: loefsys/members/templates/registration/reset_complete.html
+#: loefsys/members/templates/registration/reset_confirm.html
 #: loefsys/members/templates/registration/reset_disabled.html
-#: templates/403.html templates/404.html templates/500.html
-#: templates/cotton/logo.html
+#: loefsys/members/templates/registration/reset_done.html
+#: loefsys/members/templates/registration/reset_form.html templates/403.html
+#: templates/404.html templates/500.html templates/cotton/logo.html
 msgid "Loefbijter logo"
 msgstr "Loefbijter-logo"
 
+#: loefsys/members/templates/registration/reset_complete.html
+msgid ""
+"Your password has been updated successfully. You can now log in with your "
+"new password."
+msgstr ""
+"Je wachtwoord is succesvol bijgewerkt. Je kunt nu inloggen met je nieuwe "
+"wachtwoord."
+
+#: loefsys/members/templates/registration/reset_confirm.html
+msgid "Set a new password"
+msgstr "Nieuw wachtwoord instellen"
+
+#: loefsys/members/templates/registration/reset_confirm.html
+msgid "Enter your new password and confirm it."
+msgstr "Voer je nieuwe wachtwoord in en bevestig het."
+
+#: loefsys/members/templates/registration/reset_confirm.html
+msgid ""
+"This link is invalid, possibly because it has already been used. Ask the web "
+"committee for a new password."
+msgstr ""
+"Deze link is ongeldig, waarschijnlijk omdat hij al is gebruikt. Vraag de "
+"webcie om een nieuw wachtwoord."
+
+#: loefsys/members/templates/registration/reset_confirm.html
+#: loefsys/members/templates/registration/reset_disabled.html
+#: loefsys/members/templates/registration/reset_done.html
+#: loefsys/members/templates/registration/reset_form.html
+msgid "Back to login"
+msgstr "Terug naar inloggen"
+
+#: loefsys/members/templates/registration/reset_disabled.html
+#: loefsys/members/templates/registration/reset_form.html
+msgid "Forgot password"
+msgstr "Wachtwoord vergeten"
+
 #: loefsys/members/templates/registration/reset_disabled.html
 msgid ""
-"Contact <a href=\"mailto:webcie@loefbijter.nl\" class=\"font-bold text-white "
-"underline\">webcie@loefbijter.nl</a> and we will create a new password for "
-"you as soon as possible."
+"Contact <a href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a> and "
+"we will create a new password for you as soon as possible."
 msgstr ""
-"Neem contact op met <a href=\"mailto:webcie@loefbijter.nl\" class=\"font-"
-"bold text-white underline\">webcie@loefbijter.nl</a>, wij maken zo snel "
-"mogelijk een nieuw wachtwoord voor je aan."
+"Neem contact op met <a href=\"mailto:webcie@loefbijter."
+"nl\">webcie@loefbijter.nl</a>, wij maken zo snel mogelijk een nieuw "
+"wachtwoord voor je aan."
+
+#: loefsys/members/templates/registration/reset_done.html
+msgid "Email sent"
+msgstr "E-mail verzonden"
+
+#: loefsys/members/templates/registration/reset_done.html
+msgid ""
+"An email has been sent with instructions to reset your password. Check your "
+"inbox (and spam folder)."
+msgstr ""
+"Er is een e-mail gestuurd met instructies om je wachtwoord opnieuw in te "
+"stellen. Controleer je inbox (en spammap)."
+
+#: loefsys/members/templates/registration/reset_form.html
+msgid ""
+"Enter your email address; we will send you a link to reset your password."
+msgstr ""
+"Voer je e-mailadres in; we sturen een link om je wachtwoord opnieuw in te "
+"stellen."
+
+#: loefsys/members/templates/registration/reset_form.html
+msgid "Send email"
+msgstr "Verstuur e-mail"
 
 #: loefsys/members/views.py
 msgid "Password updated successfully."
@@ -2125,13 +2138,12 @@ msgstr "403 - Geen toegang"
 #: templates/403.html
 msgid ""
 "You don't have permission to view this page. If you think you should, ask "
-"the board, or let us know via <a href=\"mailto: webcie@loefbijter.nl\" "
-"class=\"font-bold text-white underline\">webcie@loefbijter.nl</a>."
+"the board, or let us know via <a href=\"mailto:webcie@loefbijter."
+"nl\">webcie@loefbijter.nl</a>."
 msgstr ""
 "Je hebt geen toegang tot deze pagina. Denk je dat dat wel zou moeten, vraag "
-"het dan aan het bestuur of laat het ons weten via <a href=\"mailto: "
-"webcie@loefbijter.nl\" class=\"font-bold text-white "
-"underline\">webcie@loefbijter.nl</a>."
+"het dan aan het bestuur of laat het ons weten via <a href=\"mailto:"
+"webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
 
 #: templates/403.html templates/404.html templates/500.html
 msgid "Go back"
@@ -2152,12 +2164,10 @@ msgstr "Oeps…"
 #: templates/404.html
 msgid ""
 "That page does not exist. If something is broken, let us know via <a "
-"href=\"mailto: webcie@loefbijter.nl\" class=\"font-bold text-white "
-"underline\">webcie@loefbijter.nl</a>."
+"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
 msgstr ""
 "Die pagina bestaat niet. Mocht er iets kapot zijn, laat het ons weten via <a "
-"href=\"mailto: webcie@loefbijter.nl\" class=\"font-bold text-white "
-"underline\">webcie@loefbijter.nl</a>."
+"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
 
 #: templates/500.html
 msgid "Something went wrong"

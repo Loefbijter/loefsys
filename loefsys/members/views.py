@@ -208,7 +208,7 @@ class PasswordResetByEmailView(FormView):
     leaking which emails are registered.
     """
 
-    template_name = "registration/password_reset_form.html"
+    template_name = "registration/reset_form.html"
     form_class = PasswordResetByEmailForm
     success_url = reverse_lazy("members:reset-password-done")
 
@@ -273,4 +273,4 @@ class PasswordResetByEmailView(FormView):
 class PasswordResetDoneView(TemplateView):
     """Page shown after a password-reset request is processed."""
 
-    template_name = "registration/password_reset_done.html"
+    template_name = "registration/reset_done.html"
