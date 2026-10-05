@@ -8,7 +8,12 @@ from django.urls import reverse
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event, EventOrganizer, EventRegistration
+from loefsys.events.models import (
+    Event,
+    EventOrganizer,
+    EventRegistration,
+    RegistrationFormField,
+)
 from loefsys.events.models.choices import EventCategories
 from loefsys.events.permissions import ACTIVITY_MANAGERS_GROUP, allowed_categories
 
@@ -117,6 +122,28 @@ class ActivityManagerAdminTestCase(TestCase):
             response, reverse("admin:members_user_change", args=[self.attendee.pk])
         )
 
+    def test_registrations_fold_out_form_response(self):
+        """Each registration row can be folded out to show the form answers."""
+        field = G(
+            RegistrationFormField,
+            event=self.leisure_event,
+            subject="Dieetwensen",
+            type=RegistrationFormField.TEXT_FIELD,
+        )
+        registration = EventRegistration.objects.get(event=self.leisure_event)
+        field.set_value_for(registration, "Geen pinda's")
+        url = reverse("admin:events_event_change", args=[self.leisure_event.pk])
+        response = self.client.get(url)
+        self.assertContains(response, '<details class="form-response">')
+        self.assertContains(response, ">Dieetwensen</dt>")
+        self.assertContains(response, "Geen pinda&#x27;s")
+        self.assertNotContains(response, "privatekb")
+
+    def test_no_form_response_column_without_form(self):
+        url = reverse("admin:events_event_change", args=[self.leisure_event.pk])
+        response = self.client.get(url)
+        self.assertNotContains(response, "form-response")
+
     def test_individual_organizers_hidden(self):
         """The organizer widget would list all members, so it is hidden."""
         url = reverse("admin:events_event_change", args=[self.leisure_event.pk])
@@ -141,3 +168,27 @@ class SuperuserEventAdminTestCase(TestCase):
         response = self.client.get(reverse("admin:events_event_changelist"))
         self.assertContains(response, "Borrel")
         self.assertContains(response, "Zeiltocht")
+
+
+class RegistrationFormAdminTestCase(TestCase):
+    """The form questions are edited on the event, not in an admin of their own."""
+
+    def test_form_fields_have_no_admin_of_their_own(self):
+        self.assertNotIn(RegistrationFormField, site._registry)
+
+    def test_registration_admin_shows_form_response(self):
+        self.client.force_login(G(get_user_model(), is_superuser=True))
+        event = make_event(EventCategories.LEISURE, "Borrel")
+        field = G(
+            RegistrationFormField,
+            event=event,
+            subject="Kom je met de auto?",
+            type=RegistrationFormField.BOOLEAN_FIELD,
+        )
+        registration = G(EventRegistration, event=event, contact=G(get_user_model()))
+        field.set_value_for(registration, False)
+        url = reverse("admin:events_eventregistration_change", args=[registration.pk])
+        response = self.client.get(url)
+        self.assertContains(response, '<details class="form-response" open>')
+        self.assertContains(response, "Kom je met de auto?")
+        self.assertContains(response, '<dd style="margin:0 0 0.5rem;">Nee</dd>')
