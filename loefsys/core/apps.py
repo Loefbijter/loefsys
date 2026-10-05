@@ -2,8 +2,9 @@
 
 from django.apps import AppConfig
 from django.core import checks
+from django.utils.autoreload import autoreload_started
 
-from loefsys.core.translations import check_compiled_catalogues
+from loefsys.core.translations import check_compiled_catalogues, compile_on_autoreload
 
 
 class CoreConfig(AppConfig):
@@ -12,5 +13,6 @@ class CoreConfig(AppConfig):
     name = "loefsys.core"
 
     def ready(self):
-        """Register the system checks."""
+        """Register the system checks and compile translations in ``runserver``."""
         checks.register(check_compiled_catalogues)
+        autoreload_started.connect(compile_on_autoreload)

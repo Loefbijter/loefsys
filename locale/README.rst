@@ -11,18 +11,19 @@ by hand and can't be generated. The compiled ``.mo`` files that Django reads are
 and built with ``compilemessages``. Both commands need GNU gettext (``apt install gettext``,
 ``brew install gettext``).
 
-After cloning or pulling, compile the catalogues so the site shows Dutch::
+Nothing needs to be built by hand: ``runserver`` compiles the catalogues when it starts
+and again whenever a ``.po`` file changes, and the tests (``manage.py test`` and the e2e
+tests), CI and the Docker image compile them as well. To compile them yourself, for example
+for ``runserver --noreload``, run::
 
     uv run manage.py compilemessages
 
-``manage.py check`` and ``runserver`` warn when this is needed. The Docker image, CI and
-the tests (``manage.py test`` and the e2e tests) compile them on their own.
+``manage.py check`` warns when the compiled files are missing or out of date.
 
 After adding or changing strings, update the Dutch catalogue::
 
     uv run manage.py makemessages
     # fill in the new msgstr entries in locale/nl/LC_MESSAGES/django.po
-    uv run manage.py compilemessages
 
 Commit ``django.po``. The project's ``makemessages`` defaults to Dutch, leaves out source
 locations, obsolete entries and the creation date, and sorts entries by message id, so the

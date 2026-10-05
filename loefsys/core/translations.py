@@ -2,15 +2,18 @@
 
 Only the ``.po`` catalogues are in git. The ``.mo`` files Django reads are built from
 them with ``compilemessages``: in the Docker image, in CI, and automatically before
-the tests run.
+the tests run and when ``runserver`` starts or a ``.po`` file changes.
 """
 
+import logging
+import os
 from pathlib import Path
 
 from django.conf import settings
 from django.core import checks
-from django.core.management import call_command
+from django.core.management import CommandError, call_command
 from django.test.signals import setting_changed
+from django.utils.autoreload import DJANGO_AUTORELOAD_ENV
 
 
 def stale_catalogues() -> list[Path]:
@@ -37,6 +40,8 @@ def compile_stale_catalogues() -> None:
 
 def check_compiled_catalogues(**_):
     """Warn when the translations shown would be missing or out of date."""
+    if os.environ.get(DJANGO_AUTORELOAD_ENV) == "true":
+        return []  # runserver compiles them itself, see compile_on_autoreload().
     return [
         checks.Warning(
             f"{po.relative_to(settings.BASE_DIR)} is not compiled or has changed.",
@@ -45,3 +50,15 @@ def check_compiled_catalogues(**_):
         )
         for po in stale_catalogues()
     ]
+
+
+def compile_on_autoreload(sender, **_):
+    """Compile when ``runserver`` starts, and restart it when a ``.po`` file changes.
+
+    Connected to ``autoreload_started``, so this runs in ``runserver``'s reloader.
+    """
+    sender.watch_dir(settings.LOCALE_DIR, "**/*.po")
+    try:
+        compile_stale_catalogues()
+    except CommandError as error:
+        logging.getLogger(__name__).warning("Could not compile translations: %s", error)
