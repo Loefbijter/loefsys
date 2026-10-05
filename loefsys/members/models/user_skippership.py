@@ -22,8 +22,6 @@ class UserSkippership(models.Model):
         The skippership that the user has obtained.
     since : ~datetime.date
         The date the skippership was obtained.
-    given_by : ~django.db.models.query.QuerySet of ~loefsys.members.models.user.User
-        The skippers that have authorized that the user obtained the skippership.
     pending_skippership_ids : ~collections.abc.Collection of int
         Skipperships the user is being given in the same form submission, which
         count as held when checking the required skippership.
@@ -41,14 +39,6 @@ class UserSkippership(models.Model):
         verbose_name=_("Skippership since"),
         help_text=_("The date the user obtained the skippership."),
         default=date.today,
-    )
-    given_by = models.ManyToManyField(
-        User,
-        verbose_name=_("Skippers authorized"),
-        help_text=_("The skippers that have authorized the skippership."),
-        related_name="authorized_skipperships",
-        related_query_name="authorized_skipper",
-        blank=True,
     )
 
     class Meta:
