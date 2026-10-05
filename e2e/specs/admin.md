@@ -30,3 +30,11 @@ seeing other members' data.**
 flag.**
 
 - **ADM-9** The "Admin" permission alone lets a member into the admin.
+
+**As the manager of a boat or room, I evaluate its reservation requests, and nobody
+else does.**
+
+- **ADM-12** A member who manages a room, without any permissions, gets into the admin,
+  sees only that room's requests and accepts one.
+- **ADM-13** For a room with a manager, an admin without that role can't accept or deny
+  its requests.

@@ -207,3 +207,39 @@ def test_admin_permission_grants_admin_access(page, live_server, member):
     admin_log_in(page, live_server.url, member)
 
     expect(page).to_have_url(f"{live_server.url}/admin/")
+
+
+def test_manager_evaluates_their_room(page, live_server, member, other_member):
+    """ADM-12: a room's manager accepts its requests, without any permissions."""
+    room = factories.make_room("Testkamer")
+    room.managed_by_user = member
+    room.save()
+    reservation = factories.make_reservation(other_member, room)
+    factories.make_reservation(other_member, factories.make_room("Andere kamer"))
+    admin_log_in(page, live_server.url, member)
+
+    page.goto(f"{live_server.url}/admin/reservations/reservation/")
+    expect(page.locator("#result_list tbody tr")).to_have_count(1)
+    row = page.locator("#result_list tbody tr", has_text="Testkamer")
+    row.get_by_role("button", name=re.compile(r"(Accept|Accepteren)", re.I)).click()
+
+    expect(page.locator(".messagelist")).to_be_visible()
+    reservation.refresh_from_db()
+    assert reservation.request_status == Reservation.RequestStatus.APPROVED
+
+
+def test_admin_cannot_evaluate_managed_room(page, live_server, superuser, member):
+    """ADM-13: an admin who doesn't manage a room can't evaluate its requests."""
+    room = factories.make_room("Testkamer")
+    room.managed_by_user = member
+    room.save()
+    factories.make_reservation(member, room)
+    admin_log_in(page, live_server.url, superuser)
+
+    page.goto(f"{live_server.url}/admin/reservations/reservation/")
+    row = page.locator("#result_list tbody tr", has_text="Testkamer")
+    expect(row).to_be_visible()
+    expect(row.get_by_role("button", name=re.compile(r"Accept", re.I))).to_have_count(0)
+    expect(
+        row.get_by_role("link", name=re.compile(r"(Deny|Weigeren)", re.I))
+    ).to_have_count(0)

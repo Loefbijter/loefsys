@@ -240,9 +240,18 @@ class ExportableAdminMixin(_MixinBase):
                     )
 
                     try:
-                        pending_requests = reservation_model.objects.filter(
-                            request_status=reservation_model.RequestStatus.PENDING
-                        ).count()
+                        from loefsys.reservations.permissions import (
+                            evaluable_reservations,
+                        )
+
+                        # Only requests this user evaluates, like the home to-do.
+                        pending_requests = (
+                            evaluable_reservations(user)
+                            .filter(
+                                request_status=reservation_model.RequestStatus.PENDING
+                            )
+                            .count()
+                        )
                     except Exception:
                         pending_requests = 0
 

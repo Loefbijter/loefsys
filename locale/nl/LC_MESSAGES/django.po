@@ -347,6 +347,9 @@ msgstr "Kies een schipper"
 msgid "Choose a status."
 msgstr "Kies een status."
 
+msgid "Choose either a group or a person as manager, not both."
+msgstr "Kies een groep of een persoon als beheerder, niet allebei."
+
 msgid "Choose photo"
 msgstr "Foto kiezen"
 
@@ -798,6 +801,12 @@ msgstr "Man"
 
 msgid "Manage reservation"
 msgstr "Beheer reservering"
+
+msgid "Managed by group"
+msgstr "Beheerd door groep"
+
+msgid "Managed by person"
+msgstr "Beheerd door persoon"
 
 msgid "Material"
 msgstr "Materiaal"
@@ -1370,6 +1379,10 @@ msgstr "De datum waarop de gebruiker het schipperschap heeft behaald."
 msgid "The date this member joined in this role"
 msgstr "De datum waarop dit lid in deze rol begon"
 
+msgid "The group whose members evaluate reservation requests for this item."
+msgstr ""
+"De groep waarvan de leden reserveringsaanvragen voor dit item beoordelen."
+
 msgid ""
 "The groups this user belongs to. A user will get all permissions granted to "
 "each of their groups."
@@ -1401,6 +1414,13 @@ msgstr ""
 
 msgid "The password must contain at least one uppercase letter."
 msgstr "Het wachtwoord moet minstens één hoofdletter bevatten."
+
+msgid ""
+"The person who evaluates reservation requests for this item. Leave both "
+"managers empty to let the reservation administrators evaluate them."
+msgstr ""
+"De persoon die reserveringsaanvragen voor dit item beoordeelt. Laat beide "
+"beheerders leeg om de reserveringsbeheerders ze te laten beoordelen."
 
 msgid "The role of this member"
 msgstr "De rol van dit lid"
