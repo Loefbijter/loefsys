@@ -11,6 +11,8 @@ themselves while that PR isn't merged.
 
 - **ADM-2** An admin accepts a pending reservation straight from the reservation list.
 - **ADM-3** An admin denies a reservation and gives a reason, which is stored.
+- **ADM-11** The "To do" on the home page takes an admin to the pending requests in the
+  admin, where they can accept them (not to a page that is only for the requester).
 
 **As an activity manager, I want to manage the activities in my categories, without
 seeing other members' data.**

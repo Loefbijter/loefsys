@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group, Permission
 from playwright.sync_api import expect
 
 from e2e import factories
+from e2e.conftest import log_in
 from loefsys.events.models import RegistrationFormField
 from loefsys.events.models.choices import EventCategories
 from loefsys.reservations.models.reservation import Reservation
@@ -63,6 +64,24 @@ def test_admin_accepts_pending_reservation(page, live_server, superuser, member)
     admin_log_in(page, live_server.url, superuser)
 
     page.goto(f"{live_server.url}/admin/reservations/reservation/")
+    row = page.locator("#result_list tbody tr", has_text="Testkamer")
+    row.get_by_role("button", name=re.compile(r"(Accept|Accepteren)", re.I)).click()
+
+    expect(page.locator(".messagelist")).to_be_visible()
+    reservation.refresh_from_db()
+    assert reservation.request_status == Reservation.RequestStatus.APPROVED
+
+
+def test_home_todo_leads_to_pending_requests(page, live_server, superuser, member):
+    """ADM-11: the approval to-do on the home page opens the pending requests."""
+    reservation = factories.make_reservation(member, factories.make_room("Testkamer"))
+    log_in(page, live_server.url, superuser)
+
+    page.get_by_role("link", name=re.compile(r"(Keur|Approve) Testkamer")).click()
+
+    expect(page).to_have_url(
+        re.compile(r"/admin/reservations/reservation/\?request_status__exact=0")
+    )
     row = page.locator("#result_list tbody tr", has_text="Testkamer")
     row.get_by_role("button", name=re.compile(r"(Accept|Accepteren)", re.I)).click()
 
