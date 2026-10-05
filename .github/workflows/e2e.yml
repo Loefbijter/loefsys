@@ -29,7 +29,12 @@ jobs:
         run: uv python install
 
       - name: Install dependencies
-        run: uv sync --all-extras --dev
+        run: |
+          uv sync --all-extras --dev
+          sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Compile the translations
+        run: uv run manage.py compilemessages
 
       - name: Build the stylesheet
         run: uv run manage.py tailwind --minify
