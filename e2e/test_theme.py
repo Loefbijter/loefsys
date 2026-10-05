@@ -5,7 +5,9 @@ import re
 import pytest
 from playwright.sync_api import expect
 
+from e2e import factories
 from e2e.conftest import open_phone_menu
+from loefsys.events.models import RegistrationFormField
 
 FOLLOW_DEVICE = re.compile(r"(Thema: volg apparaat|Theme: follow device)")
 LIGHT = re.compile(r"(Thema: licht|Theme: light)")
@@ -74,3 +76,58 @@ def test_switch_theme_on_phone(member_phone_page, live_server):
 
     expect(switch(page, LIGHT, role="menuitem")).to_be_visible()
     assert not is_dark(page)
+
+
+# Paints the page background or a panel in a light colour, judged by lightness:
+# oklch() as computed, rgb() as relative luminance. Transparent ones don't count.
+BRIGHT_BOXES = """() => {
+  const lightness = (c) => {
+    let m = c.match(/^oklch\\(([\\d.]+)[^/]*(?:\\/\\s*([\\d.]+))?\\)/);
+    if (m) return [parseFloat(m[1]), m[2] === undefined ? 1 : parseFloat(m[2])];
+    m = c.match(/^rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)/);
+    if (!m) return [0, 0];
+    const [r, g, b] = [m[1], m[2], m[3]].map((v) => v / 255);
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return [Math.cbrt(luminance), m[4] === undefined ? 1 : +m[4]];
+  };
+  return [...document.querySelectorAll("main *")]
+    .filter((el) => {
+      const [l, alpha] = lightness(getComputedStyle(el).backgroundColor);
+      return l > 0.8 && alpha > 0.5 && el.getClientRects().length > 0;
+    })
+    .map((el) => el.outerHTML.slice(0, 120));
+}"""
+
+
+DARK_MODE_PAGES = {
+    "home": "/",
+    "agenda": "/events/",
+    "my events": "/events/organized/",
+    "event feed": "/events/feed",
+    "registration form": "/events/{event}/registration/",
+    "reservations": "/reservations/",
+    "new reservation": "/reservations/add/1",
+    "reservation": "/reservations/detail/{reservation}",
+    "cancel reservation": "/reservations/delete/{reservation}",
+    "logbook": "/reservations/logbook/{trip}",
+    "edit profile": "/profiles/profile/edit/",
+}
+
+
+@pytest.mark.parametrize("page_name", DARK_MODE_PAGES)
+def test_pages_follow_dark_mode(member_page, live_server, member, page_name):
+    """THEME-5: in dark mode, member pages have no light boxes left over."""
+    event = factories.make_event("Klusdag Testhaven")
+    factories.make_organizer(event, member)
+    RegistrationFormField.objects.create(
+        event=event, subject="Dieetwensen", type=RegistrationFormField.TEXT_FIELD
+    )
+    reservation = factories.make_reservation(member, factories.make_room())
+    trip = factories.make_reservation(member, factories.make_boat(), days_ahead=-2)
+    path = DARK_MODE_PAGES[page_name].format(
+        event=event.slug, reservation=reservation.pk, trip=trip.pk
+    )
+
+    member_page.goto(live_server.url + path)
+
+    assert member_page.evaluate(BRIGHT_BOXES) == []

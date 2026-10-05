@@ -9,7 +9,7 @@
 <div class="bg-background min-h-screen flex flex-col">
 
     <!-- ============ HEADER ============ -->
-    <section class="bg-white border-b border-black/5">
+    <section class="bg-surface border-b border-line">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <a href="{% url 'reservations:reservations' %}"
                class="text-foreground/50 hover:text-foreground font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors cursor-pointer">
@@ -33,7 +33,7 @@
     <div class="max-w-3xl mx-auto w-full px-4 sm:px-6 py-8 space-y-5">
 
         <!-- ============ DETAIL CARD ============ -->
-        <div class="relative bg-white rounded-2xl border border-black/5 shadow-sm overflow-hidden">
+        <div class="relative bg-surface rounded-2xl border border-line shadow-sm overflow-hidden">
             <span class="absolute inset-y-0 left-0 w-1.5
                 {% if reservation.request_status == RequestStatus.PENDING %}bg-alert
                 {% elif reservation.request_status == RequestStatus.APPROVED %}bg-success
@@ -46,35 +46,35 @@
                 </h2>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-                    <div class="p-4 rounded-xl bg-black/[0.03] sm:col-span-2">
+                    <div class="p-4 rounded-xl bg-surface-2 sm:col-span-2">
                         <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                             <i class="bi bi-card-text"></i> {% translate "Description" %}
                         </p>
                         <p class="text-foreground">{{ object.reserved_item.description }}</p>
                     </div>
 
-                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                    <div class="p-4 rounded-xl bg-surface-2">
                         <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                             <i class="bi bi-clock"></i> {% translate "Start time" %}
                         </p>
                         <p class="text-foreground font-medium">{{ object.start|date:"j M Y, H:i" }}</p>
                     </div>
 
-                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                    <div class="p-4 rounded-xl bg-surface-2">
                         <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                             <i class="bi bi-clock"></i> {% translate "End time" %}
                         </p>
                         <p class="text-foreground font-medium">{{ object.end|date:"j M Y, H:i" }}</p>
                     </div>
 
-                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                    <div class="p-4 rounded-xl bg-surface-2">
                         <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                             <i class="bi bi-geo-alt"></i> {% translate "Location" %}
                         </p>
                         <p class="text-foreground font-medium">{{ object.reserved_item.get_location_display }}</p>
                     </div>
 
-                    <div class="p-4 rounded-xl bg-black/[0.03]">
+                    <div class="p-4 rounded-xl bg-surface-2">
                         <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                             <i class="bi bi-tag"></i> {% translate "Type" %}
                         </p>
@@ -94,13 +94,13 @@
         </div>
 
         <!-- ============ MANAGE RESERVATION ============ -->
-        <div class="bg-white rounded-2xl border border-black/5 shadow-sm p-5 sm:p-6">
+        <div class="bg-surface rounded-2xl border border-line shadow-sm p-5 sm:p-6">
             <h3 class="text-xs font-semibold uppercase tracking-wide text-foreground/50 mb-4">
                 {% translate "Manage reservation" %}
             </h3>
             <div class="flex flex-col sm:flex-row flex-wrap gap-3">
                 <a href="{% url 'reservations:reservation-update' pk=object.id location=object.reserved_item.location %}"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors cursor-pointer">
+                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-surface-2 transition-colors cursor-pointer">
                     <i class="bi bi-pencil"></i>
                     {% translate "Edit reservation" %}
                 </a>
@@ -113,7 +113,7 @@
                 </a>
                 {% elif object.has_boat_logbook %}
                 <a href="{% url 'reservations:boat-logbook' pk=object.id %}"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-black/5 transition-colors cursor-pointer">
+                   class="inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-foreground/80 hover:bg-surface-2 transition-colors cursor-pointer">
                     <i class="bi bi-journal-text"></i>
                     {% translate "View logbook" %}
                 </a>

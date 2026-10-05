@@ -8,3 +8,5 @@ or dark myself if I prefer.**
   sticks on other pages.
 - **THEME-3** The switch cycles light, dark and back to following the device.
 - **THEME-4** The theme switch is reachable from the phone menu.
+- **THEME-5** In dark mode, member pages (agenda, reservations and their forms, the
+  profile form, ...) have no light panels or backgrounds left over.
