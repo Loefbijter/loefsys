@@ -1078,8 +1078,14 @@ msgstr "Snel instellen (past de eindtijd automatisch aan):"
 msgid "RSC card number"
 msgstr "RSC-kaartnummer"
 
+msgid "Reason"
+msgstr "Reden"
+
 msgid "Reason for denial"
 msgstr "Reden voor weigering"
+
+msgid "Reason for the reservation"
+msgstr "Reden van de reservering"
 
 msgid "Recent and upcoming events"
 msgstr "Recente en aankomende evenementen"
@@ -1578,6 +1584,9 @@ msgstr "Week"
 
 msgid "Welcome to Loefbijter"
 msgstr "Welkom bij Loefbijter"
+
+msgid "What the reservation is for."
+msgstr "Waarvoor de reservering is."
 
 msgid "What was the wind force? (Bft)"
 msgstr "Wat was de windkracht? (Bft)"

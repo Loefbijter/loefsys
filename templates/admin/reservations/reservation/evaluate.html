@@ -8,6 +8,12 @@
         Reservation for {{ reservable }} by {{ user }}, from {{ start }} to {{ end }}.
         {% endblocktranslate %}
     </p>
+    {% if reservation.authorized_userskippership %}
+        <p><strong>{% translate "Authorized skipper" %}:</strong> {{ reservation.authorized_userskippership }}</p>
+    {% endif %}
+    {% if reservation.reason %}
+        <p><strong>{% translate "Reason" %}:</strong> {{ reservation.reason|linebreaksbr }}</p>
+    {% endif %}
 
     {% if error %}
         <p class="errornote">{{ error }}</p>

@@ -8,6 +8,7 @@ from django.urls import path, reverse
 from django.utils.functional import Promise
 from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme, urlencode
+from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
 
 from loefsys.admin_helpers import ExportableModelAdmin
@@ -47,12 +48,15 @@ class ReservationAdmin(ExportableModelAdmin):
     list_display = (
         "reservable",
         "user",
+        "authorized_userskippership",
         "start",
         "end",
+        "short_reason",
         "request_status",
         "date_of_creation",
         "evaluation_actions",
     )
+    list_select_related = ("reservable", "user", "authorized_userskippership")
     list_filter = ("request_status", "reservable__location", "reservable__type")
     search_fields = (
         "reservable__name",
@@ -65,7 +69,17 @@ class ReservationAdmin(ExportableModelAdmin):
     fieldsets = (
         (
             _("Reservation details"),
-            {"fields": ("reservable", "user", "start", "end", "date_of_creation")},
+            {
+                "fields": (
+                    "reservable",
+                    "user",
+                    "authorized_userskippership",
+                    "start",
+                    "end",
+                    "reason",
+                    "date_of_creation",
+                )
+            },
         ),
         (_("Approval"), {"fields": ("request_status", "denial_reason")}),
     )
@@ -91,8 +105,10 @@ class ReservationAdmin(ExportableModelAdmin):
             *self.readonly_fields,
             "reservable",
             "user",
+            "authorized_userskippership",
             "start",
             "end",
+            "reason",
         )
         if not can_evaluate(request.user, obj):
             fields = (*fields, "request_status", "denial_reason")
@@ -276,6 +292,11 @@ class ReservationAdmin(ExportableModelAdmin):
             "next": next_url,
         }
         return render(request, "admin/reservations/reservation/evaluate.html", context)
+
+    @admin.display(description=_("Reason"))
+    def short_reason(self, obj):
+        """Show the start of the reservation's reason in the list."""
+        return Truncator(obj.reason).chars(60)
 
     @admin.display(description=_("Evaluation"))
     def evaluation_actions(self, request, obj):

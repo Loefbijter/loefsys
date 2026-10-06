@@ -22,11 +22,21 @@ def slot(days_ahead=5, hours=2):
     return start.strftime("%Y-%m-%dT%H:%M"), end.strftime("%Y-%m-%dT%H:%M")
 
 
-def fill_reservation_form(page, item_name, start, end):
-    """Pick a period and an item on the reservation form and submit it."""
+REASON = "Vergadering van de Testcommissie."
+
+
+def fill_reason(page, reason=REASON):
+    """Fill in the reason for the reservation."""
+    page.get_by_label(re.compile(r"(Reden|Reason)", re.I)).fill(reason)
+
+
+def fill_reservation_form(page, item_name, start, end, reason=REASON):
+    """Pick a period and an item, give a reason and submit the reservation form."""
     page.get_by_label(re.compile(r"^\s*(Van|From)\s*$")).fill(start)
     page.get_by_label(re.compile(r"^\s*(Tot|To|Until)\s*$")).fill(end)
     page.locator("#item-grid label", has_text=item_name).click()
+    if reason:
+        fill_reason(page, reason)
     page.get_by_role("button", name=re.compile(r"^\s*(Reserveren|Reserve)\s*$")).click()
 
 
@@ -54,7 +64,7 @@ def test_member_sees_only_own_reservations(
 
 
 def test_member_reserves_a_room(member_page, live_server, member):
-    """RES-2: a member reserves a room; it shows up as pending."""
+    """RES-2: a member reserves a room with a reason; it shows up as pending."""
     factories.make_room("Testkamer", location=Locations.BOARDROOM)
     start, end = slot()
 
@@ -68,9 +78,8 @@ def test_member_reserves_a_room(member_page, live_server, member):
     card = member_page.get_by_role("link", name=re.compile("Testkamer"))
     expect(card).to_be_visible()
     expect(card).to_contain_text(PENDING)
-    assert Reservation.objects.filter(
-        user=member, reservable__name="Testkamer"
-    ).exists()
+    reservation = Reservation.objects.get(user=member, reservable__name="Testkamer")
+    assert reservation.reason == REASON
 
 
 def test_member_reserves_on_a_phone(member_phone_page, live_server, member):
@@ -118,6 +127,7 @@ def test_boat_needs_a_skipper(member_page, live_server, member):
     member_page.locator("#id_authorized_userskippership").select_option(
         label="Testa Zeilmaker"
     )
+    fill_reason(member_page)
     member_page.get_by_role(
         "button", name=re.compile(r"^\s*(Reserveren|Reserve)\s*$")
     ).click()
@@ -191,3 +201,15 @@ def test_member_cannot_delete_someone_elses_reservation(
         ).click()
 
     assert Reservation.objects.filter(pk=reservation.pk).exists()
+
+
+def test_reason_is_required(member_page, live_server, member):
+    """RES-10: without a reason the reservation isn't made."""
+    factories.make_room("Testkamer", location=Locations.BOARDROOM)
+    start, end = slot()
+
+    member_page.goto(f"{live_server.url}/reservations/add/{Locations.BOARDROOM}")
+    fill_reservation_form(member_page, "Testkamer", start, end, reason="")
+
+    expect(member_page).to_have_url(re.compile(r"/reservations/add/"))
+    assert not Reservation.objects.filter(user=member).exists()

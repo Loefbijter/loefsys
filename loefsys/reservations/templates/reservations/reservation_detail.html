@@ -53,6 +53,15 @@
                         <p class="text-foreground">{{ object.reserved_item.description }}</p>
                     </div>
 
+                    {% if object.reason %}
+                    <div class="p-4 rounded-xl bg-surface-2 sm:col-span-2">
+                        <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
+                            <i class="bi bi-chat-left-text"></i> {% translate "Reason" %}
+                        </p>
+                        <p class="text-foreground">{{ object.reason|linebreaksbr }}</p>
+                    </div>
+                    {% endif %}
+
                     <div class="p-4 rounded-xl bg-surface-2">
                         <p class="font-semibold text-foreground/50 text-xs uppercase tracking-wide mb-1 inline-flex items-center gap-1.5">
                             <i class="bi bi-clock"></i> {% translate "Start time" %}

@@ -5,8 +5,9 @@ it.**
 
 - **RES-1** The reservations page lists the member's own reservations, and nobody
   else's.
-- **RES-2** A member picks a period and a room and reserves it; the reservation shows up
-  as pending ("In behandeling").
+- **RES-2** A member picks a period and a room, gives a reason and reserves it; the
+  reservation shows up as pending ("In behandeling") with that reason.
+- **RES-10** The reason is required: without one the reservation isn't made.
 - **RES-3** Choosing a location (BK, Bastion, Kraaij, Overige) shows the items kept
   there.
 - **RES-4** Reserving a boat that needs a skippership asks for a skipper; the chosen

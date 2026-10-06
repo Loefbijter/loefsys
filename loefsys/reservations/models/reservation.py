@@ -44,6 +44,9 @@ class Reservation(TimeStampedModel):
         The status of the reservation.
     denial_reason : str
         A string containing clarification of the denial of the request.
+    reason : str
+        What the reservation is for, given by the member. The member form requires
+        it; reservations from before it existed, or made in the admin, may lack it.
     """
 
     class RequestStatus(models.IntegerChoices):
@@ -73,6 +76,11 @@ class Reservation(TimeStampedModel):
     end = models.DateTimeField(verbose_name=_("End time"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
     denial_reason = models.TextField(blank=True, verbose_name=_("Denial reason"))
+    reason = models.TextField(
+        blank=True,
+        verbose_name=_("Reason"),
+        help_text=_("What the reservation is for."),
+    )
 
     class Meta:
         constraints = (
