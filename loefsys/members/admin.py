@@ -3,22 +3,46 @@
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Exists, OuterRef
 from django.db.utils import OperationalError
-from django.forms import ModelMultipleChoiceField
+from django.forms import BaseInlineFormSet, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
 
 from loefsys.admin_helpers import ExportableModelAdmin
 from loefsys.privacy import pseudonymize_users
 
 from .models import Skippership, User, UserSkippership
+from .skipperships import backfill_required_skipperships
+
+
+class UserSkippershipFormSet(BaseInlineFormSet):
+    """Formset that lets a skippership and its required one be added together."""
+
+    def add_fields(self, form, index):
+        """Tell each row which skipperships the other rows are adding."""
+        super().add_fields(form, index)
+        form.instance.pending_skippership_ids = self._submitted_skippership_ids()
+
+    def _submitted_skippership_ids(self) -> set[int]:
+        """Return the skipperships selected in the submitted, non-deleted rows."""
+        if not self.is_bound:
+            return set()
+        ids = set()
+        for i in range(self.total_form_count()):
+            prefix = f"{self.prefix}-{i}"
+            value = self.data.get(f"{prefix}-skippership", "")
+            if value.isdigit() and not self.data.get(f"{prefix}-DELETE"):
+                ids.add(int(value))
+        return ids
 
 
 class UserSkippershipInline(admin.TabularInline):
     """Inline admin for assigning skipperships to a user."""
 
     model = UserSkippership
+    formset = UserSkippershipFormSet
     extra = 1
-    autocomplete_fields = ("skippership", "given_by")
+    autocomplete_fields = ("skippership",)
 
 
 class SkippershipUserInline(admin.TabularInline):
@@ -27,7 +51,31 @@ class SkippershipUserInline(admin.TabularInline):
     model = UserSkippership
     fk_name = "skippership"
     extra = 1
-    autocomplete_fields = ("user", "given_by")
+    autocomplete_fields = ("user",)
+
+
+class AdminPermissionFilter(admin.SimpleListFilter):
+    """Filter users on whether they were given the Admin permission directly.
+
+    Everyone who had the old staff flag got this permission, so this lists them
+    in one place to move them into the right groups.
+    """
+
+    title = _("Admin permission")
+    parameter_name = "admin_permission"
+
+    def lookups(self, _request, _model_admin):
+        """Return the filter options."""
+        return [("yes", _("Yes")), ("no", _("No"))]
+
+    def queryset(self, _request, queryset):
+        """Return the users matching the selected option."""
+        match self.value():
+            case "yes":
+                return queryset.filter(has_admin_permission=True)
+            case "no":
+                return queryset.filter(has_admin_permission=False)
+        return queryset
 
 
 @admin.register(User)
@@ -54,7 +102,7 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
             model_name = self.model._meta.model_name
             perm = f"{app}.pseudonymize_{model_name}"
             try:
-                allowed = user.has_perm(perm)
+                allowed = user is not None and user.has_perm(perm)
             except Exception:
                 allowed = False
 
@@ -83,7 +131,7 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
                 )
             },
         ),
-        (_("Permissions"), {"fields": ("is_staff", "is_superuser")}),
+        (_("Permissions"), {"fields": ("is_superuser", "user_permissions")}),
         (_("Groups"), {"fields": ("groups", "loefbijter_groups")}),
     )
 
@@ -104,14 +152,38 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
                 )
             },
         ),
-        (_("Permissions"), {"fields": ("is_staff", "is_superuser")}),
+        (_("Permissions"), {"fields": ("is_superuser",)}),
         (_("Groups"), {"fields": ("groups",)}),
     )
 
-    list_display = ("email", "first_name", "last_name", "is_staff")
+    list_display = ("email", "first_name", "last_name", "has_admin_permission")
+    list_filter = (AdminPermissionFilter, "is_superuser", "is_active", "groups")
     search_fields = ("email", "first_name", "last_name")
     ordering = ("email",)
-    filter_horizontal = ("groups",)
+    filter_horizontal = ("groups", "user_permissions")
+
+    @admin.display(
+        description=_("Admin"), boolean=True, ordering="has_admin_permission"
+    )
+    def has_admin_permission(self, user):
+        """Return whether the user was given the Admin permission directly."""
+        return user.has_admin_permission
+
+    def get_queryset(self, request):
+        """Annotate whether each user holds the Admin permission directly."""
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(
+                has_admin_permission=Exists(
+                    User.user_permissions.through.objects.filter(
+                        user=OuterRef("pk"),
+                        permission__codename="access_admin",
+                        permission__content_type__app_label="members",
+                    )
+                )
+            )
+        )
 
     def get_fieldsets(self, request, obj=None):
         """Return the fieldsets for the User model."""
@@ -144,6 +216,19 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
 class SkippershipAdmin(ExportableModelAdmin):
     """Admin class for the Skippership model."""
 
-    list_display = ("name",)
+    list_display = ("name", "parent")
     search_fields = ("name",)
+    autocomplete_fields = ("parent",)
     inlines = (SkippershipUserInline,)
+
+    def save_model(self, request, obj, form, change):
+        """Give existing skippers the skipperships a new parent makes required."""
+        super().save_model(request, obj, form, change)
+        if obj.parent_id is not None and "parent" in form.changed_data:
+            count = backfill_required_skipperships(Skippership, UserSkippership)
+            if count:
+                messages.info(
+                    request,
+                    _("Added %(count)d required skipperships to existing skippers.")
+                    % {"count": count},
+                )

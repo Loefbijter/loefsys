@@ -2,7 +2,7 @@
 {% load i18n static %}
 
 {% block title %}
-    {% trans "Profiel bewerken" %}
+    {% translate "Edit profile" %}
 {% endblock %}
 
 {% block content %}
@@ -22,10 +22,10 @@
 <div class="bg-background min-h-screen flex flex-col">
 
     <!-- ============ HEADER ============ -->
-    <section class="bg-white border-b border-black/5">
+    <section class="bg-surface border-b border-line">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-            <h1 class="text-2xl sm:text-3xl font-bold text-foreground">{% trans "Pas je profiel aan" %}</h1>
-            <p class="text-sm text-foreground/60 mt-1">{% trans "Werk je gegevens bij en sla de wijzigingen op." %}</p>
+            <h1 class="text-2xl sm:text-3xl font-bold text-foreground">{% translate "Edit your profile" %}</h1>
+            <p class="text-sm text-foreground/60 mt-1">{% translate "Update your details and save the changes." %}</p>
         </div>
     </section>
 
@@ -36,13 +36,13 @@
             <!-- Profile photo -->
             {% for field in user_form %}
             {% if field.field.widget.input_type == "file" %}
-            <div class="bg-white p-6 rounded-2xl border border-black/5 shadow-sm text-left mb-6 max-w-md mx-auto">
+            <div class="bg-surface p-6 rounded-2xl border border-line shadow-sm text-left mb-6 max-w-md mx-auto">
                 <div class="flex flex-col items-center text-center gap-4">
                     <div id="photo-preview"
                          data-current-photo="{% if member.picture %}{{ member.picture.url }}{% endif %}"
-                         class="w-24 h-24 rounded-full bg-black/[0.03] border-2 border-black/10 flex items-center justify-center overflow-hidden text-3xl text-foreground/30">
+                         class="w-24 h-24 rounded-full bg-surface-2 border-2 border-line flex items-center justify-center overflow-hidden text-3xl text-foreground/30">
                         {% if member.picture %}
-                           <img src="{{ member.picture.url }}" alt="{% trans 'Huidige profielfoto' %}" class="w-full h-full object-cover">
+                           <img src="{{ member.picture.url }}" alt="{% translate 'Current profile picture' %}" class="w-full h-full object-cover">
                         {% else %}
                            <i class="bi bi-person-fill"></i>
                         {% endif %}
@@ -55,17 +55,17 @@
                            <button id="photo-select-button" type="button"
                                    class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-primary/30 text-primary hover:bg-primary/5 font-semibold text-sm cursor-pointer transition-colors">
                                <i class="bi bi-camera-fill"></i>
-                               {% trans "Foto kiezen" %}
+                               {% translate "Choose photo" %}
                            </button>
                            <button id="photo-remove-button" type="button"
                                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-destructive/30 text-destructive hover:bg-destructive/5 font-semibold text-sm cursor-pointer transition-colors">
                                <i class="bi bi-trash3"></i>
-                               {% trans "Verwijderen" %}
+                               {% translate "Remove" %}
                            </button>
                         </div>
                         <div class="hidden">{{ field }}</div>
                         <p id="photo-filename" class="text-xs text-foreground/50 mt-2">
-                           {% if member.picture %}{{ member.picture.name|default:"" }}{% else %}{% trans "Geen foto gekozen" %}{% endif %}
+                           {% if member.picture %}{{ member.picture.name|default:"" }}{% else %}{% translate "No photo chosen" %}{% endif %}
                         </p>
                     </div>
                     {% if field.help_text %}
@@ -82,8 +82,8 @@
             <div class="grid grid-cols-1 {% if member_form %}md:grid-cols-2{% endif %} gap-5 {% if not member_form %}max-w-xl mx-auto{% endif %}">
 
                 <!-- Personal information -->
-                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm text-left">
-                    <h2 class="text-lg font-bold text-foreground mb-5">{% trans "Gebruikersgegevens" %}</h2>
+                <div class="bg-surface p-5 sm:p-6 rounded-2xl border border-line shadow-sm text-left">
+                    <h2 class="text-lg font-bold text-foreground mb-5">{% translate "User details" %}</h2>
                     <div class="space-y-4">
                         {% for field in user_form %}
                         {% if field.field.widget.input_type != "file" %}
@@ -106,8 +106,8 @@
 
                 <!-- Member information -->
                 {% if member_form %}
-                <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm text-left">
-                    <h2 class="text-lg font-bold text-foreground mb-5">{% trans "Lidgegevens" %}</h2>
+                <div class="bg-surface p-5 sm:p-6 rounded-2xl border border-line shadow-sm text-left">
+                    <h2 class="text-lg font-bold text-foreground mb-5">{% translate "Member details" %}</h2>
                     <div class="space-y-4">
                         {% for field in member_form %}
                         <div class="flex flex-col space-y-1.5">
@@ -132,12 +132,12 @@
             <!-- Form actions -->
             <div class="mt-6 flex flex-col-reverse sm:flex-row sm:justify-center gap-3">
                 <a href="{% url 'members:user-profile' %}"
-                   class="text-center rounded-xl border border-black/10 bg-white px-6 py-2.5 text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
-                    {% trans "Annuleren" %}
+                   class="text-center rounded-xl border border-line bg-surface px-6 py-2.5 text-sm font-semibold text-foreground/70 hover:bg-surface-2 transition-colors">
+                    {% translate "Cancel" %}
                 </a>
                 <button type="submit"
                         class="rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors cursor-pointer">
-                    {% trans "Nieuwe informatie opslaan" %}
+                    {% translate "Save new information" %}
                 </button>
             </div>
         </form>
@@ -145,41 +145,41 @@
 </div>
 
 <div id="photo-crop-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
-    <div class="w-full max-w-xl rounded-2xl bg-white p-4 sm:p-5 shadow-2xl max-h-[90vh] overflow-auto">
+    <div class="w-full max-w-xl rounded-2xl bg-surface p-4 sm:p-5 shadow-2xl max-h-[90vh] overflow-auto">
         <div class="flex items-center justify-between gap-4">
-            <h2 class="text-lg font-bold text-foreground">{% trans "Pas je profielfoto aan" %}</h2>
-            <button id="close-crop-modal" type="button" class="rounded-full border border-black/10 p-2 text-foreground/70 transition hover:bg-black/5" aria-label="{% trans 'Sluiten' %}">
+            <h2 class="text-lg font-bold text-foreground">{% translate "Adjust your profile picture" %}</h2>
+            <button id="close-crop-modal" type="button" class="rounded-full border border-line p-2 text-foreground/70 transition hover:bg-surface-2" aria-label="{% translate 'Close' %}">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
 
-        <p class="mt-2 text-sm text-foreground/60">{% trans "Versleep en zoom de afbeelding zodat je gezicht in de cirkel past." %}</p>
+        <p class="mt-2 text-sm text-foreground/60">{% translate "Drag and zoom the image so your face fits in the circle." %}</p>
 
-        <div class="profile-cropper mt-4 overflow-hidden rounded-full border border-black/10 bg-black/[0.03] mx-auto w-48 h-48 sm:w-56 sm:h-56 md:w-72 md:h-72">
-            <img id="crop-image" src="" alt="{% trans 'Profielfoto bijsnijden' %}" class="block max-w-full max-h-full">
+        <div class="profile-cropper mt-4 overflow-hidden rounded-full border border-line bg-surface-2 mx-auto w-48 h-48 sm:w-56 sm:h-56 md:w-72 md:h-72">
+            <img id="crop-image" alt="{% translate 'Crop profile picture' %}" class="block max-w-full max-h-full">
         </div>
 
         <div class="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div class="flex flex-wrap gap-2 items-center w-full sm:w-auto justify-center sm:justify-start">
-                <button id="rotate-left" type="button" class="inline-flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 w-full sm:w-auto rounded-full border border-black/10 bg-white text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
+                <button id="rotate-left" type="button" class="inline-flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 w-full sm:w-auto rounded-full border border-line bg-surface text-sm font-semibold text-foreground/70 hover:bg-surface-2 transition-colors">
                     <i class="bi bi-arrow-counterclockwise"></i>
-                    {% trans "Links" %}
+                    {% translate "Left" %}
                 </button>
-                <button id="rotate-right" type="button" class="inline-flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 w-full sm:w-auto rounded-full border border-black/10 bg-white text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
+                <button id="rotate-right" type="button" class="inline-flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 w-full sm:w-auto rounded-full border border-line bg-surface text-sm font-semibold text-foreground/70 hover:bg-surface-2 transition-colors">
                     <i class="bi bi-arrow-clockwise"></i>
-                    {% trans "Rechts" %}
+                    {% translate "Right" %}
                 </button>
-                <button id="reset-rotation" type="button" class="inline-flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 w-full sm:w-auto rounded-full border border-black/10 bg-white text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
+                <button id="reset-rotation" type="button" class="inline-flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 w-full sm:w-auto rounded-full border border-line bg-surface text-sm font-semibold text-foreground/70 hover:bg-surface-2 transition-colors">
                     <i class="bi bi-arrow-repeat"></i>
-                    {% trans "Reset" %}
+                    {% translate "Reset" %}
                 </button>
             </div>
             <div class="flex w-full sm:w-auto gap-3 justify-center sm:justify-end">
-                <button id="cancel-crop" type="button" class="rounded-xl w-full sm:w-auto border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors">
-                    {% trans "Annuleren" %}
+                <button id="cancel-crop" type="button" class="rounded-xl w-full sm:w-auto border border-line bg-surface px-4 py-2 text-sm font-semibold text-foreground/70 hover:bg-surface-2 transition-colors">
+                    {% translate "Cancel" %}
                 </button>
                 <button id="apply-crop" type="button" class="rounded-xl w-full sm:w-auto bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors">
-                    {% trans "Foto opslaan" %}
+                    {% translate "Save photo" %}
                 </button>
             </div>
         </div>
@@ -217,7 +217,7 @@
 
         const setFilename = (name) => {
             if (!filenameLabel) return;
-            filenameLabel.textContent = name || "{% trans 'Geen foto gekozen' %}";
+            filenameLabel.textContent = name || "{{ _('No photo chosen')|escapejs }}";
         };
 
         const closeCropModal = () => {
@@ -230,7 +230,7 @@
                 cropper = null;
             }
             if (cropImage) {
-                cropImage.src = "";
+                cropImage.removeAttribute("src");
             }
         };
 
@@ -242,7 +242,7 @@
                 fileInput.value = "";
             }
             setPlaceholder();
-            setFilename("{% trans 'Geen foto gekozen' %}");
+            setFilename("{{ _('No photo chosen')|escapejs }}");
         };
 
         if (selectButton && fileInput) {
@@ -261,7 +261,7 @@
                     return;
                 }
                 setPlaceholder();
-                setFilename("{% trans 'Geen foto gekozen' %}");
+                setFilename("{{ _('No photo chosen')|escapejs }}");
                 if (fileInput) {
                     fileInput.value = "";
                 }
@@ -284,7 +284,7 @@
                 const reader = new FileReader();
                 reader.onload = function (event) {
                     if (!cropModal || !cropImage || typeof Cropper === "undefined") {
-                        setPreviewFromDataUrl(event.target.result, "{% trans 'Voorbeeld profielfoto' %}");
+                        setPreviewFromDataUrl(event.target.result, "{{ _('Profile picture preview')|escapejs }}");
                         setFilename(file.name);
                         return;
                     }
@@ -352,7 +352,7 @@
 
                 const reader = new FileReader();
                 reader.onload = function (event) {
-                    setPreviewFromDataUrl(event.target.result, "{% trans 'Profielfoto' %}");
+                    setPreviewFromDataUrl(event.target.result, "{{ _('Profile picture')|escapejs }}");
                     setFilename(croppedFile.name);
                 };
                 reader.readAsDataURL(blob);
@@ -443,7 +443,7 @@
                 birthdayInput.value = `${day}-${month}-${year}`;
             };
 
-            birthdayInput.placeholder = "dd-mm-jjjj";
+            birthdayInput.placeholder = "{{ _('dd-mm-yyyy')|escapejs }}";
             birthdayInput.inputMode = "numeric";
             birthdayInput.maxLength = 10;
             birthdayInput.addEventListener("input", formatBirthday);

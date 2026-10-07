@@ -18,7 +18,6 @@ Subpackages
    loefsys.home
    loefsys.members
    loefsys.reservations
-   loefsys.settings
    loefsys.sync
    loefsys.theme
 
@@ -29,6 +28,7 @@ Submodules
    :maxdepth: 4
 
    loefsys.celery
+   loefsys.settings
    loefsys.urls
    loefsys.views
    loefsys.wsgi

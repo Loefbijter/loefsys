@@ -1,72 +1,73 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Agenda koppelen
+    {% translate "Connect calendar" %}
 {% endblock %}
 
 {% block content %}
-<div class="min-h-screen w-full max-w-full overflow-x-hidden bg-gray-50">
+<div class="min-h-screen w-full max-w-full overflow-x-hidden bg-surface-2">
 
     <!-- ============ HEADER ============ -->
-    <section class="bg-white border-b border-gray-200">
+    <section class="bg-surface border-b border-line">
         <div class="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-10 text-center">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">Agenda koppelen</h1>
-            <p class="text-sm sm:text-base text-gray-500 mt-1.5">
-                Volg de Loefbijter-agenda op je eigen agenda!
+            <h1 class="text-2xl sm:text-3xl font-bold text-fg">{% translate "Connect calendar" %}</h1>
+            <p class="text-sm sm:text-base text-muted mt-1.5">
+                {% translate "Follow the Loefbijter calendar in your own calendar!" %}
             </p>
         </div>
     </section>
 
     <div class="max-w-xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8">
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 sm:p-8">
+        <div class="bg-surface rounded-2xl border border-line shadow-sm p-5 sm:p-8">
 
-            <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-5 sm:mb-6">Hoe koppel je je agenda?</h2>
+            <h2 class="text-lg sm:text-xl font-bold text-fg mb-5 sm:mb-6">{% translate "How do you connect your calendar?" %}</h2>
 
             <ol class="space-y-4">
                 <li class="flex items-start gap-3">
                     <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">1</span>
-                    <span class="text-sm sm:text-base text-gray-700 pt-1">Open je agenda-app, bijvoorbeeld Google Calendar of Outlook.</span>
+                    <span class="text-sm sm:text-base text-fg pt-1">{% translate "Open your calendar app, for example Google Calendar or Outlook." %}</span>
                 </li>
                 <li class="flex items-start gap-3">
                     <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">2</span>
-                    <span class="text-sm sm:text-base text-gray-700 pt-1">Zoek de optie om een agenda via URL toe te voegen.</span>
+                    <span class="text-sm sm:text-base text-fg pt-1">{% translate "Look for the option to add a calendar by URL." %}</span>
                 </li>
                 <li class="flex items-start gap-3">
                     <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">3</span>
-                    <span class="text-sm sm:text-base text-gray-700 pt-1">Kopieer een link hieronder en plak deze in het URL-veld.</span>
+                    <span class="text-sm sm:text-base text-fg pt-1">{% translate "Copy one of the links below and paste it into the URL field." %}</span>
                 </li>
                 <li class="flex items-start gap-3">
                     <span class="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm flex items-center justify-center">4</span>
-                    <span class="text-sm sm:text-base text-gray-700 pt-1">Sla de wijzigingen op. Je agenda is nu gekoppeld.</span>
+                    <span class="text-sm sm:text-base text-fg pt-1">{% translate "Save the changes. Your calendar is now connected." %}</span>
                 </li>
             </ol>
 
-            <hr class="border-t border-gray-100 my-6 sm:my-8">
+            <hr class="border-t border-line my-6 sm:my-8">
 
             <!-- ============ FEED LINKS ============ -->
             <div class="space-y-5">
                 <div>
-                    <p class="text-sm font-semibold text-gray-600 mb-2">Events waar je voor bent ingeschreven</p>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <p class="text-sm font-semibold text-muted mb-2">{% translate "Events you are registered for" %}</p>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-line bg-surface-2 p-3">
                         <span id="feed-registered"
-                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-gray-700">https://app.loefbijter.nl{{ registered_event_feed }}</span>
+                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-fg">https://app.loefbijter.nl{{ registered_event_feed }}</span>
                         <button type="button" data-target="feed-registered"
                                 class="copy-btn shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs sm:text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors">
                             <i class="bi bi-clipboard copy-icon"></i>
-                            <span class="copy-label">Kopieer</span>
+                            <span class="copy-label">{% translate "Copy" %}</span>
                         </button>
                     </div>
                 </div>
 
                 <div>
-                    <p class="text-sm font-semibold text-gray-600 mb-2">Events waar je niet voor bent ingeschreven</p>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                    <p class="text-sm font-semibold text-muted mb-2">{% translate "Events you are not registered for" %}</p>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 rounded-xl border border-line bg-surface-2 p-3">
                         <span id="feed-other"
-                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-gray-700">https://app.loefbijter.nl{{ other_event_feed }}</span>
+                              class="block w-full max-w-full sm:flex-1 sm:min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs sm:text-sm text-fg">https://app.loefbijter.nl{{ other_event_feed }}</span>
                         <button type="button" data-target="feed-other"
                                 class="copy-btn shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs sm:text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors">
                             <i class="bi bi-clipboard copy-icon"></i>
-                            <span class="copy-label">Kopieer</span>
+                            <span class="copy-label">{% translate "Copy" %}</span>
                         </button>
                     </div>
                 </div>
@@ -76,6 +77,7 @@
     </div>
 </div>
 
+{% translate "Copied!" as copied_text %}{% translate "Copy" as copy_text %}
 <script>
     document.querySelectorAll(".copy-btn").forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -89,14 +91,14 @@
                 btn.classList.add("bg-success", "hover:bg-success-accent");
                 icon.classList.remove("bi-clipboard");
                 icon.classList.add("bi-check2");
-                label.textContent = "Gekopieerd!";
+                label.textContent = "{{ copied_text|escapejs }}";
 
                 setTimeout(function () {
                     btn.classList.remove("bg-success", "hover:bg-success-accent");
                     btn.classList.add("bg-primary", "hover:bg-primary-accent");
                     icon.classList.remove("bi-check2");
                     icon.classList.add("bi-clipboard");
-                    label.textContent = "Kopieer";
+                    label.textContent = "{{ copy_text|escapejs }}";
                 }, 1800);
             });
         });

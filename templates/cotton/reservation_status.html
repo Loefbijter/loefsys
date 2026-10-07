@@ -1,0 +1,11 @@
+{% load i18n %}
+<c-vars reservation class="" />
+{% if reservation.can_fill_logbook and not reservation.has_boat_logbook %}
+    <c-chip kind="warn" icon="journal-plus" class="{{ class }}">{% translate "Fill in logbook" %}</c-chip>
+{% elif reservation.request_status == 0 %}
+    <c-chip kind="warn" class="{{ class }}">{{ reservation.get_request_status_display }}</c-chip>
+{% elif reservation.request_status == 1 %}
+    <c-chip kind="ok" class="{{ class }}">{{ reservation.get_request_status_display }}</c-chip>
+{% else %}
+    <c-chip kind="bad" class="{{ class }}">{{ reservation.get_request_status_display }}</c-chip>
+{% endif %}

@@ -44,12 +44,15 @@ class Reservation(TimeStampedModel):
         The status of the reservation.
     denial_reason : str
         A string containing clarification of the denial of the request.
+    reason : str
+        What the reservation is for, given by the member. The member form requires
+        it; reservations from before it existed, or made in the admin, may lack it.
     """
 
     class RequestStatus(models.IntegerChoices):
-        PENDING = 0, _("In behandeling")
-        APPROVED = 1, _("Goedgekeurd")
-        DENIED = 2, _("Geweigerd")
+        PENDING = 0, _("Pending")
+        APPROVED = 1, _("Approved")
+        DENIED = 2, _("Denied")
 
     reservable = models.ForeignKey(Reservable, on_delete=models.CASCADE)
     user = models.ForeignKey(
@@ -73,6 +76,11 @@ class Reservation(TimeStampedModel):
     end = models.DateTimeField(verbose_name=_("End time"))
     date_of_creation = models.DateTimeField(auto_now_add=True)
     denial_reason = models.TextField(blank=True, verbose_name=_("Denial reason"))
+    reason = models.TextField(
+        blank=True,
+        verbose_name=_("Reason"),
+        help_text=_("What the reservation is for."),
+    )
 
     class Meta:
         constraints = (
@@ -141,7 +149,7 @@ class Reservation(TimeStampedModel):
         self.clean_timeslot()
 
         if not self.reservable.is_reservable:
-            raise ValidationError("This item is not reservable at the moment.")
+            raise ValidationError(_("This item is not reservable at the moment."))
 
         if self.reservable.type.category == ReservableCategories.BOAT:
             try:

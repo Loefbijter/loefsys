@@ -33,12 +33,30 @@ jobs:
         run: uv python install
 
       - name: Install dependencies
-        run: uv sync --all-extras --dev
+        run: |
+          uv sync --all-extras --dev
+          sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Lint and check formatting
+        run: |
+          uv run ruff check --no-fix .
+          uv run ruff format --check .
+
+      - name: Type check
+        run: uv run mypy
 
       - name: Prepare the database
         run: |
           uv run manage.py makemigrations
           uv run manage.py migrate
+
+      - name: Check the translations are up to date
+        run: |
+          uv run manage.py makemessages
+          git diff --exit-code -- locale/
+
+      - name: Compile the translations
+        run: uv run manage.py compilemessages
 
       - name: Run system checks
         run: uv run manage.py check

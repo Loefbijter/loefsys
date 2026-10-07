@@ -1,25 +1,27 @@
 {% extends "base.html" %}
 
-{% load static %}
+{% load i18n static %}
 
 {% block title %}
-    Login
+    {% translate "Login" %}
 {% endblock %}
 
+{% block main_class %}{% endblock %}
+
 {% block content %}
-    <div class="grid gap-6 max-w-120 justify-self-center justify-items-center">
-        <img class="h-20 w-auto" src="{% static 'loefbijter-logo.svg' %}" alt="N.S.Z.V. De Loefbijter"/>
-        <c-card>
-            <c-header.h2 class="mx-auto">Log in om verder te gaan</c-header.h2>
-            <form method="post" class="grid gap-4">
-                {% csrf_token %}
-                {{ form }}
-                <c-link href="{% url 'reset-disabled' %}">Wachtwoord vergeten?</c-link>
-                <c-button type="submit">Log in</c-button>
-                <!-- <p class="text-center">Geen account? -->
-                    <!-- <c-link href="">Account aanmaken</c-link> -->
-                </p>
-            </form>
-        </c-card>
-    </div>
+<div class="page solo">
+    <img class="solo-logo" src="{% static 'loefbijter-logo.svg' %}" alt="N.S.Z.V. De Loefbijter"/>
+    <c-panel>
+        <h1 class="solo-title">{% translate "Log in to continue" %}</h1>
+        <form method="post" class="form-stack">
+            {% csrf_token %}
+            {{ form }}
+            <c-link href="{% url 'reset-disabled' %}">{% translate "Forgot your password?" %}</c-link>
+            <div class="form-actions">
+                <c-button type="submit">{% translate "Log in" %}</c-button>
+            </div>
+        </form>
+    </c-panel>
+    <c-language-switch class="solo-foot" />
+</div>
 {% endblock %}

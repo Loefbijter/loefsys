@@ -1,0 +1,217 @@
+[
+  {
+    "model": "reservations.reservabletype",
+    "pk": 1,
+    "fields": {
+      "created": "2026-01-01T10:00:00Z",
+      "modified": "2026-01-01T10:00:00Z",
+      "name": "Kielboot",
+      "category": 1,
+      "description": "Kielboten van de vereniging."
+    }
+  },
+  {
+    "model": "reservations.reservabletype",
+    "pk": 2,
+    "fields": {
+      "created": "2026-01-01T10:00:00Z",
+      "modified": "2026-01-01T10:00:00Z",
+      "name": "Vergaderruimte",
+      "category": 2,
+      "description": "Ruimtes in het Bastion."
+    }
+  },
+  {
+    "model": "reservations.reservabletype",
+    "pk": 3,
+    "fields": {
+      "created": "2026-01-01T10:00:00Z",
+      "modified": "2026-01-01T10:00:00Z",
+      "name": "Wetsuit",
+      "category": 3,
+      "description": "Wetsuits in diverse maten."
+    }
+  },
+
+  {
+    "model": "reservations.reservable",
+    "pk": 1,
+    "fields": {
+      "created": "2026-01-01T10:00:00Z",
+      "modified": "2026-01-01T10:00:00Z",
+      "name": "Scylla",
+      "description": "Kielboot, vereist KB2.",
+      "type": 1,
+      "location": 3,
+      "is_reservable": true
+    }
+  },
+  {
+    "model": "reservations.reservableboat",
+    "pk": 1,
+    "fields": {
+      "capacity": 4,
+      "has_engine": false,
+      "provider": 1,
+      "requires_skippership": 2
+    }
+  },
+
+  {
+    "model": "reservations.reservable",
+    "pk": 2,
+    "fields": {
+      "created": "2026-01-01T10:00:00Z",
+      "modified": "2026-01-01T10:00:00Z",
+      "name": "Charybdis",
+      "description": "Kielboot, vereist KB1.",
+      "type": 1,
+      "location": 3,
+      "is_reservable": true
+    }
+  },
+  {
+    "model": "reservations.reservableboat",
+    "pk": 2,
+    "fields": {
+      "capacity": 4,
+      "has_engine": false,
+      "provider": 1,
+      "requires_skippership": 1
+    }
+  },
+
+  {
+    "model": "reservations.reservable",
+    "pk": 3,
+    "fields": {
+      "created": "2026-01-01T10:00:00Z",
+      "modified": "2026-01-01T10:00:00Z",
+      "name": "Bestuurskamer",
+      "description": "Vergaderruimte in het Bastion.",
+      "type": 2,
+      "location": 1,
+      "is_reservable": true
+    }
+  },
+  {
+    "model": "reservations.reservableroom",
+    "pk": 3,
+    "fields": {
+      "capacity": 8
+    }
+  },
+
+  {
+    "model": "reservations.reservable",
+    "pk": 4,
+    "fields": {
+      "created": "2026-01-01T10:00:00Z",
+      "modified": "2026-01-01T10:00:00Z",
+      "name": "Wetsuit M",
+      "description": "Wetsuit maat M.",
+      "type": 3,
+      "location": 2,
+      "is_reservable": true
+    }
+  },
+  {
+    "model": "reservations.reservablematerial",
+    "pk": 4,
+    "fields": {
+      "size": "M"
+    }
+  },
+
+  {
+    "model": "reservations.reservation",
+    "pk": 1,
+    "fields": {
+      "created": "2026-09-10T09:00:00Z",
+      "modified": "2026-09-10T09:00:00Z",
+      "reservable": 1,
+      "user": 3,
+      "authorized_userskippership": 3,
+      "request_status": 1,
+      "start": "2026-09-20T10:00:00Z",
+      "end": "2026-09-20T14:00:00Z",
+      "date_of_creation": "2026-09-10T09:00:00Z",
+      "denial_reason": ""
+    }
+  },
+  {
+    "model": "reservations.reservation",
+    "pk": 2,
+    "fields": {
+      "created": "2026-09-11T09:00:00Z",
+      "modified": "2026-09-11T09:00:00Z",
+      "reservable": 3,
+      "user": 2,
+      "authorized_userskippership": null,
+      "request_status": 0,
+      "start": "2026-09-18T18:00:00Z",
+      "end": "2026-09-18T20:00:00Z",
+      "date_of_creation": "2026-09-11T09:00:00Z",
+      "denial_reason": ""
+    }
+  },
+  {
+    "model": "reservations.reservation",
+    "pk": 3,
+    "fields": {
+      "created": "2026-09-09T09:00:00Z",
+      "modified": "2026-09-12T09:00:00Z",
+      "reservable": 2,
+      "user": 2,
+      "authorized_userskippership": 2,
+      "request_status": 2,
+      "start": "2026-09-19T09:00:00Z",
+      "end": "2026-09-19T12:00:00Z",
+      "date_of_creation": "2026-09-09T09:00:00Z",
+      "denial_reason": "Boot staat gepland voor onderhoud."
+    }
+  },
+  {
+    "model": "reservations.reservation",
+    "pk": 4,
+    "fields": {
+      "created": "2026-08-25T09:00:00Z",
+      "modified": "2026-08-25T09:00:00Z",
+      "reservable": 1,
+      "user": 3,
+      "authorized_userskippership": 3,
+      "request_status": 1,
+      "start": "2026-09-01T10:00:00Z",
+      "end": "2026-09-01T14:00:00Z",
+      "date_of_creation": "2026-08-25T09:00:00Z",
+      "denial_reason": ""
+    }
+  },
+
+  {
+    "model": "reservations.boatlogbook",
+    "pk": 1,
+    "fields": {
+      "created": "2026-09-01T15:00:00Z",
+      "modified": "2026-09-01T15:00:00Z",
+      "reservation": 4,
+      "wind_force": 3,
+      "motor_hours": 0,
+      "refueled": false,
+      "has_new_damage": true,
+      "new_damage_description": "Kleine kras op de romp bij de boeg ontdekt tijdens de vaart.",
+      "photo": ""
+    }
+  },
+
+  {
+    "model": "reservations.boatdamagerecord",
+    "pk": 1,
+    "fields": {
+      "created": "2026-09-01T15:05:00Z",
+      "modified": "2026-09-01T15:05:00Z",
+      "boat": 1,
+      "description": "Kleine kras op de romp bij de boeg."
+    }
+  }
+]

@@ -6,7 +6,7 @@ from celery import group, shared_task
 @shared_task(ignore_result=True)
 def sync_all_services(user_pk: int):
     """Collector task to trigger all synchronization tasks for a user."""
-    group(sync_watersportverbond.si(user_pk), sync_conscribo.si(user_pk))()
+    group(sync_watersportverbond.si(user_pk), sync_conscribo.si(user_pk))()  # type: ignore[attr-defined]
 
 
 @shared_task(ignore_result=True)

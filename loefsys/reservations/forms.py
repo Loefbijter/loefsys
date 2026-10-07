@@ -14,20 +14,20 @@ class CreateReservationForm(forms.ModelForm):
     """A form to create reservations."""
 
     reservable = forms.ModelChoiceField(
-        label=_("Te reserveren item"),
+        label=_("Item to reserve"),
         queryset=Reservable.objects.none(),
         widget=forms.RadioSelect,
     )
     authorized_userskippership = forms.ModelChoiceField(
-        label=_("Kies een schipper"),
+        label=_("Choose a skipper"),
         queryset=User.objects.filter(is_active=True).order_by(
             "last_name", "first_name"
         ),
         required=False,
-        empty_label=_("Geen schipper geselecteerd"),
+        empty_label=_("No skipper selected"),
     )
     start = forms.DateTimeField(
-        label=_("Starttijd"),
+        label=_("Start time"),
         input_formats=["%Y-%m-%dT%H:%M"],
         widget=forms.DateTimeInput(
             attrs={
@@ -40,7 +40,7 @@ class CreateReservationForm(forms.ModelForm):
         ),
     )
     end = forms.DateTimeField(
-        label=_("Eindtijd"),
+        label=_("End time"),
         input_formats=["%Y-%m-%dT%H:%M"],
         widget=forms.DateTimeInput(
             attrs={
@@ -53,6 +53,20 @@ class CreateReservationForm(forms.ModelForm):
         ),
     )
 
+    reason = forms.CharField(
+        label=_("Reason for the reservation"),
+        widget=forms.Textarea(
+            attrs={
+                "rows": 3,
+                "class": (
+                    "w-full text-base rounded-xl px-3 py-2 border border-line "
+                    "bg-surface text-fg focus:outline-none focus:ring-2 "
+                    "focus:ring-primary/40 focus:border-primary/40"
+                ),
+            }
+        ),
+    )
+
     @property
     def reserved_item(self):
         """Return the selected reservable item."""
@@ -60,17 +74,17 @@ class CreateReservationForm(forms.ModelForm):
 
     class Meta:
         model = Reservation
-        fields = ("reservable", "start", "end", "authorized_userskippership")
+        fields = ("reservable", "start", "end", "authorized_userskippership", "reason")
 
 
 class SortByReservationForm(forms.Form):
     """A form to sort reservations."""
 
     CHOICES = (
-        ("start", _("Starttijd")),
-        ("end", _("Eindtijd")),
-        ("location", _("Locatie")),
-        ("-created", _("Nieuwste eerst")),
+        ("start", _("Start time")),
+        ("end", _("End time")),
+        ("location", _("Location")),
+        ("-created", _("Newest first")),
         ("A-Z", _("A-Z")),
         ("type", _("Type")),
     )
@@ -81,10 +95,10 @@ class BoatLogbookForm(forms.ModelForm):
     """A form to fill in a boat logbook after a reservation."""
 
     has_new_damage = forms.BooleanField(
-        label=_("Heb je nieuwe schade ontdekt?"), required=False
+        label=_("Did you discover new damage?"), required=False
     )
     new_damage_description = forms.CharField(
-        label=_("Beschrijf de nieuwe schade"),
+        label=_("Describe the new damage"),
         required=False,
         widget=forms.Textarea(attrs={"rows": 4}),
     )
@@ -102,15 +116,15 @@ class BoatLogbookForm(forms.ModelForm):
         # Labels may be lazy translation strings; use a wide type to satisfy
         # static checkers while remaining compatible with Django forms.
         labels: ClassVar[dict[str, object]] = {
-            "wind_force": _("Wat was de windkracht? (Bft)"),
-            "motor_hours": _("Hoeveel motoruren heb je gemaakt?"),
-            "refueled": _("Heb je de boot afgetankt?"),
-            "photo": _("Voeg een foto van de boot toe"),
+            "wind_force": _("What was the wind force? (Bft)"),
+            "motor_hours": _("How many engine hours did you run?"),
+            "refueled": _("Did you refuel the boat?"),
+            "photo": _("Add a photo of the boat"),
         }
 
     def clean(self):
         """Require a damage description when the user reports new damage."""
-        cleaned_data = super().clean()
+        cleaned_data = super().clean() or {}
         # Be defensive: the description can be None, so coerce to empty string
         # before calling string operations.
         if cleaned_data.get("has_new_damage"):
@@ -119,8 +133,8 @@ class BoatLogbookForm(forms.ModelForm):
                 self.add_error(
                     "new_damage_description",
                     _(
-                        "Beschrijf de nieuwe schade als je aangeeft dat er nieuwe "
-                        "schade is."
+                        "Please describe the new damage if you indicate that there "
+                        "is new damage."
                     ),
                 )
         return cleaned_data
