@@ -238,8 +238,8 @@ class MyEventsFeatureTestCase(TestCase):
         recent_event = G(
             Event,
             title="Recente training",
-            start=now - timedelta(days=3),
-            end=now - timedelta(days=2),
+            start=now - timedelta(hours=26),
+            end=now - timedelta(hours=23),
             registration_start=now - timedelta(days=10),
             registration_deadline=now - timedelta(days=5),
             cancelation_deadline=now - timedelta(days=4),
@@ -255,8 +255,8 @@ class MyEventsFeatureTestCase(TestCase):
         archive_event = G(
             Event,
             title="Oude training",
-            start=now - timedelta(days=20),
-            end=now - timedelta(days=15),
+            start=now - timedelta(hours=28),
+            end=now - timedelta(hours=25),
             registration_start=now - timedelta(days=30),
             registration_deadline=now - timedelta(days=25),
             cancelation_deadline=now - timedelta(days=23),

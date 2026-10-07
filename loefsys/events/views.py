@@ -457,11 +457,14 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
 
     template_name = "events/my_events.html"
 
-    @staticmethod
-    def _is_recent_event(event, now=None):
+    #: How long after its end an event moves from the active list to the archive.
+    archive_after = timedelta(days=1)
+
+    @classmethod
+    def _is_recent_event(cls, event, now=None):
         """Return whether an event should remain in the active organizer list."""
         now = now or timezone.now()
-        return event.end >= now - timedelta(days=7)
+        return event.end >= now - cls.archive_after
 
     def get_context_data(self, **kwargs):
         """Return context containing organized events, split into recent and archive."""
@@ -485,7 +488,7 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
         context["recent_events"] = recent_events
         context["archive_events"] = archive_events
         context["is_archive_view"] = is_archive_view
-        context["archive_days"] = 7
+        context["archive_days"] = self.archive_after.days
         return context
 
 
