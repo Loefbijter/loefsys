@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone, translation
-
 from django_dynamic_fixture import G
 
 from loefsys.groups.models import Committee
