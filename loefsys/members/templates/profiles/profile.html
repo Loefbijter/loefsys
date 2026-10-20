@@ -71,6 +71,31 @@
                 {% endif %}
             </c-panel>
         </div>
+        <div class="col">
+            <c-panel title="{% translate 'Committees' %}" icon="people" count="{{ current_committee_memberships|length }}">
+                {% if current_committee_memberships or past_committee_memberships %}
+                    {% if current_committee_memberships %}
+                        <div class="badges">
+                            {% for membership in current_committee_memberships %}
+                                <c-badge icon="people">{{ membership.group.name }}</c-badge>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if past_committee_memberships %}
+                        <div class="mt-3">
+                            <h4>{% translate 'Past committees' %}</h4>
+                            <div class="badges">
+                                {% for membership in past_committee_memberships %}
+                                    <c-badge icon="people" variant="secondary">{{ membership.group.name }}</c-badge>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <c-empty-state icon="people" title="{% translate 'No committee memberships yet.' %}" />
+                {% endif %}
+            </c-panel>
+        </div>
     </div>
 </div>
 {% endblock %}

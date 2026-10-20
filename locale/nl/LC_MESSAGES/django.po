@@ -363,6 +363,9 @@ msgstr "Plaats"
 msgid "Close"
 msgstr "Sluiten"
 
+msgid "Committees"
+msgstr "Commissies"
+
 msgid "Competition"
 msgstr "Wedstrijd"
 
@@ -379,9 +382,9 @@ msgid ""
 "Contact <a href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a> and "
 "we will create a new password for you as soon as possible."
 msgstr ""
-"Neem contact op met <a href=\"mailto:webcie@loefbijter."
-"nl\">webcie@loefbijter.nl</a>, wij maken zo snel mogelijk een nieuw "
-"wachtwoord voor je aan."
+"Neem contact op met <a "
+"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>, wij maken zo "
+"snel mogelijk een nieuw wachtwoord voor je aan."
 
 msgid "Content"
 msgstr "Inhoud"
@@ -914,6 +917,9 @@ msgstr "Geen antwoord"
 msgid "No boat or room chosen yet"
 msgstr "Nog geen boot of ruimte gekozen"
 
+msgid "No committee memberships yet."
+msgstr "Nog geen commissies."
+
 msgid "No events to show"
 msgstr "Geen evenementen om te tonen"
 
@@ -995,6 +1001,9 @@ msgstr "Wachtwoord opnieuw ingesteld"
 
 msgid "Password updated successfully."
 msgstr "Wachtwoord succesvol bijgewerkt."
+
+msgid "Past committees"
+msgstr "Vorige commissies"
 
 msgid "Past month (held)"
 msgstr "Afgelopen maand (gehouden)"
@@ -1625,12 +1634,12 @@ msgstr "Je hebt nog geen reserveringen"
 
 msgid ""
 "You don't have permission to view this page. If you think you should, ask "
-"the board, or let us know via <a href=\"mailto:webcie@loefbijter."
-"nl\">webcie@loefbijter.nl</a>."
+"the board, or let us know via <a "
+"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
 msgstr ""
 "Je hebt geen toegang tot deze pagina. Denk je dat dat wel zou moeten, vraag "
-"het dan aan het bestuur of laat het ons weten via <a href=\"mailto:"
-"webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
+"het dan aan het bestuur of laat het ons weten via <a "
+"href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>."
 
 msgid "You have no upcoming reservations."
 msgstr "Je hebt geen aankomende reserveringen."
