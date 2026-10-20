@@ -19,6 +19,7 @@ from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
+from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 from loefsys.groups.models.membership import GroupMembership
 
 logger = logging.getLogger(__name__)
@@ -184,6 +185,8 @@ class UserSetPasswordView(LoginRequiredMixin, FormView):
     Uses Django's SetPasswordForm which validates the two password fields
     and applies the configured password validators.
     """
+
+    request: AuthenticatedHttpRequest
 
     template_name = "profiles/set_password.html"
     form_class = SetPasswordForm
