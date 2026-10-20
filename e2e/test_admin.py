@@ -1,22 +1,16 @@
-"""Admin roles. Spec: e2e/specs/admin.md.
-
-The activity manager and "Admin" permission tests cover PR #175 and are skipped on
-code without it.
-"""
+"""Admin roles. Spec: e2e/specs/admin.md."""
 
 import re
 
 import pytest
-from django.contrib.auth.models import Group, Permission
 from playwright.sync_api import expect
 
 from e2e import factories
 from e2e.conftest import log_in
 from loefsys.events.models import RegistrationFormField
 from loefsys.events.models.choices import EventCategories
+from loefsys.events.permissions import ACTIVITY_MANAGERS_GROUP
 from loefsys.reservations.models.reservation import Reservation
-
-ACTIVITY_MANAGERS = "Activity managers"
 
 # The activity manager group is made by a data migration, which a plain flush
 # between live server tests would throw away.
@@ -32,20 +26,13 @@ def admin_log_in(page, base_url, user):
     return page
 
 
-def requires_pr_175():
-    """Skip the test when the activity manager roles from PR #175 aren't there."""
-    if not Group.objects.filter(name=ACTIVITY_MANAGERS).exists():
-        pytest.skip("Needs the activity manager roles from PR #175")
-
-
 @pytest.fixture
 def activity_manager(db):
     """Return a member in "Activity managers" who may manage sailing events."""
-    requires_pr_175()
     user = factories.make_user(
         email="ankie.regatta@example.org", first_name="Ankie", last_name="Regatta"
     )
-    factories.add_to_group(user, ACTIVITY_MANAGERS)
+    factories.add_to_group(user, ACTIVITY_MANAGERS_GROUP)
     factories.grant_permissions(user, "events.manage_sailing_events")
     return user
 
@@ -200,8 +187,6 @@ def test_activity_manager_cannot_browse_members(page, live_server, activity_mana
 
 def test_admin_permission_grants_admin_access(page, live_server, member):
     """ADM-9: the "Admin" permission alone lets a member into the admin."""
-    if not Permission.objects.filter(codename="access_admin").exists():
-        pytest.skip('Needs the "Admin" permission from PR #175')
     factories.grant_permissions(member, "members.access_admin")
 
     admin_log_in(page, live_server.url, member)

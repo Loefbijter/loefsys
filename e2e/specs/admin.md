@@ -1,8 +1,5 @@
 # Admin roles
 
-The activity manager and "Admin" permission criteria cover PR #175. Their tests skip
-themselves while that PR isn't merged.
-
 **As a member without any permissions, I don't get into the admin.**
 
 - **ADM-1** Logging in to the admin is refused with an error.
