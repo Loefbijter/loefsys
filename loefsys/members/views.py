@@ -13,12 +13,13 @@ from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
-from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
+from loefsys.groups.models.membership import GroupMembership
 
 logger = logging.getLogger(__name__)
 
@@ -96,13 +97,10 @@ class ProfileView(LoginRequiredMixin, DetailView):
     template_name = "profiles/profile.html"
 
     def get_context_data(self, **kwargs):
-        """Add a filtered list of skipperships to the profile context.
-
-        Only the furthest-child skipperships are shown: if the user has both KB1 and KB2
-        and KB1 is an ancestor of KB2, only KB2 is included in display_skipperships.
-        """
+        """Add a filtered list of skipperships and committee memberships to the profile context."""
         context = super().get_context_data(**kwargs)
         member = self.get_object()
+
         entries = list(member.user_skipperships.select_related("skippership"))
         display = []
         for entry in entries:
@@ -114,6 +112,27 @@ class ProfileView(LoginRequiredMixin, DetailView):
                 continue
             display.append(entry.skippership)
         context["display_skipperships"] = display
+
+        today = timezone.localdate()
+        committee_memberships = list(
+            GroupMembership.objects.filter(user=member, group__committee__isnull=False)
+            .select_related("group")
+            .order_by("group__name")
+        )
+        current_committees = []
+        past_committees = []
+        for membership in committee_memberships:
+            if membership.member_until and membership.member_until < today:
+                past_committees.append(membership)
+            elif membership.member_since <= today and (
+                membership.member_until is None or membership.member_until >= today
+            ):
+                current_committees.append(membership)
+            else:
+                past_committees.append(membership)
+
+        context["current_committee_memberships"] = current_committees
+        context["past_committee_memberships"] = past_committees
         return context
 
 
@@ -165,8 +184,6 @@ class UserSetPasswordView(LoginRequiredMixin, FormView):
     Uses Django's SetPasswordForm which validates the two password fields
     and applies the configured password validators.
     """
-
-    request: AuthenticatedHttpRequest
 
     template_name = "profiles/set_password.html"
     form_class = SetPasswordForm

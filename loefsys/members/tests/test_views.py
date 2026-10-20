@@ -1,9 +1,14 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.utils import translation
+from django.utils import timezone, translation
+
 from django_dynamic_fixture import G
 
+from loefsys.groups.models import Committee
+from loefsys.groups.models.membership import GroupMembership
 from loefsys.members.models import Skippership, UserSkippership
 
 
@@ -157,3 +162,33 @@ class UserProfileViewTestCase(TestCase):
         self.assertEqual(profile_response.status_code, 200)
         self.assertNotContains(profile_response, pod_kb_link)
         self.assertNotContains(profile_response, pod_zb_link)
+
+    def test_profile_page_displays_active_and_past_committee_memberships(self):
+        """The profile page displays active and past committee memberships."""
+        user = G(get_user_model())
+        self.client.force_login(user)
+        today = timezone.localdate()
+        active_committee = G(Committee, name="Webcie")
+        past_committee = G(Committee, name="Kookcie")
+        G(
+            GroupMembership,
+            user=user,
+            group=active_committee,
+            member_since=today - timedelta(days=30),
+            member_until=None,
+        )
+        G(
+            GroupMembership,
+            user=user,
+            group=past_committee,
+            member_since=today - timedelta(days=365),
+            member_until=today - timedelta(days=10),
+        )
+
+        response = self.client.get(reverse("members:user-profile"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Commissies")
+        self.assertContains(response, "Webcie")
+        self.assertContains(response, "Kookcie")
+        self.assertContains(response, "Vroegere commissies")
