@@ -1,7 +1,4 @@
-"""Switching language. Spec: e2e/specs/language.md.
-
-Covers PR #172 and is skipped on code without the language switcher.
-"""
+"""Switching language. Spec: e2e/specs/language.md."""
 
 import re
 
@@ -15,11 +12,8 @@ DUTCH = re.compile(r"^\s*Nederlands\s*$")
 
 
 def switcher(page, name):
-    """Return the language switch button called ``name``, skipping if absent."""
-    button = page.get_by_role("button", name=name)
-    if button.count() == 0:
-        pytest.skip("Needs the language switcher from PR #172")
-    return button.filter(visible=True).first
+    """Return the visible language switch button called ``name``."""
+    return page.get_by_role("button", name=name).filter(visible=True).first
 
 
 @pytest.fixture

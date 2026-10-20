@@ -1,7 +1,5 @@
 # Language
 
-Covers PR #172. The tests skip themselves while the language switcher isn't there.
-
 **As a member, I see the site in Dutch, and I can switch to English if I prefer.**
 
 - **LANG-1** The site is in Dutch by default, also for a browser set to English.
