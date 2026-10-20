@@ -6,7 +6,7 @@ Prerequisites
 -------------
 In order to contribute to the project, you should have the following prerequisites:
 
-#. Install `Git <https://git-scm.com/>`_ and `Node.js <https://nodejs.org/>`_.
+#. Install `Git <https://git-scm.com/>`_, `Node.js <https://nodejs.org/>`_ and `GNU gettext <https://www.gnu.org/software/gettext/>`_ (``apt install gettext`` or ``brew install gettext``), which builds the translations. ``runserver`` and the tests compile them automatically.
 
 #. Ensure you have Python 3.12 installed or higher. You can check which version you are running by executing the following command in your terminal::
 

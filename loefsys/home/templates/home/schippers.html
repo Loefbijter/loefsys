@@ -1,65 +1,59 @@
 {% extends "base.html" %}
+{% load i18n static %}
 
 {% block title %}
-Schippers
+{% translate "Skippers" %}
 {% endblock %}
 
-{% block content %}
-<style>
-    .skipper-name,
-    .skipper-title {
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-</style>
+{% block head %}
+<script src="{% static 'JS/list_filter.js' %}" defer></script>
+{% endblock head %}
 
-<div class="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8">
-    <div class="space-y-3">
-        <h1 class="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Schippers</h1>
-        <p class="max-w-2xl text-base text-foreground/70 sm:text-lg">
-            Hier vind je alle schippers binnen Loefbijter. Wil je een keer zeilen? App een schipper of praat met ze op de borrel!
-        </p>
-    </div>
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<div class="page" data-list-filter>
+    {% blocktranslate trimmed count counter=skipper_count asvar page_sub %}{{ counter }} member may skipper. Want to go sailing some time? Send a skipper a message or talk to them at the borrel!{% plural %}{{ counter }} members may skipper. Want to go sailing some time? Send a skipper a message or talk to them at the borrel!{% endblocktranslate %}
+    <c-page-header eyebrow="{% translate 'About us' %}" title="{% translate 'Skippers' %}" :sub="page_sub">
+        {% if skippers_by_level %}
+            <label class="field skipper-search">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <span class="sr-only">{% translate "Search for a skipper" %}</span>
+                <input type="search" placeholder="{% translate 'Search for a skipper' %}" data-filter-input>
+            </label>
+        {% endif %}
+    </c-page-header>
 
     {% if skippers_by_level %}
-        <div class="space-y-6">
+        <div class="badges" role="group" aria-label="{% translate 'Skippership' %}">
+            <button type="button" class="filter" data-filter-group-button="" aria-pressed="true">{% translate "All" %}</button>
             {% for level_group in skippers_by_level %}
-                <section class="rounded-2xl border border-foreground/10 bg-background/70 p-6 shadow-sm">
-                    <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                            <h2 class="text-xl font-semibold text-foreground">{{ level_group.label }}</h2>
-                            <p class="text-sm text-foreground/60">{{ level_group.schippers|length }} schipper{% if level_group.schippers|length != 1 %}s{% endif %}</p>
-                        </div>
-                    </div>
-
-                    {% if level_group.schippers %}
-                        <ul class="grid gap-4 md:grid-cols-2">
-                            {% for skipper in level_group.schippers %}
-                                <li class="rounded-xl border border-foreground/10 bg-white/80 p-4 shadow-sm">
-                                    <div class="flex items-start justify-between gap-3">
-                                        <div class="min-w-0 flex-1">
-                                            <p class="skipper-name min-w-0 break-words font-semibold text-foreground">{{ skipper.user.display_name }}</p>
-                                            {% if skipper.user.title %}
-                                                <p class="skipper-title mt-1 text-sm text-foreground/60">{{ skipper.user.title }}</p>
-                                            {% endif %}
-                                        </div>
-                                        <a href="{{ skipper.profile_url }}" class="shrink-0 text-sm font-medium text-primary hover:underline">
-                                            Bekijk profiel
-                                        </a>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-sm text-foreground/60">Er zijn momenteel geen schippers geregistreerd op dit niveau.</p>
-                    {% endif %}
-                </section>
+                <button type="button" class="filter" data-filter-group-button="{{ level_group.label }}" aria-pressed="false">{{ level_group.label }}</button>
             {% endfor %}
         </div>
-    {% else %}
-        <div class="rounded-2xl border border-dashed border-foreground/20 bg-foreground/[0.03] p-8 text-center text-foreground/70">
-            Er zijn nog geen schippers geregistreerd.
+
+        {% for level_group in skippers_by_level %}
+            {% blocktranslate trimmed count counter=level_group.schippers|length asvar group_count %}{{ counter }} skipper{% plural %}{{ counter }} skippers{% endblocktranslate %}
+            <c-panel :title="level_group.label" icon="award" :count="group_count" data-filter-group="{{ level_group.label }}">
+                <div class="people">
+                    {% for skipper in level_group.schippers %}
+                        <div data-filter-item="{{ skipper.user.display_name|lower }}">
+                            <c-person-row :user="skipper.user" :href="skipper.profile_url" :sub="skipper.user.title" />
+                        </div>
+                    {% endfor %}
+                </div>
+            </c-panel>
+        {% endfor %}
+
+        <div data-filter-empty hidden>
+            <c-panel>
+                <c-empty-state icon="search" title="{% translate 'No skippers found' %}" text="{% translate 'Try another name or choose All.' %}" />
+            </c-panel>
         </div>
+    {% else %}
+        <c-panel>
+            <c-empty-state icon="award" title="{% translate 'No skippers have been registered yet.' %}" />
+        </c-panel>
     {% endif %}
 </div>
 {% endblock content %}

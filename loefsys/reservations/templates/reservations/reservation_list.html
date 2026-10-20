@@ -2,149 +2,68 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Reserveringen" %}
+    {% translate "Reservations" %}
 {% endblock %}
 
+{% block main_class %}{% endblock %}
+
 {% block content %}
-<div class="min-h-screen bg-background">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-6 sm:space-y-8">
+<div class="page">
+    {% if is_archive_view %}
+        {% translate "Archive of older reservations" as page_sub %}
+    {% else %}
+        {% translate "Active and recent reservations" as page_sub %}
+    {% endif %}
+    <c-page-header eyebrow="{% translate 'Boats' %}" title="{% translate 'My reservations' %}" :sub="page_sub">
+        <a class="btn btn-primary" href="{% url 'reservations:reservation-add' '1' %}"><i class="bi bi-plus-lg" aria-hidden="true"></i>{% translate "New reservation" %}</a>
+    </c-page-header>
 
-        <!-- Page header -->
-        <div class="mb-5 flex flex-col gap-4 rounded-3xl border border-black/5 bg-white p-4 shadow-sm sm:p-5">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-               <div>
-                   <h1 class="text-3xl sm:text-4xl font-bold text-foreground">{% trans "Mijn reserveringen" %}</h1>
-                   <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% trans "Archief van oudere reserveringen" %}{% else %}{% trans "Actieve en recente reserveringen" %}{% endif %}</p>
-               </div>
-               <a href="{% url 'reservations:reservation-add' '1' %}"
-                   class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors whitespace-nowrap cursor-pointer">
-                   <i class="bi bi-plus-lg"></i>
-                   {% trans "Nieuwe reservering" %}
-               </a>
-            </div>
-
-            <div class="flex rounded-full bg-black/5 p-1">
-               <a href="{% url 'reservations:reservations' %}" class="flex-1 rounded-full px-3 py-2 text-center text-sm font-semibold transition {% if not is_archive_view %}bg-white text-foreground shadow-sm{% else %}text-foreground/60{% endif %}">
-                   {% trans "Actief" %}
-               </a>
-               <a href="{% url 'reservations:reservations' %}?view=archive" class="flex-1 rounded-full px-3 py-2 text-center text-sm font-semibold transition {% if is_archive_view %}bg-white text-foreground shadow-sm{% else %}text-foreground/60{% endif %}">
-                   {% trans "Archief" %}
-               </a>
-            </div>
-        </div>
-
-        <!-- Filter -->
+    <div class="cal-bar">
+        <c-segmented label="{% translate 'Reservations' %}">
+            <c-segmented.item href="{% url 'reservations:reservations' %}" active="{% if not is_archive_view %}1{% endif %}">{% translate "Active" %}</c-segmented.item>
+            <c-segmented.item href="{% url 'reservations:reservations' %}?view=archive" active="{% if is_archive_view %}1{% endif %}">{% translate "Archive" %}</c-segmented.item>
+        </c-segmented>
         {% if form %}
-        <div class="bg-white rounded-2xl border border-black/5 shadow-sm p-4 sm:p-5">
-            <form method="get" class="flex flex-wrap items-end gap-4">
-                {% for field in form %}
-                <div class="flex flex-col gap-1 min-w-[150px]">
-                    {% if field.label %}
-                    <label for="{{ field.id_for_label }}" class="text-xs font-semibold uppercase tracking-wide text-foreground/50">
-                        {{ field.label }}
-                    </label>
-                    {% endif %}
-                    {{ field }}
-                    {% for error in field.errors %}
-                    <p class="text-destructive text-xs font-medium">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endfor %}
-                <button type="submit"
-                                        class="rounded-xl bg-secondary px-5 py-2.5 text-sm font-semibold text-secondary-foreground hover:bg-secondary-accent transition-colors cursor-pointer">
-                    {% trans "Toepassen" %}
-                </button>
+            <form method="get" class="cal-bar-group" data-autosubmit>
+                {% if is_archive_view %}<input type="hidden" name="view" value="archive">{% endif %}
+                <label class="field">
+                    <i class="bi bi-sort-down" aria-hidden="true"></i>
+                    <span class="sr-only">{% translate "Sort by" %}</span>
+                    <select name="{{ form.sort_by.html_name }}" id="{{ form.sort_by.id_for_label }}">
+                        {% for value, label in form.fields.sort_by.choices %}
+                            <option value="{{ value }}" {% if form.sort_by.value == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <noscript><button type="submit" class="btn btn-secondary">{% translate "Apply" %}</button></noscript>
             </form>
-        </div>
         {% endif %}
+    </div>
 
-        <!-- List of Reservations made by user -->
-        {% if reservations %}
-        <div class="space-y-3">
+    {% if reservations %}
+        <div class="rows">
             {% for reservation in reservations %}
-            <div class="relative bg-white rounded-2xl border border-black/5 shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                <!-- status accent -->
-                <span class="absolute inset-y-0 left-0 w-1.5
-                    {% if reservation.request_status == RequestStatus.PENDING %}bg-alert
-                    {% elif reservation.request_status == RequestStatus.APPROVED %}bg-success
-                    {% elif reservation.request_status == RequestStatus.DENIED %}bg-destructive
-                    {% endif %}"></span>
-
-                <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}" class="block px-5 sm:px-6 py-4 pl-6 sm:pl-7 cursor-pointer">
-                    <div class="flex items-start justify-between gap-3 flex-wrap">
-                        <div class="min-w-0">
-                            <p class="text-lg sm:text-xl font-semibold text-secondary truncate">
-                                {{ reservation.reservable }}
-                            </p>
-                            <p class="text-sm text-secondary/70 mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-                                {% if reservation.start.date == reservation.end.date %}
-                                    <span class="inline-flex items-center gap-1.5">
-                                        <i class="bi bi-calendar-event"></i>
-                                        {{ reservation.start|date:"j M Y" }}
-                                    </span>
-                                    <span class="text-foreground/30">·</span>
-                                    <span class="inline-flex items-center gap-1.5">
-                                        <i class="bi bi-clock"></i>
-                                        {{ reservation.start|date:"H:i" }} – {{ reservation.end|date:"H:i" }}
-                                    </span>
-                                {% else %}
-                                    <span class="inline-flex items-center gap-1.5">
-                                        <i class="bi bi-calendar-event"></i>
-                                        {{ reservation.start|date:"j M Y, H:i" }}
-                                    </span>
-                                    <i class="bi bi-arrow-right-short"></i>
-                                    <span>{{ reservation.end|date:"j M Y, H:i" }}</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <span class="shrink-0 text-xs font-semibold uppercase tracking-wide px-3 py-1 rounded-full
-                            {% if reservation.request_status == RequestStatus.PENDING %}bg-alert/15 text-alert
-                            {% elif reservation.request_status == RequestStatus.APPROVED %}bg-success/15 text-success
-                            {% elif reservation.request_status == RequestStatus.DENIED %}bg-destructive/15 text-destructive
-                            {% endif %}">
-                            {{ reservation.get_request_status_display }}
-                        </span>
-                    </div>
-                </a>
-
-                {% if reservation.can_fill_logbook or reservation.has_boat_logbook %}
-                <div class="flex justify-end px-5 sm:px-6 pb-4 pl-6 sm:pl-7">
+                <div class="row-stack">
+                    <c-reservation-row :reservation="reservation" />
                     {% if reservation.can_fill_logbook %}
-                    <a href="{% url 'reservations:boat-logbook' pk=reservation.id %}"
-                       class="inline-flex items-center gap-1.5 rounded-full bg-success px-4 py-2 text-sm font-semibold text-white hover:bg-success-accent transition-colors cursor-pointer">
-                        <i class="bi bi-journal-plus"></i>
-                        {% trans "Vul logboek in" %}
-                    </a>
+                        <a class="btn btn-primary btn-sm" href="{% url 'reservations:boat-logbook' pk=reservation.id %}"><i class="bi bi-journal-plus" aria-hidden="true"></i>{% translate "Fill in logbook" %}</a>
                     {% elif reservation.has_boat_logbook %}
-                    <a href="{% url 'reservations:boat-logbook' pk=reservation.id %}"
-                       class="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors cursor-pointer">
-                        <i class="bi bi-journal-text"></i>
-                        {% trans "Bekijk logboek" %}
-                    </a>
+                        <a class="btn btn-ghost btn-sm" href="{% url 'reservations:boat-logbook' pk=reservation.id %}"><i class="bi bi-journal-text" aria-hidden="true"></i>{% translate "View logbook" %}</a>
                     {% endif %}
                 </div>
-                {% endif %}
-            </div>
             {% endfor %}
         </div>
-        {% else %}
-        <!-- Empty state -->
-        <div class="bg-white rounded-2xl border border-black/5 shadow-sm px-6 py-16 text-center">
-            <div class="mx-auto w-14 h-14 rounded-full bg-accent flex items-center justify-center mb-4">
-                <i class="bi bi-calendar-x text-2xl text-primary"></i>
-            </div>
-            <p class="text-lg font-semibold text-foreground">{% if is_archive_view %}{% trans "Er staat nog geen oude reservering in het archief" %}{% else %}{% trans "Je hebt nog geen reserveringen" %}{% endif %}</p>
-            <p class="text-sm text-foreground/60 mt-1">{% if is_archive_view %}{% trans "Je oudere reserveringen worden hier automatisch geplaatst." %}{% else %}{% trans "Maak je eerste reservering om te beginnen." %}{% endif %}</p>
-            {% if not is_archive_view %}
-            <a href="{% url 'reservations:reservation-add' '1' %}"
-               class="inline-flex items-center gap-2 mt-5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-accent transition-colors cursor-pointer">
-               <i class="bi bi-plus-lg"></i>
-               {% trans "Maak reservering" %}
-            </a>
-            {% endif %}
-        </div>
-        {% endif %}
-
-    </div>
+    {% elif is_archive_view %}
+        <c-panel>
+            <c-empty-state icon="archive" title="{% translate 'There are no old reservations in the archive yet' %}" text="{% translate 'Your older reservations are placed here automatically.' %}" />
+        </c-panel>
+    {% else %}
+        {% translate "You don't have any reservations yet" as empty_title %}
+        <c-panel>
+            <c-empty-state icon="water" :title="empty_title" text="{% translate 'Make your first reservation to get started.' %}">
+                <a class="btn btn-primary" href="{% url 'reservations:reservation-add' '1' %}"><i class="bi bi-plus-lg" aria-hidden="true"></i>{% translate "Make a reservation" %}</a>
+            </c-empty-state>
+        </c-panel>
+    {% endif %}
 </div>
 {% endblock %}

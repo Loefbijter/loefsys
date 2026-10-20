@@ -1,6 +1,7 @@
 """iCalendar feed generation for Loefbijter events."""
 
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from django_ical.views import ICalFeed
 
 from loefsys.events.models import Event
@@ -12,7 +13,7 @@ class RegisteredEventFeed(ICalFeed):
 
     product_id = "-//Loefsys//RegisteredEventCalendar//"
     timezone = "Europe/Amsterdam"
-    title = "Registered Loefbijter Events"
+    title = _("Registered Loefbijter Events")
 
     def __call__(self, request, *args, **kwargs):  # noqa: D102
         if "u" in request.GET:
@@ -57,7 +58,7 @@ class OtherEventFeed(ICalFeed):
 
     product_id = "-//Loefsys//OtherEventCalendar//"
     timezone = "Europe/Amsterdam"
-    title = "Other Loefbijter Events"
+    title = _("Other Loefbijter Events")
 
     def __call__(self, request, *args, **kwargs):  # noqa: D102
         if "u" in request.GET:

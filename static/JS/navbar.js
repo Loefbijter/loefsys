@@ -1,72 +1,50 @@
-function initNavbar() {
-    if (window.__navbarInitialized) {
-        return;
-    }
+// Navigation menus: the "About us" dropdown in the top banner and the vertical
+// menu that folds out of the bottom wave on phones. Both use a button with
+// aria-controls pointing at the menu it opens.
+(function () {
+  function init() {
+    if (window.__navbarInitialized) return;
     window.__navbarInitialized = true;
 
-    // handle any About toggles (desktop + mobile). Uses data-target attribute on the toggle button
-    const toggles = document.querySelectorAll('.about-toggle');
+    const toggles = Array.from(document.querySelectorAll('[data-menu-toggle]'));
 
-    toggles.forEach(function(toggle) {
-        const targetSelector = toggle.dataset.target;
-        if (!targetSelector) return;
-        const dropdown = document.querySelector(targetSelector);
-        const chevron = toggle.querySelector('.about-chevron') || toggle.querySelector('svg');
+    function setOpen(toggle, open) {
+      const menu = document.getElementById(toggle.getAttribute('aria-controls'));
+      if (!menu) return;
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      const backdrop = toggle.dataset.backdrop && document.getElementById(toggle.dataset.backdrop);
+      if (backdrop) backdrop.hidden = !open;
+    }
+    const closeAll = (except) => toggles.forEach((t) => { if (t !== except) setOpen(t, false); });
 
-        // initialize state
-        if (dropdown && dropdown.classList.contains('hidden')) {
-            if (chevron) chevron.style.transform = 'rotate(0deg)';
-            toggle.setAttribute('aria-expanded', 'false');
-        }
-
-        toggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (!dropdown) return;
-            const isHidden = dropdown.classList.contains('hidden');
-
-            if (isHidden) {
-                // open this dropdown
-                dropdown.classList.remove('hidden');
-                toggle.setAttribute('aria-expanded', 'true');
-                if (chevron) chevron.style.transform = 'rotate(180deg)';
-            } else {
-                // close this dropdown
-                dropdown.classList.add('hidden');
-                toggle.setAttribute('aria-expanded', 'false');
-                if (chevron) chevron.style.transform = 'rotate(0deg)';
-            }
-        });
+    toggles.forEach((toggle) => {
+      toggle.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const open = toggle.getAttribute('aria-expanded') !== 'true';
+        closeAll(toggle);
+        setOpen(toggle, open);
+      });
     });
 
-    // close when clicking outside any about dropdown
-    document.addEventListener('click', function(e) {
-        document.querySelectorAll('.about-dropdown').forEach(function(dropdown) {
-            const selector = '#' + dropdown.id;
-            const relatedToggle = Array.from(toggles).find(t => t.dataset.target === selector);
-            if (!relatedToggle) return;
-            if (!relatedToggle.contains(e.target) && !dropdown.contains(e.target)) {
-                if (!dropdown.classList.contains('hidden')) {
-                    dropdown.classList.add('hidden');
-                    relatedToggle.setAttribute('aria-expanded', 'false');
-                    const chevron = relatedToggle.querySelector('.about-chevron') || relatedToggle.querySelector('svg');
-                    if (chevron) chevron.style.transform = 'rotate(0deg)';
-                }
-            }
-        });
+    document.addEventListener('click', (event) => {
+      toggles.forEach((toggle) => {
+        const menu = document.getElementById(toggle.getAttribute('aria-controls'));
+        if (menu && !menu.contains(event.target)) setOpen(toggle, false);
+      });
     });
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const mobileToggleCheckbox = document.getElementById('mobile-menu-toggle-checkbox');
-            if (mobileToggleCheckbox && mobileToggleCheckbox.checked) {
-                mobileToggleCheckbox.checked = false;
-            }
-        }
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeAll();
     });
-}
+  }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavbar);
-} else {
-    initNavbar();
-}
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+// Forms marked data-autosubmit (such as sort pickers) submit as soon as a field changes.
+document.addEventListener('change', function (event) {
+  const form = event.target.closest && event.target.closest('form[data-autosubmit]');
+  if (form) form.requestSubmit();
+});

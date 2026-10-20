@@ -22,10 +22,9 @@ try:
 except Exception as e:
     print("Could not grant permission or find user:", e)
 
-# Ensure admin user has is_staff and is_superuser set via ORM update.
+# Ensure admin user has is_superuser set via ORM update.
 try:
     admin = User.objects.get(email="admin@example.test")
-    admin.is_staff = True
     admin.is_superuser = True
     admin.save()
     print("Ensured admin flags set")

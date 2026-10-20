@@ -1,32 +1,33 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}
-    Inschrijven
+    {% translate "Register" %}
 {% endblock %}
 
 {% block content %}
 <div class="mx-auto flex w-full max-w-3xl flex-col px-4 py-8 sm:px-6 lg:px-8">
-  <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+  <div class="rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-8">
     <div class="mb-6">
-      <h1 class="text-3xl font-semibold text-slate-900">Inschrijven voor {{ event.title }}</h1>
-      <p class="mt-2 text-sm text-slate-600">Vul de vragen hieronder in om je inschrijving te voltooien.</p>
+      <h1 class="text-3xl font-semibold text-fg">{% blocktranslate trimmed with title=event.title %}Register for {{ title }}{% endblocktranslate %}</h1>
+      <p class="mt-2 text-sm text-muted">{% translate "Answer the questions below to complete your registration." %}</p>
     </div>
 
     <form method="post" class="space-y-4">
       {% csrf_token %}
       {% for field in form %}
-      <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <div class="rounded-xl border border-line bg-surface-2 p-4">
         <div class="flex items-start justify-between gap-3">
-          <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-slate-900">{{ field.label }}</label>
+          <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-fg">{{ field.label }}</label>
           {% if field.field.required %}
-          <span class="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700">Verplicht</span>
+          <c-chip kind="warn">{% translate "Required" %}</c-chip>
           {% endif %}
         </div>
         {% if field.help_text %}
-        <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ field.help_text }}</p>
+        <p class="mt-2 whitespace-pre-line text-sm leading-6 text-muted">{{ field.help_text }}</p>
         {% endif %}
         {% if field.field.widget.input_type == "checkbox" %}
-        <label class="mt-4 flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-3 text-sm text-slate-700">
+        <label class="mt-4 flex items-center gap-3 rounded-lg border border-line bg-surface px-3 py-3 text-sm text-fg">
           {{ field }}
           <span>{{ field.label }}</span>
         </label>
@@ -34,7 +35,7 @@
         <div class="mt-4">{{ field }}</div>
         {% endif %}
         {% if field.errors %}
-        <ul class="mt-3 space-y-1 text-sm text-red-600">
+        <ul class="mt-3 space-y-1 text-sm text-bad">
           {% for error in field.errors %}
           <li>{{ error }}</li>
           {% endfor %}
@@ -44,7 +45,7 @@
       {% endfor %}
 
       <div class="flex justify-end pt-2">
-        <button type="submit" class="rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary hover:text-tertiary-foreground cursor-pointer">Inschrijven</button>
+        <button type="submit" class="rounded-lg bg-secondary px-4 py-2 text-sm font-semibold text-secondary-foreground transition hover:bg-tertiary hover:text-tertiary-foreground cursor-pointer">{% translate "Register" %}</button>
       </div>
     </form>
   </div>

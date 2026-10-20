@@ -1,0 +1,18 @@
+{% comment %}One line per boat or item reservation.{% endcomment %}
+{% load i18n %}
+<c-vars reservation />
+<a class="row" href="{% url 'reservations:reservation-detail' pk=reservation.pk %}">
+    <c-date-tile :date="reservation.start" />
+    <div class="row-body">
+        <div class="row-title">{{ reservation.reservable.name }}</div>
+        <div class="row-meta">
+            <span><i class="bi bi-tag" aria-hidden="true"></i>{{ reservation.reservable.type.name }}</span>
+            <span><i class="bi bi-clock" aria-hidden="true"></i>{% if reservation.start.date == reservation.end.date %}{{ reservation.start|date:"D H:i" }}–{{ reservation.end|date:"H:i" }}{% else %}{{ reservation.start|date:"D j M H:i" }} – {{ reservation.end|date:"D j M H:i" }}{% endif %}</span>
+        </div>
+        <c-reservation-status :reservation="reservation" class="chip-n" />
+    </div>
+    <div class="row-end">
+        <c-reservation-status :reservation="reservation" />
+        <i class="bi bi-chevron-right" aria-hidden="true"></i>
+    </div>
+</a>

@@ -1,0 +1,31 @@
+# Deploys only ever run `docker compose pull && docker compose up -d`.
+# Never `docker compose down -v` / `--volumes` -- that destroys db_data/media_data.
+#
+# This file assumes Postgres is containerized alongside the app ("Variant B" in
+# docs/deployment.rst). If the production/staging pre-flight finds Postgres already
+# running natively on the host instead, remove the `db` service and `db_data` volume,
+# add `extra_hosts: ["host.docker.internal:host-gateway"]` to `web`, and point
+# DJANGO_DATABASE_URL in .env at host.docker.internal instead of `db`.
+
+services:
+  web:
+    image: ghcr.io/loefbijter/loefsys:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - media_data:/app/media
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  media_data:
+  db_data:

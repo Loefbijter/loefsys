@@ -1,1 +1,2 @@
-<a href="{{ href }}" class="font-bold hover:underline">{{ slot }}</a>
+<c-vars href="" active="" icon="" />
+<a href="{{ href }}" class="topnav-item" {% if active %}aria-current="page"{% endif %}>{% if icon %}<i class="bi bi-{{ icon }}" aria-hidden="true"></i>{% endif %}{{ slot }}</a>

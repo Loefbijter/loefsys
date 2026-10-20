@@ -2,10 +2,13 @@
 
 from django.contrib import admin, messages
 from django.core.exceptions import PermissionDenied, ValidationError
+from django.http import HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import path, reverse
+from django.utils.functional import Promise
 from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme, urlencode
+from django.utils.text import Truncator
 from django.utils.translation import gettext_lazy as _
 
 from loefsys.admin_helpers import ExportableModelAdmin
@@ -19,8 +22,16 @@ from .models import (
     ReservableType,
     Reservation,
 )
+from .permissions import (
+    can_evaluate,
+    evaluable_reservables,
+    evaluable_reservations,
+    manages_reservables,
+)
 
 admin.site.register(ReservableType, ExportableModelAdmin)
+# Reservables get the "managed by" fields from the base model; the default form
+# shows them, and the constraint on the model rejects choosing both.
 admin.site.register(ReservableBoat, ExportableModelAdmin)
 admin.site.register(ReservableMaterial, ExportableModelAdmin)
 admin.site.register(ReservableRoom, ExportableModelAdmin)
@@ -37,12 +48,15 @@ class ReservationAdmin(ExportableModelAdmin):
     list_display = (
         "reservable",
         "user",
+        "authorized_userskippership",
         "start",
         "end",
+        "short_reason",
         "request_status",
         "date_of_creation",
         "evaluation_actions",
     )
+    list_select_related = ("reservable", "user", "authorized_userskippership")
     list_filter = ("request_status", "reservable__location", "reservable__type")
     search_fields = (
         "reservable__name",
@@ -55,7 +69,17 @@ class ReservationAdmin(ExportableModelAdmin):
     fieldsets = (
         (
             _("Reservation details"),
-            {"fields": ("reservable", "user", "start", "end", "date_of_creation")},
+            {
+                "fields": (
+                    "reservable",
+                    "user",
+                    "authorized_userskippership",
+                    "start",
+                    "end",
+                    "reason",
+                    "date_of_creation",
+                )
+            },
         ),
         (_("Approval"), {"fields": ("request_status", "denial_reason")}),
     )
@@ -68,12 +92,59 @@ class ReservationAdmin(ExportableModelAdmin):
         "color:var(--link-fg,#447e9b);text-decoration:underline;cursor:pointer;"
     )
 
-    def get_readonly_fields(self, _request, obj=None):
-        """Keep the reservation details editable on add but lock them after creation."""
+    def get_readonly_fields(self, request, obj=None):
+        """Keep the reservation details editable on add but lock them after creation.
+
+        The approval fields are locked too for anyone who may not evaluate the
+        reservation, so the change form can't be used to get around its managers.
+        """
         if obj is None:
             return self.readonly_fields
 
-        return (*self.readonly_fields, "reservable", "user", "start", "end")
+        fields: tuple[str, ...] = (
+            *self.readonly_fields,
+            "reservable",
+            "user",
+            "authorized_userskippership",
+            "start",
+            "end",
+            "reason",
+        )
+        if not can_evaluate(request.user, obj):
+            fields = (*fields, "request_status", "denial_reason")
+        return fields
+
+    # Managers of a reservable may evaluate its requests without any permission, so
+    # they get in to the reservations they manage. Everyone else follows the
+    # regular model permissions.
+
+    def get_queryset(self, request):
+        """Show managers without the view permission only the requests they manage."""
+        queryset = super().get_queryset(request)
+        if super().has_view_permission(request):
+            return queryset
+        return queryset.filter(pk__in=evaluable_reservations(request.user))
+
+    def has_module_permission(self, request):
+        """Show the reservations in the admin index to managers as well."""
+        return super().has_module_permission(request) or manages_reservables(
+            request.user
+        )
+
+    def _manages(self, request, obj):
+        if obj is None:
+            return manages_reservables(request.user)
+        return can_evaluate(request.user, obj)
+
+    def has_view_permission(self, request, obj=None):
+        """Let managers view the reservations they evaluate."""
+        return super().has_view_permission(request, obj) or self._manages(request, obj)
+
+    def has_change_permission(self, request, obj=None):
+        """Let managers change the reservations they evaluate."""
+        return super().has_change_permission(request, obj) or self._manages(
+            request, obj
+        )
 
     def changelist_view(self, request, extra_context=None):
         """Expose ``RequestStatus`` so the change-list template can spot pending rows.
@@ -97,11 +168,19 @@ class ReservationAdmin(ExportableModelAdmin):
         display = list(super().get_list_display(request))
         if "evaluation_actions" in display:
             render_actions = self.evaluation_actions
+            # One query per page instead of one per row.
+            evaluable = set(
+                evaluable_reservables(request.user).values_list("pk", flat=True)
+            )
 
             def evaluation_actions(obj):
+                if obj.reservable_id not in evaluable:
+                    return "-"
                 return render_actions(request, obj)
 
-            evaluation_actions.short_description = render_actions.short_description
+            evaluation_actions.short_description = (  # type: ignore[attr-defined]
+                render_actions.short_description  # type: ignore[attr-defined]
+            )
             display[display.index("evaluation_actions")] = evaluation_actions
         return display
 
@@ -138,10 +217,11 @@ class ReservationAdmin(ExportableModelAdmin):
         deliberately outside the changelist's own bulk-action form, since a ``<form>``
         nested inside another is invalid HTML and gets silently dropped by browsers.
         """
-        if not self.has_change_permission(request):
-            raise PermissionDenied
-
+        if request.method != "POST":
+            return HttpResponseNotAllowed(["POST"])
         reservation = get_object_or_404(Reservation, pk=object_id)
+        if not can_evaluate(request.user, reservation):
+            raise PermissionDenied
         next_url = self._safe_next_url(request, request.POST.get("next"))
 
         reservation.request_status = Reservation.RequestStatus.APPROVED
@@ -162,14 +242,13 @@ class ReservationAdmin(ExportableModelAdmin):
         Used both for denying a pending reservation (a reason is required) and for
         changing the status of an already-evaluated one.
         """
-        if not self.has_change_permission(request):
-            raise PermissionDenied
-
         reservation = get_object_or_404(Reservation, pk=object_id)
+        if not can_evaluate(request.user, reservation):
+            raise PermissionDenied
         next_url = self._safe_next_url(
             request, request.POST.get("next") or request.GET.get("next")
         )
-        error = None
+        error: str | Promise | None = None
 
         if request.method == "POST":
             status = request.POST.get("status")
@@ -182,7 +261,7 @@ class ReservationAdmin(ExportableModelAdmin):
                 reservation.request_status = Reservation.RequestStatus.DENIED
                 reservation.denial_reason = denial_reason
             else:
-                error = _("Kies een status.")
+                error = _("Choose a status.")
 
             if error is None:
                 try:
@@ -212,9 +291,12 @@ class ReservationAdmin(ExportableModelAdmin):
             "error": error,
             "next": next_url,
         }
-        return render(
-            request, "admin/reservations/reservation/evaluate.html", context
-        )
+        return render(request, "admin/reservations/reservation/evaluate.html", context)
+
+    @admin.display(description=_("Reason"))
+    def short_reason(self, obj):
+        """Show the start of the reservation's reason in the list."""
+        return Truncator(obj.reason).chars(60)
 
     @admin.display(description=_("Evaluation"))
     def evaluation_actions(self, request, obj):
@@ -226,9 +308,7 @@ class ReservationAdmin(ExportableModelAdmin):
         page; Deny needs a reason, so it goes to the evaluate page instead. Already
         evaluated rows just get a Change link to that same evaluate page.
         """
-        evaluate_url = reverse(
-            "admin:reservations_reservation_evaluate", args=[obj.pk]
-        )
+        evaluate_url = reverse("admin:reservations_reservation_evaluate", args=[obj.pk])
         next_url = request.get_full_path()
 
         if obj.request_status == Reservation.RequestStatus.PENDING:

@@ -1,0 +1,7 @@
+<c-vars icon="inbox" title="" text="" />
+<div class="empty">
+    <div class="empty-icon"><i class="bi bi-{{ icon }}" aria-hidden="true"></i></div>
+    {% if title %}<b>{{ title }}</b>{% endif %}
+    {% if text %}<span>{{ text }}</span>{% endif %}
+    {{ slot }}
+</div>

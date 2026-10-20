@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block title %}
-    {% trans "Logboek" %}
+    {% translate "Logbook" %}
 {% endblock %}
 
 {% block content %}
@@ -31,22 +31,22 @@
         border: 0;
     }
 </style>
-<div class="min-h-screen bg-gray-50 overflow-x-hidden">
+<div class="min-h-screen bg-surface-2 overflow-x-hidden">
 
     <!-- ============ HEADER ============ -->
-    <section class="bg-white border-b border-gray-200">
+    <section class="bg-surface border-b border-line">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
-               class="text-gray-400 hover:text-gray-600 font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors cursor-pointer">
+               class="text-muted hover:text-fg font-medium text-sm mb-4 inline-flex items-center gap-1.5 w-fit transition-colors cursor-pointer">
                 <i class="bi bi-arrow-left-short text-lg"></i>
-                {% trans "Terug naar reservering" %}
+                {% translate "Back to reservation" %}
             </a>
 
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{% trans "Logboek" %}</h1>
-            <p class="text-sm sm:text-base text-gray-500 mt-1.5">
-                {% blocktrans with boat_name=reservation.reservable.name %}
-                    Vul het logboek in voor {{ boat_name }}.
-                {% endblocktrans %}
+            <h1 class="text-2xl sm:text-3xl font-bold text-fg">{% translate "Logbook" %}</h1>
+            <p class="text-sm sm:text-base text-muted mt-1.5">
+                {% blocktranslate trimmed with boat_name=reservation.reservable.name %}
+                    Fill in the logbook for {{ boat_name }}.
+                {% endblocktranslate %}
             </p>
         </div>
     </section>
@@ -58,11 +58,11 @@
         <div class="bg-alert/10 border border-alert/20 rounded-2xl p-5 sm:p-6">
             <h2 class="text-sm font-semibold text-alert mb-3 inline-flex items-center gap-2">
                 <i class="bi bi-exclamation-triangle-fill"></i>
-                {% trans "Huidige schade-informatie" %}
+                {% translate "Current damage information" %}
             </h2>
             <ul class="space-y-2">
                 {% for damage_record in damage_records %}
-                <li class="flex items-start gap-2 text-sm text-gray-700">
+                <li class="flex items-start gap-2 text-sm text-fg">
                     <span class="mt-1.5 w-1 h-1 rounded-full bg-alert shrink-0"></span>
                     {{ damage_record.description }}
                 </li>
@@ -72,7 +72,7 @@
         {% endif %}
 
         <!-- ============ LOGBOOK FORM ============ -->
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5 sm:p-6">
+        <div class="bg-surface rounded-2xl border border-line shadow-sm p-5 sm:p-6">
             <form method="post" enctype="multipart/form-data" class="space-y-5 boat-logbook-form">
                 {% csrf_token %}
 
@@ -84,7 +84,7 @@
 
                 <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
                     <div class="flex flex-col gap-1.5 min-w-0">
-                        <label for="{{ form.wind_force.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.wind_force.label }}</label>
+                        <label for="{{ form.wind_force.id_for_label }}" class="text-sm font-semibold text-fg">{{ form.wind_force.label }}</label>
                         {{ form.wind_force }}
                         {% for error in form.wind_force.errors %}
                         <p class="text-xs font-medium text-destructive">{{ error }}</p>
@@ -92,7 +92,7 @@
                     </div>
 
                     <div class="flex flex-col gap-1.5 min-w-0">
-                        <label for="{{ form.motor_hours.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.motor_hours.label }}</label>
+                        <label for="{{ form.motor_hours.id_for_label }}" class="text-sm font-semibold text-fg">{{ form.motor_hours.label }}</label>
                         {{ form.motor_hours }}
                         {% for error in form.motor_hours.errors %}
                         <p class="text-xs font-medium text-destructive">{{ error }}</p>
@@ -101,7 +101,7 @@
 
                     <div class="flex flex-col gap-1.5 md:col-span-2 min-w-0">
                         <label for="{{ form.refueled.id_for_label }}"
-                               class="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 cursor-pointer">
+                               class="flex items-center gap-3 rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm font-semibold text-fg cursor-pointer">
                             {{ form.refueled }}
                             {{ form.refueled.label }}
                         </label>
@@ -112,7 +112,7 @@
 
                     <div class="flex flex-col gap-1.5 md:col-span-2 min-w-0">
                         <label for="{{ form.has_new_damage.id_for_label }}"
-                               class="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-700 cursor-pointer">
+                               class="flex items-center gap-3 rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm font-semibold text-fg cursor-pointer">
                             {{ form.has_new_damage }}
                             {{ form.has_new_damage.label }}
                         </label>
@@ -122,7 +122,7 @@
                     </div>
 
                     <div class="flex flex-col gap-1.5 md:col-span-2 min-w-0">
-                        <label for="{{ form.new_damage_description.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.new_damage_description.label }}</label>
+                        <label for="{{ form.new_damage_description.id_for_label }}" class="text-sm font-semibold text-fg">{{ form.new_damage_description.label }}</label>
                         {{ form.new_damage_description }}
                         {% for error in form.new_damage_description.errors %}
                         <p class="text-xs font-medium text-destructive">{{ error }}</p>
@@ -131,14 +131,14 @@
 
                     <div class="flex flex-col gap-1.5 md:col-span-2 min-w-0">
                         <div class="flex items-center justify-between gap-3">
-                            <label for="{{ form.photo.id_for_label }}" class="text-sm font-semibold text-gray-700">{{ form.photo.label }}</label>
-                            <span id="photo-file-name" class="text-sm text-gray-500 truncate max-w-full">{% trans "Geen bestand gekozen" %}</span>
+                            <label for="{{ form.photo.id_for_label }}" class="text-sm font-semibold text-fg">{{ form.photo.label }}</label>
+                            <span id="photo-file-name" class="text-sm text-muted truncate max-w-full">{% translate "No file chosen" %}</span>
                         </div>
                         <div class="relative">
                             {{ form.photo }}
-                            <label for="{{ form.photo.id_for_label }}" class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors cursor-pointer">
+                            <label for="{{ form.photo.id_for_label }}" class="inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 py-2 text-sm font-semibold text-fg shadow-sm hover:bg-surface-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors cursor-pointer">
                                 <i class="bi bi-camera-fill"></i>
-                                {% trans "Foto toevoegen" %}
+                                {% translate "Add photo" %}
                             </label>
                         </div>
                         {% for error in form.photo.errors %}
@@ -149,24 +149,25 @@
 
                 <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-2">
                     <a href="{% url 'reservations:reservation-detail' pk=reservation.id %}"
-                       class="w-full sm:w-auto text-center rounded-xl border border-gray-200 bg-white px-6 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer">
-                        {% trans "Annuleren" %}
+                       class="w-full sm:w-auto text-center rounded-xl border border-line bg-surface px-6 py-2.5 text-sm font-semibold text-muted hover:bg-surface-2 transition-colors cursor-pointer">
+                        {% translate "Cancel" %}
                     </a>
                     <button type="submit"
                             class="w-full sm:w-auto rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary-accent transition-colors cursor-pointer">
-                        {% trans "Opslaan" %}
+                        {% translate "Save" %}
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+{% translate "No file chosen" as no_file_t %}
 <script>
   function updateLogbookPhotoLabel(input) {
     var nameEl = document.getElementById('photo-file-name');
     if (!nameEl) return;
     var file = input.files && input.files[0];
-    nameEl.textContent = file ? file.name : 'Geen bestand gekozen';
+    nameEl.textContent = file ? file.name : '{{ no_file_t|escapejs }}';
   }
   document.addEventListener('DOMContentLoaded', function () {
     var input = document.getElementById('{{ form.photo.id_for_label }}');

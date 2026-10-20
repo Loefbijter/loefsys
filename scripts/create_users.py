@@ -24,7 +24,6 @@ def ensure_user(  # noqa: PLR0913, PLR0917
         print(f"User exists: {email}")
         user.first_name = first_name
         user.last_name = last_name
-        user.is_staff = is_staff
         user.is_superuser = is_superuser
         user.is_active = True
         user.pod_link = ""
@@ -37,11 +36,16 @@ def ensure_user(  # noqa: PLR0913, PLR0917
         password=password,
         first_name=first_name,
         last_name=last_name,
-        is_staff=is_staff,
         is_superuser=is_superuser,
         pod_link="",
     )
     print(f"Created user: {email}")
+    if is_staff:
+        user.user_permissions.add(
+            Permission.objects.get(
+                codename="access_admin", content_type__app_label="members"
+            )
+        )
     return user
 
 

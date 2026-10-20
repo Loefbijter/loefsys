@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     help = "Runs the sphinx-apidoc and sphinx-build commands to generate docs"
 
-    def handle(self, *_: tuple[Any, ...], **__: dict[str, object]) -> str | None:
+    def handle(self, *_: tuple[Any, ...], **__: dict[str, object]) -> None:
         """Perform the actual logic of the command."""
         subprocess.run(self._apidoc_args(), check=False)
         subprocess.run(self._build_args(), check=False)

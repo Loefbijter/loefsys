@@ -1,0 +1,8 @@
+<c-vars href="" title="" sub="" />
+<a class="row" href="{{ href }}" style="grid-template-columns: minmax(0, 1fr) auto">
+    <div class="row-body">
+        <div class="row-title" style="white-space: normal">{{ title }}</div>
+        {% if sub %}<div class="row-meta">{{ sub }}</div>{% endif %}
+    </div>
+    <div class="row-end"><i class="bi bi-chevron-right" aria-hidden="true"></i></div>
+</a>

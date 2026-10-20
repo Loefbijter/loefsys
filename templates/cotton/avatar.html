@@ -1,0 +1,3 @@
+{% comment %}Round avatar: the member's picture, or their initials.{% endcomment %}
+<c-vars user class="" />
+<span class="ava {{ class }}" aria-hidden="true">{% if user.picture %}<img src="{{ user.picture.url }}" alt="">{% else %}{{ user.first_name|slice:":1"|upper }}{{ user.last_name|cut:" "|slice:":1"|upper }}{% endif %}</span>

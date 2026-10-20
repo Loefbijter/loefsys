@@ -3,3 +3,16 @@
 .gitignore
 .sqlite
 .venv
+collectedstatic/
+media/
+db.sqlite*
+sent_emails/
+node_modules/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+docs/_build/
+*.md
+.github/
+flake.nix
+flake.lock

@@ -4,16 +4,15 @@ from typing import TYPE_CHECKING, Optional, cast
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import AbstractBaseUser, Permission, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.files.storage import FileSystemStorage
-from django.db import ProgrammingError, models
+from django.db import models
 from django.db.models import OneToOneField, QuerySet
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import RandomCharField
 from django_extensions.db.models import TimeStampedModel
 from phonenumber_field.modelfields import PhoneNumberField
 
-from loefsys.groups.models.group import LoefbijterGroup
 from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
@@ -48,17 +47,13 @@ class UserManager(BaseUserManager):
 
     def create_user(self, email, password, **extra_fields):
         """Create and save a regular user with the given email and password."""
-        extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         """Create and save a superuser with the given email and password."""
-        extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
@@ -125,7 +120,11 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         Inherited from PermissionsMixin.d.    email : str
         The email of the user, used to log in. This value is unique.
     is_staff : bool
-        Flag that determines whether has access to the admin site.
+        Whether the user has access to the admin site.
+
+        This is not a stored flag: active users get access as soon as they hold any
+        permission, for example the ``members.access_admin`` permission or one
+        granted through a group.
     first_name : str
         The first name of the user.
 
@@ -175,15 +174,10 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         if self.picture:
             self.picture.delete(save=False)
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, verbose_name=_("Email address"))
 
     slug = RandomCharField(length=8, unique=True)
 
-    is_staff = models.BooleanField(
-        _("Staff status"),
-        default=False,
-        help_text=_("Designates whether the user can log into this admin site."),
-    )
     is_active = models.BooleanField(
         _("Active"),
         default=True,
@@ -209,7 +203,9 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     )
 
     display_name_preference = models.PositiveSmallIntegerField(
-        choices=DisplayNamePreferences, default=DisplayNamePreferences.FULL
+        choices=DisplayNamePreferences,
+        default=DisplayNamePreferences.FULL,
+        verbose_name=_("Display name preference"),
     )
 
     picture = models.ImageField(
@@ -217,6 +213,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         null=True,
         blank=True,
         storage=OverwriteStorage(),
+        verbose_name=_("Profile picture"),
     )
 
     gender = models.PositiveSmallIntegerField(
@@ -245,7 +242,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     study_registration: Optional["StudyRegistration"]
     membership_set: QuerySet["Membership"]
 
-    phone_number = PhoneNumberField(blank=True)
+    phone_number = PhoneNumberField(blank=True, verbose_name=_("Phone number"))
     pod_kb_link = models.URLField(
         max_length=512,
         blank=True,
@@ -265,50 +262,13 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     )
 
     # TODO: Refactor
-    note = models.TextField(blank=True)
+    note = models.TextField(blank=True, verbose_name=_("Note"))
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     DISPLAY_NAME_MAX_LENGTH = 64
 
     objects = UserManager()
-
-    def get_group_permissions(self, obj=None):
-        """Return permissions for Django auth groups and Loefbijter groups.
-
-        This extends the default PermissionsMixin behavior so that permissions
-        assigned to LoefbijterGroup instances are considered when evaluating a
-        user's permissions.
-        """
-        # Start with the default group permissions (from auth.Group via
-        # PermissionsMixin).
-        perms = set(super().get_group_permissions(obj))
-
-        # Collect Loefbijter groups the user belongs to from both the
-        # loefbijter_groups M2M (if present) and the GroupMembership model. Some
-        # environments use explicit GroupMembership rows instead of the M2M, so
-        # this keeps permission resolution robust when the M2M table is missing
-        # or out-of-sync.
-        try:
-            m2m_groups = self.loefbijter_groups.all()
-        except (AttributeError, ProgrammingError):
-            # AttributeError if the field isn't present on the model,
-            # ProgrammingError if the DB table for the M2M is missing; fall back to
-            # empty queryset.
-            m2m_groups = LoefbijterGroup.objects.none()
-
-        # Groups added via the explicit GroupMembership model
-        membership_groups = LoefbijterGroup.objects.filter(groupmembership__user=self)
-
-        groups_qs = m2m_groups | membership_groups
-
-        # Use distinct() to avoid duplicates and collect permission strings
-        perms.update(
-            f"{p.content_type.app_label}.{p.codename}"
-            for p in Permission.objects.filter(loefbijtergroup__in=groups_qs).distinct()
-        )
-
-        return perms
 
     @staticmethod
     def _truncate_name(value: str, max_length: int) -> str:
@@ -352,6 +312,22 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         verbose_name = _("user")
         verbose_name_plural = _("users")
         ordering = ("modified",)
+        permissions = (("access_admin", "Admin"),)
+
+    @property
+    def is_staff(self) -> bool:
+        """Return whether the user has access to the admin site.
+
+        Instead of a separate flag, access follows from permissions: an active user
+        with any permission, including the "Admin" permission, may use the admin.
+        Managers of a reservable may too, to evaluate its reservation requests.
+        """
+        # Imported here: the reservations models depend on this module.
+        from loefsys.reservations import permissions  # noqa: PLC0415
+
+        return self.is_active and (
+            bool(self.get_all_permissions()) or permissions.manages_reservables(self)
+        )
 
     def __str__(self):
         return self.full_name or self.email

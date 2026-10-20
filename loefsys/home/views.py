@@ -1,102 +1,106 @@
 """Module defining the view for the index page."""
 
-from typing import Any, cast
-
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 from django.views.generic import TemplateView, View
 
-from loefsys.events.models import Event
+from loefsys.events.models import Event, EventRegistration
+from loefsys.events.models.choices import RegistrationStatus
 from loefsys.home.models import Announcement
 from loefsys.members.models import UserSkippership
+from loefsys.reservations.models import ReservableType
 from loefsys.reservations.models.reservation import Reservation
-
-# Length used when building a short preview of long descriptions
-DESCRIPTION_PREVIEW_LEN = 300
+from loefsys.reservations.permissions import evaluable_reservations
 
 
 class HomeView(View):
-    """View for loading the index page."""
+    """The member dashboard: next activity, things to do and what is coming up."""
+
+    UPCOMING_LIMIT = 4
+
+    @staticmethod
+    def greeting(now) -> str:
+        """Return a greeting that fits the local time of day."""
+        hour = timezone.localtime(now).hour
+        if hour < 6:  # noqa: PLR2004
+            return _("Good night")
+        if hour < 12:  # noqa: PLR2004
+            return _("Good morning")
+        if hour < 18:  # noqa: PLR2004
+            return _("Good afternoon")
+        return _("Good evening")
 
     def get(self, request):
         """Handle the get request for the index page."""
         now = timezone.now()
+        user = request.user
         announcements = Announcement.objects.filter(
             published=True, announcement_start__lte=now, announcement_end__gte=now
         ).order_by("-announcement_start")
-        events = Event.objects.filter(start__gte=now).order_by("start")
-        if not self.request.user.is_active:
-            events = events.filter(published=True)
+        events = Event.objects.visible_to(user).filter(start__gte=now).order_by("start")
 
-        # Show top 4 upcoming events as a preview
-        raw_upcoming = list(events[:4])
-        upcoming_events = []
-
-        for ev in raw_upcoming:
-            # Treat event as Any for dynamic attributes added below to satisfy static
-            # type checkers that do not know about these ad-hoc attributes.
-            ev = cast(Any, ev)
-            # Picture URL if available
-            ev.picture_url = (
-                ev.picture.url
-                if getattr(ev, "picture", None) and getattr(ev.picture, "url", None)
-                else None
-            )
-
-            # Seats taken and spots left if capacity is defined
-            try:
-                ev.seats_taken = ev.eventregistration_set.active().count()
-            except Exception:
-                # Fallback: count all registrations if custom manager not available
-                ev.seats_taken = ev.eventregistration_set.count()
-            ev.spots_left = (ev.capacity - ev.seats_taken) if ev.capacity else None
-
-            # Flags computed via model methods
-            try:
-                ev.registrations_open_flag = ev.registrations_open()
-            except Exception:
-                ev.registrations_open_flag = False
-            try:
-                ev.max_capacity_reached_flag = ev.max_capacity_reached()
-            except Exception:
-                ev.max_capacity_reached_flag = False
-
-            # Human readable category and truncated description
-            ev.category_display = (
-                ev.get_category_display() if hasattr(ev, "get_category_display") else ""
-            )
-            if ev.description:
-                ev.description_preview = ev.description[:DESCRIPTION_PREVIEW_LEN] + (
-                    "..." if len(ev.description) > DESCRIPTION_PREVIEW_LEN else ""
-                )
-            else:
-                ev.description_preview = ""
-
-            upcoming_events.append(ev)
-
-        # User-specific reservations (upcoming)
+        next_registration = None
         user_reservations = None
-        if request.user.is_authenticated:
+        logbook_todo: list[Reservation] = []
+        skipperships: list = []
+        pending_approvals: list[Reservation] | None = None
+        if user.is_authenticated:
+            next_registration = (
+                EventRegistration.objects.filter(
+                    contact=user,
+                    event__end__gte=now,
+                    status__in=(RegistrationStatus.ACTIVE, RegistrationStatus.QUEUED),
+                )
+                .select_related("event")
+                .order_by("event__start")
+                .first()
+            )
             user_reservations = (
-                Reservation.objects.filter(user=request.user, end__gt=now)
+                Reservation.objects.filter(user=user, end__gt=now)
                 .exclude(request_status=Reservation.RequestStatus.DENIED)
-                .order_by("start")[:4]
+                .select_related("reservable__type")
+                .order_by("start")[: self.UPCOMING_LIMIT]
+            )
+            logbook_todo = list(
+                Reservation.objects.filter(
+                    user=user,
+                    end__lt=now,
+                    reservable__type__category=ReservableType.Category.BOAT,
+                    boat_logbook__isnull=True,
+                )
+                .exclude(request_status=Reservation.RequestStatus.DENIED)
+                .select_related("reservable")
+                .order_by("-start")
+            )
+            skipperships = highest_skipperships(user)
+            # Only the managers of a reservable get its requests as a to-do.
+            pending_approvals = list(
+                evaluable_reservations(user)
+                .filter(request_status=Reservation.RequestStatus.PENDING)
+                .select_related("reservable", "user")
+                .order_by("start")[: self.UPCOMING_LIMIT]
             )
 
-        # Pending approvals for staff
-        pending_approvals = None
-        if request.user.is_staff:
-            pending_approvals = Reservation.objects.filter(
-                request_status=Reservation.RequestStatus.PENDING
-            ).order_by("start")[:4]
+        next_event = next_registration.event if next_registration else None
+        upcoming_events = list(
+            events.exclude(pk=next_event.pk) if next_event else events
+        )[: self.UPCOMING_LIMIT]
 
         context = {
+            "greeting": self.greeting(now),
             "announcements": announcements,
             "events": events,
             "upcoming_events": upcoming_events,
+            "next_event": next_event,
+            "next_registration": next_registration,
             "user_reservations": user_reservations,
+            "logbook_todo": logbook_todo,
+            "skipperships": skipperships,
             "pending_approvals": pending_approvals,
+            "todo_count": len(logbook_todo)
+            + (len(pending_approvals) if pending_approvals is not None else 0),
             "RequestStatus": Reservation.RequestStatus,
         }
         return render(request, "home/index.html", context)
@@ -116,6 +120,20 @@ def _is_ancestor_of(skippership, ancestor):
             return True
         current = current.parent
     return False
+
+
+def highest_skipperships(user) -> list:
+    """Return the user's skipperships, leaving out the ones implied by a higher one."""
+    entries = list(user.user_skipperships.select_related("skippership__parent"))
+    return [
+        entry.skippership
+        for entry in entries
+        if not any(
+            _is_ancestor_of(other.skippership, entry.skippership)
+            for other in entries
+            if other.skippership_id != entry.skippership_id
+        )
+    ]
 
 
 class SchippersView(TemplateView):
@@ -168,6 +186,7 @@ class SchippersView(TemplateView):
             skippers_by_group.append({"label": group_name, "schippers": group_entries})
 
         context["skippers_by_level"] = skippers_by_group
+        context["skipper_count"] = len(user_skipperships_by_user)
         context["skipper_groups"] = skippers_by_group
         return context
 

@@ -41,6 +41,11 @@ class EventCategories(models.IntegerChoices):
     TRAINING = (6, _("Training"))
     """Used for events meant to train a participant"""
 
+    @property
+    def permission_codename(self) -> str:
+        """The codename of the permission to manage events in this category."""
+        return f"manage_{self.name.lower()}_events"
+
 
 class RegistrationStatus(models.IntegerChoices):
     """The various statuses for the registration."""

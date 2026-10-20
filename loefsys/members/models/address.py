@@ -41,4 +41,5 @@ class Address(TimeStampedModel):
     street2 = models.CharField(max_length=100, verbose_name=_("Second address line"))
     postal_code = models.CharField(max_length=10, verbose_name=_("Postal code"))
     city = models.CharField(max_length=50, verbose_name=_("City"))
-    country = models.CharField(max_length=50)  # TODO maybe change to django-countries
+    # TODO maybe change to django-countries
+    country = models.CharField(max_length=50, verbose_name=_("Country"))

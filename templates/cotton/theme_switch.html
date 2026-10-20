@@ -1,0 +1,13 @@
+{% comment %}Cycles the colour theme: follow the device, light, dark. See static/JS/theme.js.{% endcomment %}
+{% load i18n %}
+<c-vars class="" label="" />
+<button type="button" class="cursor-pointer {{ class }}" data-theme-toggle {{ attrs }}
+        data-label-auto="{% translate 'Theme: follow device' %}"
+        data-label-light="{% translate 'Theme: light' %}"
+        data-label-dark="{% translate 'Theme: dark' %}"
+        aria-label="{% translate 'Theme: follow device' %}" title="{% translate 'Theme: follow device' %}">
+    <span class="menu-label">
+        <i class="bi bi-circle-half" aria-hidden="true"></i>
+        {% if label %}<span data-theme-label>{% translate "Theme: follow device" %}</span>{% endif %}
+    </span>
+</button>

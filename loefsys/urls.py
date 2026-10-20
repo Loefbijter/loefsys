@@ -9,10 +9,13 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
 )
 from django.urls import include, path, re_path, reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # There is no CommonMiddleware, so APPEND_SLASH does not redirect /admin.
+    path("admin", RedirectView.as_view(url="/admin/", permanent=True)),
+    path("i18n/", include("django.conf.urls.i18n")),
     # Provide a top-level named login URL to support templates using {% url 'login' %}.
     path(
         "login/",
@@ -25,7 +28,7 @@ urlpatterns = [
     re_path(
         r"^reset/(?P<uidb64>[^/]*)/(?P<token>[^/]*)/$",
         PasswordResetConfirmView.as_view(
-            template_name="registration/password_reset_confirm.html",
+            template_name="registration/reset_confirm.html",
             success_url=reverse_lazy("password_reset_complete"),
         ),
         name="password_reset_confirm",
@@ -33,7 +36,7 @@ urlpatterns = [
     path(
         "reset/done/",
         PasswordResetCompleteView.as_view(
-            template_name="registration/password_reset_complete.html"
+            template_name="registration/reset_complete.html"
         ),
         name="password_reset_complete",
     ),

@@ -29,30 +29,18 @@ class VariantType:
 
 
 button = VariantType(
-    (
-        "inline-flex items-center justify-center gap-2 whitespace-nowrap "
-        "rounded-md transition-all disabled:pointer-events-none "
-        "disabled:opacity-50 shrink-0"
-    ),
+    "btn",
     {
         "variant": {
-            "default": (
-                "bg-secondary text-secondary-foreground border-t-2 "
-                "border-secondary-accent hover:bg-tertiary "
-                "hover:text-tertiary-foreground hover:border-tertiary-accent"
-            ),
-            "ghost": (
-                "bg-background text-foreground border-t-2 border-accent "
-                "hover:bg-background/80 hover:text-foreground/80 "
-                "hover:border-accent/80"
-            ),
-            "destructive": (
-                "bg-destructive text-destructive-foreground border-t-2 "
-                "border-destructive-accent hover:bg-destructive/90 "
-                "hover:border-destructive-accent/90"
-            ),
+            "default": "btn-primary",
+            "primary": "btn-primary",
+            "secondary": "btn-secondary",
+            "ghost": "btn-ghost",
+            "danger": "btn-danger",
+            "destructive": "btn-destructive",
         },
-        "size": {"default": "h-8 px-4 py-2"},
+        "size": {"default": "", "sm": "btn-sm", "icon": "btn-icon"},
     },
     {"variant": "default", "size": "default"},
 )
+"""Pill buttons; the classes are defined in ``styles/globals.css``."""

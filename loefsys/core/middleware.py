@@ -25,7 +25,7 @@ class UserAgentMiddleware:
             user_agent_string = request.META.get("HTTP_USER_AGENT", "")
             return Parser(user_agent_string)
 
-        request.user_agent = SimpleLazyObject(get_user_agent)
+        request.user_agent = SimpleLazyObject(get_user_agent)  # type: ignore[attr-defined]
         return self.get_response(request)
 
 
@@ -92,6 +92,7 @@ class RequireLoginMiddleware:
             "/reset/",  # Allow password reset pages (reset confirm and reset done)
             "/reset-disabled/",  # Allow reset disabled message page
             "/admin/",
+            "/i18n/",  # Allow choosing a language before logging in
             "/__reload__/",
             "/__debug__/",
             settings.STATIC_URL if hasattr(settings, "STATIC_URL") else "/static/",
@@ -103,7 +104,7 @@ class RequireLoginMiddleware:
         allowed_prefixes = [p for p in allowed_prefixes if p]
 
         for prefix in allowed_prefixes:
-            if path.startswith(prefix):
+            if prefix and path.startswith(prefix):
                 return self.get_response(request)
 
         # Not authenticated and not whitelisted — redirect to login with next param.

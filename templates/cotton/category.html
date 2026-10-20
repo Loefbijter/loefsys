@@ -1,0 +1,3 @@
+{% load event_ui %}
+<c-vars event />
+<span class="cat cat-{{ event.category|category_key }}">{{ event.get_category_display }}</span>
