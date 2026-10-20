@@ -97,7 +97,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
     template_name = "profiles/profile.html"
 
     def get_context_data(self, **kwargs):
-        """Add a filtered list of skipperships and committee memberships to the profile context."""
+        """Add skipperships and committee memberships to the profile context."""
         context = super().get_context_data(**kwargs)
         member = self.get_object()
 
