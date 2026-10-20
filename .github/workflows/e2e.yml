@@ -14,6 +14,9 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     env:
+      # Same Python as the Dockerfile. Unpinned, uv picks the newest release,
+      # which psycopg-binary may not have wheels for yet.
+      UV_PYTHON: "3.14"
       DJANGO_SECRET_KEY: django-insecure-loefbijter
       DJANGO_DATABASE_URL: sqlite:///db.sqlite
       DJANGO_DEBUG: false
