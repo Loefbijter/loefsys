@@ -52,6 +52,11 @@ class EventRegistration(TimeStampedModel):
         The cost for this event, automatically calculated from the status.
     costs_paid : ~decimal.Decimal
         The amount paid for this registration by the contact.
+    added_by_organizer : bool
+        Whether an organizer added the contact, instead of the contact signing up.
+
+        These registrations are always active, so they can't end up in the queue,
+        and they count towards the capacity of the event.
     """
 
     event = models.ForeignKey(Event, models.CASCADE, verbose_name=_("Event"))
@@ -82,6 +87,12 @@ class EventRegistration(TimeStampedModel):
     )
     costs_paid = models.DecimalField(
         max_digits=5, decimal_places=2, verbose_name=_("Costs paid"), blank=True
+    )
+
+    added_by_organizer = models.BooleanField(
+        _("Added by organizer"),
+        default=False,
+        help_text=_("The member gets a place, even if the event is full."),
     )
 
     @property
@@ -143,7 +154,9 @@ class EventRegistration(TimeStampedModel):
         """Save the model to the database.
 
         When creating a new registration, the attributes :attr:`.price_at_registration`
-        and :attr:`.fine_at_registration` are copied from the :attr`.event`.
+        and :attr:`.fine_at_registration` are copied from the :attr`.event`. The
+        status is active for registrations added by an organizer, and depends on the
+        capacity of the event otherwise.
 
         Returns
         -------
@@ -152,9 +165,13 @@ class EventRegistration(TimeStampedModel):
         if self._state.adding:
             self.status = (
                 RegistrationStatus.QUEUED
-                if self.event.max_capacity_reached() and self.event.capacity
+                if not self.added_by_organizer
+                and self.event.max_capacity_reached()
+                and self.event.capacity
                 else RegistrationStatus.ACTIVE
             )
+            if self.costs_paid is None:
+                self.costs_paid = Decimal("0.00")
             self.price_at_registration = self.event.price
             self.fine_at_registration = self.event.fine
         return super().save(**kwargs)

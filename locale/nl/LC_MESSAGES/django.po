@@ -133,6 +133,9 @@ msgstr "Activiteitsstatus"
 msgid "Add a photo of the boat"
 msgstr "Voeg een foto van de boot toe"
 
+msgid "Add members"
+msgstr "Leden toevoegen"
+
 msgid "Add photo"
 msgstr "Foto toevoegen"
 
@@ -140,6 +143,9 @@ msgstr "Foto toevoegen"
 msgid "Added %(count)d required skipperships to existing skippers."
 msgstr ""
 "%(count)d vereiste schipperschappen toegevoegd aan bestaande schippers."
+
+msgid "Added by organizer"
+msgstr "Toegevoegd door organisatie"
 
 msgid "Additional title for the user, editable by the board."
 msgstr "Extra titel voor de gebruiker, aan te passen door het bestuur."
@@ -827,6 +833,9 @@ msgstr "Lidgegevens"
 msgid "Member since"
 msgstr "Lid sinds"
 
+msgid "Member to add"
+msgstr "Toe te voegen lid"
+
 msgid "Member until"
 msgstr "Lid tot"
 
@@ -1040,6 +1049,9 @@ msgstr "Gebruik het formaat <straat> <huisnummer>"
 
 msgid "Postal code"
 msgstr "Postcode"
+
+msgid "Pre-paid"
+msgstr "Vooruitbetaald"
 
 msgid "Prefer not to say"
 msgstr "Zeg ik liever niet"
@@ -1397,6 +1409,12 @@ msgstr ""
 "De groepen waartoe deze gebruiker behoort. Een gebruiker krijgt alle rechten "
 "van elk van zijn groepen."
 
+msgid "The member gets a place, even if the event is full."
+msgstr "Het lid krijgt een plek, ook als de activiteit vol is."
+
+msgid "The member has already paid the full price."
+msgstr "Het lid heeft de volledige prijs al betaald."
+
 msgid "The member's lichting, for example '57e lichting'."
 msgstr "De lichting van het lid, bijvoorbeeld '57e lichting'."
 
@@ -1489,6 +1507,9 @@ msgid ""
 msgstr ""
 "Deze link is ongeldig, waarschijnlijk omdat hij al is gebruikt. Vraag de "
 "webcie om een nieuw wachtwoord."
+
+msgid "This member is already registered for this event."
+msgstr "Dit lid is al aangemeld voor deze activiteit."
 
 msgid "This member keeps their details private."
 msgstr "Dit lid houdt zijn of haar gegevens privé."
