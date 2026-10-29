@@ -138,6 +138,39 @@ class OrganizerAddsRegistrationsTestCase(AddRegistrationsMixin, TestCase):
         late.save()
         self.assertEqual(late.status, RegistrationStatus.QUEUED)
 
+    def test_adding_members_never_moves_existing_registrations(self):
+        """Earlier sign-ups keep their place, later ones go over capacity."""
+        first, second, queued = (
+            EventRegistration(event=self.event, contact=member)
+            for member in self.members
+        )
+        first.save()
+        second.save()
+        queued.save()
+        self.assertEqual(queued.status, RegistrationStatus.QUEUED)
+
+        added = G(get_user_model())
+        self.add_members(self.event, added)
+
+        statuses = {
+            registration.contact: registration.status
+            for registration in EventRegistration.objects.filter(event=self.event)
+        }
+        self.assertEqual(statuses[self.members[0]], RegistrationStatus.ACTIVE)
+        self.assertEqual(statuses[self.members[1]], RegistrationStatus.ACTIVE)
+        self.assertEqual(statuses[self.members[2]], RegistrationStatus.QUEUED)
+        self.assertEqual(statuses[added], RegistrationStatus.ACTIVE)
+        self.assertEqual(self.event.eventregistration_set.active().count(), 3)
+
+        # Over capacity (3/2): a cancellation doesn't promote anyone until the
+        # number of active registrations drops below the capacity.
+        first.cancel()
+        queued.refresh_from_db()
+        self.assertEqual(queued.status, RegistrationStatus.QUEUED)
+        second.cancel()
+        queued.refresh_from_db()
+        self.assertEqual(queued.status, RegistrationStatus.ACTIVE)
+
     def test_price_is_copied_and_nothing_is_paid_by_default(self):
         self.add_members(self.event, self.members[0])
         registration = EventRegistration.objects.get(contact=self.members[0])
