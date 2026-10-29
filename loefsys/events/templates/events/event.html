@@ -104,6 +104,10 @@
             {% endif %}
           {% endwith %}
 
+          {% if user_registration.added_by_organizer and event.has_form_fields %}
+            <button type="button" class="btn btn-secondary" data-open-registration-modal="true">{% translate "Fill in your details" %}</button>
+          {% endif %}
+
           {% if registration_active and event.cancellation_fine_required %}
             <label class="consent">
               <input id="fine-consent" name="fine-consent" type="checkbox" />
