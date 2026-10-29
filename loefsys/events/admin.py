@@ -6,6 +6,7 @@ This module defines the admin interfaces for managing events and event registrat
 
 from typing import ClassVar
 
+from django import forms
 from django.contrib import admin
 from django.db.models.fields import BLANK_CHOICE_DASH
 from django.template.loader import render_to_string
@@ -14,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from loefsys.admin_helpers import ExportableModelAdmin
 
 from .models import Event, EventOrganizer, EventRegistration, RegistrationFormField
+from .models.choices import RegistrationStatus
 from .models.registration import FORM_RESPONSE_PREFETCH
 from .permissions import allowed_categories
 
@@ -131,6 +133,97 @@ class EventRegistrationInline(admin.TabularInline):
         return render_form_response(registration)
 
 
+class AddRegistrationForm(forms.ModelForm):
+    """Form for an organizer to add a member to an event.
+
+    Attributes
+    ----------
+    prepaid : bool
+        Marks the full price of the event as paid, whatever the price turns out to be.
+    """
+
+    prepaid = forms.BooleanField(
+        required=False,
+        label=_("Pre-paid"),
+        help_text=_("The member has already paid the full price."),
+    )
+
+    class Meta:
+        model = EventRegistration
+        fields = ("contact", "prepaid", "costs_paid")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["contact"].required = True
+        self.fields["costs_paid"].required = False
+
+    def clean_contact(self):
+        """Refuse members that already have a place or a spot in the queue."""
+        contact = self.cleaned_data["contact"]
+        event = self.instance.event if self.instance.event_id else None
+        if event is not None and (
+            EventRegistration.objects.filter(event=event, contact=contact)
+            .filter(status__in=(RegistrationStatus.ACTIVE, RegistrationStatus.QUEUED))
+            .exists()
+        ):
+            raise forms.ValidationError(
+                _("This member is already registered for this event.")
+            )
+        return contact
+
+    def save(self, commit=True):
+        """Mark the registration as added by an organizer and apply pre-payment."""
+        registration = super().save(commit=False)
+        registration.added_by_organizer = True
+        if self.cleaned_data["prepaid"]:
+            registration.costs_paid = registration.event.price
+        if commit:
+            registration.save()
+        return registration
+
+
+class AddRegistrationInline(admin.TabularInline):
+    """Inline admin interface for adding members to an event.
+
+    Members added here get a place that counts towards the capacity of the event, even
+    before registration opens or when the event is full. They are shown in the
+    attendee list like members who signed up themselves, and still have to fill in the
+    registration form and can cancel like everyone else.
+
+    Existing registrations are listed by :class:`EventRegistrationInline`, so this only
+    ever shows empty rows.
+    """
+
+    model = EventRegistration
+    form = AddRegistrationForm
+    extra = 1
+    can_delete = False
+    verbose_name = _("Member to add")
+    verbose_name_plural = _("Add members")
+
+    def get_queryset(self, request):
+        """Never list existing registrations, they can't be changed here."""
+        return super().get_queryset(request).none()
+
+    def has_view_permission(self, request, obj=None):  # noqa: ARG002
+        """Registrations are listed by the other inline, this one only adds."""
+        return False
+
+    def has_change_permission(self, request, obj=None):  # noqa: ARG002
+        """Registrations can only be added, not changed."""
+        return False
+
+    def has_delete_permission(self, request, obj=None):  # noqa: ARG002
+        """Registrations can only be added, not removed."""
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        """Only allow adding members to events in categories the user may manage."""
+        return super().has_add_permission(request, obj) and (
+            obj is None or obj.category in allowed_categories(request.user)
+        )
+
+
 @admin.register(Event)
 class EventAdmin(ExportableModelAdmin):
     """Admin interface for the fields of the event class."""
@@ -155,6 +248,7 @@ class EventAdmin(ExportableModelAdmin):
         RegistrationFormInline,
         EventOrganizerInline,
         EventRegistrationInline,
+        AddRegistrationInline,
     ]
 
     def get_queryset(self, request):
