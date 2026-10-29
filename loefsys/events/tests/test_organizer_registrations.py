@@ -23,8 +23,8 @@ def fmt(moment):
     return {"0": moment.strftime("%Y-%m-%d"), "1": moment.strftime("%H:%M:%S")}
 
 
-class AddRegistrationsMixin:
-    """Helpers to drive the event admin with registrations to add."""
+class AddRegistrationsTestCase(TestCase):
+    """Base class with helpers to drive the event admin with registrations to add."""
 
     def inline_data(self, response, members):
         """Build the inline formset data, adding ``members`` as new registrations.
@@ -75,7 +75,7 @@ class AddRegistrationsMixin:
         return self.client.post(url, data)
 
 
-class OrganizerAddsRegistrationsTestCase(AddRegistrationsMixin, TestCase):
+class OrganizerAddsRegistrationsTestCase(AddRegistrationsTestCase):
     """Superusers adding members to events through the event admin."""
 
     def setUp(self):
@@ -274,7 +274,7 @@ FILL_IN_BUTTON = (
 )
 
 
-class AddedMemberRegistrationFormTestCase(AddRegistrationsMixin, TestCase):
+class AddedMemberRegistrationFormTestCase(AddRegistrationsTestCase):
     """Added members still fill in the registration form themselves."""
 
     def setUp(self):
@@ -316,7 +316,7 @@ class AddedMemberRegistrationFormTestCase(AddRegistrationsMixin, TestCase):
         self.assertNotContains(response, FILL_IN_BUTTON)
 
 
-class ActivityManagerAddsRegistrationsTestCase(AddRegistrationsMixin, TestCase):
+class ActivityManagerAddsRegistrationsTestCase(AddRegistrationsTestCase):
     """Activity managers may only add members to events in their categories."""
 
     def setUp(self):
