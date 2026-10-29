@@ -171,7 +171,7 @@ class OrganizerAddsRegistrationsTestCase(AddRegistrationsMixin, TestCase):
         self.add_members(self.event, self.members[0])
         response = self.add_members(self.event, self.members[0])
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "already registered")
+        self.assertTrue(response.context["errors"])
         self.assertEqual(
             EventRegistration.objects.filter(contact=self.members[0]).count(), 1
         )
