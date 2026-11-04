@@ -63,8 +63,8 @@ class SchippersViewTestCase(TestCase):
         self.assertContains(response, user.display_name)
 
 
-class SchippersMembershipTypeTestCase(TestCase):
-    """Only active members are listed on the skippers page."""
+class SchippersMembershipFilterTestCase(TestCase):
+    """The skippers page filters by membership; alumni are hidden by default."""
 
     def setUp(self):
         self.skippership = G(Skippership, name="Kielboot 1")
@@ -81,24 +81,51 @@ class SchippersMembershipTypeTestCase(TestCase):
             )
         return user
 
-    def listed(self):
+    def kinds(self):
         response = self.client.get(reverse("home:schippers"))
         return {
-            entry["user"].first_name
+            entry["user"].first_name: entry["membership"]
             for group in response.context["skippers_by_level"]
             for entry in group["schippers"]
         }
 
-    def test_passive_members_and_alumni_are_hidden(self):
+    def test_membership_kinds(self):
         self.skipper("Actief", MembershipTypes.ACTIVE)
         self.skipper("Buitengewoon", MembershipTypes.ACTIVE_EXCEPTIONAL)
         self.skipper("Passief", MembershipTypes.PASSIVE)
+        self.skipper("Passiefbg", MembershipTypes.PASSIVE_EXCEPTIONAL)
         self.skipper("Reunist", MembershipTypes.ALUMNUS)
-        self.assertEqual(self.listed(), {"Actief", "Buitengewoon"})
-
-    def test_users_without_membership_record_stay(self):
         self.skipper("Onbekend")
-        self.assertEqual(self.listed(), {"Onbekend"})
+        self.assertEqual(
+            self.kinds(),
+            {
+                "Actief": "active",
+                "Buitengewoon": "active",
+                "Passief": "passive",
+                "Passiefbg": "passive",
+                "Reunist": "alumnus",
+                "Onbekend": "active",
+            },
+        )
+
+    def test_checkboxes_default_to_active_and_passive(self):
+        response = self.client.get(reverse("home:schippers"))
+        self.assertEqual(
+            [
+                (kind, checked)
+                for kind, _label, checked in response.context["membership_filters"]
+            ],
+            [("active", True), ("passive", True), ("alumnus", False)],
+        )
+
+    def test_alumni_are_hidden_until_ticked(self):
+        self.skipper("Reunist", MembershipTypes.ALUMNUS)
+        self.skipper("Passief", MembershipTypes.PASSIVE)
+        response = self.client.get(reverse("home:schippers"))
+        self.assertContains(response, 'data-filter-membership="alumnus" hidden')
+        self.assertContains(response, 'data-filter-membership="passive" >')
+        # Alumni don't count as members in the headline.
+        self.assertEqual(response.context["skipper_count"], 1)
 
     def test_only_the_current_membership_counts(self):
         user = self.skipper(
@@ -107,14 +134,13 @@ class SchippersMembershipTypeTestCase(TestCase):
             start=date.today() - timedelta(days=800),
             end=date.today() - timedelta(days=1),
         )
-        Membership.objects.create(
+        alumnus = Membership.objects.create(
             member=user, membership_type=MembershipTypes.ALUMNUS, start=date.today()
         )
-        self.assertTrue(user.is_inactive_member)
-        self.assertEqual(self.listed(), set())
+        self.assertEqual(user.current_membership, alumnus)
+        self.assertEqual(self.kinds(), {"Oudlid": "alumnus"})
 
-        user.membership_set.filter(membership_type=MembershipTypes.ALUMNUS).update(
-            start=date.today() + timedelta(days=30)
-        )
-        self.assertFalse(user.is_inactive_member)
-        self.assertEqual(self.listed(), {"Oudlid"})
+        alumnus.start = date.today() + timedelta(days=30)
+        alumnus.save()
+        self.assertIsNone(user.current_membership)
+        self.assertEqual(self.kinds(), {"Oudlid": "active"})

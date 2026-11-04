@@ -3,13 +3,14 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, gettext_lazy, pgettext_lazy
 from django.views.generic import TemplateView, View
 
 from loefsys.events.models import Event, EventRegistration
 from loefsys.events.models.choices import RegistrationStatus
 from loefsys.home.models import Announcement
 from loefsys.members.models import Membership, UserSkippership
+from loefsys.members.models.choices import ACTIVE_MEMBERSHIP_TYPES, MembershipTypes
 from loefsys.reservations.models import ReservableType
 from loefsys.reservations.models.reservation import Reservation
 from loefsys.reservations.permissions import evaluable_reservations
@@ -136,8 +137,43 @@ def highest_skipperships(user) -> list:
     ]
 
 
+#: How the skippers page groups membership types, in the order of its filters.
+MEMBERSHIP_KIND_LABELS = {
+    "active": gettext_lazy("Active members"),
+    "passive": gettext_lazy("Passive members"),
+    "alumnus": pgettext_lazy("skippers page filter", "Alumni"),
+}
+
+
+def current_membership_kinds(user_ids) -> dict[int, str]:
+    """Return "active", "passive" or "alumnus" for users with a current membership.
+
+    Users without a current membership record are left out; callers treat them as
+    active, so missing administration never hides anyone.
+    """
+    kinds = {}
+    for member_id, membership_type in (
+        Membership.objects.current()
+        .filter(member_id__in=user_ids)
+        .values_list("member_id", "membership_type")
+    ):
+        if membership_type == MembershipTypes.ALUMNUS:
+            kinds[member_id] = "alumnus"
+        elif membership_type in ACTIVE_MEMBERSHIP_TYPES:
+            kinds[member_id] = "active"
+        else:
+            kinds[member_id] = "passive"
+    return kinds
+
+
 class SchippersView(TemplateView):
-    """View for displaying all skippers grouped by their furthest skippership."""
+    """View for displaying all skippers grouped by their furthest skippership.
+
+    Checkboxes filter the list by membership: active and passive members are
+    shown by default, alumni only when their box is ticked.
+    """
+
+    DEFAULT_MEMBERSHIPS = ("active", "passive")
 
     template_name = "home/schippers.html"
 
@@ -145,13 +181,13 @@ class SchippersView(TemplateView):
         """Add a grouped list of skippers to the page context."""
         context = super().get_context_data(**kwargs)
 
-        # Passive members and alumni don't sail for the association any more.
         user_skipperships = list(
-            UserSkippership.objects.exclude(
-                user__in=Membership.objects.inactive().values("member")
+            UserSkippership.objects.select_related("user", "skippership").order_by(
+                "user__first_name", "user__last_name", "skippership__name"
             )
-            .select_related("user", "skippership")
-            .order_by("user__first_name", "user__last_name", "skippership__name")
+        )
+        membership_kinds = current_membership_kinds(
+            {entry.user_id for entry in user_skipperships}
         )
         user_skipperships_by_user: dict[int, list] = {}
         for user_skippership in user_skipperships:
@@ -173,6 +209,7 @@ class SchippersView(TemplateView):
                 grouped_skippers.setdefault(entry.skippership.name, []).append(
                     {
                         "user": user,
+                        "membership": membership_kinds.get(user.pk, "active"),
                         "skippership": entry.skippership,
                         "profile_url": reverse(
                             "members:profile", kwargs={"slug": user.slug}
@@ -189,7 +226,17 @@ class SchippersView(TemplateView):
             skippers_by_group.append({"label": group_name, "schippers": group_entries})
 
         context["skippers_by_level"] = skippers_by_group
-        context["skipper_count"] = len(user_skipperships_by_user)
+        # Alumni are not members any more, so the headline leaves them out.
+        context["skipper_count"] = sum(
+            1
+            for user_id in user_skipperships_by_user
+            if membership_kinds.get(user_id) != "alumnus"
+        )
+        context["membership_filters"] = [
+            (kind, label, kind in self.DEFAULT_MEMBERSHIPS)
+            for kind, label in MEMBERSHIP_KIND_LABELS.items()
+        ]
+        context["default_memberships"] = self.DEFAULT_MEMBERSHIPS
         context["skipper_groups"] = skippers_by_group
         return context
 

@@ -2,6 +2,8 @@
 // Inside a [data-list-filter] container:
 //   [data-filter-input]           text box; matches against [data-filter-item] values
 //   [data-filter-group-button=X]  shows only the [data-filter-group=X] section ("" shows all)
+//   [data-filter-option=membership] checkboxes; an item with data-filter-membership=X
+//                                 shows only while the box with value X is ticked
 //   [data-filter-empty]           shown when nothing matches
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-list-filter]").forEach((root) => {
@@ -9,15 +11,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const buttons = root.querySelectorAll("[data-filter-group-button]");
     const groups = root.querySelectorAll("[data-filter-group]");
     const empty = root.querySelector("[data-filter-empty]");
+    const options = root.querySelectorAll('[data-filter-option="membership"]');
     let group = "";
 
     const apply = () => {
       const query = (input ? input.value : "").trim().toLowerCase();
+      const memberships = new Set(
+        [...options].filter((box) => box.checked).map((box) => box.value),
+      );
       let anyVisible = false;
       groups.forEach((section) => {
         let visibleItems = 0;
         section.querySelectorAll("[data-filter-item]").forEach((item) => {
-          const match = item.dataset.filterItem.includes(query);
+          const membership = item.dataset.filterMembership;
+          const match =
+            item.dataset.filterItem.includes(query) &&
+            (!membership || !options.length || memberships.has(membership));
           item.hidden = !match;
           if (match) visibleItems += 1;
         });
@@ -29,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     input?.addEventListener("input", apply);
+    options.forEach((box) => box.addEventListener("change", apply));
     buttons.forEach((button) =>
       button.addEventListener("click", () => {
         group = button.dataset.filterGroupButton;
@@ -36,5 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
         apply();
       }),
     );
+    apply();
   });
 });

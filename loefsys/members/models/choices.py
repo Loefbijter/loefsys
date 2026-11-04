@@ -65,5 +65,5 @@ class MembershipTypes(models.IntegerChoices):
 
 
 #: Membership types of members who take part in the association: they are listed
-#: as skippers and so on. Passive members and alumni are not.
+#: as active members. The others are passive members and alumni.
 ACTIVE_MEMBERSHIP_TYPES = (MembershipTypes.ACTIVE, MembershipTypes.ACTIVE_EXCEPTIONAL)

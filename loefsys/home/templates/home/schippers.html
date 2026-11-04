@@ -25,6 +25,16 @@
     </c-page-header>
 
     {% if skippers_by_level %}
+        <fieldset class="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <legend class="sr-only">{% translate "Membership" %}</legend>
+            {% for kind, label, checked in membership_filters %}
+                <label class="inline-flex items-center gap-2 text-sm font-semibold cursor-pointer">
+                    <input type="checkbox" class="size-4 accent-loef-2" value="{{ kind }}" data-filter-option="membership" {% if checked %}checked{% endif %}>
+                    {{ label }}
+                </label>
+            {% endfor %}
+        </fieldset>
+
         <div class="badges" role="group" aria-label="{% translate 'Skippership' %}">
             <button type="button" class="filter" data-filter-group-button="" aria-pressed="true">{% translate "All" %}</button>
             {% for level_group in skippers_by_level %}
@@ -37,7 +47,7 @@
             <c-panel :title="level_group.label" icon="award" :count="group_count" data-filter-group="{{ level_group.label }}">
                 <div class="people">
                     {% for skipper in level_group.schippers %}
-                        <div data-filter-item="{{ skipper.user.display_name|lower }}">
+                        <div data-filter-item="{{ skipper.user.display_name|lower }}" data-filter-membership="{{ skipper.membership }}" {% if skipper.membership not in default_memberships %}hidden{% endif %}>
                             <c-person-row :user="skipper.user" :href="skipper.profile_url" :sub="skipper.user.title" />
                         </div>
                     {% endfor %}
@@ -47,7 +57,7 @@
 
         <div data-filter-empty hidden>
             <c-panel>
-                <c-empty-state icon="search" title="{% translate 'No skippers found' %}" text="{% translate 'Try another name or choose All.' %}" />
+                <c-empty-state icon="search" title="{% translate 'No skippers found' %}" text="{% translate 'Try another name, choose All or tick more membership types.' %}" />
             </c-panel>
         </div>
     {% else %}

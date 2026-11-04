@@ -16,7 +16,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
-from .choices import ACTIVE_MEMBERSHIP_TYPES, Genders
+from .choices import Genders
 
 if TYPE_CHECKING:
     from .membership import Membership, MembershipQuerySet
@@ -294,19 +294,6 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     def current_membership(self) -> Optional["Membership"]:
         """Return the membership that applies today, if any."""
         return self.membership_set.current().first()
-
-    @property
-    def is_inactive_member(self) -> bool:
-        """Return whether the user is currently a passive member or an alumnus.
-
-        A user without a current membership record doesn't count as inactive, so
-        missing administration never hides anyone.
-        """
-        membership = self.current_membership
-        return (
-            membership is not None
-            and membership.membership_type not in ACTIVE_MEMBERSHIP_TYPES
-        )
 
     @property
     def display_name(self) -> str:
