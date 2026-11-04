@@ -145,6 +145,75 @@ class EventFillerViewTestCase(TestCase):
         self.assertIn("Public Person", data[0]["title"])
         self.assertEqual(data[0]["allDay"], True)
 
+    def birthday_starts(self, start: str, end: str) -> list[str]:
+        """Return the birthday days the filler sends for this calendar range."""
+        data = self.client.get(
+            reverse("events:event_filler"),
+            {"show_birthdays": "1", "start": start, "end": end},
+        ).json()
+        return [item["start"] for item in data if "cat-birthday" in item["classNames"]]
+
+    def test_event_filler_shows_birthdays_in_the_requested_range(self):
+        """Birthdays show in whatever range the calendar shows, also in the past."""
+        G(
+            get_user_model(),
+            first_name="Floor",
+            last_name="Morgenrood",
+            birthday=datetime(1999, 11, 2).date(),
+            show_birthday=True,
+        )
+
+        self.assertEqual(
+            self.birthday_starts("2020-11-02T00:00:00", "2020-11-09T00:00:00"),
+            ["2020-11-02"],
+        )
+        self.assertEqual(
+            self.birthday_starts("2099-10-26T00:00:00", "2099-12-07T00:00:00"),
+            ["2099-11-02"],
+        )
+        # The end is exclusive.
+        self.assertEqual(
+            self.birthday_starts("2020-10-26T00:00:00", "2020-11-02T00:00:00"), []
+        )
+
+    def test_event_filler_shows_birthdays_across_new_year(self):
+        """A range spanning new year finds birthdays in both years."""
+        for first_name, birthday in (
+            ("Joris", (1998, 12, 30)),
+            ("Sanne", (1997, 1, 2)),
+        ):
+            G(
+                get_user_model(),
+                first_name=first_name,
+                last_name="Jaarwisseling",
+                birthday=datetime(*birthday).date(),
+                show_birthday=True,
+            )
+
+        self.assertEqual(
+            sorted(self.birthday_starts("2029-12-29T00:00:00", "2030-01-05T00:00:00")),
+            ["2029-12-30", "2030-01-02"],
+        )
+
+    def test_event_filler_shows_leap_day_birthdays_on_28_february(self):
+        """In a year without 29 February, that birthday falls on 28 February."""
+        G(
+            get_user_model(),
+            first_name="Pim",
+            last_name="Schrikkeldag",
+            birthday=datetime(2000, 2, 29).date(),
+            show_birthday=True,
+        )
+
+        self.assertEqual(
+            self.birthday_starts("2031-02-23T00:00:00", "2031-03-02T00:00:00"),
+            ["2031-02-28"],
+        )
+        self.assertEqual(
+            self.birthday_starts("2032-02-23T00:00:00", "2032-03-01T00:00:00"),
+            ["2032-02-29"],
+        )
+
     def test_event_detail_shows_description_and_fine_consent_checkbox(self):
         """Event detail should display description and fine consent."""
         user = G(get_user_model())
