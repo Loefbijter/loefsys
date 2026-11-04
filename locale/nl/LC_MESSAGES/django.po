@@ -582,6 +582,9 @@ msgstr "Vul je gegevens in"
 msgid "Filter by type"
 msgstr "Filter op type"
 
+msgid "Filter upcoming events"
+msgstr "Aankomende evenementen filteren"
+
 msgid "Fine"
 msgstr "Boete"
 
@@ -661,6 +664,9 @@ msgstr ""
 
 msgid "Hide all answers"
 msgstr "Alle antwoorden verbergen"
+
+msgid "Hide full"
+msgstr "Volle verbergen"
 
 msgid "Home"
 msgstr "Home"
@@ -980,6 +986,9 @@ msgstr "Overige"
 
 msgid "Other Loefbijter Events"
 msgstr "Overige Loefbijter-evenementen"
+
+msgid "Other activities"
+msgstr "Overige activiteiten"
 
 msgid "POD links"
 msgstr "POD-links"
@@ -1539,6 +1548,9 @@ msgstr "Training"
 
 msgid "Training: phone numbers and POD links visible"
 msgstr "Training: telefoonnummers en POD-links zichtbaar"
+
+msgid "Trainings"
+msgstr "Trainingen"
 
 msgid "Try another name or choose All."
 msgstr "Probeer een andere naam of kies Alle."

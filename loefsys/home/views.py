@@ -1,5 +1,7 @@
 """Module defining the view for the index page."""
 
+from django.db import models
+from django.db.models import Count, Q
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -7,7 +9,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import TemplateView, View
 
 from loefsys.events.models import Event, EventRegistration
-from loefsys.events.models.choices import RegistrationStatus
+from loefsys.events.models.choices import EventCategories, RegistrationStatus
 from loefsys.home.models import Announcement
 from loefsys.members.models import UserSkippership
 from loefsys.reservations.models import ReservableType
@@ -19,6 +21,36 @@ class HomeView(View):
     """The member dashboard: next activity, things to do and what is coming up."""
 
     UPCOMING_LIMIT = 4
+
+    #: Values of the ``events`` query parameter that filter the upcoming events.
+    EVENT_FILTERS = ("all", "trainings", "other")
+
+    @staticmethod
+    def filter_upcoming(events, user, kind: str, hide_full: bool):
+        """Filter the upcoming events by kind and, if asked, leave out full ones.
+
+        A full event the user is registered or queued for stays in the list.
+        """
+        if kind == "trainings":
+            events = events.filter(category=EventCategories.TRAINING)
+        elif kind == "other":
+            events = events.exclude(category=EventCategories.TRAINING)
+        if hide_full:
+            events = events.annotate(
+                active_registrations=Count(
+                    "eventregistration",
+                    filter=Q(eventregistration__status=RegistrationStatus.ACTIVE),
+                )
+            )
+            full = Q(capacity__gt=0, active_registrations__gte=models.F("capacity"))
+            if user.is_authenticated:
+                own = EventRegistration.objects.filter(
+                    contact=user,
+                    status__in=(RegistrationStatus.ACTIVE, RegistrationStatus.QUEUED),
+                ).values("event")
+                full &= ~Q(pk__in=own)
+            events = events.exclude(full)
+        return events
 
     @staticmethod
     def greeting(now) -> str:
@@ -83,16 +115,23 @@ class HomeView(View):
                 .order_by("start")[: self.UPCOMING_LIMIT]
             )
 
+        kind = request.GET.get("events", "all")
+        if kind not in self.EVENT_FILTERS:
+            kind = "all"
+        hide_full = request.GET.get("full") == "hide"
+        upcoming = self.filter_upcoming(events, user, kind, hide_full)
         next_event = next_registration.event if next_registration else None
-        upcoming_events = list(
-            events.exclude(pk=next_event.pk) if next_event else events
-        )[: self.UPCOMING_LIMIT]
+        if next_event:
+            upcoming = upcoming.exclude(pk=next_event.pk)
+        upcoming_events = list(upcoming[: self.UPCOMING_LIMIT])
 
         context = {
             "greeting": self.greeting(now),
             "announcements": announcements,
             "events": events,
             "upcoming_events": upcoming_events,
+            "event_filter": kind,
+            "hide_full": hide_full,
             "next_event": next_event,
             "next_registration": next_registration,
             "user_reservations": user_reservations,

@@ -28,6 +28,14 @@
                 <c-slot name="action">
                     <a class="btn btn-ghost btn-sm" href="{% url 'events:events' %}">{% translate "Agenda" %} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </c-slot>
+                {% with full_param=hide_full|yesno:"&full=hide," %}
+                <nav class="flex flex-wrap items-center gap-2 mb-3" aria-label="{% translate 'Filter upcoming events' %}">
+                    <a class="filter" href="?events=all{{ full_param }}" aria-current="{% if event_filter == 'all' %}true{% else %}false{% endif %}">{% translate "All" %}</a>
+                    <a class="filter" href="?events=trainings{{ full_param }}" aria-current="{% if event_filter == 'trainings' %}true{% else %}false{% endif %}">{% translate "Trainings" %}</a>
+                    <a class="filter" href="?events=other{{ full_param }}" aria-current="{% if event_filter == 'other' %}true{% else %}false{% endif %}">{% translate "Other activities" %}</a>
+                    <a class="filter sm:ml-auto" href="?events={{ event_filter }}{% if not hide_full %}&full=hide{% endif %}" aria-pressed="{{ hide_full|yesno:'true,false' }}"><i class="bi bi-eye-slash" aria-hidden="true"></i> {% translate "Hide full" %}</a>
+                </nav>
+                {% endwith %}
                 {% if upcoming_events %}
                     <div class="rows">
                         {% for event in upcoming_events %}

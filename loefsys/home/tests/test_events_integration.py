@@ -6,9 +6,12 @@ from django.test import Client, TestCase
 from django.utils import timezone
 from django_dynamic_fixture import G
 
-from loefsys.events.models import Event
+from loefsys.events.models import Event, EventRegistration
+from loefsys.events.models.choices import EventCategories, RegistrationStatus
 from loefsys.home.views import HomeView
 from loefsys.members.models import User
+
+TRAINING = EventCategories.TRAINING
 
 
 def evening(days_ahead: int, **fields) -> Event:
@@ -72,3 +75,69 @@ class EventTestCase(TestCase):
 
         self.assertNotContains(response, "Old event")
         self.assertContains(response, "Later event")
+
+
+class UpcomingEventsFilterTestCase(TestCase):
+    """Members can filter the upcoming events on the home page."""
+
+    def setUp(self):
+        self.user = G(User, email="lid@example.com")
+        self.client.force_login(self.user)
+        self.training = evening(1, title="Kielboottraining", category=TRAINING)
+        self.borrel = evening(2, title="Borrel", category=EventCategories.LEISURE)
+        self.full_training = evening(
+            3, title="Volle training", category=TRAINING, capacity=1
+        )
+        G(
+            EventRegistration,
+            event=self.full_training,
+            contact=G(User, email="ander@example.com"),
+            status=RegistrationStatus.ACTIVE,
+        )
+
+    def shown(self, query=""):
+        response = self.client.get(f"/{query}")
+        return [event.title for event in response.context["upcoming_events"]]
+
+    def test_default_shows_everything(self):
+        self.assertEqual(self.shown(), ["Kielboottraining", "Borrel", "Volle training"])
+
+    def test_only_trainings(self):
+        self.assertEqual(
+            self.shown("?events=trainings"), ["Kielboottraining", "Volle training"]
+        )
+
+    def test_only_other_activities(self):
+        self.assertEqual(self.shown("?events=other"), ["Borrel"])
+
+    def test_hide_full_events(self):
+        self.assertEqual(
+            self.shown("?events=all&full=hide"), ["Kielboottraining", "Borrel"]
+        )
+        self.assertEqual(
+            self.shown("?events=trainings&full=hide"), ["Kielboottraining"]
+        )
+
+    def test_full_event_you_are_registered_for_stays(self):
+        # The earliest registration is the "next event" hero, not part of the list.
+        G(
+            EventRegistration,
+            event=self.training,
+            contact=self.user,
+            status=RegistrationStatus.ACTIVE,
+        )
+        G(
+            EventRegistration,
+            event=self.full_training,
+            contact=self.user,
+            status=RegistrationStatus.QUEUED,
+        )
+        self.assertEqual(self.shown("?full=hide"), ["Borrel", "Volle training"])
+
+    def test_unknown_filter_falls_back_to_all(self):
+        self.assertEqual(len(self.shown("?events=nonsense")), 3)
+
+    def test_filter_links_keep_the_other_choice(self):
+        response = self.client.get("/?events=trainings&full=hide")
+        self.assertContains(response, 'href="?events=other&amp;full=hide"')
+        self.assertContains(response, 'href="?events=trainings"')
