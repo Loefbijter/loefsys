@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.files.storage import FileSystemStorage
 from django.db import models
-from django.db.models import OneToOneField, QuerySet
+from django.db.models import OneToOneField
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import RandomCharField
 from django_extensions.db.models import TimeStampedModel
@@ -16,10 +16,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
-from .choices import Genders
+from .choices import ACTIVE_MEMBERSHIP_TYPES, Genders
 
 if TYPE_CHECKING:
-    from .membership import Membership
+    from .membership import Membership, MembershipQuerySet
     from .study_registration import StudyRegistration
 
 
@@ -240,7 +240,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     )
 
     study_registration: Optional["StudyRegistration"]
-    membership_set: QuerySet["Membership"]
+    membership_set: "MembershipQuerySet"
 
     phone_number = PhoneNumberField(blank=True, verbose_name=_("Phone number"))
     pod_kb_link = models.URLField(
@@ -289,6 +289,24 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         """Return the earliest known membership start date for the user."""
         membership = self.membership_set.order_by("start").first()
         return membership.start if membership else None
+
+    @property
+    def current_membership(self) -> Optional["Membership"]:
+        """Return the membership that applies today, if any."""
+        return self.membership_set.current().first()
+
+    @property
+    def is_inactive_member(self) -> bool:
+        """Return whether the user is currently a passive member or an alumnus.
+
+        A user without a current membership record doesn't count as inactive, so
+        missing administration never hides anyone.
+        """
+        membership = self.current_membership
+        return (
+            membership is not None
+            and membership.membership_type not in ACTIVE_MEMBERSHIP_TYPES
+        )
 
     @property
     def display_name(self) -> str:

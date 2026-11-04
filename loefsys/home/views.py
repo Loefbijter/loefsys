@@ -9,7 +9,7 @@ from django.views.generic import TemplateView, View
 from loefsys.events.models import Event, EventRegistration
 from loefsys.events.models.choices import RegistrationStatus
 from loefsys.home.models import Announcement
-from loefsys.members.models import UserSkippership
+from loefsys.members.models import Membership, UserSkippership
 from loefsys.reservations.models import ReservableType
 from loefsys.reservations.models.reservation import Reservation
 from loefsys.reservations.permissions import evaluable_reservations
@@ -145,10 +145,13 @@ class SchippersView(TemplateView):
         """Add a grouped list of skippers to the page context."""
         context = super().get_context_data(**kwargs)
 
+        # Passive members and alumni don't sail for the association any more.
         user_skipperships = list(
-            UserSkippership.objects.select_related("user", "skippership").order_by(
-                "user__first_name", "user__last_name", "skippership__name"
+            UserSkippership.objects.exclude(
+                user__in=Membership.objects.inactive().values("member")
             )
+            .select_related("user", "skippership")
+            .order_by("user__first_name", "user__last_name", "skippership__name")
         )
         user_skipperships_by_user: dict[int, list] = {}
         for user_skippership in user_skipperships:

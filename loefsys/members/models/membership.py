@@ -5,10 +5,25 @@ from datetime import MAXYEAR, date
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .choices import MembershipTypes
+from .choices import ACTIVE_MEMBERSHIP_TYPES, MembershipTypes
 from .user import User
+
+
+class MembershipQuerySet(models.QuerySet["Membership"]):
+    """Queries on memberships."""
+
+    def current(self, on: date | None = None) -> "MembershipQuerySet":
+        """Return the memberships that apply on the given day (default: today)."""
+        on = on or timezone.localdate()
+        return self.filter(Q(end__isnull=True) | Q(end__gte=on), start__lte=on)
+
+    def inactive(self, on: date | None = None) -> "MembershipQuerySet":
+        """Return the current memberships of passive members and alumni."""
+        return self.current(on).exclude(membership_type__in=ACTIVE_MEMBERSHIP_TYPES)
 
 
 class Membership(models.Model):
@@ -57,6 +72,8 @@ class Membership(models.Model):
         null=True,
         blank=True,
     )
+
+    objects = MembershipQuerySet.as_manager()
 
     def __str__(self):
         return f"Membership {self.membership_type} for {self.member.display_name}"

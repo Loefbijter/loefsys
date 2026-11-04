@@ -1,9 +1,12 @@
+from datetime import date, timedelta
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from django_dynamic_fixture import G
 
-from loefsys.members.models import Skippership, UserSkippership
+from loefsys.members.models import Membership, Skippership, UserSkippership
+from loefsys.members.models.choices import MembershipTypes
 
 
 class SchippersViewTestCase(TestCase):
@@ -58,3 +61,60 @@ class SchippersViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertLessEqual(len(user.display_name), 64)
         self.assertContains(response, user.display_name)
+
+
+class SchippersMembershipTypeTestCase(TestCase):
+    """Only active members are listed on the skippers page."""
+
+    def setUp(self):
+        self.skippership = G(Skippership, name="Kielboot 1")
+        self.viewer = G(get_user_model(), first_name="Kijker", last_name="Lid")
+        self.client.force_login(self.viewer)
+
+    def skipper(self, first_name, membership_type=None, **membership):
+        user = G(get_user_model(), first_name=first_name, last_name="Zeiler")
+        G(UserSkippership, user=user, skippership=self.skippership)
+        if membership_type is not None:
+            membership.setdefault("start", date.today() - timedelta(days=365))
+            Membership.objects.create(
+                member=user, membership_type=membership_type, **membership
+            )
+        return user
+
+    def listed(self):
+        response = self.client.get(reverse("home:schippers"))
+        return {
+            entry["user"].first_name
+            for group in response.context["skippers_by_level"]
+            for entry in group["schippers"]
+        }
+
+    def test_passive_members_and_alumni_are_hidden(self):
+        self.skipper("Actief", MembershipTypes.ACTIVE)
+        self.skipper("Buitengewoon", MembershipTypes.ACTIVE_EXCEPTIONAL)
+        self.skipper("Passief", MembershipTypes.PASSIVE)
+        self.skipper("Reunist", MembershipTypes.ALUMNUS)
+        self.assertEqual(self.listed(), {"Actief", "Buitengewoon"})
+
+    def test_users_without_membership_record_stay(self):
+        self.skipper("Onbekend")
+        self.assertEqual(self.listed(), {"Onbekend"})
+
+    def test_only_the_current_membership_counts(self):
+        user = self.skipper(
+            "Oudlid",
+            MembershipTypes.ACTIVE,
+            start=date.today() - timedelta(days=800),
+            end=date.today() - timedelta(days=1),
+        )
+        Membership.objects.create(
+            member=user, membership_type=MembershipTypes.ALUMNUS, start=date.today()
+        )
+        self.assertTrue(user.is_inactive_member)
+        self.assertEqual(self.listed(), set())
+
+        user.membership_set.filter(membership_type=MembershipTypes.ALUMNUS).update(
+            start=date.today() + timedelta(days=30)
+        )
+        self.assertFalse(user.is_inactive_member)
+        self.assertEqual(self.listed(), {"Oudlid"})

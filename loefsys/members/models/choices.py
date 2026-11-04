@@ -62,3 +62,8 @@ class MembershipTypes(models.IntegerChoices):
 
     ALUMNUS = (4, _("Alumnus"))
     """Used when the person is an alumnus."""
+
+
+#: Membership types of members who take part in the association: they are listed
+#: as skippers and so on. Passive members and alumni are not.
+ACTIVE_MEMBERSHIP_TYPES = (MembershipTypes.ACTIVE, MembershipTypes.ACTIVE_EXCEPTIONAL)
