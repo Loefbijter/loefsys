@@ -63,7 +63,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     registration_start : ~datetime.datetime
         The start date and time of the registration window
     registration_deadline : ~datetime.datetime
-        The end date and time of the registration window
+        The end date and time of the registration window. Required in forms,
+        because registration never opens without it.
     cancelation_deadline : ~datetime.datetime
         The end date and time of the cancelation window
     category : ~loefsys.events.models.choices.EventCategories
@@ -112,9 +113,9 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         _("Start of registration window"), blank=True, null=True
     )
 
-    registration_deadline = models.DateTimeField(
-        _("Registration deadline"), blank=True, null=True
-    )
+    # Required in forms: without a deadline, registration never opens. Older events
+    # may still have none, so the column stays nullable.
+    registration_deadline = models.DateTimeField(_("Registration deadline"), null=True)
     cancelation_deadline = models.DateTimeField(
         _("Cancelation deadline"), blank=True, null=True
     )
