@@ -1,7 +1,7 @@
 """Urls of the members app."""
 
-from django.contrib.auth.views import LoginView, LogoutView
-from django.urls import include, path
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
+from django.urls import include, path, reverse_lazy
 from django.views.generic import TemplateView
 
 from .views import (
@@ -31,15 +31,21 @@ urlpatterns = [
         name="login",
     ),
     path("logout/", LogoutView.as_view(next_page="/"), name="logout"),
-    # Password reset disabled — point users to contact the web committee
+    # Members request a link by email; the link opens the top-level
+    # ``password_reset_confirm`` view, where they choose a new password.
     path(
         "reset-password/",
-        TemplateView.as_view(template_name="registration/reset_disabled.html"),
+        PasswordResetView.as_view(
+            template_name="registration/reset_form.html",
+            email_template_name="registration/loefsys_password_reset_email.txt",
+            subject_template_name="registration/loefsys_password_reset_subject.txt",
+            success_url=reverse_lazy("members:reset-password-done"),
+        ),
         name="reset-password",
     ),
     path(
         "reset-password/done/",
-        TemplateView.as_view(template_name="registration/reset_disabled.html"),
+        TemplateView.as_view(template_name="registration/reset_done.html"),
         name="reset-password-done",
     ),
     path("profiles/", include(urlpatterns_profiles)),

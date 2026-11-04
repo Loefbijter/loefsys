@@ -88,9 +88,8 @@ class RequireLoginMiddleware:
             reverse("login"),
             "/logout/",
             "/members/logout/",
-            "/members/reset-password/",  # Allow password reset request page
+            reverse("members:reset-password"),  # Request a reset link (and done)
             "/reset/",  # Allow password reset pages (reset confirm and reset done)
-            "/reset-disabled/",  # Allow reset disabled message page
             "/admin/",
             "/i18n/",  # Allow choosing a language before logging in
             "/__reload__/",
