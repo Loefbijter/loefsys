@@ -71,3 +71,45 @@ class LoefbijterGroupBackendTestCase(TestCase):
                 username=self.user.email, password="Een-lang-wachtwoord-123"
             )
         )
+
+
+class EmailLoginCaseTestCase(TestCase):
+    """Logging in ignores the capitalisation of the email address."""
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            "jan.zeiler@example.com", "geheim-wachtwoord"
+        )
+
+    def test_login_with_different_case(self):
+        self.assertTrue(
+            self.client.login(
+                username="Jan.Zeiler@Example.COM", password="geheim-wachtwoord"
+            )
+        )
+
+    def test_login_form_with_different_case(self):
+        response = self.client.post(
+            "/login/",
+            {"username": "JAN.ZEILER@EXAMPLE.COM", "password": "geheim-wachtwoord"},
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(int(self.client.session["_auth_user_id"]), self.user.pk)
+
+    def test_wrong_password_still_fails(self):
+        self.assertFalse(
+            self.client.login(username="JAN.ZEILER@example.com", password="fout")
+        )
+
+    def test_exact_match_wins_when_only_case_differs(self):
+        other = get_user_model().objects.create_user(
+            "Jan.Zeiler@example.com", "ander-wachtwoord"
+        )
+        self.assertEqual(
+            get_user_model().objects.get_by_natural_key("Jan.Zeiler@example.com"), other
+        )
+        self.assertFalse(
+            self.client.login(
+                username="JAN.ZEILER@EXAMPLE.COM", password="geheim-wachtwoord"
+            )
+        )

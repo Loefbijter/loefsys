@@ -36,6 +36,18 @@ class UserManager(BaseUserManager):
 
     use_in_migrations = True
 
+    def get_by_natural_key(self, username):
+        """Return the user with this email address, ignoring case.
+
+        People type their address in all sorts of capitalisations when logging in.
+        If two accounts differ only in case, only the exact match is found, so the
+        lookup never picks an account at random.
+        """
+        matches = list(self.filter(email__iexact=username)[:2])
+        if len(matches) == 1:
+            return matches[0]
+        return self.get(email=username)
+
     def _create_user(self, email, password, **extra_fields):
         """Create and save a user with the given email and password."""
         email = self.normalize_email(email)
