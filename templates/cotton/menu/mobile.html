@@ -1,11 +1,12 @@
 {% comment %}Phone navigation: a tab bar in the bottom wave with the logo as the menu button.{% endcomment %}
-{% load i18n static requireapp %}
+{% load i18n static requireapp event_ui %}
 {% with ns=request.resolver_match.namespace view=request.resolver_match.view_name %}
 <div id="phone-menu-backdrop" class="foldout-backdrop" hidden></div>
 <div id="phone-menu" class="menu foldout" role="menu" hidden>
     {% requireapp "loefsys.events" %}
     <a href="{% url 'events:events' %}" role="menuitem"><span class="menu-label"><i class="bi bi-calendar3" aria-hidden="true"></i>{% translate "Activities" %}</span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
-    {% if request.user.is_authenticated and request.user.organizer.exists %}
+    {% organizes_events request.user as is_organizer %}
+    {% if is_organizer %}
         <a href="{% url 'events:my_events' %}" role="menuitem"><span class="menu-label"><i class="bi bi-list-check" aria-hidden="true"></i>{% translate "My events" %}</span><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
     {% endif %}
     {% endrequireapp %}

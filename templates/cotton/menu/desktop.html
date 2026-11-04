@@ -1,5 +1,5 @@
 {% comment %}Desktop navigation: the top wave banner.{% endcomment %}
-{% load i18n requireapp %}
+{% load i18n requireapp event_ui %}
 {% with ns=request.resolver_match.namespace view=request.resolver_match.view_name %}
 <div class="topbar">
     <nav class="topbar-band" aria-label="{% translate 'Main menu' %}">
@@ -8,7 +8,8 @@
             <c-menu.item href="{% url 'home:home' %}" active="{% if view == 'home:home' %}1{% endif %}">{% translate "Home" %}</c-menu.item>
             {% requireapp "loefsys.events" %}
             <c-menu.item href="{% url 'events:events' %}" active="{% if ns == 'events' and view != 'events:my_events' and view != 'events:my_events_event' %}1{% endif %}">{% translate "Activities" %}</c-menu.item>
-            {% if request.user.is_authenticated and request.user.organizer.exists %}
+            {% organizes_events request.user as is_organizer %}
+            {% if is_organizer %}
                 <c-menu.item href="{% url 'events:my_events' %}" active="{% if view == 'events:my_events' or view == 'events:my_events_event' %}1{% endif %}">{% translate "My events" %}</c-menu.item>
             {% endif %}
             {% endrequireapp %}

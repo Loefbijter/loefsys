@@ -18,6 +18,8 @@ from loefsys.events.models import (
     RegistrationFormField,
 )
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
+from loefsys.groups.models import Committee
+from loefsys.groups.models.membership import GroupMembership
 
 
 class EventDetailAttendeesTestCase(TestCase):
@@ -308,6 +310,49 @@ class MyEventsFeatureTestCase(TestCase):
             reverse("events:my_events_event", kwargs={"slug": self.event.slug})
         )
         self.assertEqual(response.status_code, 404)
+
+
+class GroupOrganizedTrainingTestCase(MyEventsFeatureTestCase):
+    """Members of an organizing group see the event's participants and PODs."""
+
+    def setUp(self):
+        super().setUp()
+        self.event_organizer.user.remove(self.organizer)
+        self.committee = G(
+            Committee, name="Instructiecommissie", date_discontinuation=None
+        )
+        self.event_organizer.groups.add(self.committee)
+        self.membership = GroupMembership.objects.create(
+            user=self.organizer,
+            group=self.committee,
+            member_since=timezone.localdate() - timedelta(days=30),
+        )
+
+    def test_event_page_links_organizer_to_participants_and_pods(self):
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertContains(
+            response,
+            reverse("events:my_events_event", kwargs={"slug": self.event.slug}),
+        )
+        self.assertContains(response, "Deelnemers en POD")
+
+    def test_event_page_has_no_link_for_other_members(self):
+        self.client.force_login(self.attendee)
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertNotContains(
+            response,
+            reverse("events:my_events_event", kwargs={"slug": self.event.slug}),
+        )
+
+    def test_former_group_member_loses_access(self):
+        self.membership.member_until = timezone.localdate() - timedelta(days=1)
+        self.membership.save()
+        response = self.client.get(
+            reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+        )
+        self.assertEqual(response.status_code, 404)
+        response = self.client.get("/")
+        self.assertNotContains(response, reverse("events:my_events"))
 
 
 class MyEventFormResponsesTestCase(TestCase):

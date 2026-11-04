@@ -45,12 +45,28 @@ class EventManager[TEvent: "Event"](models.Manager[TEvent]):
         published = Q(published=True)
         if not user.is_authenticated:
             return self.filter(published)
-        groups = _active_memberships(user).values("group")
-        return self.filter(
-            published
-            | Q(eventorganizer__user=user)
-            | Q(eventorganizer__groups__in=groups)
-        ).distinct()
+        return self.filter(published | organized_by(user)).distinct()
+
+    def organized_by(self, user) -> models.QuerySet["Event"]:
+        """Filter for events that the user organizes.
+
+        That is the events where the user is an organizer themselves, or where a
+        group they currently belong to (a committee, for example) is.
+
+        Returns
+        -------
+        ~django.db.models.query.QuerySet of ~loefsys.events.models.event.Event
+            A query of the events organized by the user.
+        """
+        if not user.is_authenticated:
+            return self.none()
+        return self.filter(organized_by(user)).distinct()
+
+
+def organized_by(user) -> Q:
+    """Return a filter for the events organized by the user or their groups."""
+    groups = _active_memberships(user).values("group")
+    return Q(eventorganizer__user=user) | Q(eventorganizer__groups__in=groups)
 
 
 def can_see_all_unpublished_events(user) -> bool:

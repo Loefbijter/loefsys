@@ -89,6 +89,10 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             "show_registration_modal": self.request.GET.get("show_registration_modal")
             == "1",
             "organizer": organizer,
+            "is_organizer": Event.objects.organized_by(self.request.user)
+            .filter(pk=self.object.pk)
+            .exists(),
+            "is_training": self.object.category == EventCategories.TRAINING,
         }
 
     def post(self, request, *_args, **_kwargs):
@@ -469,11 +473,7 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         """Return context containing organized events, split into recent and archive."""
         context = super().get_context_data(**kwargs)
-        all_events = (
-            Event.objects.filter(eventorganizer__user=self.request.user)
-            .distinct()
-            .order_by("-start")
-        )
+        all_events = Event.objects.organized_by(self.request.user).order_by("-start")
         now = timezone.now()
         recent_events = []
         archive_events = []
@@ -502,8 +502,8 @@ class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "event"
 
     def get_queryset(self):
-        """Return events organized by the current user for this view."""
-        return Event.objects.filter(eventorganizer__user=self.request.user)
+        """Return events organized by the current user or their groups."""
+        return Event.objects.organized_by(self.request.user)
 
     def get_context_data(self, **kwargs):
         """Return context with event details and attendees."""

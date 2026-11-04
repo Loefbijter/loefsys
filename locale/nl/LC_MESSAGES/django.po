@@ -993,6 +993,9 @@ msgstr "Bovenliggend schipperschap"
 msgid "Participants"
 msgstr "Deelnemers"
 
+msgid "Participants and PODs"
+msgstr "Deelnemers en POD's"
+
 msgid "Passive exceptional membership"
 msgstr "Passief buitengewoon lidmaatschap"
 

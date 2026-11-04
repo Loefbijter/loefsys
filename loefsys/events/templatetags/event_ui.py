@@ -27,6 +27,12 @@ def spots_left(event: Event) -> int | None:
 
 
 @register.simple_tag
+def organizes_events(user) -> bool:
+    """Return whether the user organizes any event, themselves or via a group."""
+    return Event.objects.organized_by(user).exists()
+
+
+@register.simple_tag
 def registration_for(event: Event, user) -> EventRegistration | None:
     """Return the user's active or queued registration for an event, if any."""
     if not getattr(user, "is_authenticated", False):
