@@ -27,12 +27,8 @@ def test_home_shows_own_upcoming_reservations(member_page, live_server, member):
     member_page.goto(live_server.url)
 
     expect(member_page.get_by_text("Testkamer")).to_be_visible()
-    member_page.get_by_role(
-        "link",
-        name=re.compile(
-            r"(Beheer reserveringen|Manage reservations|^\s*Alle?s?\b)", re.I
-        ),
-    ).first.click()
+    # The upcoming events filter has an "All" link too, so pick the link by target.
+    member_page.locator('main a[href="/reservations/"]').first.click()
     expect(member_page).to_have_url(f"{live_server.url}/reservations/")
 
 
