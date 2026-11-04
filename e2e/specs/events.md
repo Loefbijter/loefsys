@@ -9,6 +9,9 @@ to join.**
 - **EVT-12** The time registration opens is shown in Dutch time.
 - **EVT-13** Times are shown in Dutch time even when the browser is in another time
   zone, both in the calendar and on the activity page.
+- **EVT-15** With "Verjaardagen tonen" on, the calendar shows the birthdays of members
+  who share theirs in every view, also earlier in the week, and keeps them when
+  switching views. Turning it off hides them.
 - **EVT-8** A draft activity can't be opened by members (not found).
 
 **As a member, I want to register for an activity and cancel when I can't make it.**
