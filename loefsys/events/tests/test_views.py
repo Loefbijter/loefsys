@@ -312,47 +312,35 @@ class MyEventsFeatureTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-class GroupOrganizedTrainingTestCase(MyEventsFeatureTestCase):
-    """Members of an organizing group see the event's participants and PODs."""
+class OrganizerLinkOnEventPageTestCase(MyEventsFeatureTestCase):
+    """The event page links individual organizers to the participants page."""
 
-    def setUp(self):
-        super().setUp()
-        self.event_organizer.user.remove(self.organizer)
-        self.committee = G(
-            Committee, name="Instructiecommissie", date_discontinuation=None
-        )
-        self.event_organizer.groups.add(self.committee)
-        self.membership = GroupMembership.objects.create(
-            user=self.organizer,
-            group=self.committee,
-            member_since=timezone.localdate() - timedelta(days=30),
-        )
+    def detail_url(self):
+        return reverse("events:my_events_event", kwargs={"slug": self.event.slug})
 
-    def test_event_page_links_organizer_to_participants_and_pods(self):
+    def test_organizer_sees_link_to_participants_and_pods(self):
         response = self.client.get(self.event.get_absolute_url())
-        self.assertContains(
-            response,
-            reverse("events:my_events_event", kwargs={"slug": self.event.slug}),
-        )
+        self.assertContains(response, self.detail_url())
         self.assertContains(response, "Deelnemers en POD")
 
-    def test_event_page_has_no_link_for_other_members(self):
+    def test_other_members_see_no_link(self):
         self.client.force_login(self.attendee)
         response = self.client.get(self.event.get_absolute_url())
-        self.assertNotContains(
-            response,
-            reverse("events:my_events_event", kwargs={"slug": self.event.slug}),
-        )
+        self.assertNotContains(response, self.detail_url())
 
-    def test_former_group_member_loses_access(self):
-        self.membership.member_until = timezone.localdate() - timedelta(days=1)
-        self.membership.save()
-        response = self.client.get(
-            reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+    def test_members_of_an_organizing_group_get_no_access(self):
+        committee = G(Committee, name="Instructiecommissie", date_discontinuation=None)
+        self.event_organizer.groups.add(committee)
+        GroupMembership.objects.create(
+            user=self.attendee,
+            group=committee,
+            member_since=timezone.localdate() - timedelta(days=30),
         )
-        self.assertEqual(response.status_code, 404)
-        response = self.client.get("/")
-        self.assertNotContains(response, reverse("events:my_events"))
+        self.client.force_login(self.attendee)
+        self.assertNotContains(
+            self.client.get(self.event.get_absolute_url()), self.detail_url()
+        )
+        self.assertEqual(self.client.get(self.detail_url()).status_code, 404)
 
 
 class MyEventFormResponsesTestCase(TestCase):
