@@ -13,6 +13,17 @@ from .choices import RegistrationStatus
 from .event import Event
 from .managers import EventRegistrationManager
 
+ANSWER_SETS = {
+    "boolean": "booleanregistrationinformation_set",
+    "integer": "integerregistrationinformation_set",
+    "text": "textregistrationinformation_set",
+    "datetime": "datetimeregistrationinformation_set",
+}
+"""The related name holding a registration's answers, per form field type."""
+
+FORM_RESPONSE_PREFETCH = ("event__registrationformfield_set", *ANSWER_SETS.values())
+"""Lookups to prefetch for :attr:`EventRegistration.form_fields`."""
+
 
 class EventRegistration(TimeStampedModel):
     """Registration model for an event.
@@ -41,10 +52,17 @@ class EventRegistration(TimeStampedModel):
         The cost for this event, automatically calculated from the status.
     costs_paid : ~decimal.Decimal
         The amount paid for this registration by the contact.
+    added_by_organizer : bool
+        Whether an organizer added the contact, instead of the contact signing up.
+
+        These registrations are always active, so they can't end up in the queue,
+        and they count towards the capacity of the event.
     """
 
-    event = models.ForeignKey(Event, models.CASCADE)
-    contact = models.ForeignKey(get_user_model(), models.SET_NULL, null=True)
+    event = models.ForeignKey(Event, models.CASCADE, verbose_name=_("Event"))
+    contact = models.ForeignKey(
+        get_user_model(), models.SET_NULL, null=True, verbose_name=_("Member")
+    )
 
     status = models.PositiveSmallIntegerField(
         choices=RegistrationStatus, blank=True, verbose_name=_("Status")
@@ -71,11 +89,34 @@ class EventRegistration(TimeStampedModel):
         max_digits=5, decimal_places=2, verbose_name=_("Costs paid"), blank=True
     )
 
+    added_by_organizer = models.BooleanField(
+        _("Added by organizer"),
+        default=False,
+        help_text=_("The member gets a place, even if the event is full."),
+    )
+
     @property
     def form_fields(self):
-        """Get form fields and their values on the registration form."""
-        fields = self.event.registrationformfield_set.all()
-        return [(field, field.get_value_for(self)) for field in fields]
+        """Get form fields and their values on the registration form.
+
+        Fields without an answer get ``None``. Prefetch
+        :data:`FORM_RESPONSE_PREFETCH` when listing many registrations, so this
+        doesn't hit the database for every registration.
+
+        Returns
+        -------
+        list of tuple of ~loefsys.events.models.RegistrationFormField and value
+            The fields of the event's registration form, in form order.
+        """
+        answers = {
+            (answer_set, answer.field_id): answer.value
+            for answer_set in ANSWER_SETS.values()
+            for answer in getattr(self, answer_set).all()
+        }
+        return [
+            (field, answers.get((ANSWER_SETS.get(field.type, ""), field.pk)))
+            for field in self.event.registrationformfield_set.all()
+        ]
 
     @property
     def get_queue_position(self) -> int | None:
@@ -103,6 +144,8 @@ class EventRegistration(TimeStampedModel):
 
     class Meta:
         unique_together = ("event", "contact", "status")
+        verbose_name = _("registration")
+        verbose_name_plural = _("registrations")
 
     def __str__(self) -> str:
         return f"{self.event} | {self.contact}"
@@ -111,7 +154,9 @@ class EventRegistration(TimeStampedModel):
         """Save the model to the database.
 
         When creating a new registration, the attributes :attr:`.price_at_registration`
-        and :attr:`.fine_at_registration` are copied from the :attr`.event`.
+        and :attr:`.fine_at_registration` are copied from the :attr`.event`. The
+        status is active for registrations added by an organizer, and depends on the
+        capacity of the event otherwise.
 
         Returns
         -------
@@ -120,9 +165,13 @@ class EventRegistration(TimeStampedModel):
         if self._state.adding:
             self.status = (
                 RegistrationStatus.QUEUED
-                if self.event.max_capacity_reached() and self.event.capacity
+                if not self.added_by_organizer
+                and self.event.max_capacity_reached()
+                and self.event.capacity
                 else RegistrationStatus.ACTIVE
             )
+            if self.costs_paid is None:
+                self.costs_paid = Decimal("0.00")
             self.price_at_registration = self.event.price
             self.fine_at_registration = self.event.fine
         return super().save(**kwargs)

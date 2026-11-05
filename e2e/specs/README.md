@@ -14,6 +14,7 @@ by the Playwright test whose docstring starts with that ID, in `e2e/test_<area>.
 | Profile | [profile.md](profile.md) | `test_profile.py` |
 | Navigation, desktop and phone | [navigation.md](navigation.md) | `test_navigation.py` |
 | Language | [language.md](language.md) | `test_language.py` |
+| Colour theme | [theme.md](theme.md) | `test_theme.py` |
 | Admin roles | [admin.md](admin.md) | `test_admin.py` |
 
 ## People

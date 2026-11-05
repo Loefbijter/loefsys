@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% translate "Password reset" %}{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<div class="page solo">
+    <img class="solo-logo" src="{% static 'loefbijter-logo.svg' %}" alt="{% translate 'Loefbijter logo' %}" />
+    <c-panel>
+        <h1 class="solo-title">{% translate "Password reset" %}</h1>
+        <p class="solo-text">{% blocktranslate trimmed %}Your password has been updated successfully. You can now log in with your new password.{% endblocktranslate %}</p>
+        <div class="form-actions">
+            <a href="{% url 'members:login' %}" class="btn btn-primary">{% translate "Log in" %}</a>
+        </div>
+    </c-panel>
+</div>
+{% endblock %}

@@ -1,20 +1,16 @@
-"""Admin roles. Spec: e2e/specs/admin.md.
-
-The activity manager and "Admin" permission tests cover PR #175 and are skipped on
-code without it.
-"""
+"""Admin roles. Spec: e2e/specs/admin.md."""
 
 import re
 
 import pytest
-from django.contrib.auth.models import Group, Permission
 from playwright.sync_api import expect
 
 from e2e import factories
+from e2e.conftest import log_in
+from loefsys.events.models import RegistrationFormField
 from loefsys.events.models.choices import EventCategories
+from loefsys.events.permissions import ACTIVITY_MANAGERS_GROUP
 from loefsys.reservations.models.reservation import Reservation
-
-ACTIVITY_MANAGERS = "Activity managers"
 
 # The activity manager group is made by a data migration, which a plain flush
 # between live server tests would throw away.
@@ -30,20 +26,13 @@ def admin_log_in(page, base_url, user):
     return page
 
 
-def requires_pr_175():
-    """Skip the test when the activity manager roles from PR #175 aren't there."""
-    if not Group.objects.filter(name=ACTIVITY_MANAGERS).exists():
-        pytest.skip("Needs the activity manager roles from PR #175")
-
-
 @pytest.fixture
 def activity_manager(db):
     """Return a member in "Activity managers" who may manage sailing events."""
-    requires_pr_175()
     user = factories.make_user(
         email="ankie.regatta@example.org", first_name="Ankie", last_name="Regatta"
     )
-    factories.add_to_group(user, ACTIVITY_MANAGERS)
+    factories.add_to_group(user, ACTIVITY_MANAGERS_GROUP)
     factories.grant_permissions(user, "events.manage_sailing_events")
     return user
 
@@ -62,6 +51,24 @@ def test_admin_accepts_pending_reservation(page, live_server, superuser, member)
     admin_log_in(page, live_server.url, superuser)
 
     page.goto(f"{live_server.url}/admin/reservations/reservation/")
+    row = page.locator("#result_list tbody tr", has_text="Testkamer")
+    row.get_by_role("button", name=re.compile(r"(Accept|Accepteren)", re.I)).click()
+
+    expect(page.locator(".messagelist")).to_be_visible()
+    reservation.refresh_from_db()
+    assert reservation.request_status == Reservation.RequestStatus.APPROVED
+
+
+def test_home_todo_leads_to_pending_requests(page, live_server, superuser, member):
+    """ADM-11: the approval to-do on the home page opens the pending requests."""
+    reservation = factories.make_reservation(member, factories.make_room("Testkamer"))
+    log_in(page, live_server.url, superuser)
+
+    page.get_by_role("link", name=re.compile(r"(Keur|Approve) Testkamer")).click()
+
+    expect(page).to_have_url(
+        re.compile(r"/admin/reservations/reservation/\?request_status__exact=0")
+    )
     row = page.locator("#result_list tbody tr", has_text="Testkamer")
     row.get_by_role("button", name=re.compile(r"(Accept|Accepteren)", re.I)).click()
 
@@ -147,6 +154,27 @@ def test_activity_manager_sees_contact_details_of_registrations(
     expect(registrations.locator("input[type=text], select")).to_have_count(0)
 
 
+def test_activity_manager_folds_out_form_answers(
+    page, live_server, activity_manager, member
+):
+    """ADM-10: each registration can be folded out to read its form answers."""
+    event = factories.make_event("Regatta Testmeer", category=EventCategories.SAILING)
+    question = RegistrationFormField.objects.create(
+        event=event, subject="Welke boot wil je varen?", required=False
+    )
+    question.set_value_for(factories.register(event, member), "Een Laser")
+    admin_log_in(page, live_server.url, activity_manager)
+
+    page.goto(f"{live_server.url}/admin/events/event/{event.pk}/change/")
+
+    registrations = page.locator(".inline-group", has_text=member.email)
+    answer = registrations.get_by_text("Een Laser")
+    expect(answer).to_be_hidden()
+    registrations.locator("summary").click()
+    expect(answer).to_be_visible()
+    expect(registrations).to_contain_text("Welke boot wil je varen?")
+
+
 def test_activity_manager_cannot_browse_members(page, live_server, activity_manager):
     """ADM-8: an activity manager can't open the member list."""
     admin_log_in(page, live_server.url, activity_manager)
@@ -159,10 +187,44 @@ def test_activity_manager_cannot_browse_members(page, live_server, activity_mana
 
 def test_admin_permission_grants_admin_access(page, live_server, member):
     """ADM-9: the "Admin" permission alone lets a member into the admin."""
-    if not Permission.objects.filter(codename="access_admin").exists():
-        pytest.skip('Needs the "Admin" permission from PR #175')
     factories.grant_permissions(member, "members.access_admin")
 
     admin_log_in(page, live_server.url, member)
 
     expect(page).to_have_url(f"{live_server.url}/admin/")
+
+
+def test_manager_evaluates_their_room(page, live_server, member, other_member):
+    """ADM-12: a room's manager accepts its requests, without any permissions."""
+    room = factories.make_room("Testkamer")
+    room.managed_by_user = member
+    room.save()
+    reservation = factories.make_reservation(other_member, room)
+    factories.make_reservation(other_member, factories.make_room("Andere kamer"))
+    admin_log_in(page, live_server.url, member)
+
+    page.goto(f"{live_server.url}/admin/reservations/reservation/")
+    expect(page.locator("#result_list tbody tr")).to_have_count(1)
+    row = page.locator("#result_list tbody tr", has_text="Testkamer")
+    row.get_by_role("button", name=re.compile(r"(Accept|Accepteren)", re.I)).click()
+
+    expect(page.locator(".messagelist")).to_be_visible()
+    reservation.refresh_from_db()
+    assert reservation.request_status == Reservation.RequestStatus.APPROVED
+
+
+def test_admin_cannot_evaluate_managed_room(page, live_server, superuser, member):
+    """ADM-13: an admin who doesn't manage a room can't evaluate its requests."""
+    room = factories.make_room("Testkamer")
+    room.managed_by_user = member
+    room.save()
+    factories.make_reservation(member, room)
+    admin_log_in(page, live_server.url, superuser)
+
+    page.goto(f"{live_server.url}/admin/reservations/reservation/")
+    row = page.locator("#result_list tbody tr", has_text="Testkamer")
+    expect(row).to_be_visible()
+    expect(row.get_by_role("button", name=re.compile(r"Accept", re.I))).to_have_count(0)
+    expect(
+        row.get_by_role("link", name=re.compile(r"(Deny|Weigeren)", re.I))
+    ).to_have_count(0)

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import translation
 from django_dynamic_fixture import G
 
 from loefsys.members.models import Skippership, UserSkippership
@@ -94,6 +95,8 @@ class UserProfileViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'placeholder="dd-mm-jjjj"')
+        with translation.override("nl"):
+            self.assertEqual(response.context["form"]["birthday"].label, "Verjaardag")
         self.assertContains(response, 'maxlength="10"')
 
         post_response = self.client.post(

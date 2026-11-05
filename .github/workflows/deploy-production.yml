@@ -1,0 +1,56 @@
+name: Deploy to Production
+
+on:
+  release:
+    types: [published]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/loefbijter/loefsys:${{ github.event.release.tag_name }}
+            ghcr.io/loefbijter/loefsys:production
+            ghcr.io/loefbijter/loefsys:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # The "production" Environment's required-reviewers protection rule
+    # (repo Settings -> Environments -> production) is what actually gates
+    # this job on a human approval -- configure it there, it's invisible here.
+    environment: production
+    steps:
+      # Coolify pulls the image tagged above and redeploys it. Its deployment
+      # commands run the migrations; see infra/coolify.md.
+      - name: Trigger the Coolify deployment
+        env:
+          COOLIFY_WEBHOOK_URL: ${{ secrets.COOLIFY_WEBHOOK_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          curl --fail-with-body --silent --show-error --request POST \
+            --header "Authorization: Bearer $COOLIFY_TOKEN" \
+            "$COOLIFY_WEBHOOK_URL"

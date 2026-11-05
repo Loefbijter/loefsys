@@ -4,6 +4,7 @@ collectedstatic/
 db.sqlite*
 .vscode/
 media/
+backups/
 
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -296,3 +297,9 @@ dump.rdb
 
 # Playwright traces and screenshots of failed end-to-end tests
 test-results/
+
+# Compiled translations, built from the .po files with compilemessages
+locale/**/*.mo
+
+# direnv's cache for the Nix dev shell
+.direnv/

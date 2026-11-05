@@ -12,6 +12,7 @@ import pytest
 from playwright.sync_api import Page, Route, expect
 
 from e2e import factories as data
+from loefsys.core.translations import compile_stale_catalogues
 from loefsys.members.models import User
 
 # Playwright's sync API runs an event loop in the test thread, which makes Django
@@ -38,6 +39,12 @@ PHONE = {
 }
 
 expect.set_options(timeout=10_000)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def compiled_translations():
+    """Build the .mo files, which are not in git, so the site shows Dutch."""
+    compile_stale_catalogues()
 
 
 @pytest.fixture

@@ -16,6 +16,7 @@ from django.views import View
 from django.views.generic import DetailView, FormView, TemplateView
 
 from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
+from loefsys.core.templatetags.formatters import euro
 from loefsys.events.exceptions import NoUserObjectError
 from loefsys.events.models.feed_token import FeedToken
 
@@ -23,6 +24,7 @@ from .exceptions import RegistrationError
 from .forms import EventFieldsForm
 from .models import Event, EventOrganizer, EventRegistration, RegistrationFormField
 from .models.choices import EventCategories, RegistrationStatus
+from .models.registration import FORM_RESPONSE_PREFETCH
 
 
 class EventDetailView(LoginRequiredMixin, DetailView):
@@ -180,7 +182,11 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             elif not obj.can_cancel_registration():
                 text = _("Cannot cancel")
             elif obj.cancellation_fine_required():
-                text = _("Cancel (with fine)")
+                text = (
+                    _("Cancel (%(fine)s fine)") % {"fine": euro(obj.fine)}
+                    if obj.fine
+                    else _("Cancel registration")
+                )
             elif obj.cancelation_window_open():
                 text = _("Cancel registration")
             else:
@@ -451,11 +457,14 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
 
     template_name = "events/my_events.html"
 
-    @staticmethod
-    def _is_recent_event(event, now=None):
+    #: How long after its end an event moves from the active list to the archive.
+    archive_after = timedelta(days=1)
+
+    @classmethod
+    def _is_recent_event(cls, event, now=None):
         """Return whether an event should remain in the active organizer list."""
         now = now or timezone.now()
-        return event.end >= now - timedelta(days=7)
+        return event.end >= now - cls.archive_after
 
     def get_context_data(self, **kwargs):
         """Return context containing organized events, split into recent and archive."""
@@ -479,7 +488,7 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
         context["recent_events"] = recent_events
         context["archive_events"] = archive_events
         context["is_archive_view"] = is_archive_view
-        context["archive_days"] = 7
+        context["archive_days"] = self.archive_after.days
         return context
 
 
@@ -501,8 +510,11 @@ class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["event_page_url"] = self.object.get_absolute_url()
         context["attendees"] = (
-            self.object.eventregistration_set.active().select_related("contact")
+            self.object.eventregistration_set.active()
+            .select_related("contact", "event")
+            .prefetch_related(*FORM_RESPONSE_PREFETCH)
         )
+        context["has_form"] = self.object.has_form_fields
         context["event_categories"] = EventCategories
         context["training_event"] = self.object.category == EventCategories.TRAINING
         return context

@@ -65,7 +65,8 @@
                         {% endfor %}
                         {% for reservation in pending_approvals %}
                             {% blocktranslate trimmed asvar todo_title with boat=reservation.reservable.name name=reservation.user.display_name %}Approve {{ boat }} for {{ name }}{% endblocktranslate %}
-                            <c-todo href="{% url 'reservations:reservation-detail' pk=reservation.pk %}" :title="todo_title" sub="{{ reservation.start|date:'D j M H:i' }}" />
+                            {# Requests are approved in the admin; the member-facing detail page only shows your own reservations. #}
+                            <c-todo href="{% url 'admin:reservations_reservation_changelist' %}?request_status__exact={{ RequestStatus.PENDING.value }}" :title="todo_title" sub="{{ reservation.start|date:'D j M H:i' }}" />
                         {% endfor %}
                     </div>
                 </c-panel>

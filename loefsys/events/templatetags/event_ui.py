@@ -1,9 +1,10 @@
-"""Template helpers for the event widgets (``<c-event-row>``, ``<c-event-hero>``)."""
+"""Template helpers for the event widgets and pages."""
 
 from django import template
 
 from loefsys.events.models import Event, EventRegistration
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
+from loefsys.events.models.registration_form_field import format_answer
 
 register = template.Library()
 
@@ -35,3 +36,9 @@ def registration_for(event: Event, user) -> EventRegistration | None:
         contact=user,
         status__in=(RegistrationStatus.ACTIVE, RegistrationStatus.QUEUED),
     ).first()
+
+
+@register.filter
+def answer(value) -> str:
+    """Return an answer to a registration form question as readable text."""
+    return format_answer(value)

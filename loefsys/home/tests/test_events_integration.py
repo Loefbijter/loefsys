@@ -1,98 +1,74 @@
-from datetime import UTC, datetime
-from unittest import skip, skipUnless
+from datetime import timedelta
+from unittest import skipUnless
 
 from django.apps import apps
 from django.test import Client, TestCase
+from django.utils import timezone
 from django_dynamic_fixture import G
 
 from loefsys.events.models import Event
+from loefsys.home.views import HomeView
 from loefsys.members.models import User
 
 
+def evening(days_ahead: int, **fields) -> Event:
+    """Create a published event from 19:00 to 21:00, ``days_ahead`` days from now."""
+    start = (timezone.localtime() + timedelta(days=days_ahead)).replace(
+        hour=19, minute=0, second=0, microsecond=0
+    )
+    return G(
+        Event, start=start, end=start + timedelta(hours=2), published=True, **fields
+    )
+
+
 @skipUnless(apps.is_installed("loefsys.events"), "Events app not installed")
-@skip("Events aren't yet rendered on the homepage")
 class EventTestCase(TestCase):
-    """Tests for event information display for users."""
+    """Tests for the upcoming events on the home page."""
 
     def setUp(self):
-        """Set up user and events."""
+        """Log in a member."""
         self.client = Client()
         self.user = G(User, email="user@user.nl", password="secret")
-        G(
-            Event,
-            title="Bierproeverij",
-            start=datetime(3000, 3, 10, 19, 0, 0, tzinfo=UTC),
-            end=datetime(3000, 3, 10, 21, 0, 0, tzinfo=UTC),
-            location="Café jos",
-        )
-        G(
-            Event,
-            title="Later event",
-            start=datetime(5000, 1, 1, 10, 0, 0, tzinfo=UTC),
-            end=datetime(5000, 10, 10, 10, 0, 0, tzinfo=UTC),
-            published=True,
-        )
+        self.client.force_login(self.user)
 
     def test_two_events(self):
-        """Test for when there are two coming events.
+        """Upcoming events are listed with their time and location."""
+        evening(3, title="Bierproeverij", location="Café jos")
+        evening(10, title="Later event")
 
-        Both events and their information should be displayed.
-        """
-        self.client.force_login(self.user)
         response = self.client.get("/")
+
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response=response, text="Bierproeverij")
-        self.assertContains(
-            response=response, text="10/03/3000 19:00 - 10/03/3000 21:00"
-        )
-        self.assertContains(response=response, text="Café jos")
-        self.assertContains(response=response, text="Later event")
-        self.assertContains(
-            response=response, text="01/01/5000 10:00 - 10/10/5000 10:00"
-        )
+        self.assertContains(response, "Bierproeverij")
+        self.assertContains(response, "Café jos")
+        self.assertContains(response, "19:00\N{EN DASH}21:00")
+        self.assertContains(response, "Later event")
 
     def test_three_events(self):
-        """Test for when there are more than two coming events.
+        """Only the first few upcoming events are listed, earliest first."""
+        limit = HomeView.UPCOMING_LIMIT
+        for day in range(1, limit + 2):
+            evening(day, title=f"Event on day {day}")
 
-        The two earliest coming events and their information should be displayed.
-        """
-        G(
-            Event,
-            title="Earlier event",
-            start=datetime(4000, 2, 2, 20, 0, 0, tzinfo=UTC),
-            end=datetime(4000, 12, 2, 20, 0, 0, tzinfo=UTC),
-        )
-        self.client.force_login(self.user)
         response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response=response, text="Earlier event")
-        self.assertContains(
-            response=response, text="02/02/4000 20:00 - 02/12/4000 20:00"
-        )
-        self.assertNotContains(response=response, text="Later event")
-        self.assertNotContains(
-            response=response, text="01/01/5000 10:00 - 10/10/5000 10:00"
-        )
+
+        shown = [event.title for event in response.context["upcoming_events"]]
+        self.assertEqual(shown, [f"Event on day {day}" for day in range(1, limit + 1)])
+        self.assertNotContains(response, f"Event on day {limit + 1}")
 
     def test_old_event(self):
-        """Test for when there is an event that started before now.
-
-        This old event should not be displayed.
-        """
+        """An event that has already started is not listed."""
+        now = timezone.now()
         G(
             Event,
             title="Old event",
-            start=datetime(2024, 1, 1, 20, 0, 0, tzinfo=UTC),
-            end=datetime(3000, 3, 10, 21, 0, 0, tzinfo=UTC),
+            start=now - timedelta(days=1),
+            end=now + timedelta(days=1),
+            published=True,
         )
-        self.client.force_login(self.user)
+        evening(3, title="Later event")
+
         response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response=response, text="Old event")
-        self.assertNotContains(
-            response=response, text="01/01/2024 20:00 - 10/03/3000 21:00"
-        )
-        self.assertContains(response=response, text="Later event")
-        self.assertContains(
-            response=response, text="01/01/5000 10:00 - 10/10/5000 10:00"
-        )
+
+        self.assertNotContains(response, "Old event")
+        self.assertContains(response, "Later event")

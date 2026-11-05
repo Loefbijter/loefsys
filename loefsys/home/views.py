@@ -12,6 +12,7 @@ from loefsys.home.models import Announcement
 from loefsys.members.models import UserSkippership
 from loefsys.reservations.models import ReservableType
 from loefsys.reservations.models.reservation import Reservation
+from loefsys.reservations.permissions import evaluable_reservations
 
 
 class HomeView(View):
@@ -74,14 +75,13 @@ class HomeView(View):
                 .order_by("-start")
             )
             skipperships = highest_skipperships(user)
-            if user.has_perm("reservations.change_reservation"):
-                pending_approvals = list(
-                    Reservation.objects.filter(
-                        request_status=Reservation.RequestStatus.PENDING
-                    )
-                    .select_related("reservable", "user")
-                    .order_by("start")[: self.UPCOMING_LIMIT]
-                )
+            # Only the managers of a reservable get its requests as a to-do.
+            pending_approvals = list(
+                evaluable_reservations(user)
+                .filter(request_status=Reservation.RequestStatus.PENDING)
+                .select_related("reservable", "user")
+                .order_by("start")[: self.UPCOMING_LIMIT]
+            )
 
         next_event = next_registration.event if next_registration else None
         upcoming_events = list(

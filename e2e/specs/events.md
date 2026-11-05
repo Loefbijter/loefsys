@@ -30,3 +30,5 @@ prepare.**
 - **EVT-10** Organizers find their activities under "Mijn events" and see the
   participants there.
 - **EVT-11** Members who organize nothing don't see "Mijn events".
+- **EVT-14** When the activity has extra questions, the organizer folds out each
+  participant to read their answers, on desktop and on a phone.

@@ -13,10 +13,10 @@
         font-size: 1rem;
         line-height: 1.5;
         padding: 0.75rem 0.875rem;
-        border: 1px solid rgba(15, 23, 42, 0.12);
+        border: 1px solid var(--line);
         border-radius: 0.875rem;
-        background: white;
-        color: #0f172a;
+        background: var(--surface);
+        color: var(--fg);
         touch-action: manipulation;
         box-sizing: border-box;
         max-width: 100%;
@@ -36,7 +36,7 @@
 <div class="bg-background relative flex flex-col min-h-screen pb-32 overflow-x-hidden">
 
     <!-- ============ HEADER ============ -->
-    <section class="bg-white border-b border-black/5">
+    <section class="bg-surface border-b border-line">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <h1 class="text-2xl sm:text-3xl font-bold text-foreground">{% translate "Reserve" %}</h1>
             <p class="text-sm sm:text-base text-foreground/60 mt-1.5 max-w-xl">
@@ -45,31 +45,31 @@
 
             <!-- Location tabs -->
             <nav class="mt-6">
-                <ul class="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-black/5 p-1.5 rounded-3xl sm:rounded-full text-sm font-semibold">
+                <ul class="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-surface-2 p-1.5 rounded-3xl sm:rounded-full text-sm font-semibold">
                     <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '1' %}{% else %}{% url 'reservations:reservation-add' '1' %}{% endif %}"
-                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 1 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 1 %}bg-surface text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 1 %}page{% else %}false{% endif %}">
                             {% translate "Boardroom" context "location tab" %}
                         </a>
                     </li>
                     <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '2' %}{% else %}{% url 'reservations:reservation-add' '2' %}{% endif %}"
-                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 2 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 2 %}bg-surface text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 2 %}page{% else %}false{% endif %}">
                             {% translate "Bastion" %}
                         </a>
                     </li>
                     <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '3' %}{% else %}{% url 'reservations:reservation-add' '3' %}{% endif %}"
-                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 3 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 3 %}bg-surface text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 3 %}page{% else %}false{% endif %}">
                             {% translate "Kraaij" %}
                         </a>
                     </li>
                     <li class="min-w-0">
                         <a href="{% if object.pk %}{% url 'reservations:reservation-update' object.pk '0' %}{% else %}{% url 'reservations:reservation-add' '0' %}{% endif %}"
-                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 0 %}bg-white text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
+                           class="block w-full text-center px-3 sm:px-4 py-2 rounded-full transition-colors duration-200 truncate whitespace-nowrap {% if location == 0 %}bg-surface text-primary shadow-sm{% else %}text-foreground/60 hover:text-foreground{% endif %} cursor-pointer"
                            aria-current="{% if location == 0 %}page{% else %}false{% endif %}">
                             {% translate "Other" context "location tab" %}
                         </a>
@@ -93,7 +93,7 @@
         <div class="max-w-4xl mx-auto px-4 sm:px-6 space-y-4 sm:space-y-5 mt-6">
 
             <!-- ============ STEP 1: PERIOD ============ -->
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm">
+            <div class="bg-surface p-5 sm:p-6 rounded-2xl border border-line shadow-sm">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">1</span>
                     <h2 class="text-lg sm:text-xl font-bold text-foreground">{% translate "Choose the period" %}</h2>
@@ -125,19 +125,19 @@
                     </p>
                     <div class="flex flex-wrap gap-2">
                         <button type="button" data-duration-hours="1"
-                                                        class="quick-duration px-4 py-1.5 rounded-full border border-black/10 bg-black/5 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
+                                                        class="quick-duration px-4 py-1.5 rounded-full border border-line bg-surface-2 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
                             {% blocktranslate trimmed count hours=1 %}{{ hours }} hour{% plural %}{{ hours }} hours{% endblocktranslate %}
                         </button>
                         <button type="button" data-duration-hours="3"
-                                                        class="quick-duration px-4 py-1.5 rounded-full border border-black/10 bg-black/5 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
+                                                        class="quick-duration px-4 py-1.5 rounded-full border border-line bg-surface-2 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
                             {% blocktranslate trimmed count hours=3 %}{{ hours }} hour{% plural %}{{ hours }} hours{% endblocktranslate %}
                         </button>
                         <button type="button" data-duration-hours="5"
-                                                        class="quick-duration px-4 py-1.5 rounded-full border border-black/10 bg-black/5 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
+                                                        class="quick-duration px-4 py-1.5 rounded-full border border-line bg-surface-2 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
                             {% blocktranslate trimmed count hours=5 %}{{ hours }} hour{% plural %}{{ hours }} hours{% endblocktranslate %}
                         </button>
                         <button type="button" id="quick-fullday"
-                                                        class="quick-duration px-4 py-1.5 rounded-full border border-black/10 bg-black/5 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
+                                                        class="quick-duration px-4 py-1.5 rounded-full border border-line bg-surface-2 hover:bg-primary hover:text-primary-foreground hover:border-primary text-sm font-semibold transition-colors cursor-pointer">
                             {% translate "Whole day" %}
                         </button>
                     </div>
@@ -148,7 +148,7 @@
             </div>
 
             <!-- ============ STEP 2: TYPE FILTER ============ -->
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm">
+            <div class="bg-surface p-5 sm:p-6 rounded-2xl border border-line shadow-sm">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">2</span>
                     <h2 class="text-lg sm:text-xl font-bold text-foreground">{% translate "Filter by type" %}</h2>
@@ -158,7 +158,7 @@
                         <input type="radio" name="reservable_type_display" value="" class="hidden peer"
                                {% if not selected_reservable_type %}checked{% endif %}
                                                    onchange="filterByType('')">
-                        <span class="inline-block px-4 py-1.5 rounded-full border border-black/10 cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-black/5">
+                        <span class="inline-block px-4 py-1.5 rounded-full border border-line cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-surface-2">
                             {% translate "All" %}
                         </span>
                     </label>
@@ -167,7 +167,7 @@
                         <input type="radio" name="reservable_type_display" value="{{ reservable_type.name }}" class="hidden peer"
                                {% if reservable_type.name == selected_reservable_type %}checked{% endif %}
                                                    onchange="filterByType('{{ reservable_type.name|escapejs }}')">
-                        <span class="inline-block px-4 py-1.5 rounded-full border border-black/10 cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-black/5">
+                        <span class="inline-block px-4 py-1.5 rounded-full border border-line cursor-pointer text-sm font-semibold transition-colors peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary hover:bg-surface-2">
                             {{ reservable_type.name }}
                         </span>
                     </label>
@@ -175,7 +175,7 @@
                 </div>
                 {% if reservable_types|length > 4 %}
                 <div class="mt-3">
-                    <button type="button" id="toggle-reservable-types" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-black/10 bg-white text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors cursor-pointer">
+                    <button type="button" id="toggle-reservable-types" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-line bg-surface text-sm font-semibold text-foreground/70 hover:bg-surface-2 transition-colors cursor-pointer">
                         <span>{% translate "Show more" %}</span>
                         <i class="bi bi-chevron-down"></i>
                     </button>
@@ -184,7 +184,7 @@
             </div>
 
             <!-- ============ STEP 3: BOATS / ITEMS ============ -->
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm">
+            <div class="bg-surface p-5 sm:p-6 rounded-2xl border border-line shadow-sm">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">3</span>
                     <h2 class="text-lg sm:text-xl font-bold text-foreground">{% translate "Choose a boat or room" %}</h2>
@@ -204,17 +204,17 @@
                                required>
 
                         <label for="reservable_{{ forloop.counter }}"
-                               class="flex items-center gap-3 bg-white border border-black/10 rounded-xl px-4 py-3 cursor-pointer transition hover:border-black/20 hover:shadow-sm peer-checked:ring-2 peer-checked:ring-primary peer-checked:border-primary/40 peer-checked:bg-primary/5">
+                               class="flex items-center gap-3 bg-surface border border-line rounded-xl px-4 py-3 cursor-pointer transition hover:border-muted hover:shadow-sm peer-checked:ring-2 peer-checked:ring-primary peer-checked:border-primary/40 peer-checked:bg-primary/5">
 
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <p class="font-semibold text-foreground truncate">{{ item.name }}</p>
-                                    <span class="inline-flex items-center gap-1 rounded-full bg-black/5 px-2 py-0.5 text-[11px] uppercase font-semibold text-foreground/60">
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[11px] uppercase font-semibold text-foreground/60">
                                         <i class="bi bi-tag"></i>
                                         {{ item.type.name }}
                                     </span>
                                     {% if item.type.category == 3 %}
-                                    <span class="inline-flex items-center gap-1 rounded-full bg-black/5 px-2 py-0.5 text-[11px] font-semibold text-foreground/60">
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-semibold text-foreground/60">
                                         <i class="bi bi-rulers"></i>
                                         {{ item.reservablematerial.size }}
                                     </span>
@@ -235,7 +235,7 @@
 
                             <button type="button"
                                     onclick="event.preventDefault(); event.stopPropagation(); document.getElementById('info_{{ forloop.counter }}').classList.remove('hidden')"
-                                                                class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full border border-black/10 text-foreground/40 hover:border-primary hover:text-primary transition-colors cursor-pointer"
+                                                                class="shrink-0 w-8 h-8 flex items-center justify-center rounded-full border border-line text-foreground/40 hover:border-primary hover:text-primary transition-colors cursor-pointer"
                                     aria-label="{% translate 'More info' %}">
                                 <i class="bi bi-info-lg"></i>
                             </button>
@@ -246,7 +246,7 @@
                     <div id="info_{{ forloop.counter }}"
                          class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 cursor-pointer"
                          onclick="if (event.target === this) this.classList.add('hidden')">
-                        <div class="relative bg-white rounded-2xl border border-black/5 shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto">
+                        <div class="relative bg-surface rounded-2xl border border-line shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto">
                             <div class="bg-tertiary rounded-t-2xl px-6 py-5 relative">
                                 <button type="button"
                                         onclick="document.getElementById('info_{{ forloop.counter }}').classList.add('hidden')"
@@ -273,21 +273,21 @@
 
                                 {% if item.type.category == 1 %}
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
+                                    <div class="flex items-center gap-3 bg-surface-2 rounded-xl p-3">
                                         <i class="bi bi-people-fill text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% translate "Capacity" %}</p>
                                             <p class="font-semibold text-foreground">{{ item.reservableboat.capacity }}</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
+                                    <div class="flex items-center gap-3 bg-surface-2 rounded-xl p-3">
                                         <i class="bi bi-fuel-pump text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% translate "Engine" %}</p>
                                             <p class="font-semibold text-foreground">{% if item.reservableboat.has_engine %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</p>
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
+                                    <div class="flex items-center gap-3 bg-surface-2 rounded-xl p-3">
                                         <i class="bi bi-anchor text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% translate "Provider" %}</p>
@@ -295,7 +295,7 @@
                                         </div>
                                     </div>
                                     {% if item.reservableboat.requires_skippership %}
-                                    <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
+                                    <div class="flex items-center gap-3 bg-surface-2 rounded-xl p-3">
                                         <i class="bi bi-mortarboard-fill text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% translate "Skippership" %}</p>
@@ -306,7 +306,7 @@
                                 </div>
                                 {% elif item.type.category == 2 %}
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
+                                    <div class="flex items-center gap-3 bg-surface-2 rounded-xl p-3">
                                         <i class="bi bi-people-fill text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% translate "Capacity" %}</p>
@@ -316,7 +316,7 @@
                                 </div>
                                 {% elif item.type.category == 3 %}
                                 <div class="grid grid-cols-2 gap-3">
-                                    <div class="flex items-center gap-3 bg-black/[0.03] rounded-xl p-3">
+                                    <div class="flex items-center gap-3 bg-surface-2 rounded-xl p-3">
                                         <i class="bi bi-rulers text-lg text-primary"></i>
                                         <div>
                                             <p class="text-[11px] uppercase font-semibold text-foreground/50">{% translate "Size" %}</p>
@@ -333,7 +333,7 @@
 
                 {% if form.reservable.field.queryset|length > 6 %}
                 <div class="mt-4">
-                    <button type="button" id="toggle-item-list" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-black/10 bg-white text-sm font-semibold text-foreground/70 hover:bg-black/5 transition-colors cursor-pointer">
+                    <button type="button" id="toggle-item-list" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-line bg-surface text-sm font-semibold text-foreground/70 hover:bg-surface-2 transition-colors cursor-pointer">
                         <span>{% translate "Show more" %}</span>
                         <i class="bi bi-chevron-down"></i>
                     </button>
@@ -342,7 +342,7 @@
             </div>
 
             <!-- ============ STEP 4: SCHIPPER ============ -->
-            <div id="skipper-section" class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm hidden">
+            <div id="skipper-section" class="bg-surface p-5 sm:p-6 rounded-2xl border border-line shadow-sm hidden">
                 <div class="flex items-center gap-3 mb-4">
                     <span class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold text-sm shrink-0">4</span>
                     <h2 class="text-lg sm:text-xl font-bold text-foreground">{% translate "Skipper" %}</h2>
@@ -353,12 +353,12 @@
                         {% translate "Search and choose a skipper" %}
                     </label>
                     <input type="search" id="skipper-search" placeholder="{% translate 'Search skipper...' %}"
-                           class="w-full text-base rounded-xl px-3 py-2 border border-black/10 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 mb-2">
+                           class="w-full text-base rounded-xl px-3 py-2 border border-line focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 mb-2">
 
                     <label for="id_authorized_userskippership" class="sr-only">
                         {% translate "Choose a skipper" %}
                     </label>
-                    <select id="id_authorized_userskippership" name="{{ form.authorized_userskippership.name }}" class="w-full text-base rounded-xl px-3 py-2 border border-black/10 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40">
+                    <select id="id_authorized_userskippership" name="{{ form.authorized_userskippership.name }}" class="w-full text-base rounded-xl px-3 py-2 border border-line focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40">
                         {% if form.authorized_userskippership.field.empty_label %}
                         <option value="">{{ form.authorized_userskippership.field.empty_label }}</option>
                         {% endif %}
@@ -377,7 +377,7 @@
                     </label>
                     <input type="text" id="id_new_skipper_name" name="new_skipper_name"
                            placeholder="{% translate 'Full name' %}"
-                           class="w-full text-base rounded-xl px-3 py-2 border border-black/10 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40">
+                           class="w-full text-base rounded-xl px-3 py-2 border border-line focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40">
                     <p class="text-xs text-foreground/50 mt-1">
                         {% translate "This skipper is not in the system yet. We will contact you to confirm this." %}
                     </p>
@@ -387,7 +387,7 @@
             <!-- ============ OTHER FIELDS (if any) ============ -->
             {% for field in form %}
             {% if field.name != 'reservable' and field.name != 'authorized_userskippership' and field.name != 'start' and field.name != 'end' %}
-            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-black/5 shadow-sm other-fields-card">
+            <div class="bg-surface p-5 sm:p-6 rounded-2xl border border-line shadow-sm other-fields-card">
                 <div class="flex flex-col space-y-1">
                     <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-foreground/70">
                         {{ field.label }}
@@ -423,7 +423,7 @@
             </div>
             <div class="flex gap-3 w-full sm:w-auto">
                 <a href="{% url 'reservations:reservations' %}"
-                   class="flex-1 sm:flex-none text-center px-6 py-2.5 rounded-xl border border-black/10 bg-white hover:bg-black/5 font-semibold text-foreground/70 transition-colors cursor-pointer">
+                   class="flex-1 sm:flex-none text-center px-6 py-2.5 rounded-xl border border-line bg-surface hover:bg-surface-2 font-semibold text-foreground/70 transition-colors cursor-pointer">
                     {% translate "Cancel" %}
                 </a>
                 <button type="submit" form="reservationform"

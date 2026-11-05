@@ -202,6 +202,38 @@ def test_organizer_sees_their_events_and_attendees(
     expect(member_page.get_by_text("Pim Fokkemast").first).to_be_visible()
 
 
+def add_question(event, subject, field_type=RegistrationFormField.TEXT_FIELD):
+    """Add a question to the registration form of ``event``."""
+    return RegistrationFormField.objects.create(
+        event=event, subject=subject, type=field_type, required=False
+    )
+
+
+@pytest.mark.parametrize("on_phone", [False, True], ids=["desktop", "phone"])
+def test_organizer_folds_out_form_answers(
+    on_phone, member, other_member, live_server, request
+):
+    """EVT-14: the organizer folds out each participant's answers to the form."""
+    event = factories.make_event("Zeilweekend Testmeer")
+    factories.make_organizer(event, member)
+    diet = add_question(event, "Dieetwensen")
+    tent = add_question(
+        event, "Neem je een tent mee?", RegistrationFormField.BOOLEAN_FIELD
+    )
+    diet.set_value_for(factories.register(event, other_member), "Vegetarisch")
+    tent.set_value_for(EventRegistration.objects.get(contact=other_member), True)
+    page = request.getfixturevalue("member_phone_page" if on_phone else "member_page")
+
+    page.goto(f"{live_server.url}/events/organized/{event.slug}/")
+
+    answer = page.get_by_text("Vegetarisch")
+    expect(answer).to_be_hidden()
+    page.locator("summary", has_text="Pim Fokkemast").click()
+    expect(answer).to_be_visible()
+    expect(page.locator("details.fold[open]")).to_contain_text("Neem je een tent mee?")
+    expect(page.locator("details.fold[open]")).to_contain_text("Ja")
+
+
 def test_member_without_organized_events_has_no_my_events_link(
     member_page, live_server
 ):

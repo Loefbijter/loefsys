@@ -2,8 +2,10 @@
 
 from typing import TYPE_CHECKING
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import CheckConstraint, Q
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
@@ -73,6 +75,14 @@ class Reservable(TimeStampedModel):
 
         For example, if an item is unavailable due to maintenance, the value is set to
         `False`.
+    managed_by_group : ~loefsys.groups.models.group.LoefbijterGroup, None
+        The group whose active members evaluate requests for this item.
+    managed_by_user : ~loefsys.members.models.user.User, None
+        The person who evaluates requests for this item.
+
+        At most one of the two is set. Without either, anyone with the permission to
+        change reservations evaluates the requests; see
+        :mod:`loefsys.reservations.permissions`.
     """
 
     class Location(models.IntegerChoices):
@@ -104,6 +114,41 @@ class Reservable(TimeStampedModel):
             "example, set this to false."
         ),
     )
+    managed_by_group = models.ForeignKey(
+        "groups.LoefbijterGroup",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="managed_reservables",
+        verbose_name=_("Managed by group"),
+        help_text=_(
+            "The group whose members evaluate reservation requests for this item."
+        ),
+    )
+    managed_by_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="managed_reservables",
+        verbose_name=_("Managed by person"),
+        help_text=_(
+            "The person who evaluates reservation requests for this item. Leave both "
+            "managers empty to let the reservation administrators evaluate them."
+        ),
+    )
+
+    class Meta(TimeStampedModel.Meta):
+        constraints = (
+            CheckConstraint(
+                name="reservable_single_manager",
+                condition=Q(managed_by_group__isnull=True)
+                | Q(managed_by_user__isnull=True),
+                violation_error_message=_(
+                    "Choose either a group or a person as manager, not both."
+                ),
+            ),
+        )
 
     def __str__(self):
         return self.name

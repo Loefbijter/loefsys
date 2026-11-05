@@ -1,0 +1,33 @@
+# Dutch translations for Django admin JavaScript strings that Django itself
+# does not translate yet. Django merges this catalogue with its own, so only the
+# missing strings are listed here. Update by hand and run compilemessages.
+msgid ""
+msgstr ""
+"Project-Id-Version: loefsys\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Choose %s by selecting them and then select the \"Choose\" arrow button."
+msgstr "Kies %s door ze te selecteren en daarna op de pijl 'Kiezen' te klikken."
+
+msgid "Remove %s by selecting them and then select the \"Remove\" arrow button."
+msgstr "Verwijder %s door ze te selecteren en daarna op de pijl 'Verwijderen' te klikken."
+
+msgid "Choose all %s"
+msgstr "Alle %s kiezen"
+
+msgid "Choose selected %s"
+msgstr "Geselecteerde %s kiezen"
+
+msgid "Remove selected %s"
+msgstr "Geselecteerde %s verwijderen"
+
+msgid "Remove all %s"
+msgstr "Alle %s verwijderen"
+
+msgid "(click to clear)"
+msgstr "(klik om te wissen)"

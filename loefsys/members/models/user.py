@@ -320,8 +320,14 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
 
         Instead of a separate flag, access follows from permissions: an active user
         with any permission, including the "Admin" permission, may use the admin.
+        Managers of a reservable may too, to evaluate its reservation requests.
         """
-        return self.is_active and bool(self.get_all_permissions())
+        # Imported here: the reservations models depend on this module.
+        from loefsys.reservations import permissions  # noqa: PLC0415
+
+        return self.is_active and (
+            bool(self.get_all_permissions()) or permissions.manages_reservables(self)
+        )
 
     def __str__(self):
         return self.full_name or self.email

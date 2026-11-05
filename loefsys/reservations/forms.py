@@ -53,6 +53,20 @@ class CreateReservationForm(forms.ModelForm):
         ),
     )
 
+    reason = forms.CharField(
+        label=_("Reason for the reservation"),
+        widget=forms.Textarea(
+            attrs={
+                "rows": 3,
+                "class": (
+                    "w-full text-base rounded-xl px-3 py-2 border border-line "
+                    "bg-surface text-fg focus:outline-none focus:ring-2 "
+                    "focus:ring-primary/40 focus:border-primary/40"
+                ),
+            }
+        ),
+    )
+
     @property
     def reserved_item(self):
         """Return the selected reservable item."""
@@ -60,7 +74,7 @@ class CreateReservationForm(forms.ModelForm):
 
     class Meta:
         model = Reservation
-        fields = ("reservable", "start", "end", "authorized_userskippership")
+        fields = ("reservable", "start", "end", "authorized_userskippership", "reason")
 
 
 class SortByReservationForm(forms.Form):

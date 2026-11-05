@@ -42,7 +42,7 @@ class UserSkippershipInline(admin.TabularInline):
     model = UserSkippership
     formset = UserSkippershipFormSet
     extra = 1
-    autocomplete_fields = ("skippership", "given_by")
+    autocomplete_fields = ("skippership",)
 
 
 class SkippershipUserInline(admin.TabularInline):
@@ -51,7 +51,7 @@ class SkippershipUserInline(admin.TabularInline):
     model = UserSkippership
     fk_name = "skippership"
     extra = 1
-    autocomplete_fields = ("user", "given_by")
+    autocomplete_fields = ("user",)
 
 
 class AdminPermissionFilter(admin.SimpleListFilter):

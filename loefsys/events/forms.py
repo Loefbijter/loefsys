@@ -22,7 +22,7 @@ class EventFieldsForm(forms.Form):
                         widget=forms.CheckboxInput(
                             attrs={
                                 "class": (
-                                    "h-4 w-4 rounded border-slate-300 text-secondary "
+                                    "h-4 w-4 rounded border-line text-secondary "
                                     "focus:ring-secondary"
                                 )
                             }
@@ -34,8 +34,9 @@ class EventFieldsForm(forms.Form):
                         widget=forms.NumberInput(
                             attrs={
                                 "class": (
-                                    "block w-full rounded-lg border border-slate-300 "
-                                    "px-3 py-2.5 text-sm text-slate-900 shadow-sm "
+                                    "block w-full rounded-lg border border-line "
+                                    "bg-surface "
+                                    "px-3 py-2.5 text-sm text-fg shadow-sm "
                                     "transition "
                                     "focus:border-secondary "
                                     "focus:outline-none "
@@ -51,8 +52,9 @@ class EventFieldsForm(forms.Form):
                             attrs={
                                 "type": "datetime-local",
                                 "class": (
-                                    "block w-full rounded-lg border border-slate-300 "
-                                    "px-3 py-2.5 text-sm text-slate-900 shadow-sm "
+                                    "block w-full rounded-lg border border-line "
+                                    "bg-surface "
+                                    "px-3 py-2.5 text-sm text-fg shadow-sm "
                                     "transition "
                                     "focus:border-secondary "
                                     "focus:outline-none "
@@ -70,8 +72,9 @@ class EventFieldsForm(forms.Form):
                                 "rows": 5,
                                 "placeholder": _("Type your answer here..."),
                                 "class": (
-                                    "block w-full rounded-lg border border-slate-300 "
-                                    "px-3 py-2.5 text-sm text-slate-900 shadow-sm "
+                                    "block w-full rounded-lg border border-line "
+                                    "bg-surface "
+                                    "px-3 py-2.5 text-sm text-fg shadow-sm "
                                     "transition "
                                     "focus:border-secondary "
                                     "focus:outline-none "
