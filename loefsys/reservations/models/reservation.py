@@ -47,6 +47,8 @@ class Reservation(TimeStampedModel):
     reason : str
         What the reservation is for, given by the member. The member form requires
         it; reservations from before it existed, or made in the admin, may lack it.
+    logbook_reminder_sent_at : ~datetime.datetime
+        When the member was emailed to fill in the logbook, if that happened.
     """
 
     class RequestStatus(models.IntegerChoices):
@@ -80,6 +82,12 @@ class Reservation(TimeStampedModel):
         blank=True,
         verbose_name=_("Reason"),
         help_text=_("What the reservation is for."),
+    )
+    logbook_reminder_sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        editable=False,
+        verbose_name=_("Logbook reminder sent at"),
     )
 
     class Meta:

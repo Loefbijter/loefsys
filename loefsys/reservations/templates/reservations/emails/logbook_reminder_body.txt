@@ -1,0 +1,12 @@
+{% load i18n %}{% autoescape off %}{% blocktranslate trimmed with name=user.first_name %}Hello {{ name }},{% endblocktranslate %}
+
+{% blocktranslate trimmed with date=reservation.start|date:"l j F" start=reservation.start|time:"H:i" end=reservation.end|time:"H:i" %}You reserved {{ boat }} on {{ date }}, from {{ start }} to {{ end }}. The logbook for that reservation is still empty.{% endblocktranslate %}
+
+{% translate "Please fill it in, so the next crew knows the state of the boat:" %}
+{{ logbook_url }}
+
+{% translate "It only takes a minute: the wind force, the motor hours, whether you refuelled and any new damage." %}
+
+{% translate "Kind regards," %}
+Loefbijter
+{% endautoescape %}
