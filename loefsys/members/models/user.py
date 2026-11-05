@@ -17,6 +17,7 @@ from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
 from .choices import Genders
+from .fields import LowercaseEmailField
 
 if TYPE_CHECKING:
     from .membership import Membership
@@ -35,18 +36,6 @@ class UserManager(BaseUserManager):
     """
 
     use_in_migrations = True
-
-    def get_by_natural_key(self, username):
-        """Return the user with this email address, ignoring case.
-
-        People type their address in all sorts of capitalisations when logging in.
-        If two accounts differ only in case, only the exact match is found, so the
-        lookup never picks an account at random.
-        """
-        matches = list(self.filter(email__iexact=username)[:2])
-        if len(matches) == 1:
-            return matches[0]
-        return self.get(email=username)
 
     def _create_user(self, email, password, **extra_fields):
         """Create and save a user with the given email and password."""
@@ -186,7 +175,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         if self.picture:
             self.picture.delete(save=False)
 
-    email = models.EmailField(unique=True, verbose_name=_("Email address"))
+    email = LowercaseEmailField(unique=True, verbose_name=_("Email address"))
 
     slug = RandomCharField(length=8, unique=True)
 
