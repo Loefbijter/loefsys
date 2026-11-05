@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 
-from loefsys.members.models import User, UserSkippership, implied_skippership_ids
+from loefsys.members.models import User, UserSkippership
 from loefsys.reservations.models.boat import ReservableBoat
 from loefsys.reservations.models.choices import ReservableCategories
 from loefsys.reservations.models.logbook import BoatLogbook
@@ -172,12 +172,10 @@ class Reservation(TimeStampedModel):
             if (
                 required_skippership
                 and self.authorized_userskippership
-                and required_skippership.pk
-                not in implied_skippership_ids(
-                    UserSkippership.objects.filter(
-                        user=self.authorized_userskippership
-                    ).values_list("skippership_id", flat=True)
-                )
+                and not UserSkippership.objects.filter(
+                    user=self.authorized_userskippership,
+                    skippership=required_skippership,
+                ).exists()
             ):
                 raise ValidationError(
                     {

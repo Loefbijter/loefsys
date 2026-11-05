@@ -35,6 +35,7 @@ class SkipperChoiceTestCase(TestCase):
             initials="W.",
             display_name_preference=DisplayNamePreferences.INITIALS_LASTNAME,
         )
+        UserSkippership.objects.create(user=cls.laser_skipper, skippership=cls.laser)
         UserSkippership.objects.create(
             user=cls.laser_skipper, skippership=cls.laser_plus
         )
@@ -78,7 +79,7 @@ class SkipperChoiceTestCase(TestCase):
         self.assertIn(self.keel_skipper, options)
         self.assertNotIn(self.non_skipper, options)
 
-    def test_higher_skippership_also_qualifies_for_lower(self):
+    def test_options_list_held_skipperships(self):
         skipperships = self.options_by_user()[self.laser_skipper]["skipperships"]
         self.assertEqual(
             set(skipperships.split(",")), {str(self.laser.pk), str(self.laser_plus.pk)}
@@ -100,7 +101,7 @@ class SkipperChoiceTestCase(TestCase):
             reason="Training",
         )
 
-    def test_reservation_accepts_skipper_with_higher_skippership(self):
+    def test_reservation_accepts_qualified_skipper(self):
         self.reservation(self.laser_skipper).clean()
 
     def test_reservation_rejects_unqualified_skipper(self):

@@ -5,7 +5,7 @@ from typing import ClassVar
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from loefsys.members.models import Skippership, User, implied_skippership_ids
+from loefsys.members.models import User
 
 from .models import BoatLogbook, Reservable, Reservation
 
@@ -69,20 +69,16 @@ class CreateReservationForm(forms.ModelForm):
 
     @property
     def skipper_options(self) -> list[dict]:
-        """Return the skippers to offer, with what they qualify for and match on.
+        """Return the skippers to offer, with what they hold and match on.
 
-        Each entry holds the user, the ids of every skippership they qualify for
-        (including the ones implied by a higher skippership) and the text the
-        search box matches against, so searching works on first name, nickname
-        and last name whatever display name the skipper chose.
+        Each entry holds the user, the ids of their skipperships and the text
+        the search box matches against, so searching works on first name,
+        nickname and last name whatever display name the skipper chose.
         """
-        parents = dict(Skippership.objects.values_list("pk", "parent_id"))
         options = []
         skippers = self.fields["authorized_userskippership"].queryset  # type: ignore[attr-defined]
         for user in skippers.prefetch_related("user_skipperships"):
-            qualified = implied_skippership_ids(
-                (us.skippership_id for us in user.user_skipperships.all()), parents
-            )
+            held = {us.skippership_id for us in user.user_skipperships.all()}
             search = " ".join(
                 part
                 for part in (
@@ -96,7 +92,7 @@ class CreateReservationForm(forms.ModelForm):
             options.append(
                 {
                     "user": user,
-                    "skipperships": ",".join(str(pk) for pk in sorted(qualified)),
+                    "skipperships": ",".join(str(pk) for pk in sorted(held)),
                     "search": search.lower(),
                 }
             )
