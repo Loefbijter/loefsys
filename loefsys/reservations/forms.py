@@ -5,7 +5,7 @@ from typing import ClassVar
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from loefsys.members.models.user import User
+from loefsys.members.models import Skippership, User, implied_skippership_ids
 
 from .models import BoatLogbook, Reservable, Reservation
 
@@ -20,9 +20,9 @@ class CreateReservationForm(forms.ModelForm):
     )
     authorized_userskippership = forms.ModelChoiceField(
         label=_("Choose a skipper"),
-        queryset=User.objects.filter(is_active=True).order_by(
-            "last_name", "first_name"
-        ),
+        queryset=User.objects.filter(is_active=True, skippership__isnull=False)
+        .distinct()
+        .order_by("last_name", "first_name"),
         required=False,
         empty_label=_("No skipper selected"),
     )
@@ -66,6 +66,41 @@ class CreateReservationForm(forms.ModelForm):
             }
         ),
     )
+
+    @property
+    def skipper_options(self) -> list[dict]:
+        """Return the skippers to offer, with what they qualify for and match on.
+
+        Each entry holds the user, the ids of every skippership they qualify for
+        (including the ones implied by a higher skippership) and the text the
+        search box matches against, so searching works on first name, nickname
+        and last name whatever display name the skipper chose.
+        """
+        parents = dict(Skippership.objects.values_list("pk", "parent_id"))
+        options = []
+        skippers = self.fields["authorized_userskippership"].queryset  # type: ignore[attr-defined]
+        for user in skippers.prefetch_related("user_skipperships"):
+            qualified = implied_skippership_ids(
+                (us.skippership_id for us in user.user_skipperships.all()), parents
+            )
+            search = " ".join(
+                part
+                for part in (
+                    user.first_name,
+                    user.nickname,
+                    user.last_name,
+                    user.display_name,
+                )
+                if part
+            )
+            options.append(
+                {
+                    "user": user,
+                    "skipperships": ",".join(str(pk) for pk in sorted(qualified)),
+                    "search": search.lower(),
+                }
+            )
+        return options
 
     @property
     def reserved_item(self):
