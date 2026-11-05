@@ -58,3 +58,21 @@ class Skippership(models.Model):
                 )
             seen.add(parent.pk)
             parent = parent.parent
+
+
+def implied_skippership_ids(held_ids, parents: dict | None = None) -> set[int]:
+    """Return the held skippership ids plus every skippership they imply.
+
+    Holding a skippership also qualifies for the skipperships below it in the
+    hierarchy (its ``parent`` chain), e.g. Laser+ also counts as Laser. Pass
+    ``parents`` (skippership id to parent id) to reuse it across many calls.
+    """
+    if parents is None:
+        parents = dict(Skippership.objects.values_list("pk", "parent_id"))
+    implied: set[int] = set()
+    for skippership_id in held_ids:
+        current = skippership_id
+        while current is not None and current not in implied:
+            implied.add(current)
+            current = parents.get(current)
+    return implied
