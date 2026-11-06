@@ -75,21 +75,41 @@ document.addEventListener("DOMContentLoaded", () => {
     if (ev.extendedProps.location) addMeta("geo-alt", ev.extendedProps.location);
     body.append(name, meta);
 
-    const end = document.createElement("div");
-    end.className = "row-end";
+    // Status chips, as <c-event-status> draws them: "Unpublished", then "Full"
+    // or "Registration open". On a phone they move under the meta line (.chip-n).
+    const chips = [];
+    const addChip = (kind, text, icon) => {
+      const chip = document.createElement("span");
+      chip.className = `chip chip-${kind}`;
+      if (icon) {
+        const i = document.createElement("i");
+        i.className = `bi bi-${icon}`;
+        i.setAttribute("aria-hidden", "true");
+        chip.append(i);
+      }
+      chip.append(text);
+      chips.push(chip);
+    };
     if (ev.extendedProps.published === false) {
       row.classList.add("row-unpublished");
-      const chip = document.createElement("span");
-      chip.className = "chip chip-unpublished";
-      chip.textContent = el.dataset.unpublished;
-      end.append(chip);
+      addChip("unpublished", el.dataset.unpublished, "eye-slash");
     }
+    if (ev.extendedProps.status) addChip(ev.extendedProps.status.kind, ev.extendedProps.status.label);
+    chips.forEach((chip) => {
+      const narrow = chip.cloneNode(true);
+      narrow.classList.add("chip-n");
+      body.append(narrow);
+    });
+
+    const end = document.createElement("div");
+    end.className = "row-end";
     if (ev.extendedProps.category) {
       const cat = document.createElement("span");
       cat.className = `cat ${ev.classNames.join(" ")}`;
       cat.textContent = ev.extendedProps.category;
       end.append(cat);
     }
+    end.append(...chips);
     const chevron = document.createElement("i");
     chevron.className = "bi bi-chevron-right";
     chevron.setAttribute("aria-hidden", "true");

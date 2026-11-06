@@ -50,6 +50,11 @@
 
       {% if organizer %}
         <c-panel title="{% translate 'Organizers' %}" icon="people">
+          {% if is_organizer %}
+            <c-slot name="action">
+              <a class="btn btn-ghost btn-sm" href="{% url 'events:my_events_event' event.slug %}">{% if is_training %}{% translate "Participants and PODs" %}{% else %}{% translate "Participants" %}{% endif %} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            </c-slot>
+          {% endif %}
           <div class="badges">
             {% for group in organizer.groups.all %}
               <c-badge icon="people">{{ group.name }}</c-badge>

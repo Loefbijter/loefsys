@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.files.storage import FileSystemStorage
 from django.db import models
-from django.db.models import OneToOneField, QuerySet
+from django.db.models import OneToOneField
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import RandomCharField
 from django_extensions.db.models import TimeStampedModel
@@ -20,7 +20,7 @@ from .choices import Genders
 from .fields import LowercaseEmailField
 
 if TYPE_CHECKING:
-    from .membership import Membership
+    from .membership import Membership, MembershipQuerySet
     from .study_registration import StudyRegistration
 
 
@@ -241,7 +241,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     )
 
     study_registration: Optional["StudyRegistration"]
-    membership_set: QuerySet["Membership"]
+    membership_set: "MembershipQuerySet"
 
     phone_number = PhoneNumberField(blank=True, verbose_name=_("Phone number"))
     pod_kb_link = models.URLField(
@@ -290,6 +290,11 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         """Return the earliest known membership start date for the user."""
         membership = self.membership_set.order_by("start").first()
         return membership.start if membership else None
+
+    @property
+    def current_membership(self) -> Optional["Membership"]:
+        """Return the membership that applies today, if any."""
+        return self.membership_set.current().first()
 
     @property
     def display_name(self) -> str:
