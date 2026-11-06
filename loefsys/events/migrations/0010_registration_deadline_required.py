@@ -13,7 +13,7 @@ def fill_missing_deadlines(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("events", "0008_activity_managers_add_registrations"),
+        ("events", "0009_organizer_help_texts"),
     ]
 
     operations = [
