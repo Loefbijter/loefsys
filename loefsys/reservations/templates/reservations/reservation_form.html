@@ -371,12 +371,12 @@
                     <label for="id_authorized_userskippership" class="sr-only">
                         {% translate "Choose a skipper" %}
                     </label>
-                    <select id="id_authorized_userskippership" name="{{ form.authorized_userskippership.name }}" class="w-full text-base rounded-xl px-3 py-2 border border-line focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40">
+                    <select id="id_authorized_userskippership" name="{{ form.authorized_userskippership.name }}" data-no-match-label="{% translate 'No qualified skipper matches your search' %}" class="w-full text-base rounded-xl px-3 py-2 border border-line focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40">
                         {% if form.authorized_userskippership.field.empty_label %}
                         <option value="">{{ form.authorized_userskippership.field.empty_label }}</option>
                         {% endif %}
-                        {% for user in form.authorized_userskippership.field.queryset %}
-                        <option value="{{ user.pk }}" data-skipperships="{% for us in user.user_skipperships.all %}{% if not forloop.first %},{% endif %}{{ us.skippership_id }}{% endfor %}" {% if form.authorized_userskippership.value|stringformat:'s' == user.pk|stringformat:'s' %}selected{% endif %}>{{ user.display_name }}</option>
+                        {% for option in form.skipper_options %}
+                        <option value="{{ option.user.pk }}" data-skipperships="{{ option.skipperships }}" data-search="{{ option.search }}" {% if form.authorized_userskippership.value|stringformat:'s' == option.user.pk|stringformat:'s' %}selected{% endif %}>{{ option.user.display_name }}</option>
                         {% endfor %}
                     </select>
                     {% for error in form.authorized_userskippership.errors %}
@@ -539,6 +539,42 @@
         const newWrap = document.getElementById("skipper-new-wrap");
         const newSkipperInput = document.getElementById("id_new_skipper_name");
         const skipperSection = document.getElementById("skipper-section");
+        const skipperSearch = document.getElementById("skipper-search");
+        const skipperSelectEl = document.getElementById("id_authorized_userskippership");
+        // Keep every skipper option aside, so filtering can rebuild the list.
+        // Hiding <option> elements does not work in every browser (iOS Safari).
+        const emptySkipperOption = skipperSelectEl ? Array.from(skipperSelectEl.options).find((opt) => !opt.value) : null;
+        const emptySkipperLabel = emptySkipperOption ? emptySkipperOption.textContent : "";
+        const allSkipperOptions = skipperSelectEl ? Array.from(skipperSelectEl.options).filter((opt) => opt.value) : [];
+
+        // Show only the skippers qualified for the chosen boat whose name
+        // matches every word typed in the search box. While searching, the
+        // first match is picked so the choice shows without opening the list.
+        function renderSkipperOptions(requiredSkippership) {
+            if (!skipperSelectEl) return;
+            const words = skipperSearch ? skipperSearch.value.trim().toLowerCase().split(/\s+/).filter(Boolean) : [];
+            const previous = skipperSelectEl.value;
+            const matches = allSkipperOptions.filter((opt) => {
+                const qualified = !requiredSkippership || (opt.dataset.skipperships || "").split(",").includes(requiredSkippership);
+                const search = opt.dataset.search || opt.textContent.toLowerCase();
+                return qualified && words.every((word) => search.includes(word));
+            });
+
+            allSkipperOptions.forEach((opt) => opt.remove());
+            matches.forEach((opt) => skipperSelectEl.appendChild(opt));
+
+            if (emptySkipperOption) {
+                emptySkipperOption.textContent = matches.length || !words.length ? emptySkipperLabel : skipperSelectEl.dataset.noMatchLabel;
+            }
+
+            if (matches.some((opt) => opt.value === previous)) {
+                skipperSelectEl.value = previous;
+            } else if (words.length && matches.length) {
+                skipperSelectEl.value = matches[0].value;
+            } else {
+                skipperSelectEl.value = "";
+            }
+        }
 
         function updateSkipperSection() {
             const selectedReservable = document.querySelector("input[name='reservable']:checked");
@@ -559,32 +595,7 @@
                 return;
             }
 
-            // If it's a boat reservation and a specific skippership is required,
-            // filter the skipper select options to only those users that have the
-            // matching skippership. The <option> elements have a data-skipperships
-            // attribute listing comma-separated skippership ids for that user.
-            if (skipperSelect) {
-                const opts = Array.from(skipperSelect.options);
-                opts.forEach((opt) => {
-                    // keep the empty option visible
-                    if (!opt.value) {
-                        opt.hidden = false;
-                        return;
-                    }
-
-                    if (!requiredSkippership) {
-                        opt.hidden = false;
-                    } else {
-                        const has = (opt.dataset.skipperships || '').split(',').filter(Boolean).includes(requiredSkippership);
-                        opt.hidden = !has;
-                    }
-                });
-
-                // if the currently selected option became hidden, clear selection
-                if (skipperSelect.selectedIndex >= 0 && skipperSelect.options[skipperSelect.selectedIndex].hidden) {
-                    skipperSelect.selectedIndex = -1;
-                }
-            }
+            renderSkipperOptions(requiredSkippership);
 
             if (newSkipperInput) newSkipperInput.value = "";
             if (existingWrap) existingWrap.classList.remove("hidden");
@@ -764,6 +775,8 @@
                 const data = JSON.parse(raw);
                 const form = document.getElementById(reservationFormId);
                 if (!form) return;
+                // put every skipper back first, so the saved one can be selected
+                if (skipperSelectEl) allSkipperOptions.forEach((opt) => skipperSelectEl.appendChild(opt));
                 const elements = form.querySelectorAll('input, select, textarea');
                 elements.forEach((el) => {
                     if (!el.name || !(el.name in data)) return;
@@ -825,24 +838,11 @@
         restoreReservationFormState();
         updateSkipperSection();
 
-        // --- Skipper search: filter the select options in-place ---
-        const skipperSearch = document.getElementById('skipper-search');
-        const skipperSelect = document.getElementById('{{ form.authorized_userskippership.id_for_label|escapejs }}'.replace('id_', '')) || document.getElementById('{{ form.authorized_userskippership.id_for_label|escapejs }}');
-        // Note: Django usually renders the select with id "id_authorized_userskippership". Prefer explicit lookup:
-        const skipperSelectEl = document.getElementById('id_authorized_userskippership');
-
-        if (skipperSearch && skipperSelectEl) {
-            skipperSearch.addEventListener('input', function () {
-                const q = this.value.trim().toLowerCase();
-                for (let i = 0; i < skipperSelectEl.options.length; i++) {
-                    const opt = skipperSelectEl.options[i];
-                    const text = (opt.text || '').toLowerCase();
-                    opt.hidden = q.length > 0 && !text.includes(q);
-                }
-                // if the currently selected option became hidden, clear selection
-                if (skipperSelectEl.selectedIndex >= 0 && skipperSelectEl.options[skipperSelectEl.selectedIndex].hidden) {
-                    skipperSelectEl.selectedIndex = -1;
-                }
+        // --- Skipper search: narrow the qualified skippers by name ---
+        if (skipperSearch) {
+            skipperSearch.addEventListener("input", function () {
+                const selectedReservable = document.querySelector("input[name='reservable']:checked");
+                renderSkipperOptions(selectedReservable ? selectedReservable.dataset.requiredSkippership || null : null);
             });
         }
     });

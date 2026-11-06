@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -370,12 +370,32 @@ class EventFillerView(View):
         except ValueError:
             return "cat-other"
 
+    @staticmethod
+    def status(event) -> dict[str, str] | None:
+        """Return the status chip for an event, like ``<c-event-status>`` shows it.
+
+        Needs ``event.active_registrations``, the number of active registrations.
+        """
+        if event.capacity is not None and event.capacity <= event.active_registrations:
+            return {"kind": "bad", "label": _("Full")}
+        if event.registrations_open():
+            return {"kind": "info", "label": _("Registration open")}
+        return None
+
     def get(self, request):
         """Get the events for the calendar."""
         show_birthdays = request.GET.get("show_birthdays", "0") in {"1", "true", "True"}
         data = []
 
-        for event in Event.objects.visible_to(request.user):
+        # distinct=True: visible_to() can join organisers, which repeats rows.
+        events = Event.objects.visible_to(request.user).annotate(
+            active_registrations=Count(
+                "eventregistration",
+                filter=Q(eventregistration__status=RegistrationStatus.ACTIVE),
+                distinct=True,
+            )
+        )
+        for event in events:
             data.append(
                 {
                     "title": event.title,
@@ -399,6 +419,7 @@ class EventFillerView(View):
                     "classNames": [self.category_class(event)]
                     + ([] if event.published else ["is-unpublished"]),
                     "published": event.published,
+                    "status": self.status(event),
                 }
             )
 
