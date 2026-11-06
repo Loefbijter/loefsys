@@ -63,7 +63,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     registration_start : ~datetime.datetime
         The start date and time of the registration window
     registration_deadline : ~datetime.datetime
-        The end date and time of the registration window
+        The end date and time of the registration window, at the latest the start
+        of the event. Required, because registration never opens without it.
     cancelation_deadline : ~datetime.datetime
         The end date and time of the cancelation window
     category : ~loefsys.events.models.choices.EventCategories
@@ -112,9 +113,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         _("Start of registration window"), blank=True, null=True
     )
 
-    registration_deadline = models.DateTimeField(
-        _("Registration deadline"), blank=True, null=True
-    )
+    # Required: without a deadline, registration never opens.
+    registration_deadline = models.DateTimeField(_("Registration deadline"))
     cancelation_deadline = models.DateTimeField(
         _("Cancelation deadline"), blank=True, null=True
     )
@@ -193,8 +193,8 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
                 violation_error_message="End time cannot be before the start time.",
             ),
             CheckConstraint(
-                condition=Q(start__gt=F("registration_deadline")),
-                name="event_start_gt_reg_end",
+                condition=Q(start__gte=F("registration_deadline")),
+                name="event_start_gte_reg_end",
                 violation_error_message="registration deadline can't be after start.",
             ),
             CheckConstraint(
@@ -244,7 +244,7 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         bool
             A boolean that defines whether registrations are open.
         """
-        if not self.published or not self.registration_deadline:
+        if not self.published:
             return False
         if self.registration_start is None:
             return timezone.now() < self.registration_deadline

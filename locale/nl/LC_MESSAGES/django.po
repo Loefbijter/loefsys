@@ -1114,9 +1114,6 @@ msgstr "Inschrijven vanaf %(date)s."
 msgid "Registrations"
 msgstr "Inschrijvingen"
 
-msgid "Registrations are closed."
-msgstr "Inschrijvingen zijn gesloten."
-
 msgid "Registrations are currently closed."
 msgstr "Inschrijvingen zijn momenteel gesloten."
 

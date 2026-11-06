@@ -247,8 +247,6 @@ class EventDetailView(LoginRequiredMixin, DetailView):
                     timezone.localtime(obj.registration_start), "DATETIME_FORMAT"
                 )
             }
-        elif obj.registration_deadline is None:
-            reason = _("Registrations are closed.")
         elif timezone.now() > obj.registration_deadline:
             reason = _("Registrations closed on %(date)s.") % {
                 "date": date_format(
