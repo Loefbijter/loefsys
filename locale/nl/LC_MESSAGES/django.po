@@ -73,17 +73,11 @@ msgstr "Een afwijsreden is verplicht als je een reservering weigert."
 msgid "A member until this time."
 msgstr "Lid tot deze datum."
 
-msgid "A request was made to reset the password for your account. If you did not request this, please ignore this email."
-msgstr "Er is verzocht om het wachtwoord voor je account opnieuw in te stellen. Als je dit niet hebt aangevraagd, negeer dan deze e-mail."
-
 msgid "A reservation already exists for this timeslot."
 msgstr "Er bestaat al een reservering voor dit tijdslot."
 
 msgid "A skippership cannot require itself."
 msgstr "Een schipperschap kan zichzelf niet vereisen."
-
-msgid "A temporary password was requested for your account."
-msgstr "Er is verzocht om een tijdelijk wachtwoord voor je account."
 
 msgid "A-Z"
 msgstr "A-Z"
@@ -163,9 +157,6 @@ msgstr "Alumni"
 
 msgid "Alumnus"
 msgstr "Alumnus"
-
-msgid "An email has been sent with instructions to reset your password. Check your inbox (and spam folder)."
-msgstr "Er is een e-mail gestuurd met instructies om je wachtwoord opnieuw in te stellen. Controleer je inbox (en spammap)."
 
 msgid "Announcement end"
 msgstr "Einde bericht"
@@ -359,9 +350,6 @@ msgstr "Bevestig verwijdering reservering"
 
 msgid "Connect calendar"
 msgstr "Agenda koppelen"
-
-msgid "Contact <a href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a> and we will create a new password for you as soon as possible."
-msgstr "Neem contact op met <a href=\"mailto:webcie@loefbijter.nl\">webcie@loefbijter.nl</a>, wij maken zo snel mogelijk een nieuw wachtwoord voor je aan."
 
 msgid "Content"
 msgstr "Inhoud"
@@ -640,17 +628,14 @@ msgstr "Hoeveel motoruren heb je gemaakt?"
 msgid "I accept the fine of %(fine)s if I cancel after %(deadline)s."
 msgstr "Ik accepteer de boete van %(fine)s als ik me na %(deadline)s afmeld."
 
-msgid "If the given email address exists, a temporary password has been sent."
-msgstr "Als het opgegeven e-mailadres bestaat, is er een tijdelijk wachtwoord gestuurd."
+msgid "If an account exists for this email address, we have sent it a link to reset your password. Check your inbox (and spam folder)."
+msgstr "Als er een account bij dit e-mailadres hoort, hebben we er een link naartoe gestuurd om je wachtwoord opnieuw in te stellen. Controleer je inbox (en spammap)."
 
 msgid "If this is checked an NDA needs to be signed to be part of this taskforce."
 msgstr "Als dit is aangevinkt, moet een geheimhoudingsverklaring (NDA) worden getekend om deel uit te maken van deze taskforce."
 
 msgid "If this is checked new members should be assigned to this committee, any members that are part of this committee satisfy their committee_duty."
 msgstr "Als dit is aangevinkt, kunnen nieuwe leden aan deze commissie worden toegewezen; leden van deze commissie voldoen aan hun commissieplicht."
-
-msgid "If you did not request this, please contact the site administrator."
-msgstr "Als je dit niet hebt aangevraagd, neem dan contact op met de sitebeheerder."
 
 msgid "In queue"
 msgstr "In wachtrij"
@@ -729,9 +714,6 @@ msgstr "Log in om verder te gaan"
 
 msgid "Log in to view and manage your reservations."
 msgstr "Log in om je reserveringen te bekijken en te beheren."
-
-msgid "Log in with this password and change it immediately via your profile (Profile > Set password)."
-msgstr "Log in met dit wachtwoord en wijzig het direct via je profiel (Profiel > Wachtwoord instellen)."
 
 msgid "Log out"
 msgstr "Uitloggen"
@@ -1108,6 +1090,9 @@ msgstr "Inschrijvingen zijn gesloten op %(date)s."
 msgid "Remove"
 msgstr "Verwijderen"
 
+msgid "Request a new link"
+msgstr "Nieuwe link aanvragen"
+
 msgid "Request status"
 msgstr "Status aanvraag"
 
@@ -1153,6 +1138,9 @@ msgstr "Reserveren"
 
 msgid "Reset"
 msgstr "Reset"
+
+msgid "Reset your Loefsys password"
+msgstr "Stel je Loefsys-wachtwoord opnieuw in"
 
 msgid "Right"
 msgstr "Rechts"
@@ -1265,6 +1253,9 @@ msgstr "Schipperschap sinds"
 msgid "Skipperships"
 msgstr "Schipperschappen"
 
+msgid "Someone asked to reset the password of your Loefsys account. Open this link to choose a new password:"
+msgstr "Iemand heeft gevraagd om het wachtwoord van je Loefsys-account opnieuw in te stellen. Open deze link om een nieuw wachtwoord te kiezen:"
+
 msgid "Something went wrong"
 msgstr "Er is iets misgegaan"
 
@@ -1304,13 +1295,6 @@ msgstr "Onderwerp"
 msgid "Taken"
 msgstr "Bezet"
 
-msgid "Temporary password - Loefsys"
-msgstr "Tijdelijk wachtwoord - Loefsys"
-
-#, python-format
-msgid "Temporary password: %(temporary_password)s"
-msgstr "Tijdelijk wachtwoord: %(temporary_password)s"
-
 msgid "Text"
 msgstr "Tekst"
 
@@ -1337,6 +1321,9 @@ msgstr "De groep waarvan de leden reserveringsaanvragen voor dit item beoordelen
 
 msgid "The groups this user belongs to. A user will get all permissions granted to each of their groups."
 msgstr "De groepen waartoe deze gebruiker behoort. Een gebruiker krijgt alle rechten van elk van zijn groepen."
+
+msgid "The link works once and expires after a few days. If you did not ask for a new password, you can ignore this email: your password stays the same."
+msgstr "De link werkt één keer en verloopt na een paar dagen. Heb je niet om een nieuw wachtwoord gevraagd? Dan kun je deze e-mail negeren: je wachtwoord blijft hetzelfde."
 
 msgid "The member gets a place, even if the event is full."
 msgstr "Het lid krijgt een plek, ook als de activiteit vol is."
@@ -1389,9 +1376,6 @@ msgstr "Het schipperschap dat vereist is om deze boot te gebruiken."
 msgid "The skippership that must be obtained before this one."
 msgstr "Het schipperschap dat eerst behaald moet zijn."
 
-msgid "The team"
-msgstr "Het team"
-
 msgid "Theme: dark"
 msgstr "Thema: donker"
 
@@ -1419,8 +1403,8 @@ msgstr "Dit item kan niet gereserveerd worden."
 msgid "This item is not reservable at the moment."
 msgstr "Dit item is momenteel niet reserveerbaar."
 
-msgid "This link is invalid, possibly because it has already been used. Ask the web committee for a new password."
-msgstr "Deze link is ongeldig, waarschijnlijk omdat hij al is gebruikt. Vraag de webcie om een nieuw wachtwoord."
+msgid "This link is invalid, possibly because it has already been used or has expired. Request a new one below."
+msgstr "Deze link is ongeldig, waarschijnlijk omdat hij al is gebruikt of verlopen is. Vraag hieronder een nieuwe aan."
 
 msgid "This member is already registered for this event."
 msgstr "Dit lid is al aangemeld voor deze activiteit."
@@ -1566,9 +1550,6 @@ msgstr "Je wachtwoord is succesvol bijgewerkt. Je kunt nu inloggen met je nieuwe
 
 msgid "Your reservations"
 msgstr "Jouw reserveringen"
-
-msgid "Your temporary password is:"
-msgstr "Je tijdelijke wachtwoord is:"
 
 msgid "ZB POD link"
 msgstr "ZB POD-link"
