@@ -207,6 +207,9 @@
   }
   @media (max-width: 47.99rem) {
     .row-end .cat { display: none; }
+    /* The agenda list is not in a panel, so it moves its chips here. */
+    .cal .row-end .chip { display: none; }
+    .cal .row .chip-n { display: inline-flex; }
   }
 
   /* A row with an action underneath, e.g. a reservation with its logbook */

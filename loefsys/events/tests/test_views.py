@@ -113,6 +113,44 @@ class EventFillerViewTestCase(TestCase):
         self.assertEqual(data[0]["start"], "2099-07-01T10:40:00")
         self.assertEqual(data[0]["end"], "2099-07-01T12:40:00")
 
+    def _filler_event(self, title, capacity=None, registration_open=True):
+        now = timezone.now()
+        start = now + timedelta(days=7)
+        opens = now + timedelta(days=1 if not registration_open else -1)
+        return G(
+            Event,
+            title=title,
+            start=start,
+            end=start + timedelta(hours=2),
+            capacity=capacity,
+            registration_start=opens,
+            registration_deadline=start - timedelta(days=1),
+            cancelation_deadline=start - timedelta(days=1),
+            published=True,
+        )
+
+    def test_event_filler_includes_status_chip(self):
+        """Each event says whether it is full or open, as on the home page."""
+        full = self._filler_event("Volle zeilmiddag", capacity=1)
+        G(EventRegistration, event=full, contact=G(get_user_model()))
+        G(
+            EventRegistration,
+            event=full,
+            contact=G(get_user_model()),
+            status=RegistrationStatus.QUEUED,
+        )
+        self._filler_event("Open borrel", capacity=5)
+        self._filler_event("Later open", registration_open=False)
+
+        data = self.client.get(reverse("events:event_filler")).json()
+        status = {entry["title"]: entry["status"] for entry in data}
+
+        self.assertEqual(status["Volle zeilmiddag"], {"kind": "bad", "label": "Vol"})
+        self.assertEqual(
+            status["Open borrel"], {"kind": "info", "label": "Inschrijving open"}
+        )
+        self.assertIsNone(status["Later open"])
+
     def test_event_filler_toggle_includes_only_public_birthdays(self):
         """Birthdays should stay hidden by default and require an explicit toggle."""
         public_birthday = timezone.now().date().replace(year=2000)
