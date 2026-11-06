@@ -66,3 +66,51 @@ class ReservationDeleteViewTestCase(TestCase):
 
         self.assertEqual(response.status_code, 404)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
+
+
+class CheckAvailabilityTestCase(TestCase):
+    def setUp(self):
+        self.client.force_login(
+            User.objects.create_user(
+                email="member@example.com",
+                password="secure-password",
+                first_name="Mila",
+                last_name="Member",
+            )
+        )
+        reservable_type = ReservableType.objects.create(
+            name="Laser", category=ReservableCategories.BOAT, description="A dinghy"
+        )
+        self.free_boat = Reservable.objects.create(
+            name="Zeemeeuw",
+            description="A dinghy",
+            type=reservable_type,
+            location=Locations.BASTION,
+            is_reservable=True,
+        )
+        self.boat_in_maintenance = Reservable.objects.create(
+            name="Kokmeeuw",
+            description="A dinghy",
+            type=reservable_type,
+            location=Locations.BASTION,
+            is_reservable=False,
+        )
+        self.params = {"start": "2030-06-01T10:00", "end": "2030-06-01T12:00"}
+
+    def check(self, reservable, url_path="check-availability"):
+        response = self.client.get(
+            f"/reservations/{url_path}",
+            {**self.params, "reservable": reservable.pk, "object_pk": 0},
+        )
+        self.assertEqual(response.status_code, 200)
+        return response.json()["available"]
+
+    def test_free_item_is_available(self):
+        self.assertTrue(self.check(self.free_boat))
+        self.assertTrue(self.check(self.free_boat, "update/check-availability"))
+
+    def test_item_in_maintenance_is_not_available(self):
+        self.assertFalse(self.check(self.boat_in_maintenance))
+        self.assertFalse(
+            self.check(self.boat_in_maintenance, "update/check-availability")
+        )

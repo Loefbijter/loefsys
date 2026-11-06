@@ -411,6 +411,10 @@ class EventOrganizer(TimeStampedModel):
         related_name="organizing_group",
         blank=True,
         verbose_name=_("groups"),
+        help_text=_(
+            "Groups are shown as organizers on the event page. Their members do "
+            "not see the participants' details: add those people as members below."
+        ),
     )
 
     user: models.ManyToManyField = models.ManyToManyField(
@@ -418,6 +422,11 @@ class EventOrganizer(TimeStampedModel):
         related_name="organizer",
         blank=True,
         verbose_name=_("members"),
+        help_text=_(
+            "These members can see the participants and their email addresses; "
+            "for trainings also their phone numbers and POD links. Only add the "
+            "people who need that."
+        ),
     )
 
     class Meta:
