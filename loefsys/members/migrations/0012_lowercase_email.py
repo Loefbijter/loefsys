@@ -26,7 +26,7 @@ def lowercase_emails(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("members", "0010_remove_userskippership_given_by"),
+        ("members", "0011_backfill_parent_skipperships"),
     ]
 
     operations = [

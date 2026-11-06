@@ -12,7 +12,7 @@ from loefsys.groups.models import Board
 from loefsys.groups.models.membership import GroupMembership
 
 lowercase_emails = import_module(
-    "loefsys.members.migrations.0011_lowercase_email"
+    "loefsys.members.migrations.0012_lowercase_email"
 ).lowercase_emails
 
 PERM = "events.change_event"
