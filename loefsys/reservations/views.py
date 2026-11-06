@@ -176,7 +176,9 @@ class ReservationCreateView(LoginRequiredMixin, CreateView):
         end = request.GET.get("end")
         reservable_id = request.GET.get("reservable")
 
-        if start < end:
+        if not Reservable.objects.filter(pk=reservable_id, is_reservable=True).exists():
+            available = False
+        elif start < end:
             conflicts = Reservation.objects.filter(reservable_id=reservable_id).filter(
                 Q(start__range=(start, end))
                 | Q(end__range=(start, end))
@@ -252,7 +254,9 @@ class ReservationUpdateView(LoginRequiredMixin, UpdateView):
         reservable_id = request.GET.get("reservable")
         object_pk = request.GET.get("object_pk")
 
-        if start < end:
+        if not Reservable.objects.filter(pk=reservable_id, is_reservable=True).exists():
+            available = False
+        elif start < end:
             conflicts = (
                 Reservation.objects.exclude(pk=object_pk)
                 .filter(reservable_id=reservable_id)
