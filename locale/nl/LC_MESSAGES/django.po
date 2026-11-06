@@ -109,6 +109,9 @@ msgstr "Actieve en recente reserveringen"
 msgid "Active exceptional membership"
 msgstr "Actief buitengewoon lidmaatschap"
 
+msgid "Active members"
+msgstr "Actieve leden"
+
 msgid "Active membership"
 msgstr "Actief lidmaatschap"
 
@@ -160,6 +163,10 @@ msgstr "Hele dag"
 
 msgid "Alumni"
 msgstr "Alumni"
+
+msgctxt "skippers page filter"
+msgid "Alumni"
+msgstr "Reünisten"
 
 msgid "Alumnus"
 msgstr "Alumnus"
@@ -793,6 +800,9 @@ msgstr "Toe te voegen lid"
 msgid "Member until"
 msgstr "Lid tot"
 
+msgid "Membership"
+msgstr "Lidmaatschap"
+
 msgid "Membership end"
 msgstr "Einde lidmaatschap"
 
@@ -952,6 +962,9 @@ msgstr "Deelnemers"
 
 msgid "Passive exceptional membership"
 msgstr "Passief buitengewoon lidmaatschap"
+
+msgid "Passive members"
+msgstr "Passieve leden"
 
 msgid "Passive membership"
 msgstr "Passief lidmaatschap"
@@ -1455,8 +1468,8 @@ msgstr "Training"
 msgid "Training: phone numbers and POD links visible"
 msgstr "Training: telefoonnummers en POD-links zichtbaar"
 
-msgid "Try another name or choose All."
-msgstr "Probeer een andere naam of kies Alle."
+msgid "Try another name, choose All or tick more membership types."
+msgstr "Probeer een andere naam, kies Alle of vink meer soorten leden aan."
 
 msgid "Type"
 msgstr "Type"
