@@ -10,11 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const viewButtons = document.querySelectorAll("[data-cal-view]");
   const phone = window.matchMedia("(max-width: 47.99rem)");
 
-  const source = () => ({
+  // Read the toggle on every fetch, so whatever the box shows is what is fetched.
+  const source = {
     url: el.dataset.eventsUrl,
     method: "GET",
-    extraParams: { show_birthdays: birthdays && birthdays.checked ? "1" : "0" },
-  });
+    extraParams: () => ({ show_birthdays: birthdays && birthdays.checked ? "1" : "0" }),
+  };
 
   // Times are always shown in Amsterdam time, wherever the viewer is. The event
   // filler sends Amsterdam wall-clock times and the calendar runs in that zone.
@@ -132,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
     dayMaxEventRows: 3,
     eventDisplay: "block",
     eventTimeFormat: { hour: "2-digit", minute: "2-digit", hour12: false },
-    events: source(),
+    events: source,
     datesSet: (info) => {
       if (title) title.textContent = info.view.title;
       viewButtons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.calView === info.view.type)));
@@ -149,8 +150,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("cal-next")?.addEventListener("click", () => calendar.next());
   document.getElementById("cal-today")?.addEventListener("click", () => calendar.today());
   viewButtons.forEach((b) => b.addEventListener("click", () => calendar.changeView(b.dataset.calView)));
-  birthdays?.addEventListener("change", () => {
-    calendar.getEventSources().forEach((s) => s.remove());
-    calendar.addEventSource(source());
-  });
+  birthdays?.addEventListener("change", () => calendar.refetchEvents());
 });

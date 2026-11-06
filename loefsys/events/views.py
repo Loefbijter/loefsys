@@ -1,6 +1,6 @@
 """Module defining the views for events."""
 
-from datetime import timedelta
+from datetime import date, timedelta
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -375,6 +375,42 @@ class EventFillerView(View):
             return "cat-other"
 
     @staticmethod
+    def requested_dates(request) -> tuple[date, date]:
+        """Return the first and last day the calendar asks events for.
+
+        FullCalendar sends ``start`` and ``end`` (exclusive) for the dates it shows.
+        Without them, fall back to the coming year. The range is capped at a year.
+        """
+        today = timezone.localdate()
+
+        def parse(value: str | None) -> date | None:
+            try:
+                return date.fromisoformat(value[:10]) if value else None
+            except ValueError:
+                return None
+
+        first = parse(request.GET.get("start")) or today
+        end = parse(request.GET.get("end"))
+        last = end - timedelta(days=1) if end else first + timedelta(days=364)
+        return first, min(max(first, last), first + timedelta(days=364))
+
+    @staticmethod
+    def birthdays_between(birthday: date, first: date, last: date) -> list[date]:
+        """Return the days from ``first`` to ``last`` that are ``birthday``.
+
+        In years without 29 February, a birthday on that day falls on 28 February.
+        """
+        days = []
+        for year in range(first.year, last.year + 1):
+            try:
+                day = birthday.replace(year=year)
+            except ValueError:
+                day = date(year, 2, 28)
+            if first <= day <= last:
+                days.append(day)
+        return days
+
+    @staticmethod
     def status(event) -> dict[str, str] | None:
         """Return the status chip for an event, like ``<c-event-status>`` shows it.
 
@@ -428,27 +464,27 @@ class EventFillerView(View):
             )
 
         if show_birthdays:
-            today = timezone.localdate()
+            first, last = self.requested_dates(request)
             user_model = get_user_model()
             for user in user_model.objects.filter(
                 birthday__isnull=False, show_birthday=True
             ):
                 if user.birthday is None:
                     continue
-                birthday_this_year = user.birthday.replace(year=today.year)
-                if birthday_this_year < today:
-                    birthday_this_year = user.birthday.replace(year=today.year + 1)
-
-                data.append(
-                    {
-                        "title": _("%(name)s - Birthday") % {"name": user.display_name},
-                        "start": birthday_this_year.isoformat(),
-                        "end": (birthday_this_year + timedelta(days=1)).isoformat(),
-                        "allDay": True,
-                        "url": reverse("members:profile", kwargs={"slug": user.slug}),
-                        "classNames": ["cat-birthday"],
-                    }
-                )
+                for day in self.birthdays_between(user.birthday, first, last):
+                    data.append(
+                        {
+                            "title": _("%(name)s - Birthday")
+                            % {"name": user.display_name},
+                            "start": day.isoformat(),
+                            "end": (day + timedelta(days=1)).isoformat(),
+                            "allDay": True,
+                            "url": reverse(
+                                "members:profile", kwargs={"slug": user.slug}
+                            ),
+                            "classNames": ["cat-birthday"],
+                        }
+                    )
 
         return JsonResponse(data, safe=False)
 
