@@ -18,6 +18,8 @@ from loefsys.events.models import (
     RegistrationFormField,
 )
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
+from loefsys.groups.models import Committee
+from loefsys.groups.models.membership import GroupMembership
 
 
 class EventDetailAttendeesTestCase(TestCase):
@@ -112,6 +114,44 @@ class EventFillerViewTestCase(TestCase):
 
         self.assertEqual(data[0]["start"], "2099-07-01T10:40:00")
         self.assertEqual(data[0]["end"], "2099-07-01T12:40:00")
+
+    def _filler_event(self, title, capacity=None, registration_open=True):
+        now = timezone.now()
+        start = now + timedelta(days=7)
+        opens = now + timedelta(days=1 if not registration_open else -1)
+        return G(
+            Event,
+            title=title,
+            start=start,
+            end=start + timedelta(hours=2),
+            capacity=capacity,
+            registration_start=opens,
+            registration_deadline=start - timedelta(days=1),
+            cancelation_deadline=start - timedelta(days=1),
+            published=True,
+        )
+
+    def test_event_filler_includes_status_chip(self):
+        """Each event says whether it is full or open, as on the home page."""
+        full = self._filler_event("Volle zeilmiddag", capacity=1)
+        G(EventRegistration, event=full, contact=G(get_user_model()))
+        G(
+            EventRegistration,
+            event=full,
+            contact=G(get_user_model()),
+            status=RegistrationStatus.QUEUED,
+        )
+        self._filler_event("Open borrel", capacity=5)
+        self._filler_event("Later open", registration_open=False)
+
+        data = self.client.get(reverse("events:event_filler")).json()
+        status = {entry["title"]: entry["status"] for entry in data}
+
+        self.assertEqual(status["Volle zeilmiddag"], {"kind": "bad", "label": "Vol"})
+        self.assertEqual(
+            status["Open borrel"], {"kind": "info", "label": "Inschrijving open"}
+        )
+        self.assertIsNone(status["Later open"])
 
     def test_event_filler_toggle_includes_only_public_birthdays(self):
         """Birthdays should stay hidden by default and require an explicit toggle."""
@@ -308,6 +348,37 @@ class MyEventsFeatureTestCase(TestCase):
             reverse("events:my_events_event", kwargs={"slug": self.event.slug})
         )
         self.assertEqual(response.status_code, 404)
+
+
+class OrganizerLinkOnEventPageTestCase(MyEventsFeatureTestCase):
+    """The event page links individual organizers to the participants page."""
+
+    def detail_url(self):
+        return reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+
+    def test_organizer_sees_link_to_participants_and_pods(self):
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertContains(response, self.detail_url())
+        self.assertContains(response, "Deelnemers en POD")
+
+    def test_other_members_see_no_link(self):
+        self.client.force_login(self.attendee)
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertNotContains(response, self.detail_url())
+
+    def test_members_of_an_organizing_group_get_no_access(self):
+        committee = G(Committee, name="Instructiecommissie", date_discontinuation=None)
+        self.event_organizer.groups.add(committee)
+        GroupMembership.objects.create(
+            user=self.attendee,
+            group=committee,
+            member_since=timezone.localdate() - timedelta(days=30),
+        )
+        self.client.force_login(self.attendee)
+        self.assertNotContains(
+            self.client.get(self.event.get_absolute_url()), self.detail_url()
+        )
+        self.assertEqual(self.client.get(self.detail_url()).status_code, 404)
 
 
 class MyEventFormResponsesTestCase(TestCase):

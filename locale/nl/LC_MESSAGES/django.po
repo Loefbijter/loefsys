@@ -109,6 +109,9 @@ msgstr "Actieve en recente reserveringen"
 msgid "Active exceptional membership"
 msgstr "Actief buitengewoon lidmaatschap"
 
+msgid "Active members"
+msgstr "Actieve leden"
+
 msgid "Active membership"
 msgstr "Actief lidmaatschap"
 
@@ -160,6 +163,10 @@ msgstr "Hele dag"
 
 msgid "Alumni"
 msgstr "Alumni"
+
+msgctxt "skippers page filter"
+msgid "Alumni"
+msgstr "Reünisten"
 
 msgid "Alumnus"
 msgstr "Alumnus"
@@ -617,6 +624,9 @@ msgstr "Groep"
 msgid "Groups"
 msgstr "Groepen"
 
+msgid "Groups are shown as organizers on the event page. Their members do not see the participants' details: add those people as members below."
+msgstr "Groepen staan als organisator op de eventpagina. Hun leden zien de gegevens van deelnemers niet: voeg die mensen hieronder toe als lid."
+
 #, python-format
 msgid "Hello %(name)s,"
 msgstr "Hallo %(name)s,"
@@ -651,6 +661,9 @@ msgstr "Als dit is aangevinkt, kunnen nieuwe leden aan deze commissie worden toe
 
 msgid "If you did not request this, please contact the site administrator."
 msgstr "Als je dit niet hebt aangevraagd, neem dan contact op met de sitebeheerder."
+
+msgid "In maintenance"
+msgstr "In onderhoud"
 
 msgid "In queue"
 msgstr "In wachtrij"
@@ -790,6 +803,9 @@ msgstr "Toe te voegen lid"
 msgid "Member until"
 msgstr "Lid tot"
 
+msgid "Membership"
+msgstr "Lidmaatschap"
+
 msgid "Membership end"
 msgstr "Einde lidmaatschap"
 
@@ -883,6 +899,9 @@ msgstr "Geen bestand gekozen"
 msgid "No photo chosen"
 msgstr "Geen foto gekozen"
 
+msgid "No qualified skipper matches your search"
+msgstr "Geen bevoegde schipper gevonden"
+
 msgid "No skipper selected"
 msgstr "Geen schipper geselecteerd"
 
@@ -944,8 +963,14 @@ msgstr "Bovenliggend schipperschap"
 msgid "Participants"
 msgstr "Deelnemers"
 
+msgid "Participants and PODs"
+msgstr "Deelnemers en POD's"
+
 msgid "Passive exceptional membership"
 msgstr "Passief buitengewoon lidmaatschap"
+
+msgid "Passive members"
+msgstr "Passieve leden"
 
 msgid "Passive membership"
 msgstr "Passief lidmaatschap"
@@ -1407,6 +1432,9 @@ msgstr "Er staat nog geen oud evenement in het archief."
 msgid "There are no registered participants for this event yet."
 msgstr "Er zijn nog geen geregistreerde deelnemers voor dit event."
 
+msgid "These members can see the participants and their email addresses; for trainings also their phone numbers and POD links. Only add the people who need that."
+msgstr "Deze leden zien de deelnemers en hun e-mailadressen; bij trainingen ook hun telefoonnummers en POD-links. Voeg alleen de mensen toe die dat nodig hebben."
+
 msgid "This activity is not published. Only the board and its organisers can see it."
 msgstr "Deze activiteit is niet gepubliceerd. Alleen het bestuur en de organisatoren kunnen haar zien."
 
@@ -1446,8 +1474,8 @@ msgstr "Training"
 msgid "Training: phone numbers and POD links visible"
 msgstr "Training: telefoonnummers en POD-links zichtbaar"
 
-msgid "Try another name or choose All."
-msgstr "Probeer een andere naam of kies Alle."
+msgid "Try another name, choose All or tick more membership types."
+msgstr "Probeer een andere naam, kies Alle of vink meer soorten leden aan."
 
 msgid "Type"
 msgstr "Type"
