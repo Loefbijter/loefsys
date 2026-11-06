@@ -883,6 +883,9 @@ msgstr "Geen bestand gekozen"
 msgid "No photo chosen"
 msgstr "Geen foto gekozen"
 
+msgid "No qualified skipper matches your search"
+msgstr "Geen bevoegde schipper gevonden"
+
 msgid "No skipper selected"
 msgstr "Geen schipper geselecteerd"
 
