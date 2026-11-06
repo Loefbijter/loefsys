@@ -35,8 +35,9 @@
             </div>
         </form>
         {% else %}
-        <p class="solo-text">{% translate "This link is invalid, possibly because it has already been used. Ask the web committee for a new password." %}</p>
+        <p class="solo-text">{% translate "This link is invalid, possibly because it has already been used or has expired. Request a new one below." %}</p>
         <div class="form-actions">
+            <a href="{% url 'members:reset-password' %}" class="btn btn-primary">{% translate "Request a new link" %}</a>
             <a href="{% url 'members:login' %}" class="btn btn-secondary">{% translate "Back to login" %}</a>
         </div>
         {% endif %}
