@@ -1,8 +1,9 @@
 """Module overriding ``makemessages`` with this project's defaults.
 
 The catalogue is edited on many branches at once, so it is written to change only
-when the translatable strings do: no source locations, no creation date, and the
-entries sorted by message id rather than by where they appear in the code.
+when the translatable strings do: no source locations, no creation date, the
+entries sorted by message id rather than by where they appear in the code, and no
+line wrapping, since different gettext versions wrap long strings differently.
 """
 
 import re
@@ -22,11 +23,12 @@ class Command(Base):
     msgattrib_options = [*Base.msgattrib_options, "--sort-output"]  # noqa: RUF012
 
     def add_arguments(self, parser):
-        """Make Dutch, no locations and no obsolete entries the defaults."""
+        """Make Dutch, no locations, no wrapping and no obsolete entries default."""
         super().add_arguments(parser)
         parser.set_defaults(
             locale=["nl"],
             no_location=True,
+            no_wrap=True,
             no_obsolete=True,
             ignore_patterns=["node_modules", ".venv"],
         )

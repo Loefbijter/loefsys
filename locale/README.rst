@@ -26,7 +26,8 @@ After adding or changing strings, update the Dutch catalogue::
     # fill in the new msgstr entries in locale/nl/LC_MESSAGES/django.po
 
 Commit ``django.po``. The project's ``makemessages`` defaults to Dutch, leaves out source
-locations, obsolete entries and the creation date, and sorts entries by message id, so the
+locations, obsolete entries and the creation date, doesn't wrap long lines (gettext
+versions wrap differently), and sorts entries by message id, so the
 file only changes when strings do. When two branches conflict in ``django.po``, keep the
 entries from both sides and run ``makemessages`` again to tidy up.
 
