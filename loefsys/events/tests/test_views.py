@@ -18,6 +18,8 @@ from loefsys.events.models import (
     RegistrationFormField,
 )
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
+from loefsys.groups.models import Committee
+from loefsys.groups.models.membership import GroupMembership
 
 
 class EventDetailAttendeesTestCase(TestCase):
@@ -346,6 +348,37 @@ class MyEventsFeatureTestCase(TestCase):
             reverse("events:my_events_event", kwargs={"slug": self.event.slug})
         )
         self.assertEqual(response.status_code, 404)
+
+
+class OrganizerLinkOnEventPageTestCase(MyEventsFeatureTestCase):
+    """The event page links individual organizers to the participants page."""
+
+    def detail_url(self):
+        return reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+
+    def test_organizer_sees_link_to_participants_and_pods(self):
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertContains(response, self.detail_url())
+        self.assertContains(response, "Deelnemers en POD")
+
+    def test_other_members_see_no_link(self):
+        self.client.force_login(self.attendee)
+        response = self.client.get(self.event.get_absolute_url())
+        self.assertNotContains(response, self.detail_url())
+
+    def test_members_of_an_organizing_group_get_no_access(self):
+        committee = G(Committee, name="Instructiecommissie", date_discontinuation=None)
+        self.event_organizer.groups.add(committee)
+        GroupMembership.objects.create(
+            user=self.attendee,
+            group=committee,
+            member_since=timezone.localdate() - timedelta(days=30),
+        )
+        self.client.force_login(self.attendee)
+        self.assertNotContains(
+            self.client.get(self.event.get_absolute_url()), self.detail_url()
+        )
+        self.assertEqual(self.client.get(self.detail_url()).status_code, 404)
 
 
 class MyEventFormResponsesTestCase(TestCase):

@@ -89,6 +89,10 @@ class EventDetailView(LoginRequiredMixin, DetailView):
             "show_registration_modal": self.request.GET.get("show_registration_modal")
             == "1",
             "organizer": organizer,
+            # Only individually added organizers see the participants' details.
+            "is_organizer": organizer is not None
+            and organizer.user.filter(pk=self.request.user.pk).exists(),
+            "is_training": self.object.category == EventCategories.TRAINING,
         }
 
     def post(self, request, *_args, **_kwargs):

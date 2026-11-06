@@ -624,6 +624,9 @@ msgstr "Groep"
 msgid "Groups"
 msgstr "Groepen"
 
+msgid "Groups are shown as organizers on the event page. Their members do not see the participants' details: add those people as members below."
+msgstr "Groepen staan als organisator op de eventpagina. Hun leden zien de gegevens van deelnemers niet: voeg die mensen hieronder toe als lid."
+
 #, python-format
 msgid "Hello %(name)s,"
 msgstr "Hallo %(name)s,"
@@ -959,6 +962,9 @@ msgstr "Bovenliggend schipperschap"
 
 msgid "Participants"
 msgstr "Deelnemers"
+
+msgid "Participants and PODs"
+msgstr "Deelnemers en POD's"
 
 msgid "Passive exceptional membership"
 msgstr "Passief buitengewoon lidmaatschap"
@@ -1428,6 +1434,9 @@ msgstr "Er staat nog geen oud evenement in het archief."
 
 msgid "There are no registered participants for this event yet."
 msgstr "Er zijn nog geen geregistreerde deelnemers voor dit event."
+
+msgid "These members can see the participants and their email addresses; for trainings also their phone numbers and POD links. Only add the people who need that."
+msgstr "Deze leden zien de deelnemers en hun e-mailadressen; bij trainingen ook hun telefoonnummers en POD-links. Voeg alleen de mensen toe die dat nodig hebben."
 
 msgid "This activity is not published. Only the board and its organisers can see it."
 msgstr "Deze activiteit is niet gepubliceerd. Alleen het bestuur en de organisatoren kunnen haar zien."
