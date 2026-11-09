@@ -180,3 +180,11 @@ class AdminHeaderLinkTestCase(TestCase):
         response = self.client.get(reverse("home:home"))
         # Once in the desktop header and once in the phone menu.
         self.assertContains(response, f'href="{self.admin_url}"', count=2)
+
+
+class AdminFaviconTestCase(TestCase):
+    """The admin has its own browser-tab icon: the logo with a wrench."""
+
+    def test_admin_pages_use_the_admin_icon(self):
+        response = self.client.get(reverse("admin:login"))
+        self.assertContains(response, "loefbijter-logo-admin.svg")
