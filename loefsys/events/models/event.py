@@ -217,6 +217,17 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     def __str__(self):
         return f"{self.title}"
 
+    def save(self, *args, **kwargs):
+        """Save the event and move queued registrations up if places opened up.
+
+        Raising or removing the capacity frees places, which go to the queue first
+        rather than to whoever registers next.
+        """
+        adding = self._state.adding
+        super().save(*args, **kwargs)
+        if not adding:
+            self.fill_from_queue()
+
     @property
     def url(self) -> str:
         """Url for the event."""
@@ -282,7 +293,9 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
 
         Queued registrations are activated in the order they were made, until the
         event is full again. When the event has no capacity limit (anymore), every
-        queued registration is activated. This runs when a registration is cancelled.
+        queued registration is activated. This runs whenever places may have opened
+        up: when a registration is cancelled and when the event is saved, for example
+        after its capacity was raised.
 
         Returns
         -------
