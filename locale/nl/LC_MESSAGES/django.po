@@ -708,7 +708,7 @@ msgid "Left"
 msgstr "Links"
 
 msgid "Leisure"
-msgstr "Ontspanning"
+msgstr "Gezelligheid"
 
 msgid "Lichting"
 msgstr "Lichting"
