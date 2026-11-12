@@ -10,7 +10,7 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
 )
 from django.urls import include, path, re_path, reverse_lazy
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import RedirectView
 from django.views.i18n import set_language
 from django.views.static import serve
 
@@ -43,14 +43,6 @@ urlpatterns = [
             template_name="registration/reset_complete.html"
         ),
         name="password_reset_complete",
-    ),
-    # Simple top-level page shown when password reset is disabled
-    path(
-        "reset-disabled/",
-        login_not_required(
-            TemplateView.as_view(template_name="registration/reset_disabled.html")
-        ),
-        name="reset-disabled",
     ),
     path("", include("loefsys.home.urls"), name="home"),
     path("", include("loefsys.members.urls", namespace="members")),

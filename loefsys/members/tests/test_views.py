@@ -1,4 +1,7 @@
+import re
+
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import translation
@@ -157,3 +160,79 @@ class UserProfileViewTestCase(TestCase):
         self.assertEqual(profile_response.status_code, 200)
         self.assertNotContains(profile_response, pod_kb_link)
         self.assertNotContains(profile_response, pod_zb_link)
+
+
+class PasswordResetTestCase(TestCase):
+    """Members can reset a forgotten password through a link sent by email."""
+
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            "sanne.kiel@example.com",
+            "oud-wachtwoord",
+            first_name="Sanne",
+            last_name="Kiel",
+        )
+
+    def reset_path(self) -> str:
+        """Return the path of the reset link in the last email sent."""
+        link = re.search(r"https?://[^/\s]+(/reset/\S+/)", str(mail.outbox[-1].body))
+        assert link is not None
+        return link.group(1)
+
+    def test_login_page_links_to_reset_form(self):
+        response = self.client.get(reverse("login"))
+        self.assertContains(response, reverse("members:reset-password"))
+
+    def test_reset_form_is_public(self):
+        response = self.client.get(reverse("members:reset-password"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_unknown_address_sends_nothing_but_looks_the_same(self):
+        response = self.client.post(
+            reverse("members:reset-password"), {"email": "niemand@example.com"}
+        )
+        self.assertRedirects(response, reverse("members:reset-password-done"))
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_reset_link_sets_new_password(self):
+        response = self.client.post(
+            reverse("members:reset-password"), {"email": "Sanne.Kiel@Example.com"}
+        )
+        self.assertRedirects(response, reverse("members:reset-password-done"))
+        self.assertEqual(len(mail.outbox), 1)
+        message = mail.outbox[0]
+        self.assertEqual(message.to, ["sanne.kiel@example.com"])
+        self.assertIn("Loefsys", message.subject)
+        self.assertNotIn("oud-wachtwoord", message.body)
+
+        response = self.client.get(self.reset_path(), follow=True)
+        self.assertContains(response, "new_password1")
+
+        set_password_url = response.redirect_chain[-1][0]
+        response = self.client.post(
+            set_password_url,
+            {
+                "new_password1": "nieuw-Wachtw00rd!",
+                "new_password2": "nieuw-Wachtw00rd!",
+            },
+        )
+        self.assertRedirects(response, reverse("password_reset_complete"))
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password("nieuw-Wachtw00rd!"))
+
+    def test_used_link_is_rejected(self):
+        self.client.post(
+            reverse("members:reset-password"), {"email": "sanne.kiel@example.com"}
+        )
+        path = self.reset_path()
+        response = self.client.get(path, follow=True)
+        self.client.post(
+            response.redirect_chain[-1][0],
+            {
+                "new_password1": "nieuw-Wachtw00rd!",
+                "new_password2": "nieuw-Wachtw00rd!",
+            },
+        )
+        response = self.client.get(path, follow=True)
+        self.assertContains(response, reverse("members:reset-password"))
+        self.assertNotContains(response, "new_password1")
