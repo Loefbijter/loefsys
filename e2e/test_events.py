@@ -1,6 +1,7 @@
 """Finding activities and registering for them. Spec: e2e/specs/events.md."""
 
 import re
+from datetime import timedelta
 
 import pytest
 from django.utils import timezone
@@ -150,6 +151,37 @@ def test_times_are_dutch_from_abroad(
     page.goto(live_server.url + event.get_absolute_url())
     expect(registration_button(page)).to_contain_text(opens)
     context.close()
+
+
+def test_birthdays_stay_on_when_switching_views(member_page, live_server):
+    """EVT-15: shown birthdays stay in every view, also earlier this week."""
+    today = timezone.localdate()
+    monday = today - timedelta(days=today.weekday())
+    for first_name, day in (("Joris", monday), ("Floor", monday + timedelta(days=6))):
+        factories.make_user(
+            f"{first_name.lower()}.jarig@example.org",
+            first_name,
+            "Jarigsma",
+            birthday=day.replace(year=1999),
+            show_birthday=True,
+        )
+    page = member_page
+    birthdays = page.locator("#calendar .cat-birthday").filter(visible=True)
+    toggle = page.locator("#cal-birthdays-toggle")
+
+    page.goto(f"{live_server.url}/events/")
+    expect(page.locator("#calendar")).to_be_visible()
+    expect(birthdays).to_have_count(0)
+
+    toggle.check()
+    for view in ("listMonth", "timeGridWeek", "dayGridMonth", "timeGridWeek"):
+        page.locator(f"[data-cal-view={view}]").click()
+        expect(toggle).to_be_checked()
+        expect(birthdays.filter(has_text="Joris Jarigsma")).to_have_count(1)
+        expect(birthdays.filter(has_text="Floor Jarigsma")).to_have_count(1)
+
+    toggle.uncheck()
+    expect(birthdays).to_have_count(0)
 
 
 def test_unpublished_event_is_not_found(member_page, live_server):

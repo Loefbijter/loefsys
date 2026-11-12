@@ -17,6 +17,7 @@ from loefsys.members.models.choices import DisplayNamePreferences
 
 from .address import Address
 from .choices import Genders
+from .fields import LowercaseEmailField
 
 if TYPE_CHECKING:
     from .membership import Membership, MembershipQuerySet
@@ -174,7 +175,7 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         if self.picture:
             self.picture.delete(save=False)
 
-    email = models.EmailField(unique=True, verbose_name=_("Email address"))
+    email = LowercaseEmailField(unique=True, verbose_name=_("Email address"))
 
     slug = RandomCharField(length=8, unique=True)
 

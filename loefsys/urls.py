@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth.views import (
     LoginView,
     PasswordResetCompleteView,
@@ -10,12 +11,15 @@ from django.contrib.auth.views import (
 )
 from django.urls import include, path, re_path, reverse_lazy
 from django.views.generic import RedirectView
+from django.views.i18n import set_language
+from django.views.static import serve
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     # There is no CommonMiddleware, so APPEND_SLASH does not redirect /admin.
     path("admin", RedirectView.as_view(url="/admin/", permanent=True)),
-    path("i18n/", include("django.conf.urls.i18n")),
+    # Public, so visitors can pick a language before logging in.
+    path("i18n/setlang/", login_not_required(set_language), name="set_language"),
     # Provide a top-level named login URL to support templates using {% url 'login' %}.
     path(
         "login/",
@@ -48,7 +52,19 @@ urlpatterns = [
 ]
 
 if settings.DEBUG and settings.BROWSER_RELOAD_ENABLED:
-    urlpatterns.append(path("__reload__/", include("django_browser_reload.urls")))
+    from django_browser_reload.views import events
+
+    urlpatterns.append(
+        path(
+            "__reload__/",
+            include(
+                (
+                    [path("events/", login_not_required(events), name="events")],
+                    "django_browser_reload",
+                )
+            ),
+        )
+    )
 
 if settings.DEBUG:
     from debug_toolbar.toolbar import debug_toolbar_urls
@@ -59,4 +75,8 @@ handler404 = "django.views.defaults.page_not_found"
 handler500 = "django.views.defaults.server_error"
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        view=login_not_required(serve),
+        document_root=settings.MEDIA_ROOT,
+    )

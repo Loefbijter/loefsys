@@ -1,5 +1,6 @@
 """Urls of the members app."""
 
+from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.urls import include, path, reverse_lazy
 from django.views.generic import TemplateView
@@ -45,7 +46,9 @@ urlpatterns = [
     ),
     path(
         "reset-password/done/",
-        TemplateView.as_view(template_name="registration/reset_done.html"),
+        login_not_required(
+            TemplateView.as_view(template_name="registration/reset_done.html")
+        ),
         name="reset-password-done",
     ),
     path("profiles/", include(urlpatterns_profiles)),
