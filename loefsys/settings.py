@@ -99,9 +99,9 @@ MIDDLEWARE += [
     "loefsys.core.i18n.LanguageMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    # Require login for anonymous users across most pages. Public paths are
-    # whitelisted separately.
-    "loefsys.core.middleware.RequireLoginMiddleware",
+    # Every view requires login, except views marked with @login_not_required.
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
+    "loefsys.core.middleware.NoStoreForAuthenticatedMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
