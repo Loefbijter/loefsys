@@ -217,6 +217,17 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
     def __str__(self):
         return f"{self.title}"
 
+    def save(self, *args, **kwargs):
+        """Save the event and move queued registrations up if places opened up.
+
+        Raising or removing the capacity frees places, which go to the queue first
+        rather than to whoever registers next.
+        """
+        adding = self._state.adding
+        super().save(*args, **kwargs)
+        if not adding:
+            self.fill_from_queue()
+
     @property
     def url(self) -> str:
         """Url for the event."""
@@ -277,28 +288,32 @@ class Event(TitleSlugDescriptionModel, TimeStampedModel):
         deadline = self.cancelation_deadline or self.start
         return deadline < timezone.now()
 
-    def process_cancellation(self) -> None:
-        """Process the side effects for an event of a cancellation.
+    def fill_from_queue(self) -> None:
+        """Move queued registrations up while there are places available.
+
+        Queued registrations are activated in the order they were made, until the
+        event is full again. When the event has no capacity limit (anymore), every
+        queued registration is activated. This runs whenever places may have opened
+        up: when a registration is cancelled and when the event is saved, for example
+        after its capacity was raised.
 
         Returns
         -------
         None
         """
-        if not self.mandatory_registration():
+        queued = self.eventregistration_set.queued().order_by("created")
+        if self.mandatory_registration():
+            # mandatory_registration() ensures capacity is non-null and > 0,
+            # make that explicit for static type checkers.
+            assert self.capacity is not None
+            num_available = self.capacity - self.eventregistration_set.active().count()
+            if num_available <= 0:
+                return
+            queued = queued[:num_available]
+
+        objs = list(queued)
+        if not objs:
             return
-
-        # mandatory_registration() ensures capacity is non-null and > 0,
-        # make that explicit for static type checkers.
-        assert self.capacity is not None
-
-        num_active = self.eventregistration_set.active().count()
-        num_queued = self.eventregistration_set.queued().count()
-        if not num_queued or num_active >= self.capacity:
-            return
-
-        num_available = self.capacity - num_active
-        num_to_add = min(num_available, num_queued)
-        objs = self.eventregistration_set.queued().order_by("created")[:num_to_add]
         modified = timezone.now()
         for obj in objs:
             obj.status = RegistrationStatus.ACTIVE
