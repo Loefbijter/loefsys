@@ -21,7 +21,6 @@ class LoginRequiredTestCase(TestCase):
             "members:login",
             "members:reset-password",
             "members:reset-password-done",
-            "reset-disabled",
             "password_reset_complete",
         ):
             with self.subTest(name=name):

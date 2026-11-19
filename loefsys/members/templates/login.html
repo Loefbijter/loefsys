@@ -16,7 +16,7 @@
         <form method="post" class="form-stack">
             {% csrf_token %}
             {{ form }}
-            <c-link href="{% url 'reset-disabled' %}">{% translate "Forgot your password?" %}</c-link>
+            <c-link href="{% url 'members:reset-password' %}">{% translate "Forgot your password?" %}</c-link>
             <div class="form-actions">
                 <c-button type="submit">{% translate "Log in" %}</c-button>
             </div>

@@ -46,11 +46,12 @@ def test_member_logs_out_from_profile(member_page, live_server):
     expect(page).to_have_url(re.compile(r"/login/"))
 
 
-def test_password_reset_points_to_web_committee(page, live_server):
-    """AUTH-5: "forgot password" explains how to get a new password."""
+def test_password_reset_link_opens_request_form(page, live_server):
+    """AUTH-5: "forgot password" opens the form to request a reset link."""
     page.goto(f"{live_server.url}/login/")
     page.get_by_role(
         "link", name=re.compile(r"(Wachtwoord vergeten|Forgot)", re.I)
     ).click()
 
-    expect(page).to_have_url(re.compile(r"/reset-disabled/"))
+    expect(page).to_have_url(re.compile(r"/reset-password/"))
+    expect(page.get_by_role("textbox")).to_be_visible()

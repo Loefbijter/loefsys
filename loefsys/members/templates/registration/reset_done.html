@@ -10,7 +10,7 @@
     <img class="solo-logo" src="{% static 'loefbijter-logo.svg' %}" alt="{% translate 'Loefbijter logo' %}" />
     <c-panel>
         <h1 class="solo-title">{% translate "Email sent" %}</h1>
-        <p class="solo-text">{% blocktranslate trimmed %}An email has been sent with instructions to reset your password. Check your inbox (and spam folder).{% endblocktranslate %}</p>
+        <p class="solo-text">{% blocktranslate trimmed %}If an account exists for this email address, we have sent it a link to reset your password. Check your inbox (and spam folder).{% endblocktranslate %}</p>
         <div class="form-actions">
             <a href="{% url 'members:login' %}" class="btn btn-secondary">{% translate "Back to login" %}</a>
         </div>

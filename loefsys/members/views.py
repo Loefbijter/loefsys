@@ -4,18 +4,14 @@ import logging
 from typing import ClassVar
 
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, update_session_auth_hash
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
 from django.http import HttpRequest
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _, gettext_lazy
-from django.views.generic import DetailView, FormView, TemplateView, UpdateView
+from django.views.generic import DetailView, FormView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
 from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
@@ -190,87 +186,3 @@ class UserSetPasswordView(LoginRequiredMixin, FormView):
         update_session_auth_hash(self.request, self.request.user)
         messages.success(self.request, _("Password updated successfully."))
         return super().form_valid(form)
-
-
-class PasswordResetByEmailForm(forms.Form):
-    """Simple form asking for the user's email address."""
-
-    email = forms.EmailField(label=gettext_lazy("Email address"))
-
-
-class PasswordResetByEmailView(FormView):
-    """Let a user request a temporary password by entering their email.
-
-    If the email corresponds to a user account, generate a temporary password,
-    set it on the user, save, and email the temporary password to the user.
-
-    The response page is the same whether or not an account was found to avoid
-    leaking which emails are registered.
-    """
-
-    template_name = "registration/reset_form.html"
-    form_class = PasswordResetByEmailForm
-    success_url = reverse_lazy("members:reset-password-done")
-
-    def form_valid(self, form):
-        """Process the password-reset form and email temporary passwords.
-
-        The success response is shown regardless of whether an account was
-        found to avoid leaking registered addresses.
-        """
-        email = form.cleaned_data["email"].strip()
-        user_model = get_user_model()
-        users = user_model.objects.filter(email__iexact=email)
-
-        # Always show success page, but only send email if user exists.
-        if users.exists():
-            for user in users:
-                # Generate a reasonably strong temporary password
-                temp_password = get_random_string(12)
-                user.set_password(temp_password)
-                user.save()
-
-                # Send the temporary password via email using the project's template
-                subject = _("Temporary password - Loefsys")
-                from_email = (
-                    getattr(settings, "DEFAULT_FROM_EMAIL", None)
-                    or getattr(settings, "SERVER_EMAIL", None)
-                    or "no-reply@example.com"
-                )
-                context = {
-                    "user": user,
-                    "temp_password": temp_password,
-                    "protocol": self.request.scheme,
-                    "domain": self.request.get_host(),
-                }
-                message = render_to_string(
-                    "registration/password_reset_email.html", context
-                )
-                try:
-                    send_mail(
-                        subject, message, from_email, [user.email], fail_silently=False
-                    )
-                    # If using the file backend, log where the file should be written
-                    logger.info(
-                        "Password reset email sent to %s (backend=%s)",
-                        user.email,
-                        getattr(settings, "EMAIL_BACKEND", ""),
-                    )
-                except Exception:
-                    # Log the error so failures are visible during development/ops.
-                    # Still show the generic success page to the user.
-                    logger.exception(
-                        "Failed to send password reset email to %s", user.email
-                    )
-
-        messages.success(
-            self.request,
-            _("If the given email address exists, a temporary password has been sent."),
-        )
-        return super().form_valid(form)
-
-
-class PasswordResetDoneView(TemplateView):
-    """Page shown after a password-reset request is processed."""
-
-    template_name = "registration/reset_done.html"
