@@ -6,7 +6,7 @@ from django.utils import timezone
 from django_dynamic_fixture import G
 
 from loefsys.events.models import Event, EventRegistration
-from loefsys.events.models.choices import EventCategories
+from loefsys.events.models.choices import EventCategories, RegistrationStatus
 from loefsys.events.models.event import EventOrganizer
 
 
@@ -81,3 +81,71 @@ class EventRegistrationTestCase(TestCase):
         )
         self.assertIsNotNone(registration)
         self.assertIsNotNone(registration.pk)
+
+
+class EventQueueTestCase(TestCase):
+    """The queue catches up when places open up on an event."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.event = G(
+            Event,
+            capacity=2,
+            start=now + timedelta(days=30),
+            end=now + timedelta(days=30, hours=3),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=20),
+            cancelation_deadline=now + timedelta(days=20),
+        )
+        self.registrations = [
+            G(EventRegistration, event=self.event, added_by_organizer=False)
+            for _ in range(5)
+        ]
+
+    def statuses(self):
+        return [
+            EventRegistration.objects.get(pk=registration.pk).status
+            for registration in self.registrations
+        ]
+
+    def test_full_event_queues_the_rest(self):
+        self.assertEqual(
+            self.statuses(),
+            [RegistrationStatus.ACTIVE] * 2 + [RegistrationStatus.QUEUED] * 3,
+        )
+
+    def test_raising_capacity_activates_queue_in_order(self):
+        self.event.capacity = 4
+        self.event.save()
+        self.assertEqual(
+            self.statuses(),
+            [RegistrationStatus.ACTIVE] * 4 + [RegistrationStatus.QUEUED],
+        )
+
+    def test_new_registration_after_raise_is_queued_behind_waiting_members(self):
+        self.event.capacity = 3
+        self.event.save()
+        late = G(EventRegistration, event=self.event, added_by_organizer=False)
+        self.assertEqual(late.status, RegistrationStatus.QUEUED)
+        self.assertEqual(late.get_queue_position, 3)
+
+    def test_removing_capacity_activates_whole_queue(self):
+        self.event.capacity = None
+        self.event.save()
+        self.assertEqual(self.statuses(), [RegistrationStatus.ACTIVE] * 5)
+
+    def test_lowering_capacity_keeps_active_registrations(self):
+        self.event.capacity = 1
+        self.event.save()
+        self.assertEqual(
+            self.statuses(),
+            [RegistrationStatus.ACTIVE] * 2 + [RegistrationStatus.QUEUED] * 3,
+        )
+
+    def test_cancellation_activates_first_in_queue(self):
+        self.registrations[0].cancel()
+        statuses = self.statuses()
+        self.assertEqual(
+            statuses[1:],
+            [RegistrationStatus.ACTIVE] * 2 + [RegistrationStatus.QUEUED] * 2,
+        )

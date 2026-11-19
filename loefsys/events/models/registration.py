@@ -222,4 +222,4 @@ class EventRegistration(TimeStampedModel):
             ).delete()
 
             self.save()
-            self.event.process_cancellation()
+            self.event.fill_from_queue()
