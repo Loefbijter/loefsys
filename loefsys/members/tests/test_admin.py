@@ -112,3 +112,46 @@ class MembershipInlineTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'name="membership_set-0-membership_type"')
+
+
+class CurrentMembershipFilterTestCase(TestCase):
+    """The user list filters on the type of today's membership."""
+
+    def setUp(self):
+        admin_user = G(get_user_model(), email="beheer@example.com", is_superuser=True)
+        self.client.force_login(admin_user)
+        self.make("actief@example.com", MembershipTypes.ACTIVE, date(2023, 9, 1))
+        self.make("reunist@example.com", MembershipTypes.ALUMNUS, date(2024, 9, 1))
+        # Was active until last year: only the ended membership exists.
+        old = self.make("vroeger@example.com", MembershipTypes.ACTIVE, date(2019, 9, 1))
+        old.membership_set.update(end=date(2020, 8, 31))
+
+    def make(self, email, membership_type, start):
+        user = G(get_user_model(), email=email)
+        Membership.objects.create(
+            member=user, membership_type=membership_type, start=start
+        )
+        return user
+
+    def changelist(self, query):
+        return self.client.get(reverse("admin:members_user_changelist") + query)
+
+    def test_filter_on_alumnus(self):
+        response = self.changelist(f"?membership={MembershipTypes.ALUMNUS.value}")
+        self.assertContains(response, "reunist@example.com")
+        self.assertNotContains(response, "actief@example.com")
+        self.assertNotContains(response, "vroeger@example.com")
+
+    def test_filter_on_no_current_membership(self):
+        response = self.changelist("?membership=none")
+        self.assertContains(response, "vroeger@example.com")
+        self.assertContains(response, "beheer@example.com")
+        self.assertNotContains(response, "reunist@example.com")
+
+    def test_list_shows_current_membership(self):
+        response = self.changelist("?membership=0")
+        self.assertContains(
+            response,
+            '<td class="field-current_membership_type">Actief lidmaatschap</td>',
+            html=True,
+        )

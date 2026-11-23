@@ -893,6 +893,9 @@ msgstr "Geen antwoord"
 msgid "No boat or room chosen yet"
 msgstr "Nog geen boot of ruimte gekozen"
 
+msgid "No current membership"
+msgstr "Geen huidig lidmaatschap"
+
 msgid "No events to show"
 msgstr "Geen evenementen om te tonen"
 
@@ -1616,6 +1619,9 @@ msgstr "ZB POD-link"
 
 msgid "created"
 msgstr "aangemaakt"
+
+msgid "current membership"
+msgstr "huidig lidmaatschap"
 
 msgid "dd-mm-yyyy"
 msgstr "dd-mm-jjjj"

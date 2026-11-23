@@ -3,7 +3,7 @@
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.db.models import Exists, OuterRef
+from django.db.models import Exists, OuterRef, Subquery
 from django.db.utils import OperationalError
 from django.forms import BaseInlineFormSet, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
@@ -12,6 +12,7 @@ from loefsys.admin_helpers import ExportableModelAdmin
 from loefsys.privacy import pseudonymize_users
 
 from .models import Membership, Skippership, User, UserSkippership
+from .models.choices import MembershipTypes
 from .models.membership import validate_has_overlap
 from .skipperships import backfill_required_skipperships
 
@@ -119,6 +120,31 @@ class AdminPermissionFilter(admin.SimpleListFilter):
         return queryset
 
 
+class CurrentMembershipFilter(admin.SimpleListFilter):
+    """Filter users on the type of the membership that applies today."""
+
+    title = _("current membership")
+    parameter_name = "membership"
+
+    def lookups(self, _request, _model_admin):
+        """Return the membership types, and an option for no current membership."""
+        return [
+            *((str(value), label) for value, label in MembershipTypes.choices),
+            ("none", _("No current membership")),
+        ]
+
+    def queryset(self, _request, queryset):
+        """Return the users whose current membership matches the selected option."""
+        match self.value():
+            case None:
+                return queryset
+            case "none":
+                return queryset.filter(current_membership_type__isnull=True)
+            case value if value.isdigit():
+                return queryset.filter(current_membership_type=int(value))
+        return queryset
+
+
 @admin.register(User)
 class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
     """Admin class for the User model."""
@@ -197,8 +223,20 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
         (_("Groups"), {"fields": ("groups",)}),
     )
 
-    list_display = ("email", "first_name", "last_name", "has_admin_permission")
-    list_filter = (AdminPermissionFilter, "is_superuser", "is_active", "groups")
+    list_display = (
+        "email",
+        "first_name",
+        "last_name",
+        "current_membership_type",
+        "has_admin_permission",
+    )
+    list_filter = (
+        CurrentMembershipFilter,
+        AdminPermissionFilter,
+        "is_superuser",
+        "is_active",
+        "groups",
+    )
     search_fields = ("email", "first_name", "last_name")
     ordering = ("email",)
     filter_horizontal = ("groups", "user_permissions")
@@ -210,19 +248,32 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
         """Return whether the user was given the Admin permission directly."""
         return user.has_admin_permission
 
+    @admin.display(description=_("Membership"), ordering="current_membership_type")
+    def current_membership_type(self, user):
+        """Return the type of the membership that applies today."""
+        if user.current_membership_type is None:
+            return None
+        return MembershipTypes(user.current_membership_type).label
+
     def get_queryset(self, request):
-        """Annotate whether each user holds the Admin permission directly."""
+        """Annotate the current membership and the Admin permission of each user."""
         return (
             super()
             .get_queryset(request)
             .annotate(
+                current_membership_type=Subquery(
+                    Membership.objects.current()
+                    .filter(member=OuterRef("pk"))
+                    .order_by("-start")
+                    .values("membership_type")[:1]
+                ),
                 has_admin_permission=Exists(
                     User.user_permissions.through.objects.filter(
                         user=OuterRef("pk"),
                         permission__codename="access_admin",
                         permission__content_type__app_label="members",
                     )
-                )
+                ),
             )
         )
 
