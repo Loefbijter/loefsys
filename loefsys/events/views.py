@@ -568,11 +568,16 @@ class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
         """Return context with event details and attendees."""
         context = super().get_context_data(**kwargs)
         context["event_page_url"] = self.object.get_absolute_url()
-        context["attendees"] = (
-            self.object.eventregistration_set.active()
-            .select_related("contact", "event")
-            .prefetch_related(*FORM_RESPONSE_PREFETCH)
-        )
+        registrations = self.object.eventregistration_set
+
+        def with_details(queryset):
+            return queryset.select_related("contact", "event").prefetch_related(
+                *FORM_RESPONSE_PREFETCH
+            )
+
+        context["attendees"] = with_details(registrations.active())
+        # Same order as Event.fill_from_queue, so position 1 is the next one in.
+        context["queue"] = with_details(registrations.queued().order_by("created"))
         context["has_form"] = self.object.has_form_fields
         context["event_categories"] = EventCategories
         context["training_event"] = self.object.category == EventCategories.TRAINING

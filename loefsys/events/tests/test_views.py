@@ -529,6 +529,89 @@ class MyEventFormResponsesTestCase(TestCase):
         self.assertContains(response, "Ada Antwoord")
 
 
+class OrganizerQueueTestCase(TestCase):
+    """The organiser's event page lists the queue in the order it moves up."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.organizer = G(get_user_model())
+        self.event = G(
+            Event,
+            title="Volle borrel",
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=6),
+            cancelation_deadline=now + timedelta(days=6),
+            category=EventCategories.LEISURE,
+            capacity=1,
+            published=True,
+        )
+        organizer = G(EventOrganizer, event=self.event)
+        organizer.user.add(self.organizer)
+        self.client.force_login(self.organizer)
+        self.url = reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+
+    def register(self, first_name):
+        """Register a new member the way they would sign up themselves."""
+        return EventRegistration.objects.create(
+            event=self.event,
+            contact=G(get_user_model(), first_name=first_name, last_name="Wachter"),
+            added_by_organizer=False,
+        )
+
+    def test_queue_is_listed_in_order_with_positions(self):
+        self.register("Pim")
+        first = self.register("Fenna")
+        second = self.register("Gijs")
+        # Saving out of order shows the queue follows sign-up time, not the pk.
+        EventRegistration.objects.filter(pk=first.pk).update(
+            created=second.created + timedelta(minutes=1)
+        )
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(
+            [r.contact.first_name for r in response.context["queue"]], ["Gijs", "Fenna"]
+        )
+        self.assertEqual(
+            [r.contact.first_name for r in response.context["attendees"]], ["Pim"]
+        )
+        self.assertContains(response, "Wachtrij")
+        self.assertContains(response, "Plek 1")
+        self.assertContains(response, "Plek 2")
+        content = response.content.decode()
+        self.assertLess(content.index("Gijs Wachter"), content.index("Fenna Wachter"))
+
+    def test_queue_shows_form_answers(self):
+        field = G(
+            RegistrationFormField,
+            event=self.event,
+            subject="Dieetwensen",
+            type=RegistrationFormField.TEXT_FIELD,
+        )
+        self.register("Pim")
+        queued = self.register("Fenna")
+        field.set_value_for(queued, "Vegetarisch")
+
+        response = self.client.get(self.url)
+
+        self.assertContains(response, '<details class="fold">', count=2)
+        self.assertContains(response, "Vegetarisch")
+
+    def test_empty_queue(self):
+        self.register("Pim")
+        response = self.client.get(self.url)
+        self.assertContains(response, "Er staat niemand in de wachtrij.")
+
+    def test_no_queue_without_capacity(self):
+        self.event.capacity = None
+        self.event.save()
+        self.register("Pim")
+        response = self.client.get(self.url)
+        self.assertNotContains(response, "Wachtrij")
+
+
 class RegistrationFormDraftEventTestCase(TestCase):
     """The registration form must not be reachable for draft events."""
 
