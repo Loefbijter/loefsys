@@ -1,0 +1,47 @@
+{% load i18n event_ui %}
+{% url 'members:profile' slug=registration.contact.slug as profile_url %}
+{% if has_form or training_event %}
+  <details class="fold">
+    <summary class="row">
+      <c-avatar :user="registration.contact" />
+      <div class="row-body">
+        <div class="row-title">{{ registration.contact.display_name }}</div>
+        <div class="row-meta">
+          <span>{{ registration.contact.email }}</span>
+          {% if registration.contact.lichting %}<span>{{ registration.contact.lichting }}</span>{% endif %}
+        </div>
+      </div>
+      <div class="row-end"><i class="bi bi-chevron-down fold-icon" aria-hidden="true"></i></div>
+    </summary>
+    <div class="fold-body">
+      {% if has_form %}
+        <dl class="kv answers">
+          {% for field, value in registration.form_fields %}
+            <dt>{{ field.subject }}</dt>
+            <dd>{% with text=value|answer %}{% if text %}{{ text }}{% else %}<span class="answer-empty">{% translate "No answer" %}</span>{% endif %}{% endwith %}</dd>
+          {% endfor %}
+        </dl>
+      {% endif %}
+      {% if training_event %}
+        {% translate "Not available" as not_available %}
+        <dl class="kv">
+          <dt>{% translate "Phone" %}</dt>
+          <dd>{{ registration.contact.phone_number|default:not_available }}</dd>
+          <dt>{% translate "POD links" %}</dt>
+          <dd class="badges">
+            {% if registration.contact.pod_kb_link %}
+              <a href="{{ registration.contact.pod_kb_link }}" target="_blank" rel="noreferrer noopener" class="btn btn-secondary btn-sm">KB POD</a>
+            {% endif %}
+            {% if registration.contact.pod_zb_link %}
+              <a href="{{ registration.contact.pod_zb_link }}" target="_blank" rel="noreferrer noopener" class="btn btn-secondary btn-sm">ZB POD</a>
+            {% endif %}
+            {% if not registration.contact.pod_kb_link and not registration.contact.pod_zb_link %}{{ not_available }}{% endif %}
+          </dd>
+        </dl>
+      {% endif %}
+      <a href="{{ profile_url }}" class="btn btn-ghost btn-sm fold-link">{% translate "View profile" %} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+    </div>
+  </details>
+{% else %}
+  <c-person-row :user="registration.contact" :href="profile_url" sub="{{ registration.contact.email }}" />
+{% endif %}
