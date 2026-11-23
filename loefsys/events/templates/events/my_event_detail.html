@@ -16,9 +16,9 @@
     <div class="col">
       <c-panel title="{% translate 'Participants' %}" icon="person-check" count="{{ attendees|length }}" class="participants">
         <c-slot name="action">
-          {% if has_form and attendees or has_form and queue %}
+          {% if has_form %}{% if attendees or queue %}
             <button type="button" class="btn btn-ghost btn-sm" data-fold-all data-label-open="{% translate 'Show all answers' %}" data-label-close="{% translate 'Hide all answers' %}">{% translate "Show all answers" %}</button>
-          {% endif %}
+          {% endif %}{% endif %}
         </c-slot>
         {% if training_event %}
           <p><c-chip kind="info" icon="mortarboard">{% translate "Training: phone numbers and POD links visible" %}</c-chip></p>
@@ -87,7 +87,7 @@
   </div>
 </div>
 
-{% if has_form and attendees or has_form and queue %}
+{% if has_form %}{% if attendees or queue %}
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const button = document.querySelector('[data-fold-all]');
@@ -105,5 +105,5 @@
       folds.forEach(function (fold) { fold.addEventListener('toggle', update); });
     });
   </script>
-{% endif %}
+{% endif %}{% endif %}
 {% endblock %}
