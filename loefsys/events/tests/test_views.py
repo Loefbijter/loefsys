@@ -20,6 +20,8 @@ from loefsys.events.models import (
 from loefsys.events.models.choices import EventCategories, RegistrationStatus
 from loefsys.groups.models import Committee
 from loefsys.groups.models.membership import GroupMembership
+from loefsys.members.models import Membership
+from loefsys.members.models.choices import MembershipTypes
 
 
 class EventDetailAttendeesTestCase(TestCase):
@@ -688,3 +690,79 @@ class DraftEventVisibilityTestCase(TestCase):
         response = self.client.get(reverse("events:event_filler"))
         entries = {entry["title"]: entry for entry in response.json()}
         self.assertFalse(entries["Geheime conceptactiviteit"]["published"])
+
+
+class MyEventReunistTagTestCase(TestCase):
+    """Organizers see which participants are reünisten (alumni today)."""
+
+    def setUp(self):
+        now = timezone.now()
+        self.organizer = G(get_user_model())
+        self.event = G(
+            Event,
+            title="Reünie",
+            start=now + timedelta(days=7),
+            end=now + timedelta(days=7, hours=2),
+            registration_start=now - timedelta(days=1),
+            registration_deadline=now + timedelta(days=6),
+            cancelation_deadline=now + timedelta(days=6),
+            category=EventCategories.LEISURE,
+            published=True,
+        )
+        G(EventOrganizer, event=self.event).user.add(self.organizer)
+        today = timezone.localdate()
+        for first_name, membership_type, start in [
+            ("Otto", MembershipTypes.ALUMNUS, today - timedelta(days=30)),
+            ("Lotte", MembershipTypes.ACTIVE, today - timedelta(days=30)),
+            # Becomes alumnus next month: not a reünist yet.
+            ("Pim", MembershipTypes.ALUMNUS, today + timedelta(days=30)),
+        ]:
+            user = G(get_user_model(), first_name=first_name, last_name="Test")
+            Membership.objects.create(
+                member=user, membership_type=membership_type, start=start
+            )
+            G(EventRegistration, event=self.event, contact=user)
+        self.client.force_login(self.organizer)
+        self.url = reverse("events:my_events_event", kwargs={"slug": self.event.slug})
+
+    def reunisten(self, response):
+        return {
+            registration.contact.first_name
+            for registration in response.context["attendees"]
+            if registration.contact_is_reunist
+        }
+
+    def test_only_current_alumni_are_tagged(self):
+        response = self.client.get(self.url)
+        self.assertEqual(self.reunisten(response), {"Otto"})
+        self.assertContains(response, "Reünist", count=1)
+
+    def test_queued_reunist_is_tagged(self):
+        # Full: the three participants fill it, so the next one is queued.
+        self.event.capacity = 3
+        self.event.save()
+        user = G(get_user_model(), first_name="Wim", last_name="Wachter")
+        Membership.objects.create(
+            member=user,
+            membership_type=MembershipTypes.ALUMNUS,
+            start=timezone.localdate() - timedelta(days=30),
+        )
+        G(
+            EventRegistration,
+            event=self.event,
+            contact=user,
+            status=RegistrationStatus.QUEUED,
+        )
+        response = self.client.get(self.url)
+        queued = {
+            r.contact.first_name: r.contact_is_reunist
+            for r in response.context["queue"]
+        }
+        self.assertEqual(queued, {"Wim": True})
+        self.assertContains(response, "Reünist", count=2)
+
+    def test_tag_in_fold_out_rows(self):
+        G(RegistrationFormField, event=self.event, subject="Dieetwensen")
+        response = self.client.get(self.url)
+        self.assertContains(response, '<details class="fold">', count=3)
+        self.assertContains(response, "Reünist", count=1)

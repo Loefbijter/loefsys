@@ -171,6 +171,10 @@ msgstr "Reünisten"
 msgid "Alumnus"
 msgstr "Alumnus"
 
+msgctxt "membership tag"
+msgid "Alumnus"
+msgstr "Reünist"
+
 msgid "An email has been sent with instructions to reset your password. Check your inbox (and spam folder)."
 msgstr "Er is een e-mail gestuurd met instructies om je wachtwoord opnieuw in te stellen. Controleer je inbox (en spammap)."
 
@@ -435,9 +439,6 @@ msgstr "Beschrijf de nieuwe schade"
 
 msgid "Description"
 msgstr "Beschrijving"
-
-msgid "Designates whether this user should be treated as active."
-msgstr "Bepaalt of deze gebruiker als actief wordt beschouwd."
 
 msgid "Details"
 msgstr "Gegevens"
@@ -815,6 +816,9 @@ msgstr "Begin lidmaatschap"
 msgid "Membership type"
 msgstr "Soort lidmaatschap"
 
+msgid "Memberships can't overlap: one must end before the next starts."
+msgstr "Lidmaatschappen mogen niet overlappen: het ene moet eindigen voordat het volgende begint."
+
 msgid "Menu"
 msgstr "Menu"
 
@@ -889,6 +893,9 @@ msgstr "Geen antwoord"
 
 msgid "No boat or room chosen yet"
 msgstr "Nog geen boot of ruimte gekozen"
+
+msgid "No current membership"
+msgstr "Geen huidig lidmaatschap"
 
 msgid "No events to show"
 msgstr "Geen evenementen om te tonen"
@@ -1505,6 +1512,9 @@ msgstr "Onbekend"
 msgid "Unpublished"
 msgstr "Niet gepubliceerd"
 
+msgid "Untick to disable this user: they can no longer log in. This is separate from their membership type."
+msgstr "Vink uit om deze gebruiker uit te schakelen: ze kunnen dan niet meer inloggen. Dit staat los van het soort lidmaatschap."
+
 msgid "Until"
 msgstr "Tot"
 
@@ -1519,6 +1529,9 @@ msgstr "Bijgewerkt op"
 
 msgid "User"
 msgstr "Gebruiker"
+
+msgid "User active"
+msgstr "Gebruiker actief"
 
 msgid "User details"
 msgstr "Gebruikersgegevens"
@@ -1614,6 +1627,9 @@ msgstr "ZB POD-link"
 msgid "created"
 msgstr "aangemaakt"
 
+msgid "current membership"
+msgstr "huidig lidmaatschap"
+
 msgid "dd-mm-yyyy"
 msgstr "dd-mm-jjjj"
 
@@ -1640,6 +1656,12 @@ msgstr "laatst gewijzigd"
 
 msgid "members"
 msgstr "leden"
+
+msgid "membership"
+msgstr "lidmaatschap"
+
+msgid "memberships"
+msgstr "lidmaatschappen"
 
 msgid "modified"
 msgstr "gewijzigd"

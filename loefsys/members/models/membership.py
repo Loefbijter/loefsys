@@ -71,8 +71,14 @@ class Membership(models.Model):
 
     objects = MembershipQuerySet.as_manager()
 
+    class Meta:
+        """Meta options for the Membership model."""
+
+        verbose_name = _("membership")
+        verbose_name_plural = _("memberships")
+
     def __str__(self):
-        return f"Membership {self.membership_type} for {self.member.display_name}"
+        return f"{self.get_membership_type_display()}: {self.member.display_name}"
 
     def clean(self):
         """Run validation on the model."""
@@ -80,6 +86,11 @@ class Membership(models.Model):
 
         if self.end and self.end < self.start:
             raise ValidationError({"end": _("End date can't be before start date.")})
+
+        # The admin inline checks overlap across all its rows at once, since rows
+        # can be moved and added in one save. A new user has no rows yet either.
+        if getattr(self, "overlap_checked_by_formset", False) or self.member_id is None:
+            return
 
         memberships = self.member.membership_set.all()
         if validate_has_overlap(self, memberships):
@@ -115,7 +126,7 @@ def validate_has_overlap(
     """
     max_date = date(MAXYEAR, 12, 31)
     for other in memberships:
-        if to_check.pk == other.pk:
+        if other is to_check or (to_check.pk is not None and to_check.pk == other.pk):
             continue
 
         last_start = max(to_check.start, other.start)
