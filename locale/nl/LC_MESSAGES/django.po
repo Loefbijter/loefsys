@@ -1513,7 +1513,7 @@ msgid "Unpublished"
 msgstr "Niet gepubliceerd"
 
 msgid "Untick to disable this user: they can no longer log in. This is separate from their membership type."
-msgstr "Vink uit om deze gebruiker uit te schakelen: die kan dan niet meer inloggen. Dit staat los van het soort lidmaatschap."
+msgstr "Vink uit om deze gebruiker uit te schakelen: ze kunnen dan niet meer inloggen. Dit staat los van het soort lidmaatschap."
 
 msgid "Until"
 msgstr "Tot"
