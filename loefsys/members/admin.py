@@ -2,7 +2,7 @@
 
 from django.contrib import admin, messages
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Exists, OuterRef
 from django.db.utils import OperationalError
 from django.forms import BaseInlineFormSet, ModelMultipleChoiceField
@@ -11,7 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from loefsys.admin_helpers import ExportableModelAdmin
 from loefsys.privacy import pseudonymize_users
 
-from .models import Skippership, User, UserSkippership
+from .models import Membership, Skippership, User, UserSkippership
+from .models.membership import validate_has_overlap
 from .skipperships import backfill_required_skipperships
 
 
@@ -43,6 +44,46 @@ class UserSkippershipInline(admin.TabularInline):
     formset = UserSkippershipFormSet
     extra = 1
     autocomplete_fields = ("skippership",)
+
+
+class MembershipFormSet(BaseInlineFormSet):
+    """Formset that checks the user's memberships don't overlap each other.
+
+    The rows are checked against each other as submitted, so a membership can be
+    ended and its follow-up added in the same save.
+    """
+
+    def add_fields(self, form, index):
+        """Leave the overlap check of each row to the formset."""
+        super().add_fields(form, index)
+        form.instance.overlap_checked_by_formset = True
+
+    def clean(self):
+        """Raise an error when two of the kept rows overlap."""
+        super().clean()
+        checked: list[Membership] = []
+        for form in self.forms:
+            data = getattr(form, "cleaned_data", None)
+            if not data or data.get("DELETE") or not data.get("start"):
+                continue
+            membership = Membership(
+                pk=form.instance.pk, start=data["start"], end=data.get("end")
+            )
+            if validate_has_overlap(membership, checked):
+                raise ValidationError(
+                    _("Memberships can't overlap: one must end before the next starts.")
+                )
+            checked.append(membership)
+
+
+class MembershipInline(admin.TabularInline):
+    """Inline admin for a user's membership periods and their types."""
+
+    model = Membership
+    formset = MembershipFormSet
+    extra = 0
+    fields = ("membership_type", "start", "end")
+    ordering = ("start",)
 
 
 class SkippershipUserInline(admin.TabularInline):
@@ -82,7 +123,7 @@ class AdminPermissionFilter(admin.SimpleListFilter):
 class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
     """Admin class for the User model."""
 
-    inlines = (UserSkippershipInline,)
+    inlines = (MembershipInline, UserSkippershipInline)
 
     actions = (*getattr(BaseUserAdmin, "actions", ()), "pseudonymize_selected")
 
