@@ -60,6 +60,9 @@ intersphinx_disabled_reftypes = []
 
 autodoc_typehints = "both"
 autodoc_member_order = "bysource"
+# celery.contrib.sphinx needs the pre-Sphinx 9 autodoc and otherwise turns this on
+# itself with a warning.
+autodoc_use_legacy_class_based = True
 
 # -- Options for Napoleon ----------------------------------------------------
 
