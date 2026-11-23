@@ -38,7 +38,7 @@ dev = [
     "django-browser-reload>=1.21.0",
     "django-debug-toolbar>=8.0.0",
     "django-dynamic-fixture>=4.0.1",
-    "django-stubs>=5.1.2",
+    "django-stubs>=5.2.7,<6",
     "mypy>=2.4.1",
     "playwright==1.63.*",
     "pre-commit>=4.1.0",
