@@ -920,6 +920,9 @@ msgstr "Geen aankomende evenementen."
 msgid "Nobody has signed up yet."
 msgstr "Nog niemand ingeschreven."
 
+msgid "Nobody is in the queue."
+msgstr "Er staat niemand in de wachtrij."
+
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
@@ -1020,6 +1023,10 @@ msgstr "Beschrijf de nieuwe schade als je aangeeft dat er nieuwe schade is."
 msgid "Please use the format <street> <number>"
 msgstr "Gebruik het formaat <straat> <huisnummer>"
 
+#, python-format
+msgid "Position %(position)s"
+msgstr "Plek %(position)s"
+
 msgid "Postal code"
 msgstr "Postcode"
 
@@ -1056,6 +1063,9 @@ msgstr "Geselecteerde gebruikers pseudonimiseren"
 
 msgid "Published"
 msgstr "Gepubliceerd"
+
+msgid "Queue"
+msgstr "Wachtrij"
 
 msgid "Quick set (adjusts the end time automatically):"
 msgstr "Snel instellen (past de eindtijd automatisch aan):"
@@ -1548,6 +1558,9 @@ msgstr "Wat was de windkracht? (Bft)"
 
 msgid "When"
 msgstr "Wanneer"
+
+msgid "When a place opens up, the member at position 1 moves up to the participants."
+msgstr "Komt er een plek vrij, dan schuift wie op plek 1 staat door naar de deelnemers."
 
 msgid "When an item is unavailable for reservation, due to maintenance for example, set this to false."
 msgstr "Zet dit uit wanneer een item niet gereserveerd kan worden, bijvoorbeeld vanwege onderhoud."

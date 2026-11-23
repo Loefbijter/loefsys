@@ -16,7 +16,7 @@
     <div class="col">
       <c-panel title="{% translate 'Participants' %}" icon="person-check" count="{{ attendees|length }}" class="participants">
         <c-slot name="action">
-          {% if has_form and attendees %}
+          {% if has_form and attendees or has_form and queue %}
             <button type="button" class="btn btn-ghost btn-sm" data-fold-all data-label-open="{% translate 'Show all answers' %}" data-label-close="{% translate 'Hide all answers' %}">{% translate "Show all answers" %}</button>
           {% endif %}
         </c-slot>
@@ -34,6 +34,21 @@
           <c-empty-state icon="person-plus" title="{% translate 'There are no registered participants for this event yet.' %}" />
         {% endif %}
       </c-panel>
+
+      {% if queue or event.capacity %}
+        <c-panel title="{% translate 'Queue' %}" icon="hourglass-split" count="{{ queue|length }}" class="queue">
+          {% if queue %}
+            <p class="text-sm text-muted">{% translate "When a place opens up, the member at position 1 moves up to the participants." %}</p>
+            <div class="rows">
+              {% for registration in queue %}
+                {% include 'events/includes/organizer_registration_row.html' with position=forloop.counter %}
+              {% endfor %}
+            </div>
+          {% else %}
+            <c-empty-state icon="hourglass" title="{% translate 'Nobody is in the queue.' %}" />
+          {% endif %}
+        </c-panel>
+      {% endif %}
     </div>
 
     <div class="col">
@@ -49,6 +64,10 @@
           {% endif %}
           <dt>{% translate "Registrations" %}</dt>
           <dd>{% if event.capacity %}{{ attendees|length }} / {{ event.capacity }}{% else %}{{ attendees|length }}{% endif %}</dd>
+          {% if queue %}
+            <dt>{% translate "Queue" %}</dt>
+            <dd>{{ queue|length }}</dd>
+          {% endif %}
         </dl>
       </c-panel>
 
@@ -68,7 +87,7 @@
   </div>
 </div>
 
-{% if has_form and attendees %}
+{% if has_form and attendees or has_form and queue %}
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const button = document.querySelector('[data-fold-all]');
