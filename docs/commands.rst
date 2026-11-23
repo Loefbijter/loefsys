@@ -20,9 +20,26 @@ Project-specific Commands
 
     uv run ruff check
 
-* Run the mypy typechecker::
+* Run the mypy typechecker (checks the whole ``loefsys`` package, like CI)::
 
-    uv run mypy -p loefsys
+    uv run mypy
+
+* Run the end-to-end browser tests (see ``e2e/README.md``)::
+
+    uv run playwright install chromium  # once
+    uv run pytest e2e
+
+* Update the Dutch translation catalogue after adding or changing strings (see ``locale/README.rst``)::
+
+    uv run manage.py makemessages
+
+* Compile the translations (``runserver`` and the tests do this automatically)::
+
+    uv run manage.py compilemessages
+
+* Wipe the database and fill it with invented test data (refuses to run without ``LOEFSYS_ALLOW_RESET=true``)::
+
+    LOEFSYS_ALLOW_RESET=true uv run manage.py reset_staging
 
 * Generate docs locally::
 
@@ -52,6 +69,10 @@ See `django-admin <https://docs.djangoproject.com/en/5.2/ref/django-admin/>` for
 
     uv run manage.py runserver
 
-* Start the Tailwind CSS development server::
+* Start the Tailwind CSS watcher::
 
     uv run manage.py tailwind
+
+* Build the minified stylesheet once, without watching::
+
+    uv run manage.py tailwind --minify
