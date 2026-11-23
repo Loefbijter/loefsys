@@ -440,9 +440,6 @@ msgstr "Beschrijf de nieuwe schade"
 msgid "Description"
 msgstr "Beschrijving"
 
-msgid "Designates whether this user should be treated as active."
-msgstr "Bepaalt of deze gebruiker als actief wordt beschouwd."
-
 msgid "Details"
 msgstr "Gegevens"
 
@@ -1515,6 +1512,9 @@ msgstr "Onbekend"
 msgid "Unpublished"
 msgstr "Niet gepubliceerd"
 
+msgid "Untick to disable this user: they can no longer log in. This is separate from their membership type."
+msgstr "Vink uit om deze gebruiker uit te schakelen: die kan dan niet meer inloggen. Dit staat los van het soort lidmaatschap."
+
 msgid "Until"
 msgstr "Tot"
 
@@ -1529,6 +1529,9 @@ msgstr "Bijgewerkt op"
 
 msgid "User"
 msgstr "Gebruiker"
+
+msgid "User active"
+msgstr "Gebruiker actief"
 
 msgid "User details"
 msgstr "Gebruikersgegevens"

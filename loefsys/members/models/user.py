@@ -180,9 +180,12 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
     slug = RandomCharField(length=8, unique=True)
 
     is_active = models.BooleanField(
-        _("Active"),
+        _("User active"),
         default=True,
-        help_text=_("Designates whether this user should be treated as active."),
+        help_text=_(
+            "Untick to disable this user: they can no longer log in. This is "
+            "separate from their membership type."
+        ),
     )
 
     first_name = models.CharField(max_length=64, verbose_name=_("First name"))
