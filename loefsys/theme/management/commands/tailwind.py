@@ -21,7 +21,12 @@ class Command(BaseCommand):
 
     def handle(self, *_: tuple[Any, ...], **options: dict[str, object]) -> None:
         """Perform the actual logic of the command."""
-        args = ["-i", settings.TAILWIND_INPUT_CSS, "-o", settings.TAILWIND_OUTPUT_CSS]
+        args = [
+            "-i",
+            str(settings.TAILWIND_INPUT_CSS),
+            "-o",
+            str(settings.TAILWIND_OUTPUT_CSS),
+        ]
         if options["minify"]:
             args += ["--minify"]
         if options["watch"] or not options["minify"]:
