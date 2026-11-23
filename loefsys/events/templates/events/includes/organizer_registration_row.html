@@ -8,6 +8,7 @@
         <div class="row-title">{{ registration.contact.display_name }}</div>
         <div class="row-meta">
           {% if position %}<span><i class="bi bi-hourglass-split" aria-hidden="true"></i> {% blocktranslate trimmed %}Position {{ position }}{% endblocktranslate %}</span>{% endif %}
+          {% if registration.contact_is_reunist %}{% include "events/includes/reunist_chip.html" %}{% endif %}
           <span>{{ registration.contact.email }}</span>
           {% if registration.contact.lichting %}<span>{{ registration.contact.lichting }}</span>{% endif %}
         </div>
@@ -51,12 +52,13 @@
         <div class="row-title">{{ registration.contact.display_name }}</div>
         <div class="row-meta">
           <span><i class="bi bi-hourglass-split" aria-hidden="true"></i> {% blocktranslate trimmed %}Position {{ position }}{% endblocktranslate %}</span>
+          {% if registration.contact_is_reunist %}{% include "events/includes/reunist_chip.html" %}{% endif %}
           <span>{{ registration.contact.email }}</span>
         </div>
       </div>
       <div class="row-end"><i class="bi bi-chevron-right" aria-hidden="true"></i></div>
     </a>
   {% else %}
-    <c-person-row :user="registration.contact" :href="profile_url" sub="{{ registration.contact.email }}" />
+    <c-person-row :user="registration.contact" :href="profile_url" sub="{{ registration.contact.email }}">{% if registration.contact_is_reunist %}{% include "events/includes/reunist_chip.html" %}{% endif %}</c-person-row>
   {% endif %}
 {% endif %}

@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.db.models import Count, Q
+from django.db.models import Count, Exists, OuterRef, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -19,6 +19,8 @@ from loefsys.core.http_user_type_hint import AuthenticatedHttpRequest
 from loefsys.core.templatetags.formatters import euro
 from loefsys.events.exceptions import NoUserObjectError
 from loefsys.events.models.feed_token import FeedToken
+from loefsys.members.models import Membership
+from loefsys.members.models.choices import MembershipTypes
 
 from .exceptions import RegistrationError
 from .forms import EventFieldsForm
@@ -551,6 +553,14 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
         return context
 
 
+#: Whether a registration's contact is a reünist: an alumnus today.
+REUNIST = Exists(
+    Membership.objects.current().filter(
+        member=OuterRef("contact"), membership_type=MembershipTypes.ALUMNUS
+    )
+)
+
+
 class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
     """View for organizers to inspect their own event registrations."""
 
@@ -571,8 +581,10 @@ class MyEventOrganizerDetailView(LoginRequiredMixin, DetailView):
         registrations = self.object.eventregistration_set
 
         def with_details(queryset):
-            return queryset.select_related("contact", "event").prefetch_related(
-                *FORM_RESPONSE_PREFETCH
+            return (
+                queryset.select_related("contact", "event")
+                .prefetch_related(*FORM_RESPONSE_PREFETCH)
+                .annotate(contact_is_reunist=REUNIST)
             )
 
         context["attendees"] = with_details(registrations.active())

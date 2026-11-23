@@ -171,6 +171,10 @@ msgstr "Reünisten"
 msgid "Alumnus"
 msgstr "Alumnus"
 
+msgctxt "membership tag"
+msgid "Alumnus"
+msgstr "Reünist"
+
 msgid "An email has been sent with instructions to reset your password. Check your inbox (and spam folder)."
 msgstr "Er is een e-mail gestuurd met instructies om je wachtwoord opnieuw in te stellen. Controleer je inbox (en spammap)."
 
