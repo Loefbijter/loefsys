@@ -1074,7 +1074,7 @@ requires-dist = [
     { name = "python-dateutil", specifier = ">=2.8.2" },
     { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "starmerge", specifier = ">=0.2.0" },
-    { name = "user-agent-parser", specifier = ">=0.1.6" },
+    { name = "user-agent-parser", specifier = ">=0.2.1" },
     { name = "whitenoise", specifier = ">=6.8.2" },
 ]
 
@@ -2133,11 +2133,11 @@ wheels = [
 
 [[package]]
 name = "user-agent-parser"
-version = "0.1.6"
+version = "0.2.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ad/4a/d9849ab469efdaf85aec74cbf5c4423475db8d77ecb84d6c6f385a5324ba/user_agent_parser-0.1.6.tar.gz", hash = "sha256:e7dccab408e4e375e265df7ddd56fb07c41e2c04469fd7454849f4d10282c656", size = 18922, upload-time = "2025-05-20T03:48:33.409Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e8/ed/360b8323db5f863a073475d267ba5932985b68494c3f9c1efd6475f5ab47/user_agent_parser-0.2.1.tar.gz", hash = "sha256:74e0ff532a08dc753ab0e5d6eb687720e33ee65d4c2c9436451150f247d3ae19", size = 34931, upload-time = "2026-03-18T13:09:59.162Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c3/6e/4de80520e794b6dda9543c28f44c0e6fb1eb6af89c670621db32cc331a37/user_agent_parser-0.1.6-py3-none-any.whl", hash = "sha256:a6941990daa4e30d08e06b5f3bfacf4f73d7e6c65126f9de86fe454b873ec7f6", size = 18572, upload-time = "2025-05-20T03:48:31.903Z" },
+    { url = "https://files.pythonhosted.org/packages/96/c4/7b758cc99f9005b185596321c32a71c472675e40d77a57762110816d5d80/user_agent_parser-0.2.1-py3-none-any.whl", hash = "sha256:26dbde53923fa17cff18d8d96d5f0450cdac6f5e5e29ab59774cb1178b671520", size = 35268, upload-time = "2026-03-18T13:10:00.461Z" },
 ]
 
 [[package]]
