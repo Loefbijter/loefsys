@@ -4,6 +4,8 @@ Staging and production run as two Coolify applications on one server. GitHub Act
 builds the image and pushes it to GHCR, then calls the application's Coolify deploy
 webhook (`.github/workflows/deploy-staging.yml` and `deploy-production.yml`).
 
+The server is an AWS instance (3.123.52.81, usually set up as the `loef` SSH host) running Coolify 4.7.6. Its dashboard is at https://coolify.loefbijter.nl.
+
 | | Staging | Production |
 |---|---|---|
 | Deploys | every push to `main` | every published GitHub release |
@@ -27,10 +29,25 @@ Environment variables, on top of the database URL from the Coolify Postgres reso
 ```
 DJANGO_SECRET_KEY=            # different on each
 DJANGO_DEBUG=false
-DJANGO_ALLOWED_HOSTS=staging.loefbijter.nl
-DJANGO_CSRF_TRUSTED_ORIGINS=https://staging.loefbijter.nl
+DJANGO_ALLOWED_HOSTS=staging.loefbijter.nl                   # app.loefbijter.nl on production
+DJANGO_CSRF_TRUSTED_ORIGINS=https://staging.loefbijter.nl    # https://app.loefbijter.nl on production
 DJANGO_SECURE_SSL_REDIRECT=true
 ```
+
+Production only, to send email over SMTP:
+
+```
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DJANGO_EMAIL_HOST=
+DJANGO_EMAIL_PORT=587         # the default
+DJANGO_EMAIL_HOST_USER=
+DJANGO_EMAIL_HOST_PASSWORD=
+DJANGO_EMAIL_USE_TLS=true     # the default
+```
+
+Without `DJANGO_EMAIL_BACKEND`, Django writes each email to a file in the container
+instead of sending it, so password resets and notifications never arrive. As of
+2026-11-24 these variables are not set on production yet.
 
 Staging only:
 
@@ -63,7 +80,19 @@ Each GitHub environment (`staging`, `production`) has two secrets:
   (`https://<coolify>/api/v1/deploy?uuid=<uuid>&force=false`).
 - `COOLIFY_TOKEN`: a Coolify API token with the `deploy` permission (**Keys & Tokens**).
 
+The `production` environment has a required-reviewers protection rule (repository
+**Settings → Environments → production**). Both jobs of the production workflow, the
+image build and the deploy, wait until a reviewer approves the run in GitHub Actions.
+
+Publishing a release again fires the production workflow again. Moving a release's tag
+turns the release into a draft, and publishing that draft starts a new production run:
+reject or cancel it if you did not mean to deploy that release.
+
 ## Backups
 
-The production Postgres resource has a daily scheduled backup in Coolify. Staging has
-none, since its data is invented and rebuilt on every deploy.
+The production Postgres resource has a scheduled backup in Coolify every day at 03:00 server time.
+Staging has none, since its data is invented and rebuilt on every deploy.
+
+The backups are stored on the server only: no S3 storage is configured, so losing the
+server loses the backups with it. Before risky work on the server, take a manual backup
+and copy it somewhere else.
