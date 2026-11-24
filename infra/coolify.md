@@ -90,5 +90,9 @@ reject or cancel it if you did not mean to deploy that release.
 
 ## Backups
 
-The production Postgres resource has a daily scheduled backup in Coolify. Staging has
-none, since its data is invented and rebuilt on every deploy.
+The production Postgres resource has a scheduled backup in Coolify every day at 03:00 server time.
+Staging has none, since its data is invented and rebuilt on every deploy.
+
+The backups are stored on the server only: no S3 storage is configured, so losing the
+server loses the backups with it. Before risky work on the server, take a manual backup
+and copy it somewhere else.
