@@ -4,6 +4,8 @@ Staging and production run as two Coolify applications on one server. GitHub Act
 builds the image and pushes it to GHCR, then calls the application's Coolify deploy
 webhook (`.github/workflows/deploy-staging.yml` and `deploy-production.yml`).
 
+The server is an AWS instance (3.123.52.81, usually set up as the `loef` SSH host) running Coolify 4.7.6. Its dashboard is at https://coolify.loefbijter.nl.
+
 | | Staging | Production |
 |---|---|---|
 | Deploys | every push to `main` | every published GitHub release |
@@ -62,6 +64,14 @@ Each GitHub environment (`staging`, `production`) has two secrets:
 - `COOLIFY_WEBHOOK_URL`: the application's deploy webhook, from its **Webhooks** tab
   (`https://<coolify>/api/v1/deploy?uuid=<uuid>&force=false`).
 - `COOLIFY_TOKEN`: a Coolify API token with the `deploy` permission (**Keys & Tokens**).
+
+The `production` environment has a required-reviewers protection rule (repository
+**Settings → Environments → production**). Both jobs of the production workflow, the
+image build and the deploy, wait until a reviewer approves the run in GitHub Actions.
+
+Publishing a release again fires the production workflow again. Moving a release's tag
+turns the release into a draft, and publishing that draft starts a new production run:
+reject or cancel it if you did not mean to deploy that release.
 
 ## Backups
 
