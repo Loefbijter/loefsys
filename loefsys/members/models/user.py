@@ -155,11 +155,6 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         accounts too. However, it is possible that no phone number is available for
         ex-members, so the field should take into account empty values too.
     picture : ~django.db.models.fields.files.ImageFieldFile
-    note : str
-        A note field that are only visible to active board members.
-
-        For guest accounts, a note can provide information for which purpose this
-        account exists. For members, incidents can potentially be tracked.
     """
 
     def user_upload_directory(self):
@@ -264,9 +259,6 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
             "Paste the link to your ZB POD (Google Sheets) so it can be edited."
         ),
     )
-
-    # TODO: Refactor
-    note = models.TextField(blank=True, verbose_name=_("Note"))
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"

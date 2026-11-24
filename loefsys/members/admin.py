@@ -194,7 +194,6 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
                     "pod_kb_link",
                     "pod_zb_link",
                     "picture",
-                    "note",
                 )
             },
         ),
@@ -215,7 +214,6 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
                     "phone_number",
                     "pod_kb_link",
                     "pod_zb_link",
-                    "note",
                 )
             },
         ),

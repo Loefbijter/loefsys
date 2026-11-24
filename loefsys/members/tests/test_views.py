@@ -112,7 +112,6 @@ class UserProfileViewTestCase(TestCase):
                 "gender": user.gender,
                 "birthday": "12-05-1999",
                 "show_birthday": user.show_birthday,
-                "note": user.note,
             },
         )
 
@@ -143,7 +142,6 @@ class UserProfileViewTestCase(TestCase):
                 "gender": user.gender,
                 "birthday": user.birthday or "",
                 "show_birthday": user.show_birthday,
-                "note": user.note,
             },
         )
 
@@ -157,3 +155,14 @@ class UserProfileViewTestCase(TestCase):
         self.assertEqual(profile_response.status_code, 200)
         self.assertNotContains(profile_response, pod_kb_link)
         self.assertNotContains(profile_response, pod_zb_link)
+
+    def test_profile_edit_page_does_not_offer_note(self):
+        """Members can't see or set a note on their profile."""
+        user = G(get_user_model())
+        self.client.force_login(user)
+
+        response = self.client.get(reverse("members:user-profile-edit"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("note", response.context["form"].fields)
+        self.assertNotContains(response, 'name="note"')

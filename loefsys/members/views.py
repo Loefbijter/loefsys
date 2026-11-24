@@ -58,7 +58,6 @@ class UserProfileEditForm(forms.ModelForm):
             "gender",
             "birthday",
             "show_birthday",
-            "note",
         ]
 
 

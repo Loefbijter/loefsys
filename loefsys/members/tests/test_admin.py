@@ -1,4 +1,5 @@
 from datetime import date
+from io import BytesIO
 from typing import Any
 
 from django.contrib.auth import get_user_model
@@ -6,6 +7,7 @@ from django.forms import inlineformset_factory
 from django.test import TestCase
 from django.urls import reverse
 from django_dynamic_fixture import G
+from openpyxl import load_workbook
 
 from loefsys.members.admin import MembershipFormSet
 from loefsys.members.models import Membership
@@ -155,3 +157,32 @@ class CurrentMembershipFilterTestCase(TestCase):
             '<td class="field-current_membership_type">Actief lidmaatschap</td>',
             html=True,
         )
+
+
+class UserNoteRemovedTestCase(TestCase):
+    """The user admin and its export have no note."""
+
+    def setUp(self):
+        self.admin_user = G(get_user_model(), is_superuser=True, is_active=True)
+        self.member = G(get_user_model(), email="lid@example.com")
+        self.client.force_login(self.admin_user)
+
+    def test_change_page_has_no_note(self):
+        response = self.client.get(
+            reverse("admin:members_user_change", args=[self.member.pk])
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'name="note"')
+
+    def test_add_page_has_no_note(self):
+        response = self.client.get(reverse("admin:members_user_add"))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'name="note"')
+
+    def test_export_has_no_note(self):
+        response = self.client.get(reverse("admin:members_user_export_excel"))
+        self.assertEqual(response.status_code, 200)
+        sheet = load_workbook(BytesIO(response.content)).active
+        values = [str(cell.value) for row in sheet.iter_rows() for cell in row]
+        self.assertIn("lid@example.com", values)
+        self.assertNotIn("Note", values)

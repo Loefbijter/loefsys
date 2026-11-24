@@ -107,8 +107,6 @@ for u in users_to_create:
             row[i] = templ_map.get("show_birthday") or 0
         elif col == "phone_number":
             row[i] = templ_map.get("phone_number") or ""
-        elif col == "note":
-            row[i] = templ_map.get("note") or ""
         elif col == "address_id":
             row[i] = templ_map.get("address_id")
         elif col == "lichting":
