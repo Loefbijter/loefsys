@@ -29,10 +29,25 @@ Environment variables, on top of the database URL from the Coolify Postgres reso
 ```
 DJANGO_SECRET_KEY=            # different on each
 DJANGO_DEBUG=false
-DJANGO_ALLOWED_HOSTS=staging.loefbijter.nl
-DJANGO_CSRF_TRUSTED_ORIGINS=https://staging.loefbijter.nl
+DJANGO_ALLOWED_HOSTS=staging.loefbijter.nl                   # app.loefbijter.nl on production
+DJANGO_CSRF_TRUSTED_ORIGINS=https://staging.loefbijter.nl    # https://app.loefbijter.nl on production
 DJANGO_SECURE_SSL_REDIRECT=true
 ```
+
+Production only, to send email over SMTP:
+
+```
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DJANGO_EMAIL_HOST=
+DJANGO_EMAIL_PORT=587         # the default
+DJANGO_EMAIL_HOST_USER=
+DJANGO_EMAIL_HOST_PASSWORD=
+DJANGO_EMAIL_USE_TLS=true     # the default
+```
+
+Without `DJANGO_EMAIL_BACKEND`, Django writes each email to a file in the container
+instead of sending it, so password resets and notifications never arrive. As of
+2026-11-24 these variables are not set on production yet.
 
 Staging only:
 
