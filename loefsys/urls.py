@@ -1,7 +1,8 @@
 """Module containing the url definition of the loefsys web app."""
 
+import re
+
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth.views import (
@@ -82,9 +83,15 @@ if settings.DEBUG:
 handler404 = "django.views.defaults.page_not_found"
 handler500 = "django.views.defaults.server_error"
 
-if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        view=login_not_required(serve),
-        document_root=settings.MEDIA_ROOT,
-    )
+# Uploaded files. With local storage nothing in front of gunicorn serves them
+# (Coolify's Traefik only proxies), so Django does. Not wrapped in
+# login_not_required, so the login-required middleware keeps them members-only.
+# static() returns [] unless DEBUG, hence re_path directly.
+if settings.USES_LOCAL_STORAGE:
+    urlpatterns += [
+        re_path(
+            rf"^{re.escape(settings.MEDIA_URL.lstrip('/'))}(?P<path>.*)$",
+            serve,
+            {"document_root": settings.MEDIA_ROOT},
+        )
+    ]
