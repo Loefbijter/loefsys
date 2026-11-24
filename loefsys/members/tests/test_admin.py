@@ -159,14 +159,12 @@ class CurrentMembershipFilterTestCase(TestCase):
         )
 
 
-class UserNoteHiddenTestCase(TestCase):
-    """The board-only note isn't shown or exported in the user admin."""
+class UserNoteRemovedTestCase(TestCase):
+    """The user admin and its export have no note."""
 
     def setUp(self):
         self.admin_user = G(get_user_model(), is_superuser=True, is_active=True)
-        self.member = G(
-            get_user_model(), email="lid@example.com", note="Board-only remark"
-        )
+        self.member = G(get_user_model(), email="lid@example.com")
         self.client.force_login(self.admin_user)
 
     def test_change_page_has_no_note(self):
@@ -175,7 +173,6 @@ class UserNoteHiddenTestCase(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, 'name="note"')
-        self.assertNotContains(response, "Board-only remark")
 
     def test_add_page_has_no_note(self):
         response = self.client.get(reverse("admin:members_user_add"))
@@ -188,5 +185,4 @@ class UserNoteHiddenTestCase(TestCase):
         sheet = load_workbook(BytesIO(response.content)).active
         values = [str(cell.value) for row in sheet.iter_rows() for cell in row]
         self.assertIn("lid@example.com", values)
-        self.assertNotIn("Board-only remark", values)
         self.assertNotIn("Note", values)

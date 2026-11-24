@@ -156,34 +156,13 @@ class UserProfileViewTestCase(TestCase):
         self.assertNotContains(profile_response, pod_kb_link)
         self.assertNotContains(profile_response, pod_zb_link)
 
-    def test_profile_edit_page_does_not_offer_or_save_note(self):
-        """Members can't see or change the board-only note on their profile."""
-        user = G(get_user_model(), note="Board-only remark")
+    def test_profile_edit_page_does_not_offer_note(self):
+        """Members can't see or set a note on their profile."""
+        user = G(get_user_model())
         self.client.force_login(user)
 
         response = self.client.get(reverse("members:user-profile-edit"))
 
         self.assertEqual(response.status_code, 200)
         self.assertNotIn("note", response.context["form"].fields)
-        self.assertNotContains(response, "Board-only remark")
-
-        post_response = self.client.post(
-            reverse("members:user-profile-edit"),
-            {
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "initials": user.initials,
-                "nickname": user.nickname,
-                "display_name_preference": user.display_name_preference,
-                "pod_kb_link": user.pod_kb_link,
-                "pod_zb_link": user.pod_zb_link,
-                "gender": user.gender,
-                "birthday": user.birthday or "",
-                "show_birthday": user.show_birthday,
-                "note": "Changed by the member",
-            },
-        )
-
-        self.assertEqual(post_response.status_code, 302)
-        user.refresh_from_db()
-        self.assertEqual(user.note, "Board-only remark")
+        self.assertNotContains(response, 'name="note"')

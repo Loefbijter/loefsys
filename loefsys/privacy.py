@@ -13,7 +13,7 @@ def pseudonymize_user(user) -> None:
     """Pseudonymize a single User instance in-place.
 
     - replaces email with a non-routable placeholder
-    - clears names, phone, birthday, note, and address references
+    - clears names, phone, birthday, and address references
     - deletes profile picture file if present
     - deactivates account (is_active=False)
 
@@ -33,7 +33,6 @@ def pseudonymize_user(user) -> None:
         "phone_number",
         "pod_kb_link",
         "pod_zb_link",
-        "note",
     ):
         if hasattr(user, attr):
             try:

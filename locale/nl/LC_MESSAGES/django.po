@@ -933,9 +933,6 @@ msgstr "Er staat niemand in de wachtrij."
 msgid "Not available"
 msgstr "Niet beschikbaar"
 
-msgid "Note"
-msgstr "Notitie"
-
 msgid "Only required when you deny the reservation."
 msgstr "Alleen verplicht wanneer je de reservering weigert."
 

@@ -221,18 +221,6 @@ class UserAdmin(ExportableModelAdmin, BaseUserAdmin):
         (_("Groups"), {"fields": ("groups",)}),
     )
 
-    # Fields kept out of the Excel export. The note is meant for the board only and
-    # stays hidden until the board dossier (#244) replaces it.
-    export_excluded_fields = ("note",)
-
-    def get_export_fields(self):
-        """Return the exported fields, without the board-only note."""
-        return [
-            field
-            for field in super().get_export_fields()
-            if field.name not in self.export_excluded_fields
-        ]
-
     list_display = (
         "email",
         "first_name",

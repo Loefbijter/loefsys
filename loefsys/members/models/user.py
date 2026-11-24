@@ -155,12 +155,6 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
         accounts too. However, it is possible that no phone number is available for
         ex-members, so the field should take into account empty values too.
     picture : ~django.db.models.fields.files.ImageFieldFile
-    note : str
-        Legacy free-text note, meant for the board only.
-
-        It is not shown in any form, admin page or export. The existing contents
-        are kept so they can move into the board-only member dossier (#244),
-        which will replace this field.
     """
 
     def user_upload_directory(self):
@@ -265,9 +259,6 @@ class User(AbstractBaseUser, TimeStampedModel, PermissionsMixin):
             "Paste the link to your ZB POD (Google Sheets) so it can be edited."
         ),
     )
-
-    # Hidden everywhere; to be replaced by the board-only member dossier (#244).
-    note = models.TextField(blank=True, verbose_name=_("Note"))
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
